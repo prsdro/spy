@@ -1,0 +1,34 @@
+# Database (3.7GB — rebuild from CSVs with ingest.py + indicators.py)
+spy.db
+spy.db-wal
+spy.db-shm
+
+# Compressed archive (redundant with CSV source files)
+spy.zip
+
+# SSH keys
+newkey
+newkey.pub
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Claude CLI config
+.claude/
+
+# Screenshots (not essential for the project)
+*.jpg
+*.png
+!validated-backtests/*.jpeg
+!validated-backtests/*.webp
+
+# OS
+.DS_Store
+Thumbs.db
