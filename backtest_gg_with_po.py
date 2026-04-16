@@ -7,11 +7,13 @@ PO Snapshot = (zone, slope, state)
 - State: Compression, Bull Expansion (PO>=0 + no compression), Bear Expansion (PO<0 + no compression)
 """
 
+import os
 import sqlite3
 import pandas as pd
 import numpy as np
 
-DB_PATH = "/root/spy/spy.db"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.path.join(BASE_DIR, "spy.db")
 
 
 def classify_po(po_val, po_prev, compression):

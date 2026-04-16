@@ -8,12 +8,14 @@ Investigates: PO zone, leaving_distribution, candle bias flips,
 conviction arrows, fast cloud flips, compression state, ATR trend.
 """
 
+import os
 import sqlite3
 import pandas as pd
 import numpy as np
 from collections import defaultdict
 
-DB_PATH = "/root/spy/spy.db"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.path.join(BASE_DIR, "spy.db")
 
 
 def main():

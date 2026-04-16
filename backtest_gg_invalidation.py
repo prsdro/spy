@@ -9,11 +9,13 @@ timeframes (3m, 10m, 1h). Only checks pullbacks after the 38.2% entry
 within the same RTH session.
 """
 
+import os
 import sqlite3
 import pandas as pd
 import numpy as np
 
-DB_PATH = "/root/spy/spy.db"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.path.join(BASE_DIR, "spy.db")
 
 
 def main():

@@ -8,12 +8,14 @@ Compares the fast cloud (EMA8/EMA21) flip as a reversal signal on:
 - 1-hour bars
 """
 
+import os
 import sqlite3
 import pandas as pd
 import numpy as np
 import json
 
-DB_PATH = "/root/spy/spy.db"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.path.join(BASE_DIR, "spy.db")
 
 
 def get_qualifying_dates(df10):
@@ -417,7 +419,7 @@ def main():
         "po_close_mean": round(float(np.mean([d["po_close"] for d in day_stats])), 1),
     }
 
-    with open("/root/spy/po_sustained_viz_data.json", "w") as f:
+    with open(os.path.join(BASE_DIR, "po_sustained_viz_data.json"), "w") as f:
         json.dump(viz_data, f)
 
     print("✓ Data exported to po_sustained_viz_data.json")

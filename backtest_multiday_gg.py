@@ -6,11 +6,13 @@ Tracks GG (38.2% → 61.8% of weekly ATR) completion over 1-5 trading days.
 Conditions on DAILY Phase Oscillator state at GG entry.
 """
 
+import os
 import sqlite3
 import pandas as pd
 import numpy as np
 
-DB_PATH = "/root/spy/spy.db"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.path.join(BASE_DIR, "spy.db")
 
 
 def main():

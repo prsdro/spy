@@ -584,7 +584,7 @@ async def analyze(req: AnalyzeRequest, authorization: str = Header(None)):
 QUERY_SYSTEM = """You are a data analyst. Given a natural language question about SPY trading data,
 write a Python script that queries the SQLite database and prints the answer.
 
-DATABASE: /root/spy/spy.db
+DATABASE: spy.db (located in the project root directory)
 
 TABLES AND KEY POINTS:
 - ind_10m: 10-minute bars (best for intraday studies). Has daily ATR levels broadcast to every bar.
@@ -658,7 +658,7 @@ def execute_query_code(code: str) -> str:
         result = subprocess.run(
             ["python3", "-c", code],
             capture_output=True, text=True, timeout=30,
-            cwd="/root/spy"
+            cwd=os.path.dirname(os.path.dirname(__file__))
         )
         output = result.stdout.strip()
         if result.returncode != 0:

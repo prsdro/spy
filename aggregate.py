@@ -4,12 +4,14 @@ Uses pandas for proper OHLCV resampling, writes results back to SQLite.
 Usage: python3 aggregate.py [--test]  (--test processes only 2024-10 data for validation)
 """
 
+import os
 import sqlite3
 import pandas as pd
 import time
 import sys
 
-DB_PATH = "/root/spy/spy.db"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.path.join(BASE_DIR, "spy.db")
 
 TIMEFRAMES = [
     ("candles_3m",  "3min"),

@@ -5,27 +5,29 @@ Import TradingView CSV exports into spy.db:
   2. Update ind_1h Phase Oscillator values from file (1) for April 10-15 2025
 """
 
+import os
 import csv
 import sqlite3
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
-DB_PATH = "/root/spy/spy.db"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.path.join(BASE_DIR, "spy.db")
 ET = ZoneInfo("America/New_York")
 
 # Multi-day ATR files in priority order (longest first = base, others fill gaps)
 MULTIDAY_FILES = [
-    "/root/spy/AMEX_SPY, 60 (8).csv",  # Apr 2022 - Apr 2026 (longest)
-    "/root/spy/AMEX_SPY, 60 (7).csv",  # Nov 2022 - Apr 2026
-    "/root/spy/AMEX_SPY, 60 (5).csv",  # Dec 2023 - Apr 2026
-    "/root/spy/AMEX_SPY, 60 (4).csv",  # Jul 2024 - Apr 2026
-    "/root/spy/AMEX_SPY, 60 (3).csv",  # Feb 2025 - Apr 2026
-    "/root/spy/AMEX_SPY, 60 (2).csv",  # Aug 2025 - Apr 2026
-    "/root/spy/AMEX_SPY, 60 (6).csv",  # Jun 2023 - Nov 2025 (OLDER, ends earlier)
+    os.path.join(BASE_DIR, "AMEX_SPY, 60 (8).csv"),  # Apr 2022 - Apr 2026 (longest)
+    os.path.join(BASE_DIR, "AMEX_SPY, 60 (7).csv"),  # Nov 2022 - Apr 2026
+    os.path.join(BASE_DIR, "AMEX_SPY, 60 (5).csv"),  # Dec 2023 - Apr 2026
+    os.path.join(BASE_DIR, "AMEX_SPY, 60 (4).csv"),  # Jul 2024 - Apr 2026
+    os.path.join(BASE_DIR, "AMEX_SPY, 60 (3).csv"),  # Feb 2025 - Apr 2026
+    os.path.join(BASE_DIR, "AMEX_SPY, 60 (2).csv"),  # Aug 2025 - Apr 2026
+    os.path.join(BASE_DIR, "AMEX_SPY, 60 (6).csv"),  # Jun 2023 - Nov 2025 (OLDER, ends earlier)
 ]
 
 # Day mode file for PO update
-DAY_MODE_FILE = "/root/spy/AMEX_SPY, 60 (1).csv"
+DAY_MODE_FILE = os.path.join(BASE_DIR, "AMEX_SPY, 60 (1).csv")
 
 
 def parse_timestamp(ts_str: str) -> str:

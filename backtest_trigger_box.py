@@ -9,11 +9,13 @@ When price opens in the bearish trigger box (below PDC but above put trigger):
 Mirror for bullish: opens above PDC but below call trigger.
 """
 
+import os
 import sqlite3
 import pandas as pd
 import numpy as np
 
-DB_PATH = "/root/spy/spy.db"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.path.join(BASE_DIR, "spy.db")
 
 
 def main():

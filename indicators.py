@@ -11,7 +11,8 @@ import numpy as np
 import time
 import sys
 
-DB_PATH = "/root/spy/spy.db"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.path.join(BASE_DIR, "spy.db")
 
 TABLES = [
     "candles_1m",

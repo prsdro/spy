@@ -7,11 +7,13 @@ the distribution, and what happens after extreme deviations?
 The 21 EMA is the pivot EMA in the Saty system — the core trend reference.
 """
 
+import os
 import sqlite3
 import pandas as pd
 import numpy as np
 
-DB_PATH = "/root/spy/spy.db"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.path.join(BASE_DIR, "spy.db")
 
 
 def main():

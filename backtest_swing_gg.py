@@ -11,11 +11,13 @@ Actually, Saty's Swing mode uses Monthly timeframe. We need monthly candles.
 Let's compute monthly OHLC from daily, then compute ATR and levels, then track on daily.
 """
 
+import os
 import sqlite3
 import pandas as pd
 import numpy as np
 
-DB_PATH = "/root/spy/spy.db"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.path.join(BASE_DIR, "spy.db")
 
 
 def rma(series, period):
