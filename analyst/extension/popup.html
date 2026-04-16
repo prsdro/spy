@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  width: 420px;
+  height: 560px;
+  background: #0c0e12;
+  color: #eaebef;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+#header {
+  padding: 10px 14px;
+  background: linear-gradient(135deg, #0e1018, #12151f);
+  border-bottom: 1px solid #1e2230;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+}
+#header .title { font-size: 14px; font-weight: 700; }
+#header .title span { color: #fbbf24; }
+#header .status { font-size: 10px; color: #7a7e90; font-family: monospace; }
+
+#messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+#messages::-webkit-scrollbar { width: 4px; }
+#messages::-webkit-scrollbar-track { background: transparent; }
+#messages::-webkit-scrollbar-thumb { background: #1e2230; border-radius: 2px; }
+
+.msg {
+  font-size: 13px;
+  line-height: 1.55;
+  padding: 8px 10px;
+  border-radius: 6px;
+  max-width: 95%;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+.msg.user {
+  background: #1a1800;
+  border: 1px solid #2a2200;
+  color: #fbbf24;
+  align-self: flex-end;
+  font-weight: 500;
+}
+.msg.analyst {
+  background: #111419;
+  border: 1px solid #1e2230;
+  color: #c8cad0;
+}
+.msg.analyst strong { color: #eaebef; }
+.msg.analyst code {
+  background: #1a1d25;
+  padding: 1px 4px;
+  border-radius: 3px;
+  font-family: monospace;
+  font-size: 12px;
+  color: #1cd48a;
+}
+.msg.system {
+  background: transparent;
+  color: #7a7e90;
+  font-size: 11px;
+  text-align: center;
+  align-self: center;
+}
+.msg.error {
+  background: #1a0a0a;
+  border: 1px solid #3a1010;
+  color: #ef4444;
+  font-size: 12px;
+}
+
+#indicators {
+  padding: 6px 10px;
+  background: #111419;
+  border-top: 1px solid #1e2230;
+  font-family: monospace;
+  font-size: 10px;
+  color: #7a7e90;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+  min-height: 24px;
+}
+#indicators .bull { color: #1cd48a; }
+#indicators .bear { color: #ef6c00; }
+#indicators .val { color: #b0b3c0; }
+
+#input-area {
+  padding: 8px 10px;
+  border-top: 1px solid #1e2230;
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+#input {
+  flex: 1;
+  background: #111419;
+  border: 1px solid #1e2230;
+  border-radius: 5px;
+  padding: 7px 10px;
+  color: #eaebef;
+  font-size: 13px;
+  font-family: inherit;
+  outline: none;
+}
+#input:focus { border-color: #fbbf24; }
+#input::placeholder { color: #4a4e5c; }
+#send {
+  background: #fbbf24;
+  color: #000;
+  border: none;
+  border-radius: 5px;
+  padding: 7px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+#send:hover { opacity: 0.85; }
+#send:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.loading {
+  display: inline-flex;
+  gap: 4px;
+  padding: 8px 10px;
+}
+.loading span {
+  width: 5px; height: 5px; border-radius: 50%; background: #fbbf24;
+  animation: bounce 1.2s ease-in-out infinite;
+}
+.loading span:nth-child(2) { animation-delay: 0.2s; }
+.loading span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes bounce {
+  0%, 80%, 100% { transform: scale(0.5); opacity: 0.3; }
+  40% { transform: scale(1); opacity: 1; }
+}
+.query-btn {
+  margin-top: 6px;
+  padding: 5px 12px;
+  background: #1a1a3a;
+  border: 1px solid #60a5fa;
+  color: #60a5fa;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.query-btn:hover { background: #1a2040; }
+.query-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+</style>
+</head>
+<body>
+
+<div id="header">
+  <div>
+    <div class="title">milkman<span>.</span> analyst</div>
+    <div class="status" id="status">ready</div>
+  </div>
+  <button id="clear" style="background:none;border:1px solid #1e2230;color:#7a7e90;font-size:10px;padding:2px 8px;border-radius:3px;cursor:pointer">Clear</button>
+</div>
+
+<div id="messages">
+  <div class="msg system">SPY analysis using Saty ATR Levels, Pivot Ribbon &amp; Phase Oscillator. Intraday data may be ~15 min delayed.</div>
+</div>
+
+<div id="indicators"></div>
+
+<div id="input-area">
+  <input id="input" type="text" placeholder="What's the setup today?" autocomplete="off">
+  <button id="send">Go</button>
+</div>
+
+<script src="popup.js"></script>
+</body>
+</html>

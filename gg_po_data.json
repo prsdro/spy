@@ -1,0 +1,158 @@
+{
+  "mid|falling|compression": {
+    "bull": {
+      "total": 573,
+      "done_any": 388,
+      "done_1h": 308
+    },
+    "bear": {
+      "total": 1635,
+      "done_any": 1274,
+      "done_1h": 1065
+    }
+  },
+  "mid|rising|bear_exp": {
+    "bull": {
+      "total": 440,
+      "done_any": 358,
+      "done_1h": 281
+    },
+    "bear": {
+      "total": 367,
+      "done_any": 310,
+      "done_1h": 265
+    }
+  },
+  "low|falling|bear_exp": {
+    "bull": {
+      "total": 6,
+      "done_any": 5,
+      "done_1h": 3
+    },
+    "bear": {
+      "total": 240,
+      "done_any": 233,
+      "done_1h": 229
+    }
+  },
+  "mid|rising|compression": {
+    "bull": {
+      "total": 1587,
+      "done_any": 1219,
+      "done_1h": 997
+    },
+    "bear": {
+      "total": 481,
+      "done_any": 340,
+      "done_1h": 271
+    }
+  },
+  "high|rising|bull_exp": {
+    "bull": {
+      "total": 318,
+      "done_any": 297,
+      "done_1h": 289
+    },
+    "bear": {
+      "total": 4,
+      "done_any": 0,
+      "done_1h": 0
+    }
+  },
+  "mid|falling|bull_exp": {
+    "bull": {
+      "total": 413,
+      "done_any": 324,
+      "done_1h": 254
+    },
+    "bear": {
+      "total": 443,
+      "done_any": 300,
+      "done_1h": 218
+    }
+  },
+  "low|rising|bear_exp": {
+    "bull": {
+      "total": 27,
+      "done_any": 23,
+      "done_1h": 13
+    },
+    "bear": {
+      "total": 107,
+      "done_any": 102,
+      "done_1h": 95
+    }
+  },
+  "mid|falling|bear_exp": {
+    "bull": {
+      "total": 117,
+      "done_any": 74,
+      "done_1h": 57
+    },
+    "bear": {
+      "total": 658,
+      "done_any": 568,
+      "done_1h": 511
+    }
+  },
+  "mid|rising|bull_exp": {
+    "bull": {
+      "total": 729,
+      "done_any": 597,
+      "done_1h": 525
+    },
+    "bear": {
+      "total": 90,
+      "done_any": 54,
+      "done_1h": 40
+    }
+  },
+  "high|falling|bull_exp": {
+    "bull": {
+      "total": 129,
+      "done_any": 113,
+      "done_1h": 104
+    },
+    "bear": {
+      "total": 23,
+      "done_any": 15,
+      "done_1h": 11
+    }
+  },
+  "high|rising|compression": {
+    "bull": {
+      "total": 11,
+      "done_any": 11,
+      "done_1h": 11
+    },
+    "bear": {
+      "total": 1,
+      "done_any": 0,
+      "done_1h": 0
+    }
+  },
+  "low|falling|compression": {
+    "bull": {
+      "total": 1,
+      "done_any": 0,
+      "done_1h": 0
+    },
+    "bear": {
+      "total": 4,
+      "done_any": 4,
+      "done_1h": 4
+    }
+  },
+  "high|falling|compression": {
+    "bull": {
+      "total": 2,
+      "done_any": 2,
+      "done_1h": 2
+    },
+    "bear": {
+      "total": 0,
+      "done_any": 0,
+      "done_1h": 0
+    }
+  }
+}

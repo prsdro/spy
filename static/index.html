@@ -1,0 +1,1839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SPY Visualizer</title>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lightweight-charts@4.2.2/dist/lightweight-charts.standalone.production.js"></script>
+<script>
+// Cloud fill primitive — draws filled area between two line series
+class CloudFillPrimitive {
+  constructor(series1, series2, bullColor, bearColor) {
+    this._series1 = series1;
+    this._series2 = series2;
+    this._bullColor = bullColor;
+    this._bearColor = bearColor;
+    this._chart = null;
+  }
+  attached(p) { this._chart = p.chart; }
+  detached() { this._chart = null; }
+  updateAllViews() {}
+  paneViews() { return [new CloudFillPaneView(this)]; }
+  priceAxisViews() { return []; }
+  timeAxisViews() { return []; }
+  autoscaleInfo() { return null; }
+}
+
+class CloudFillPaneView {
+  constructor(source) { this._source = source; }
+  renderer() { return new CloudFillRenderer(this._source); }
+  update() {}
+  zOrder() { return 'bottom'; }
+}
+
+class CloudFillRenderer {
+  constructor(source) { this._source = source; }
+  draw(target) {
+    const s = this._source;
+    if (!s._chart) return;
+    const timeScale = s._chart.timeScale();
+    const d1 = s._series1.data();
+    const d2 = s._series2.data();
+    if (!d1 || !d2 || d1.length === 0 || d2.length === 0) return;
+
+    // Build lookup for series2 by time
+    const s2map = {};
+    for (const pt of d2) {
+      s2map[pt.time] = pt.value;
+    }
+
+    const ctx = target;
+    // Find the actual canvas context
+    const scope = target.useBitmapCoordinateSpace ? target : null;
+    if (scope) {
+      scope.useBitmapCoordinateSpace(({ context: ctx2, bitmapSize, horizontalPixelRatio, verticalPixelRatio }) => {
+        this._drawFill(ctx2, s, timeScale, d1, s2map, horizontalPixelRatio, verticalPixelRatio);
+      });
+    }
+  }
+
+  _drawFill(ctx, s, timeScale, d1, s2map, hpr, vpr) {
+    const points = [];
+    for (const pt of d1) {
+      const v2 = s2map[pt.time];
+      if (v2 === undefined) continue;
+
+      const x = timeScale.timeToCoordinate(pt.time);
+      if (x === null) continue;
+
+      const y1 = s._series1.priceToCoordinate(pt.value);
+      const y2 = s._series1.priceToCoordinate(v2);
+      if (y1 === null || y2 === null) continue;
+
+      points.push({ x: x * hpr, y1: y1 * vpr, y2: y2 * vpr, above: pt.value >= v2 });
+    }
+
+    if (points.length < 2) return;
+
+    // Draw filled segments — split by bull/bear
+    let segStart = 0;
+    for (let i = 1; i <= points.length; i++) {
+      const changed = i === points.length || points[i].above !== points[segStart].above;
+      if (changed) {
+        const seg = points.slice(segStart, i);
+        const isBull = seg[0].above;
+        ctx.fillStyle = isBull ? s._bullColor : s._bearColor;
+        ctx.beginPath();
+        // Forward along y1
+        ctx.moveTo(seg[0].x, seg[0].y1);
+        for (let j = 1; j < seg.length; j++) ctx.lineTo(seg[j].x, seg[j].y1);
+        // Backward along y2
+        for (let j = seg.length - 1; j >= 0; j--) ctx.lineTo(seg[j].x, seg[j].y2);
+        ctx.closePath();
+        ctx.fill();
+        segStart = i;
+      }
+    }
+  }
+}
+
+// ATR level primitive — draws time-bounded horizontal lines + white text labels
+class ATRLevelPrimitive {
+  constructor(series) {
+    this._series = series;
+    this._chart = null;
+    this._levels = []; // [{price, label, color, startTime, endTime}]
+  }
+  setLevels(levels) { this._levels = levels; }
+  setShowLabels(show) { this._showLabels = show; }
+  attached(p) { this._chart = p.chart; }
+  detached() { this._chart = null; }
+  updateAllViews() {}
+  paneViews() { return [new ATRLevelPaneView(this)]; }
+  priceAxisViews() { return []; }
+  timeAxisViews() { return []; }
+  autoscaleInfo() { return null; }
+}
+class ATRLevelPaneView {
+  constructor(s) { this._s = s; }
+  renderer() { return new ATRLevelRenderer(this._s); }
+  update() {}
+  zOrder() { return 'bottom'; }
+}
+class ATRLevelRenderer {
+  constructor(s) { this._s = s; }
+  draw(target) {
+    const s = this._s;
+    if (!s._chart || !s._levels.length) return;
+    const scope = target.useBitmapCoordinateSpace ? target : null;
+    if (!scope) return;
+    scope.useBitmapCoordinateSpace(({ context: ctx, bitmapSize, horizontalPixelRatio: hpr, verticalPixelRatio: vpr }) => {
+      const ts = s._chart.timeScale();
+      ctx.font = `${9 * vpr}px 'Fira Code', monospace`;
+      ctx.textAlign = 'right';
+
+      // First pass: find the latest endTime per base name so we only draw
+      // each label once (on its rightmost/most-recent period segment).
+      // Uses lv.name (e.g. "Call (D)") not lv.label (which includes the price).
+      const latestEnd = {};
+      for (const lv of s._levels) {
+        const key = lv.name || lv.label;
+        const prev = latestEnd[key];
+        if (!prev || lv.endTime > prev) latestEnd[key] = lv.endTime;
+      }
+
+      // Track occupied Y pixel ranges to avoid overlapping labels
+      const usedYs = [];
+
+      for (const lv of s._levels) {
+        const y = s._series.priceToCoordinate(lv.price);
+        if (y === null) continue;
+        const py = y * vpr;
+
+        // Get x coordinates for start and end of this level's period
+        let x1 = ts.timeToCoordinate(lv.startTime);
+        let x2 = ts.timeToCoordinate(lv.endTime);
+
+        // Clamp to visible area
+        if (x1 === null && x2 === null) continue;
+        if (x1 === null) x1 = 0;
+        if (x2 === null) x2 = bitmapSize.width / hpr;
+
+        const px1 = x1 * hpr;
+        const px2 = x2 * hpr;
+
+        if (px2 < 0 || px1 > bitmapSize.width) continue;
+
+        // Draw horizontal line segment
+        ctx.strokeStyle = lv.color;
+        ctx.lineWidth = 1 * vpr;
+        ctx.setLineDash([]);
+        ctx.beginPath();
+        ctx.moveTo(Math.max(0, px1), py);
+        ctx.lineTo(Math.min(bitmapSize.width, px2), py);
+        ctx.stroke();
+
+        // Only draw label on the most recent period for this base name
+        const nameKey = lv.name || lv.label;
+        if (s._showLabels !== false && lv.endTime === latestEnd[nameKey]) {
+          const labelY = py - 3 * vpr;
+          // Skip if another label is within 10px vertically
+          const tooClose = usedYs.some(uy => Math.abs(uy - labelY) < 10 * vpr);
+          if (!tooClose) {
+            const labelX = Math.min(px2 - 4 * hpr, bitmapSize.width - 8 * hpr);
+            ctx.fillStyle = 'rgba(0,0,0,0.5)';
+            ctx.fillText(lv.label, labelX + 1 * hpr, labelY + 1 * vpr);
+            ctx.fillStyle = '#e2e8f0cc';
+            ctx.fillText(lv.label, labelX, labelY);
+            usedYs.push(labelY);
+          }
+        }
+      }
+    });
+  }
+}
+
+// ETH session shading primitive — draws dark overlay on pre-market / after-hours bars
+class ETHShadePrimitive {
+  constructor(candleSeries, ethColor) {
+    this._series = candleSeries;
+    this._color = ethColor || 'rgba(10,14,23,0.45)';
+    this._chart = null;
+    this._ethBars = [];
+    this._sessionLines = [];
+  }
+  setETHBars(bars) { this._ethBars = bars; }
+  setSessionLines(lines) { this._sessionLines = lines; }
+  attached(p) { this._chart = p.chart; }
+  detached() { this._chart = null; }
+  updateAllViews() {}
+  paneViews() { return [new ETHShadePaneView(this)]; }
+  priceAxisViews() { return []; }
+  timeAxisViews() { return []; }
+  autoscaleInfo() { return null; }
+}
+
+class ETHShadePaneView {
+  constructor(source) { this._source = source; }
+  renderer() { return new ETHShadeRenderer(this._source); }
+  update() {}
+  zOrder() { return 'bottom'; }
+}
+
+class ETHShadeRenderer {
+  constructor(source) { this._source = source; }
+  draw(target) {
+    const s = this._source;
+    if (!s._chart) return;
+    const scope = target.useBitmapCoordinateSpace ? target : null;
+    if (!scope) return;
+    scope.useBitmapCoordinateSpace(({ context: ctx, bitmapSize, horizontalPixelRatio: hpr, verticalPixelRatio: vpr }) => {
+      const ts = s._chart.timeScale();
+      const h = bitmapSize.height;
+
+      // ETH bar shading
+      if (s._ethBars.length) {
+        ctx.fillStyle = s._color;
+        for (const t of s._ethBars) {
+          const x = ts.timeToCoordinate(t);
+          if (x === null) continue;
+          const barW = Math.max(4 * hpr, 2);
+          ctx.fillRect((x - 2) * hpr, 0, barW, h);
+        }
+      }
+
+      // Session open/close vertical lines
+      if (s._sessionLines.length) {
+        for (const sl of s._sessionLines) {
+          const x = ts.timeToCoordinate(sl.time);
+          if (x === null) continue;
+          const px = x * hpr;
+
+          if (sl.type === 'open') {
+            // Dashed cyan line for market open
+            ctx.strokeStyle = 'rgba(96,165,250,0.5)';
+            ctx.lineWidth = 1 * hpr;
+            ctx.setLineDash([4 * vpr, 4 * vpr]);
+          } else {
+            // Dashed orange line for market close
+            ctx.strokeStyle = 'rgba(249,115,22,0.4)';
+            ctx.lineWidth = 1 * hpr;
+            ctx.setLineDash([4 * vpr, 4 * vpr]);
+          }
+          ctx.beginPath();
+          ctx.moveTo(px, 0);
+          ctx.lineTo(px, h);
+          ctx.stroke();
+          ctx.setLineDash([]);
+        }
+      }
+    });
+  }
+}
+</script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg-deep: #05080e;
+  --bg-main: #0a0e17;
+  --bg-card: #111827;
+  --bg-hover: #1a2236;
+  --bg-active: #0d2a3a;
+  --border: #1e293b;
+  --border-dim: #151e2e;
+  --text: #e2e8f0;
+  --text-dim: #94a3b8;
+  --text-muted: #475569;
+  --accent: #06d6a0;
+  --accent-glow: rgba(6, 214, 160, 0.12);
+  --accent-border: rgba(6, 214, 160, 0.4);
+  --bull: #22c55e;
+  --bear: #ef4444;
+}
+
+html, body {
+  height: 100%; overflow: hidden;
+  font-family: 'Lexend', sans-serif;
+  background: var(--bg-deep);
+  color: var(--text);
+}
+
+body {
+  display: grid;
+  grid-template-columns: 272px 1fr;
+  grid-template-rows: 1fr;
+}
+
+/* ── Sidebar ────────────────────────────── */
+.sidebar {
+  background: var(--bg-card);
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  overflow-y: auto;
+  box-shadow: inset 3px 0 0 var(--accent);
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+.sidebar.collapsed { transform: translateX(-100%); position: absolute; z-index: 10; opacity: 0; pointer-events: none; }
+#sidebar-toggle {
+  display: none; position: fixed; top: 8px; left: 8px; z-index: 100;
+  width: 36px; height: 36px; border-radius: 6px; border: 1px solid var(--border);
+  background: var(--bg-card); color: var(--accent); font-size: 18px;
+  cursor: pointer; align-items: center; justify-content: center;
+}
+
+.sidebar-header {
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid var(--border-dim);
+}
+.sidebar-header h1 {
+  font-size: 28px; font-weight: 700; letter-spacing: 6px;
+  color: var(--accent);
+  font-family: 'Fira Code', monospace;
+}
+.sidebar-header .sub {
+  font-size: 11px; font-weight: 400; color: var(--text-muted);
+  letter-spacing: 2px; text-transform: uppercase; margin-top: 2px;
+}
+
+.section { padding: 14px 16px; }
+.section-label {
+  font-size: 10px; font-weight: 600; letter-spacing: 2.5px;
+  color: var(--text-muted); text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.divider { height: 1px; background: var(--border-dim); margin: 0 16px; }
+
+/* Mode buttons */
+.mode-group { margin-bottom: 10px; }
+.group-label {
+  font-size: 9px; font-weight: 500; letter-spacing: 2px;
+  color: var(--text-muted); text-transform: uppercase;
+  margin-bottom: 4px; padding-left: 4px; opacity: 0.7;
+}
+.mode-btn {
+  display: flex; align-items: center; justify-content: space-between;
+  width: 100%; padding: 7px 10px; margin-bottom: 2px;
+  background: transparent; border: 1px solid transparent;
+  border-radius: 6px; cursor: pointer; transition: all 0.15s;
+  text-align: left; color: var(--text-dim); font-family: inherit;
+}
+.mode-btn:hover { background: var(--bg-hover); color: var(--text); }
+.mode-btn.active {
+  background: var(--accent-glow); border-color: var(--accent-border);
+  color: var(--accent);
+}
+.mode-name {
+  font-size: 13px; font-weight: 500;
+}
+.mode-key {
+  font-size: 10px; font-family: 'Fira Code', monospace;
+  opacity: 0.4; min-width: 16px; text-align: center;
+}
+.mode-desc {
+  display: block; font-size: 10px; opacity: 0.55; margin-top: 1px;
+}
+
+/* Date nav */
+.nav-row {
+  display: flex; align-items: center; gap: 6px; margin-top: 4px;
+}
+.nav-btn {
+  width: 34px; height: 34px; border-radius: 6px;
+  background: var(--bg-hover); border: 1px solid var(--border);
+  color: var(--text-dim); cursor: pointer; font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s; font-family: inherit;
+}
+.nav-btn:hover { border-color: var(--accent-border); color: var(--accent); }
+.nav-btn.active { border-color: var(--accent); color: var(--accent); background: var(--bg-active); }
+#date-input {
+  flex: 1; height: 34px; border-radius: 6px;
+  background: var(--bg-hover); border: 1px solid var(--border);
+  color: var(--text); font-family: 'Fira Code', monospace;
+  font-size: 12px; padding: 0 8px; text-align: center;
+  outline: none;
+}
+#date-input:focus { border-color: var(--accent-border); }
+#date-input::-webkit-calendar-picker-indicator { filter: invert(0.7); }
+
+/* Info panel */
+.info-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 6px;
+}
+.info-item {
+  background: var(--bg-hover); border-radius: 6px; padding: 8px 10px;
+}
+.info-item.wide { grid-column: 1 / -1; }
+.info-label {
+  font-size: 9px; font-weight: 500; letter-spacing: 1.5px;
+  color: var(--text-muted); text-transform: uppercase;
+}
+.info-val {
+  font-family: 'Fira Code', monospace; font-size: 13px;
+  color: var(--text); margin-top: 2px;
+}
+
+/* ── Studies Panel ──────────────────────── */
+.studies-section { }
+.study-card {
+  background: var(--bg-hover); border-radius: 6px;
+  margin-bottom: 6px; overflow: hidden;
+  border: 1px solid transparent;
+  transition: border-color 0.15s;
+}
+.study-card:hover { border-color: var(--border); }
+.study-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 7px 10px; cursor: pointer; gap: 6px;
+}
+.study-name {
+  font-size: 11px; font-weight: 500; color: var(--text-dim);
+  flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.study-stat {
+  display: flex; align-items: center; gap: 6px;
+  font-family: 'Fira Code', monospace; font-size: 11px; flex-shrink: 0;
+}
+.study-pct { font-weight: 600; }
+.study-pct.high { color: #22c55e; }
+.study-pct.mid { color: #fbbf24; }
+.study-pct.low { color: #ef4444; }
+.study-n {
+  color: var(--text-muted); font-size: 10px;
+  cursor: pointer; text-decoration: underline; text-decoration-style: dotted;
+  text-underline-offset: 2px;
+}
+.study-n:hover { color: var(--accent); }
+.study-body { display: none; padding: 0 8px 8px; }
+.study-body.open { display: block; }
+.study-filters {
+  display: flex; gap: 4px; margin-bottom: 6px;
+}
+.study-filter-btn {
+  font-size: 9px; font-family: 'Fira Code', monospace;
+  padding: 2px 6px; border-radius: 4px; cursor: pointer;
+  border: 1px solid var(--border); background: transparent;
+  color: var(--text-muted); transition: all 0.12s;
+  letter-spacing: 0.5px;
+}
+.study-filter-btn:hover { border-color: var(--accent-border); color: var(--text); }
+.study-filter-btn.active { background: var(--accent-glow); border-color: var(--accent-border); color: var(--accent); }
+.study-dates {
+  max-height: 220px; overflow-y: auto;
+  scrollbar-width: thin; scrollbar-color: var(--border) transparent;
+}
+.study-dates::-webkit-scrollbar { width: 3px; }
+.study-dates::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+.study-date-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 3px 6px; border-radius: 4px; cursor: pointer;
+  font-family: 'Fira Code', monospace; font-size: 10px;
+  color: var(--text-dim); transition: background 0.1s;
+}
+.study-date-row:hover { background: var(--bg-active); color: var(--text); }
+.study-date-row .date-label { flex: 1; }
+.study-date-row .trigger-time { color: var(--text-muted); margin-right: 6px; font-size: 9px; }
+.study-date-row .result-dot {
+  width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0;
+}
+.result-dot.for { background: #22c55e; }
+.result-dot.against { background: #ef4444; }
+.study-load-more {
+  display: block; width: 100%; padding: 4px;
+  font-size: 9px; color: var(--text-muted); text-align: center;
+  background: transparent; border: 1px dashed var(--border);
+  border-radius: 4px; cursor: pointer; margin-top: 4px;
+  font-family: inherit;
+}
+.study-load-more:hover { border-color: var(--accent-border); color: var(--accent); }
+.study-loading {
+  text-align: center; padding: 12px;
+  font-size: 10px; color: var(--text-muted);
+}
+.study-cat-label {
+  font-size: 9px; font-weight: 500; letter-spacing: 1.5px;
+  color: var(--text-muted); text-transform: uppercase;
+  margin: 8px 0 4px 4px; opacity: 0.6;
+}
+.study-chevron {
+  font-size: 8px; color: var(--text-muted); transition: transform 0.15s;
+  flex-shrink: 0;
+}
+.study-card.expanded .study-chevron { transform: rotate(90deg); }
+
+/* ── Main Area ──────────────────────────── */
+.main-area {
+  display: flex; flex-direction: column;
+  background: var(--bg-main);
+  overflow: hidden;
+}
+
+.top-bar {
+  height: 40px; display: flex; align-items: center;
+  padding: 0 16px; gap: 8px;
+  border-bottom: 1px solid var(--border-dim);
+  flex-shrink: 0;
+}
+.badge {
+  font-size: 11px; font-weight: 500; padding: 2px 8px;
+  border-radius: 4px; letter-spacing: 0.5px;
+}
+.badge-mode {
+  background: var(--accent-glow); color: var(--accent);
+  border: 1px solid var(--accent-border);
+}
+.badge-tf {
+  background: rgba(139, 92, 246, 0.15); color: #a78bfa;
+  border: 1px solid rgba(139, 92, 246, 0.3);
+}
+.badge-session {
+  background: rgba(251, 191, 36, 0.12); color: #fbbf24;
+  border: 1px solid rgba(251, 191, 36, 0.25);
+}
+.badge-warp {
+  background: rgba(236, 72, 153, 0.12); color: #ec4899;
+  border: 1px solid rgba(236, 72, 153, 0.25);
+}
+.top-date {
+  font-family: 'Fira Code', monospace; font-size: 12px;
+  color: var(--text-dim); margin-left: auto;
+}
+.top-bars {
+  font-size: 11px; color: var(--text-muted);
+}
+
+/* Chart containers */
+.chart-wrap {
+  position: relative; flex: 1; min-height: 0;
+}
+.chart-osc-wrap {
+  position: relative; height: 240px; flex-shrink: 0;
+  border-top: 1px solid var(--border);
+}
+.chart-container { width: 100%; height: 100%; }
+
+/* Legends */
+.legend {
+  position: absolute; top: 8px; left: 12px; z-index: 100;
+  pointer-events: none; display: flex; gap: 14px;
+  font-family: 'Fira Code', monospace; font-size: 11px;
+}
+.legend-ohlc { display: flex; gap: 10px; }
+.legend-lbl { color: var(--text-muted); }
+.legend-val { color: var(--text); }
+.legend-val.up { color: var(--bull); }
+.legend-val.down { color: var(--bear); }
+
+.legend-emas {
+  display: flex; gap: 8px; font-size: 10px; margin-top: 1px;
+}
+.legend-ema { opacity: 0.8; }
+
+.legend-phase {
+  position: absolute; top: 6px; left: 12px; z-index: 100;
+  pointer-events: none; font-family: 'Fira Code', monospace; font-size: 11px;
+}
+.phase-val { margin-left: 6px; }
+
+/* Loading overlay */
+.loading-overlay {
+  position: absolute; inset: 0; z-index: 200;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(5, 8, 14, 0.7);
+  transition: opacity 0.2s;
+}
+.loading-overlay.hidden { opacity: 0; pointer-events: none; }
+.loader {
+  width: 28px; height: 28px; border-radius: 50%;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Scrollbar */
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-track { background: transparent; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+/* ── Mobile ── */
+@media (max-width: 768px) {
+  body { grid-template-columns: 1fr; }
+  .sidebar { position: fixed; top: 0; left: 0; bottom: 0; width: 280px; z-index: 50; transform: translateX(-100%); opacity: 0; }
+  .sidebar.open { transform: translateX(0); opacity: 1; pointer-events: auto; }
+  #sidebar-toggle { display: flex; }
+  .sidebar-header h1 { font-size: 22px; letter-spacing: 4px; }
+  #chart-osc { height: 160px !important; }
+}
+</style>
+</head>
+<body>
+<button id="sidebar-toggle" onclick="toggleSidebar()">&#9776;</button>
+
+<!-- ─── Sidebar ─────────────────────────── -->
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <h1>SPY</h1>
+    <div class="sub">Chart Visualizer</div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">Mode</div>
+    <div class="mode-group">
+      <div class="group-label">Macro</div>
+      <button class="mode-btn" data-mode="big_picture">
+        <div><span class="mode-name">Big Picture</span><span class="mode-desc">Monthly</span></div>
+        <span class="mode-key">1</span>
+      </button>
+      <button class="mode-btn" data-mode="long_term">
+        <div><span class="mode-name">Long-term</span><span class="mode-desc">Weekly &middot; Yearly ATR</span></div>
+        <span class="mode-key">2</span>
+      </button>
+      <button class="mode-btn" data-mode="position">
+        <div><span class="mode-name">Position</span><span class="mode-desc">Daily &middot; Quarterly ATR</span></div>
+        <span class="mode-key">3</span>
+      </button>
+    </div>
+    <div class="mode-group">
+      <div class="group-label">Swing</div>
+      <button class="mode-btn" data-mode="swing">
+        <div><span class="mode-name">Swing</span><span class="mode-desc">Hourly RTH &middot; Monthly ATR</span></div>
+        <span class="mode-key">4</span>
+      </button>
+      <button class="mode-btn" data-mode="swing_hd">
+        <div><span class="mode-name">Swing H/D</span><span class="mode-desc">Hourly RTH &middot; Daily Warp</span></div>
+        <span class="mode-key">5</span>
+      </button>
+    </div>
+    <div class="mode-group">
+      <div class="group-label">Intraday</div>
+      <button class="mode-btn" data-mode="multiday">
+        <div><span class="mode-name">Multiday</span><span class="mode-desc">Hourly ETH &middot; Weekly ATR</span></div>
+        <span class="mode-key">6</span>
+      </button>
+      <button class="mode-btn" data-mode="day">
+        <div><span class="mode-name">Day</span><span class="mode-desc">10min ETH &middot; Daily ATR</span></div>
+        <span class="mode-key">7</span>
+      </button>
+      <button class="mode-btn" data-mode="day_3_10">
+        <div><span class="mode-name">Day 3/10</span><span class="mode-desc">3min ETH &middot; 10min Warp</span></div>
+        <span class="mode-key">8</span>
+      </button>
+      <button class="mode-btn" data-mode="day_rth">
+        <div><span class="mode-name">Day RTH</span><span class="mode-desc">3min RTH &middot; Daily ATR</span></div>
+        <span class="mode-key">9</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section">
+    <div class="section-label">Navigate</div>
+    <div class="nav-row">
+      <button class="nav-btn" id="btn-prev" title="Previous (Left arrow)">&larr;</button>
+      <input type="date" id="date-input">
+      <button class="nav-btn" id="btn-next" title="Next (Right arrow)">&rarr;</button>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section">
+    <div class="section-label">Candle Timeframe</div>
+    <div class="nav-row" style="gap:4px;flex-wrap:wrap">
+      <button class="nav-btn tf-btn" data-tf="3m" style="flex:1;min-width:30px">3m</button>
+      <button class="nav-btn tf-btn active" data-tf="10m" style="flex:1;min-width:30px">10m</button>
+      <button class="nav-btn tf-btn" data-tf="1h" style="flex:1;min-width:30px">1h</button>
+      <button class="nav-btn tf-btn" data-tf="1d" style="flex:1;min-width:30px">D</button>
+      <button class="nav-btn tf-btn" data-tf="1w" style="flex:1;min-width:30px">W</button>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section">
+    <div class="section-label">Day Range</div>
+    <div class="nav-row" style="gap:4px;flex-wrap:wrap">
+      <button class="nav-btn range-btn" data-range="1" style="flex:1;min-width:30px">1d</button>
+      <button class="nav-btn range-btn" data-range="2" style="flex:1;min-width:30px">2d</button>
+      <button class="nav-btn range-btn" data-range="3" style="flex:1;min-width:30px">3d</button>
+      <button class="nav-btn range-btn active" data-range="5" style="flex:1;min-width:30px">5d</button>
+      <button class="nav-btn range-btn" data-range="10" style="flex:1;min-width:30px">10d</button>
+      <button class="nav-btn range-btn" data-range="20" style="flex:1;min-width:30px">20d</button>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section">
+    <div class="section-label">ATR Overlay</div>
+    <div class="nav-row" style="gap:4px;flex-wrap:wrap">
+      <button class="nav-btn atr-btn active" data-atr="auto" style="flex:1;min-width:36px">Auto</button>
+      <button class="nav-btn atr-btn" data-atr="daily" style="flex:1;min-width:30px">Day</button>
+      <button class="nav-btn atr-btn" data-atr="weekly" style="flex:1;min-width:30px">Wk</button>
+      <button class="nav-btn atr-btn" data-atr="monthly" style="flex:1;min-width:30px">Mo</button>
+      <button class="nav-btn atr-btn" data-atr="none" style="flex:1;min-width:30px">Off</button>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section">
+    <div class="section-label">Ribbon Timeframe</div>
+    <div class="nav-row" style="gap:4px;flex-wrap:wrap">
+      <button class="nav-btn ribbon-btn active" data-ribbon="auto" style="flex:1;min-width:36px">Auto</button>
+      <button class="nav-btn ribbon-btn" data-ribbon="3m" style="flex:1;min-width:30px">3m</button>
+      <button class="nav-btn ribbon-btn" data-ribbon="10m" style="flex:1;min-width:30px">10m</button>
+      <button class="nav-btn ribbon-btn" data-ribbon="1h" style="flex:1;min-width:30px">1h</button>
+      <button class="nav-btn ribbon-btn" data-ribbon="4h" style="flex:1;min-width:30px">4h</button>
+      <button class="nav-btn ribbon-btn" data-ribbon="1d" style="flex:1;min-width:30px">D</button>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section">
+    <div class="section-label">Session</div>
+    <div class="nav-row" style="gap:4px;flex-wrap:wrap">
+      <button class="nav-btn session-btn active" data-session="eth" style="flex:1;min-width:36px">ETH</button>
+      <button class="nav-btn session-btn" data-session="rth" style="flex:1;min-width:36px">RTH</button>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section">
+    <div class="section-label">Info</div>
+    <div class="info-grid">
+      <div class="info-item">
+        <div class="info-label">ATR</div>
+        <div class="info-val" id="info-atr">&mdash;</div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">Prev Close</div>
+        <div class="info-val" id="info-pc">&mdash;</div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">Phase</div>
+        <div class="info-val" id="info-phase">&mdash;</div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">Zone</div>
+        <div class="info-val" id="info-zone">&mdash;</div>
+      </div>
+      <div class="info-item wide">
+        <div class="info-label">ATR Mode</div>
+        <div class="info-val" id="info-atr-mode">&mdash;</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section studies-section">
+    <div class="section-label">Studies</div>
+    <div id="studies-container">
+      <div class="study-loading">Loading studies...</div>
+    </div>
+  </div>
+
+  <div class="section" style="opacity:0.4; padding-bottom:16px;">
+    <div style="font-size:10px; color:var(--text-muted);">
+      Keys: 1-9 modes &middot; &larr;&rarr; navigate
+    </div>
+  </div>
+</aside>
+
+<!-- ─── Main Area ───────────────────────── -->
+<main class="main-area">
+  <div class="top-bar">
+    <span class="badge badge-mode" id="top-mode">Day</span>
+    <span class="badge badge-tf" id="top-tf">10m</span>
+    <span class="badge badge-session" id="top-session">ETH</span>
+    <span class="badge badge-warp" id="top-warp" style="display:none"></span>
+    <span class="top-date" id="top-date"></span>
+    <span class="top-bars" id="top-bars"></span>
+    <label style="margin-left:auto;display:flex;align-items:center;gap:4px;font-size:11px;color:#64748b;cursor:pointer;user-select:none">
+      <input type="checkbox" id="toggle-atr-labels" checked style="cursor:pointer;accent-color:#06d6a0"> ATR Labels
+    </label>
+  </div>
+
+  <div class="chart-wrap">
+    <div class="legend" id="main-legend">
+      <div class="legend-ohlc">
+        <span><span class="legend-lbl">O </span><span class="legend-val" id="lg-o">&mdash;</span></span>
+        <span><span class="legend-lbl">H </span><span class="legend-val" id="lg-h">&mdash;</span></span>
+        <span><span class="legend-lbl">L </span><span class="legend-val" id="lg-l">&mdash;</span></span>
+        <span><span class="legend-lbl">C </span><span class="legend-val" id="lg-c">&mdash;</span></span>
+        <span><span class="legend-lbl">V </span><span class="legend-val" id="lg-v">&mdash;</span></span>
+      </div>
+    </div>
+    <div class="legend" id="ema-legend" style="top:24px;">
+      <div class="legend-emas" id="lg-emas"></div>
+    </div>
+    <div id="chart-main" class="chart-container"></div>
+    <div class="loading-overlay" id="loader"><div class="loader"></div></div>
+  </div>
+
+  <div class="chart-osc-wrap">
+    <div class="legend-phase" id="osc-legend">
+      <span class="legend-lbl">Phase</span>
+      <span class="legend-val phase-val" id="lg-phase">&mdash;</span>
+    </div>
+    <div id="chart-osc" class="chart-container"></div>
+  </div>
+</main>
+
+<script>
+// ═══════════════════════════════════════════════════
+// State
+// ═══════════════════════════════════════════════════
+const S = {
+  mode: 'day',
+  date: null,
+  data: null,
+  loading: false,
+  _rangeOverride: 5,
+  _tfOverride: null,
+  _atrOverride: 'auto',
+  _ribbonOverride: 'auto',
+  _sessionOverride: null,  // null = mode default, 'RTH' or 'ETH'
+  _atrMode: null,
+  _showATRLabels: true,
+};
+
+const MODE_KEYS = [
+  'big_picture','long_term','position',
+  'swing','swing_hd',
+  'multiday','day','day_3_10','day_rth'
+];
+
+// Only 21 and 200 EMAs are visible lines. 8, 13, 48 are invisible (used for cloud fills only).
+const EMA_COLORS = { '8':'transparent', '13':'transparent', '21':'#ffffff', '48':'transparent', '200':'#60a5fa' };
+const EMA_WIDTHS = { '8':0, '13':0, '21':2, '48':0, '200':2 };
+
+// Phase zone classification
+function phaseZone(v) {
+  if (v > 100) return { name:'Ext Up', color:'#ff1744' };
+  if (v > 61.8) return { name:'Distribution', color:'#ff9100' };
+  if (v > 23.6) return { name:'Bullish', color:'#69f0ae' };
+  if (v > -23.6) return { name:'Neutral', color:'#78909c' };
+  if (v > -61.8) return { name:'Bearish', color:'#ff7043' };
+  if (v > -100) return { name:'Accumulation', color:'#29b6f6' };
+  return { name:'Ext Down', color:'#7c4dff' };
+}
+
+// ═══════════════════════════════════════════════════
+// Studies engine
+// ═══════════════════════════════════════════════════
+const Studies = {
+  catalog: null,
+  openStudy: null,       // currently expanded study id
+  loadedDates: {},       // study_id -> {filter, dates[], page, total}
+};
+
+async function loadStudiesCatalog() {
+  try {
+    const res = await fetch('api/studies');
+    if (!res.ok) return;
+    const data = await res.json();
+    Studies.catalog = data.studies;
+    renderStudiesCatalog();
+    // If still loading, poll every 3s until done
+    if (data.loading) {
+      setTimeout(loadStudiesCatalog, 3000);
+    }
+  } catch (e) {
+    console.warn('Studies load error:', e);
+    document.getElementById('studies-container').innerHTML =
+      '<div class="study-loading" style="color:#ef4444">Failed to load</div>';
+  }
+}
+
+function renderStudiesCatalog() {
+  const container = document.getElementById('studies-container');
+  if (!Studies.catalog || !Studies.catalog.length) {
+    container.innerHTML = '<div class="study-loading">No studies found</div>';
+    return;
+  }
+
+  // Group by category
+  const groups = {};
+  for (const s of Studies.catalog) {
+    if (!groups[s.category]) groups[s.category] = [];
+    groups[s.category].push(s);
+  }
+
+  let html = '';
+  for (const [cat, studies] of Object.entries(groups)) {
+    html += `<div class="study-cat-label">${cat}</div>`;
+    for (const s of studies) {
+      const pctClass = s.pct >= 70 ? 'high' : s.pct >= 55 ? 'mid' : 'low';
+      const expanded = Studies.openStudy === s.id;
+      html += `
+        <div class="study-card${expanded ? ' expanded' : ''}" data-study="${s.id}">
+          <div class="study-header" onclick="toggleStudy('${s.id}')">
+            <span class="study-chevron">&#9654;</span>
+            <span class="study-name" title="${s.desc}">${s.name}</span>
+            <div class="study-stat">
+              <span class="study-pct ${pctClass}">${s.pct}%</span>
+              <span class="study-n" onclick="event.stopPropagation();toggleStudy('${s.id}')"
+                    title="Click to see ${s.n} dates">n=${s.n.toLocaleString()}</span>
+            </div>
+          </div>
+          <div class="study-body${expanded ? ' open' : ''}" id="study-body-${s.id}">
+            <div class="study-filters">
+              <button class="study-filter-btn active" data-filter="all"
+                      onclick="filterStudy('${s.id}','all',this)">All (${s.n.toLocaleString()})</button>
+              <button class="study-filter-btn" data-filter="for"
+                      onclick="filterStudy('${s.id}','for',this)">For (${s.n_for.toLocaleString()})</button>
+              <button class="study-filter-btn" data-filter="against"
+                      onclick="filterStudy('${s.id}','against',this)">Against (${s.n_against.toLocaleString()})</button>
+            </div>
+            <div class="study-dates" id="study-dates-${s.id}">
+              ${expanded ? '' : ''}
+            </div>
+          </div>
+        </div>`;
+    }
+  }
+  container.innerHTML = html;
+
+  // If a study was open, reload its dates
+  if (Studies.openStudy && Studies.loadedDates[Studies.openStudy]) {
+    const sd = Studies.loadedDates[Studies.openStudy];
+    loadStudyDates(Studies.openStudy, sd.filter, 1);
+  }
+}
+
+async function toggleStudy(id) {
+  const card = document.querySelector(`.study-card[data-study="${id}"]`);
+  const body = document.getElementById(`study-body-${id}`);
+  if (!card || !body) return;
+
+  if (Studies.openStudy === id) {
+    // Collapse
+    Studies.openStudy = null;
+    card.classList.remove('expanded');
+    body.classList.remove('open');
+    return;
+  }
+
+  // Collapse any previously open study
+  if (Studies.openStudy) {
+    const prev = document.querySelector(`.study-card[data-study="${Studies.openStudy}"]`);
+    const prevBody = document.getElementById(`study-body-${Studies.openStudy}`);
+    if (prev) prev.classList.remove('expanded');
+    if (prevBody) prevBody.classList.remove('open');
+  }
+
+  Studies.openStudy = id;
+  card.classList.add('expanded');
+  body.classList.add('open');
+
+  // Load dates if not already loaded
+  if (!Studies.loadedDates[id]) {
+    await loadStudyDates(id, null, 1);
+  } else {
+    renderStudyDates(id);
+  }
+}
+
+async function filterStudy(id, filter, btn) {
+  // Update active button
+  const card = document.querySelector(`.study-card[data-study="${id}"]`);
+  card.querySelectorAll('.study-filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  const apiFilter = filter === 'all' ? null : filter;
+  await loadStudyDates(id, apiFilter, 1);
+}
+
+async function loadStudyDates(id, filter, page) {
+  const datesEl = document.getElementById(`study-dates-${id}`);
+  if (!datesEl) return;
+
+  if (page === 1) {
+    datesEl.innerHTML = '<div class="study-loading">Loading dates...</div>';
+  }
+
+  try {
+    const params = new URLSearchParams({ page, per_page: 50 });
+    if (filter) params.set('result', filter);
+    const res = await fetch(`api/study/${id}?${params}`);
+    if (!res.ok) return;
+    const data = await res.json();
+
+    if (page === 1) {
+      Studies.loadedDates[id] = {
+        filter,
+        dates: data.dates,
+        page: data.page,
+        total: data.total_filtered,
+      };
+    } else {
+      Studies.loadedDates[id].dates.push(...data.dates);
+      Studies.loadedDates[id].page = data.page;
+    }
+    renderStudyDates(id);
+  } catch (e) {
+    console.warn('Study dates error:', e);
+    datesEl.innerHTML = '<div class="study-loading" style="color:#ef4444">Error loading</div>';
+  }
+}
+
+function renderStudyDates(id) {
+  const datesEl = document.getElementById(`study-dates-${id}`);
+  const sd = Studies.loadedDates[id];
+  if (!datesEl || !sd) return;
+
+  let html = '';
+  for (const d of sd.dates) {
+    html += `
+      <div class="study-date-row" onclick="navigateToStudyDate('${d.date}')" title="View ${d.date} in chart">
+        <span class="date-label">${d.date}</span>
+        <span class="trigger-time">${d.trigger_time}</span>
+        <span class="result-dot ${d.result}"></span>
+      </div>`;
+  }
+
+  // Load more button
+  const loaded = sd.dates.length;
+  if (loaded < sd.total) {
+    html += `<button class="study-load-more"
+              onclick="loadStudyDates('${id}', ${sd.filter ? `'${sd.filter}'` : 'null'}, ${sd.page + 1})">
+              Load more (${loaded}/${sd.total})
+            </button>`;
+  }
+
+  datesEl.innerHTML = html;
+}
+
+function navigateToStudyDate(date) {
+  // Navigate the chart to Day mode for this date
+  loadChart('day', date);
+}
+
+// ═══════════════════════════════════════════════════
+// Chart instances
+// ═══════════════════════════════════════════════════
+let mainChart, oscChart;
+let candleSeries, volumeSeries, phaseSeries, phaseMarkers;
+let cloudSeries = {}; // keyed by name
+let ethShade;
+let atrLevelPrim;
+let emaSeries = {};
+let atrLines = [];
+
+const CHART_OPTS = {
+  layout: { background: { type: 'solid', color: '#0a0e17' }, textColor: '#64748b', fontFamily: "'Fira Code', monospace", fontSize: 11, attributionLogo: false },
+  grid: { vertLines: { color: '#1e293b30' }, horzLines: { color: '#1e293b30' } },
+  rightPriceScale: { borderColor: '#1e293b', scaleMargins: { top: 0.02, bottom: 0.15 }, autoScale: true },
+  timeScale: { borderColor: '#1e293b', timeVisible: true, secondsVisible: false, rightOffset: 12, minBarSpacing: 3 },
+  handleScale: { axisPressedMouseMove: { time: true, price: true }, mouseWheel: true, pinch: true },
+  handleScroll: { mouseWheel: true, pressedMouseMove: true, horzTouchDrag: true, vertTouchDrag: true },
+  crosshair: {
+    mode: LightweightCharts.CrosshairMode.Normal,
+    vertLine: { color: '#94a3b833', width: 1, style: 3, labelBackgroundColor: '#1e293b' },
+    horzLine: { color: '#94a3b833', width: 1, style: 3, labelBackgroundColor: '#1e293b' },
+  },
+};
+
+function toggleSidebar() {
+  const sb = document.querySelector('.sidebar');
+  sb.classList.toggle('open');
+}
+
+// Close sidebar when clicking outside on mobile
+document.addEventListener('click', (e) => {
+  const sb = document.querySelector('.sidebar');
+  const toggle = document.getElementById('sidebar-toggle');
+  if (sb.classList.contains('open') && !sb.contains(e.target) && e.target !== toggle) {
+    sb.classList.remove('open');
+  }
+});
+
+function initCharts() {
+  // Main chart
+  const mc = document.getElementById('chart-main');
+  mainChart = LightweightCharts.createChart(mc, { ...CHART_OPTS });
+
+  candleSeries = mainChart.addCandlestickSeries({
+    upColor: '#22c55e', downColor: '#ef4444',
+    borderUpColor: '#22c55e', borderDownColor: '#ef4444',
+    wickUpColor: '#22c55eaa', wickDownColor: '#ef4444aa',
+  });
+
+  volumeSeries = mainChart.addHistogramSeries({
+    priceFormat: { type: 'volume' },
+    priceScaleId: 'vol',
+    lastValueVisible: false, priceLineVisible: false,
+  });
+  mainChart.priceScale('vol').applyOptions({ scaleMargins: { top: 0.82, bottom: 0 } });
+
+  // EMA lines (on top of clouds)
+  for (const [p, color] of Object.entries(EMA_COLORS)) {
+    emaSeries[p] = mainChart.addLineSeries({
+      color, lineWidth: EMA_WIDTHS[p],
+      crosshairMarkerVisible: false,
+      priceLineVisible: false, lastValueVisible: false,
+    });
+  }
+
+  // ETH session shading
+  ethShade = new ETHShadePrimitive(candleSeries);
+  candleSeries.attachPrimitive(ethShade);
+
+  atrLevelPrim = new ATRLevelPrimitive(candleSeries);
+  candleSeries.attachPrimitive(atrLevelPrim);
+
+  // Oscillator chart
+  const oc = document.getElementById('chart-osc');
+  oscChart = LightweightCharts.createChart(oc, {
+    ...CHART_OPTS,
+    rightPriceScale: { borderColor: '#1e293b', scaleMargins: { top: 0.08, bottom: 0.08 }, autoScale: true },
+    timeScale: { ...CHART_OPTS.timeScale, visible: true },
+    handleScale: { axisPressedMouseMove: { time: true, price: true }, mouseWheel: true, pinch: true },
+    handleScroll: { mouseWheel: true, pressedMouseMove: true, horzTouchDrag: true, vertTouchDrag: true },
+  });
+
+  phaseSeries = oscChart.addLineSeries({
+    priceFormat: { type: 'price', precision: 1, minMove: 0.1 },
+    priceLineVisible: false, lastValueVisible: true,
+    lineWidth: 2,
+    color: '#69f0ae',
+    crosshairMarkerVisible: true,
+    crosshairMarkerRadius: 4,
+  });
+
+  // Phase zone boundary lines — all Fibonacci levels
+  [
+    { price: 100, color: '#64748b88' },
+    { price: 61.8, color: '#64748b66' },
+    { price: 23.6, color: '#64748b44' },
+    { price: 0, color: '#94a3b8aa' },
+    { price: -23.6, color: '#64748b44' },
+    { price: -61.8, color: '#64748b66' },
+    { price: -100, color: '#64748b88' },
+  ].forEach(z => {
+    phaseSeries.createPriceLine({
+      price: z.price, color: z.color, lineWidth: 1, lineStyle: 0,
+      title: '', axisLabelVisible: false,
+    });
+  });
+
+  // Sync time scales
+  let syncing = false;
+  mainChart.timeScale().subscribeVisibleLogicalRangeChange(range => {
+    if (syncing || !range) return;
+    syncing = true;
+    oscChart.timeScale().setVisibleLogicalRange(range);
+    syncing = false;
+  });
+  oscChart.timeScale().subscribeVisibleLogicalRangeChange(range => {
+    if (syncing || !range) return;
+    syncing = true;
+    mainChart.timeScale().setVisibleLogicalRange(range);
+    syncing = false;
+  });
+
+  // Crosshair move → update legend
+  mainChart.subscribeCrosshairMove(param => {
+    const cd = param.seriesData?.get(candleSeries);
+    const vd = param.seriesData?.get(volumeSeries);
+    if (cd) {
+      const up = cd.close >= cd.open;
+      const cls = up ? 'up' : 'down';
+      document.getElementById('lg-o').textContent = cd.open.toFixed(2);
+      document.getElementById('lg-o').className = 'legend-val ' + cls;
+      document.getElementById('lg-h').textContent = cd.high.toFixed(2);
+      document.getElementById('lg-h').className = 'legend-val ' + cls;
+      document.getElementById('lg-l').textContent = cd.low.toFixed(2);
+      document.getElementById('lg-l').className = 'legend-val ' + cls;
+      document.getElementById('lg-c').textContent = cd.close.toFixed(2);
+      document.getElementById('lg-c').className = 'legend-val ' + cls;
+    }
+    if (vd) {
+      const vol = vd.value >= 1e6 ? (vd.value/1e6).toFixed(1)+'M' : vd.value >= 1e3 ? (vd.value/1e3).toFixed(0)+'K' : vd.value;
+      document.getElementById('lg-v').textContent = vol;
+    }
+    // EMA legend
+    updateEMALegend(param);
+    // Sync crosshair to osc
+    if (param.time && S.data) {
+      const phaseMap = S._phaseMap;
+      const pv = phaseMap?.get(param.time);
+      if (pv !== undefined) {
+        oscChart.setCrosshairPosition(pv, param.time, phaseSeries);
+        updatePhaseLegend(pv);
+      }
+    } else {
+      oscChart.clearCrosshairPosition();
+    }
+  });
+
+  oscChart.subscribeCrosshairMove(param => {
+    const pd = param.seriesData?.get(phaseSeries);
+    if (pd) updatePhaseLegend(pd.value);
+    if (param.time && S.data) {
+      const cm = S._candleMap;
+      const cv = cm?.get(param.time);
+      if (cv !== undefined) {
+        mainChart.setCrosshairPosition(cv, param.time, candleSeries);
+      }
+    } else {
+      mainChart.clearCrosshairPosition();
+    }
+  });
+
+  // Resize observer
+  const ro = new ResizeObserver(() => {
+    mainChart.applyOptions({ width: mc.clientWidth, height: mc.clientHeight });
+    oscChart.applyOptions({ width: oc.clientWidth, height: oc.clientHeight });
+  });
+  ro.observe(mc);
+  ro.observe(oc);
+}
+
+function updateEMALegend(param) {
+  const el = document.getElementById('lg-emas');
+  const parts = [];
+  for (const [p, color] of Object.entries(EMA_COLORS)) {
+    const series = emaSeries[p];
+    const d = param.seriesData?.get(series);
+    const v = d ? d.value.toFixed(2) : '\u2014';
+    parts.push(`<span class="legend-ema" style="color:${color}">E${p} ${v}</span>`);
+  }
+  el.innerHTML = parts.join('');
+}
+
+function updatePhaseLegend(val) {
+  const zone = phaseZone(val);
+  const el = document.getElementById('lg-phase');
+  el.textContent = val.toFixed(1);
+  el.style.color = zone.color;
+  document.getElementById('info-phase').textContent = val.toFixed(1);
+  document.getElementById('info-phase').style.color = zone.color;
+  document.getElementById('info-zone').textContent = zone.name;
+  document.getElementById('info-zone').style.color = zone.color;
+}
+
+// ═══════════════════════════════════════════════════
+// Data loading
+// ═══════════════════════════════════════════════════
+async function loadChart(mode, date) {
+  if (S.loading) return;
+  S.loading = true;
+  showLoader(true);
+
+  const params = new URLSearchParams({ mode });
+  if (date) params.set('date', date);
+  if (S._rangeOverride) params.set('range_days', S._rangeOverride);
+  if (S._tfOverride) params.set('candle_tf', S._tfOverride);
+  if (S._atrOverride && S._atrOverride !== 'auto') params.set('atr_override', S._atrOverride);
+  if (S._ribbonOverride && S._ribbonOverride !== 'auto') params.set('ribbon_tf', S._ribbonOverride);
+  if (S._sessionOverride) params.set('session', S._sessionOverride);
+
+  try {
+    const res = await fetch(`api/chart?${params}`);
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      console.warn('Chart load error:', err);
+      showLoader(false);
+      S.loading = false;
+      return;
+    }
+    const data = await res.json();
+    S.data = data;
+    S.mode = mode;
+    S.date = data.meta.date;
+
+    renderChart(data);
+    updateUI(data.meta);
+    syncURL();
+  } catch (e) {
+    console.error('Failed to load chart:', e);
+  }
+  showLoader(false);
+  S.loading = false;
+}
+
+function syncURL() {
+  const p = new URLSearchParams();
+  p.set('mode', S.mode);
+  if (S.date) p.set('date', S.date);
+  if (S._rangeOverride && S._rangeOverride !== 5) p.set('range', S._rangeOverride);
+  if (S._tfOverride) p.set('tf', S._tfOverride);
+  if (S._atrOverride && S._atrOverride !== 'auto') p.set('atr', S._atrOverride);
+  if (S._ribbonOverride && S._ribbonOverride !== 'auto') p.set('ribbon', S._ribbonOverride);
+  if (S._sessionOverride) p.set('session', S._sessionOverride);
+  if (!S._showATRLabels) p.set('labels', '0');
+  const url = '?' + p.toString();
+  if (window.location.search !== url) {
+    window.history.replaceState(null, '', url);
+  }
+}
+
+function renderChart(data) {
+  const { candles, volume, phase, emas, atr, meta } = data;
+
+  // Candles — set by cloud logic above with bias coloring
+
+  // Volume
+  volumeSeries.setData(volume.map(([t,v,g]) => ({
+    time: t, value: v,
+    color: g ? 'rgba(34,197,94,0.18)' : 'rgba(239,68,68,0.18)',
+  })));
+
+  // EMAs with Pivot Ribbon cloud coloring
+  const emaLookup = {};
+  for (const p of ['8','13','21','48','200']) {
+    emaLookup[p] = {};
+    (emas[p] || []).forEach(([t,v]) => { emaLookup[p][t] = v; });
+  }
+
+  // Attach cloud fill primitives
+  try {
+    // Fast cloud: fill between EMA8 and EMA21
+    const fastCloud = new CloudFillPrimitive(
+      emaSeries['8'], emaSeries['21'],
+      'rgba(34,197,94,0.35)',   // bullish green
+      'rgba(239,68,68,0.35)'    // bearish red
+    );
+    emaSeries['8'].attachPrimitive(fastCloud);
+
+    // Slow cloud: fill between EMA13 and EMA48
+    const slowCloud = new CloudFillPrimitive(
+      emaSeries['13'], emaSeries['48'],
+      'rgba(96,165,250,0.25)',   // bullish blue
+      'rgba(249,115,22,0.25)'    // bearish orange
+    );
+    emaSeries['13'].attachPrimitive(slowCloud);
+  } catch(e) {
+    console.warn('Cloud fill primitives not supported:', e);
+  }
+
+  // EMA data — invisible series just get plain data, visible ones get per-bar coloring
+  for (const [p, series] of Object.entries(emaSeries)) {
+    const pts = emas[p] || [];
+    if (p === '21' || p === '200') {
+      // Visible lines with per-bar color
+      series.setData(pts.map(([t, v]) => {
+        const e8 = emaLookup['8'][t], e21 = emaLookup['21'][t];
+        const e200 = emaLookup['200'][t];
+        const fastBull = e8 !== undefined && e21 !== undefined && e8 >= e21;
+        const ltBull = e21 !== undefined && e200 !== undefined && e21 >= e200;
+        let color;
+        if (p === '21') color = fastBull ? '#22c55e' : '#ef4444';
+        else color = ltBull ? '#60a5fa' : '#f97316';
+        return { time: t, value: v, color };
+      }));
+    } else {
+      // Invisible — just set data for cloud fill primitive to read
+      series.setData(pts.map(([t, v]) => ({ time: t, value: v })));
+    }
+  }
+
+  // Candle bias coloring (relative to EMA 48)
+  candleSeries.setData(candles.map(([t, o, h, l, c]) => {
+    const e48 = emaLookup['48'][t];
+    const up = c >= o;
+    const aboveEma48 = e48 !== undefined && c >= e48;
+
+    // Check compression from phase data
+    const phaseBar = phase.find(p => p[0] === t);
+    const isComp = phaseBar && phaseBar[2] === 1;
+
+    let upColor, downColor;
+    if (isComp) {
+      upColor = '#b0b0b0'; downColor = '#808080'; // gray compression
+    } else if (aboveEma48) {
+      upColor = '#22c55e'; downColor = '#60a5fa'; // green up, blue pullback
+    } else {
+      upColor = '#f97316'; downColor = '#ef4444'; // orange bounce, red down
+    }
+
+    return {
+      time: t, open: o, high: h, low: l, close: c,
+      color: up ? upColor : downColor,
+      borderColor: up ? upColor : downColor,
+      wickColor: up ? upColor + 'aa' : downColor + 'aa',
+    };
+  }));
+
+  // ETH shading + session open/close vertical lines
+  const ethBarTimes = [];
+  const sessionLines = []; // {time, type: 'open'|'close'}
+  const openSeen = new Set();   // track one open line per calendar day
+  const closeSeen = new Set();  // track one close line per calendar day
+  candles.forEach(([t]) => {
+    const d = new Date(t * 1000);
+    const h = d.getUTCHours();
+    const m = d.getUTCMinutes();
+    const dayStr = d.toISOString().slice(0, 10);
+
+    // ETH bars
+    if (h < 9 || (h === 9 && m < 30) || h >= 16) {
+      ethBarTimes.push(t);
+    }
+
+    // Detect session boundaries — only one line per day
+    if (h === 9 && m >= 30 && m < 40 && !openSeen.has(dayStr)) {
+      sessionLines.push({ time: t, type: 'open' });
+      openSeen.add(dayStr);
+    }
+    if (h === 15 && m >= 50 && !closeSeen.has(dayStr)) {
+      sessionLines.push({ time: t, type: 'close' });
+      closeSeen.add(dayStr);
+    }
+  });
+  ethShade.setETHBars(ethBarTimes);
+  ethShade.setSessionLines(sessionLines);
+
+  // Conviction arrows: detect 13/48 EMA crossover
+  const convictionMarkers = [];
+  const e13arr = emas['13'] || [], e48arr = emas['48'] || [];
+  if (e13arr.length > 1 && e48arr.length > 1) {
+    const e13map = {}, e48map = {};
+    e13arr.forEach(([t,v]) => { e13map[t] = v; });
+    e48arr.forEach(([t,v]) => { e48map[t] = v; });
+    let prevAbove = null;
+    e13arr.forEach(([t, v13]) => {
+      const v48 = e48map[t];
+      if (v48 === undefined) return;
+      const above = v13 >= v48;
+      if (prevAbove !== null && above !== prevAbove) {
+        convictionMarkers.push({
+          time: t,
+          position: above ? 'belowBar' : 'aboveBar',
+          color: '#ffffff',
+          shape: above ? 'arrowUp' : 'arrowDown',
+          text: '',
+        });
+      }
+      prevAbove = above;
+    });
+  }
+  convictionMarkers.sort((a,b) => a.time - b.time);
+  candleSeries.setMarkers(convictionMarkers);
+
+  // Phase oscillator: line colored by compression/expansion state
+  // phase data format: [timestamp, value, compression, signals_bitmask]
+  const phaseLineData = phase.map(([t, v, comp, sig]) => {
+    let color;
+    if (comp) {
+      color = '#e040fb'; // magenta/pink for compression (matches TV)
+    } else if (v >= 0) {
+      color = '#69f0ae'; // green for bullish expansion
+    } else {
+      color = '#ef4444'; // red for bearish expansion
+    }
+    return { time: t, value: v, color };
+  });
+  phaseSeries.setData(phaseLineData);
+
+  // Add markers for leaving accumulation/distribution signals
+  const markers = [];
+  phase.forEach(([t, v, comp, sig]) => {
+    if (!sig) return;
+    if (sig & 1) { // leaving accumulation
+      markers.push({ time: t, position: 'belowBar', color: '#fbbf24', shape: 'circle', text: '' });
+    }
+    if (sig & 2) { // leaving distribution
+      markers.push({ time: t, position: 'aboveBar', color: '#fbbf24', shape: 'circle', text: '' });
+    }
+    if (sig & 4) { // leaving extreme down
+      markers.push({ time: t, position: 'belowBar', color: '#7c4dff', shape: 'circle', text: '' });
+    }
+    if (sig & 8) { // leaving extreme up
+      markers.push({ time: t, position: 'aboveBar', color: '#ff1744', shape: 'circle', text: '' });
+    }
+  });
+  markers.sort((a, b) => a.time - b.time);
+  phaseSeries.setMarkers(markers);
+
+  // ATR levels — time-bounded per period
+  clearATRLines();
+  const atrMulti = data.atr_multi || [];
+  addATRLines(atr, atrMulti, meta.atr_mode);
+  if (atr) {
+    document.getElementById('info-atr').textContent = atr.atr.toFixed(2);
+    document.getElementById('info-pc').textContent = atr.pc.toFixed(2);
+  } else {
+    document.getElementById('info-atr').textContent = '\u2014';
+    document.getElementById('info-pc').textContent = '\u2014';
+  }
+
+  // Build lookup maps for crosshair sync
+  S._phaseMap = new Map(phase.map(([t,v]) => [t, v]));
+  S._candleMap = new Map(candles.map(([t,o,h,l,c]) => [t, c]));
+
+  // Update last bar legend
+  if (candles.length) {
+    const last = candles[candles.length - 1];
+    const up = last[4] >= last[1];
+    const cls = up ? 'up' : 'down';
+    ['lg-o','lg-h','lg-l','lg-c'].forEach((id, i) => {
+      document.getElementById(id).textContent = last[i+1].toFixed(2);
+      document.getElementById(id).className = 'legend-val ' + cls;
+    });
+    const v = last[4]; // close as placeholder for volume
+    const vol = volume[volume.length - 1];
+    const vv = vol[1];
+    document.getElementById('lg-v').textContent = vv >= 1e6 ? (vv/1e6).toFixed(1)+'M' : vv >= 1e3 ? (vv/1e3).toFixed(0)+'K' : vv;
+  }
+
+  if (phase.length) {
+    const lastP = phase[phase.length - 1][1];
+    updatePhaseLegend(lastP);
+  }
+
+  // Show last ~120 bars instead of fitting all content (prevents compression)
+  const totalBars = candles.length;
+  if (totalBars > 120) {
+    const range = { from: totalBars - 120, to: totalBars + 10 };
+    mainChart.timeScale().setVisibleLogicalRange(range);
+    oscChart.timeScale().setVisibleLogicalRange(range);
+  } else {
+    mainChart.timeScale().fitContent();
+    oscChart.timeScale().fitContent();
+  }
+}
+
+function clearATRLines() {
+  atrLines = [];
+  if (atrLevelPrim) atrLevelPrim.setLevels([]);
+}
+
+function getATRLevelDefs(atr, ms) {
+  const blue = '#60a5fa', yellow = '#faec23', gold = '#d4a800', gray = '#64748b88';
+  const defs = [
+    ['pc',    'PDC',                    '#e2e8f066'],
+    ['utrig', 'Call (' + ms + ')',      blue],
+    ['ltrig', 'Put (' + ms + ')',       yellow],
+    ['u382',  'GG Open (' + ms + ')',   gray],
+    ['l382',  'GG Open (' + ms + ')',   gray],
+    ['u50',   '+50%',                   gray],
+    ['l50',   '-50%',                   gray],
+    ['u618',  'Midrange (' + ms + ')',  gray],
+    ['l618',  'Midrange (' + ms + ')',  gray],
+    ['u786',  '+78.6%',                 gray],
+    ['l786',  '-78.6%',                 gray],
+    ['u100',  '+1 ATR (' + ms + ')',    gold],
+    ['l100',  '-1 ATR (' + ms + ')',    gold],
+    ['u1236', '+123.6%',                gray],
+    ['l1236', '-123.6%',                gray],
+    ['u1382', '+138.2%',                gray],
+    ['l1382', '-138.2%',                gray],
+    ['u150',  '+150%',                  gray],
+    ['l150',  '-150%',                  gray],
+    ['u1618', '+161.8%',                gray],
+    ['l1618', '-161.8%',                gray],
+  ];
+  const result = [];
+  for (const [key, label, color] of defs) {
+    const val = atr[key];
+    if (val === undefined) continue;
+    result.push({ price: val, label: label + ' = ' + val.toFixed(2), name: label, color });
+  }
+  return result;
+}
+
+function addATRLines(atrData, atrMulti, atrMode) {
+  const modeMap = { daily:'D', weekly:'W', monthly:'M', quarterly:'Q', yearly:'Y' };
+  const ms = modeMap[atrMode || S._atrMode] || 'D';
+  const allLevels = []; // [{price, label, color, startTime, endTime}]
+
+  // Build sorted array of candle timestamps for snapping period boundaries
+  const candleTimes = S.data ? S.data.candles.map(c => c[0]) : [];
+
+  // Find the first candle timestamp >= target, or last candle if none
+  function snapToCandle(targetTs) {
+    if (!candleTimes.length) return targetTs;
+    for (let j = 0; j < candleTimes.length; j++) {
+      if (candleTimes[j] >= targetTs) return candleTimes[j];
+    }
+    return candleTimes[candleTimes.length - 1];
+  }
+  // Find the last candle timestamp < target, or first candle if none
+  function snapToCandleBefore(targetTs) {
+    if (!candleTimes.length) return targetTs;
+    for (let j = candleTimes.length - 1; j >= 0; j--) {
+      if (candleTimes[j] < targetTs) return candleTimes[j];
+    }
+    return candleTimes[0];
+  }
+
+  if (atrMulti && atrMulti.length > 0) {
+    // Multi-period: each period has its own start/end times
+    // Convert period dates to UTC timestamps (append Z to avoid local-time parsing)
+    const periodTs = atrMulti.map(p => Math.floor(new Date(p.date + 'T00:00:00Z').getTime() / 1000));
+
+    for (let i = 0; i < atrMulti.length; i++) {
+      const period = atrMulti[i];
+      const defs = getATRLevelDefs(period.levels, ms);
+      // Snap period start to first candle on or after the period date
+      const startTime = snapToCandle(periodTs[i]);
+      let endTime;
+      if (i + 1 < atrMulti.length) {
+        // Snap end to last candle before next period starts
+        endTime = snapToCandleBefore(periodTs[i + 1]);
+      } else {
+        // Last period extends to end of visible data
+        endTime = candleTimes.length ? candleTimes[candleTimes.length - 1] : startTime + 86400;
+      }
+      // Skip periods with no visible candles (start >= end means zero width)
+      if (startTime < endTime) {
+        for (const d of defs) {
+          allLevels.push({ ...d, startTime, endTime });
+        }
+      }
+    }
+  } else if (atrData) {
+    // Single period: span the full candle range
+    const t0 = candleTimes.length ? candleTimes[0] : 0;
+    const t1 = candleTimes.length ? candleTimes[candleTimes.length - 1] : 9999999999;
+    const defs = getATRLevelDefs(atrData, ms);
+    for (const d of defs) {
+      allLevels.push({ ...d, startTime: t0, endTime: t1 });
+    }
+  }
+
+  if (atrLevelPrim) atrLevelPrim.setLevels(allLevels);
+}
+
+// ═══════════════════════════════════════════════════
+// UI updates
+// ═══════════════════════════════════════════════════
+function updateUI(meta) {
+  document.getElementById('top-mode').textContent = meta.label;
+  document.getElementById('top-tf').textContent = meta.tf;
+  document.getElementById('top-session').textContent = meta.session;
+  document.getElementById('top-date').textContent = meta.date;
+  document.getElementById('top-bars').textContent = meta.bars + ' bars';
+  document.getElementById('date-input').value = meta.date;
+
+  const warpEl = document.getElementById('top-warp');
+  if (meta.warp) {
+    warpEl.textContent = 'Warp: ' + meta.warp;
+    warpEl.style.display = '';
+  } else {
+    warpEl.style.display = 'none';
+  }
+
+  document.getElementById('info-atr-mode').textContent = meta.atr_mode || 'None';
+  S._atrMode = meta.atr_mode;
+
+  // Active mode button
+  document.querySelectorAll('.mode-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.mode === meta.mode);
+  });
+}
+
+function showLoader(show) {
+  document.getElementById('loader').classList.toggle('hidden', !show);
+}
+
+// ═══════════════════════════════════════════════════
+// Navigation
+// ═══════════════════════════════════════════════════
+async function navigate(dir) {
+  if (!S.date) return;
+  try {
+    const res = await fetch(`api/nav?mode=${S.mode}&date=${S.date}&dir=${dir}`);
+    const { date } = await res.json();
+    if (date && date !== S.date) {
+      loadChart(S.mode, date);
+    }
+  } catch(e) { console.error('Nav error:', e); }
+}
+
+// ═══════════════════════════════════════════════════
+// Event listeners
+// ═══════════════════════════════════════════════════
+function initEvents() {
+  // Mode buttons
+  document.querySelectorAll('.mode-btn').forEach(btn => {
+    btn.addEventListener('click', () => loadChart(btn.dataset.mode, S.date));
+  });
+
+  // Nav buttons
+  document.getElementById('btn-prev').addEventListener('click', () => navigate('prev'));
+  document.getElementById('btn-next').addEventListener('click', () => navigate('next'));
+
+  // ATR label toggle
+  document.getElementById('toggle-atr-labels').addEventListener('change', e => {
+    S._showATRLabels = e.target.checked;
+    if (atrLevelPrim) atrLevelPrim.setShowLabels(S._showATRLabels);
+    syncURL();
+    // Force redraw
+    if (mainChart) mainChart.timeScale().scrollToPosition(0, false);
+  });
+
+  // Candle timeframe buttons
+  document.querySelectorAll('.tf-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tf-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      S._tfOverride = btn.dataset.tf;
+      loadChart(S.mode, S.date);
+    });
+  });
+
+  // Range buttons
+  document.querySelectorAll('.range-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.range-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      S._rangeOverride = parseInt(btn.dataset.range);
+      loadChart(S.mode, S.date);
+    });
+  });
+
+  // ATR overlay buttons
+  document.querySelectorAll('.atr-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.atr-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      S._atrOverride = btn.dataset.atr;
+      loadChart(S.mode, S.date);
+    });
+  });
+
+  // Ribbon timeframe buttons
+  document.querySelectorAll('.ribbon-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.ribbon-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      S._ribbonOverride = btn.dataset.ribbon;
+      loadChart(S.mode, S.date);
+    });
+  });
+
+  // Session buttons
+  document.querySelectorAll('.session-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.session-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      S._sessionOverride = btn.dataset.session === 'eth' ? null : btn.dataset.session.toUpperCase();
+      loadChart(S.mode, S.date);
+    });
+  });
+
+  // Date input
+  document.getElementById('date-input').addEventListener('change', e => {
+    if (e.target.value) loadChart(S.mode, e.target.value);
+  });
+
+  // Keyboard shortcuts
+  document.addEventListener('keydown', e => {
+    // Don't capture when typing in date input
+    if (e.target.tagName === 'INPUT') return;
+    if (e.key === 'ArrowLeft') { e.preventDefault(); navigate('prev'); }
+    else if (e.key === 'ArrowRight') { e.preventDefault(); navigate('next'); }
+    else if (e.key >= '1' && e.key <= '9') {
+      const idx = parseInt(e.key) - 1;
+      if (idx < MODE_KEYS.length) loadChart(MODE_KEYS[idx], S.date);
+    }
+  });
+}
+
+// ═══════════════════════════════════════════════════
+// Init
+// ═══════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  initCharts();
+  initEvents();
+  showLoader(true);
+
+  // Restore full state from URL params
+  const u = new URLSearchParams(window.location.search);
+  const initMode = u.get('mode') || 'day';
+  const initDate = u.get('date') || undefined;
+
+  if (u.get('range')) {
+    S._rangeOverride = parseInt(u.get('range'));
+    document.querySelectorAll('.range-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.range === u.get('range'));
+    });
+  }
+  if (u.get('tf')) {
+    S._tfOverride = u.get('tf');
+    document.querySelectorAll('.tf-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.tf === u.get('tf'));
+    });
+  }
+  if (u.get('atr')) {
+    S._atrOverride = u.get('atr');
+    document.querySelectorAll('.atr-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.atr === u.get('atr'));
+    });
+  }
+  if (u.get('ribbon')) {
+    S._ribbonOverride = u.get('ribbon');
+    document.querySelectorAll('.ribbon-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.ribbon === u.get('ribbon'));
+    });
+  }
+  if (u.get('session')) {
+    const sess = u.get('session').toUpperCase();
+    S._sessionOverride = sess === 'ETH' ? null : sess;
+    document.querySelectorAll('.session-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.session === u.get('session').toLowerCase());
+    });
+  }
+  if (u.get('labels') === '0') {
+    S._showATRLabels = false;
+    document.getElementById('toggle-atr-labels').checked = false;
+  }
+
+  loadChart(initMode, initDate);
+  loadStudiesCatalog();
+});
+</script>
+</body>
+</html>
