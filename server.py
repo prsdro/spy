@@ -14,7 +14,8 @@ import pandas as pd
 import numpy as np
 
 app = FastAPI(title="SPY Visualizer")
-DB = "/root/spy/spy.db"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB = os.path.join(BASE_DIR, "spy.db")
 
 # ═══════════════════════════════════════════════════════════════
 # Mode configurations
@@ -1085,13 +1086,13 @@ async def api_study(study_id: str, result: Optional[str] = None,
 # Static files & startup
 # ═══════════════════════════════════════════════════════════════
 
-os.makedirs("/root/spy/static", exist_ok=True)
-app.mount("/static", StaticFiles(directory="/root/spy/static"), name="static")
+os.makedirs(os.path.join(BASE_DIR, "static"), exist_ok=True)
+app.mount("/static", StaticFiles(directory=os.path.join(BASE_DIR, "static")), name="static")
 
 
 @app.get("/")
 async def root():
-    return FileResponse("/root/spy/static/index.html",
+    return FileResponse(os.path.join(BASE_DIR, "static", "index.html"),
                         headers={"Cache-Control": "no-cache, must-revalidate"})
 
 

@@ -127,12 +127,14 @@ METHODOLOGY
      - Sample sizes for every cell
 """
 
+import os
 import sqlite3
 import pandas as pd
 import numpy as np
 from collections import defaultdict
 
-DB_PATH = "/root/spy/spy.db"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.path.join(BASE_DIR, "spy.db")
 
 # ── Parameters ──
 LOOKBACK = 20          # bars to look back for "was bullish" (20 × 3m = 60 min)

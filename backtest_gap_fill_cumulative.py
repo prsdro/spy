@@ -10,12 +10,14 @@ Condition on:
 Gap size buckets: <0.25%, 0.25-0.5%, 0.5-1%, 1-2%, 2%+
 """
 
+import os
 import sqlite3
 import pandas as pd
 import numpy as np
 import json
 
-DB_PATH = "/root/spy/spy.db"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.path.join(BASE_DIR, "spy.db")
 
 
 def main():
@@ -215,9 +217,9 @@ def main():
                 print()
 
     # Save JSON for visualization
-    with open("/root/spy/gap_fill_cumulative.json", "w") as f:
+    with open(os.path.join(BASE_DIR, "gap_fill_cumulative.json"), "w") as f:
         json.dump(results, f, indent=2)
-    print("\nJSON saved to /root/spy/gap_fill_cumulative.json")
+    print(f"\nJSON saved to {os.path.join(BASE_DIR, 'gap_fill_cumulative.json')}")
 
     conn.close()
 

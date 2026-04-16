@@ -13,11 +13,13 @@ Example: Bearish trigger box (open below PDC, above put trigger)
 - Win: price NEVER reaches +61.8% by end of day
 """
 
+import os
 import sqlite3
 import pandas as pd
 import numpy as np
 
-DB_PATH = "/root/spy/spy.db"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.path.join(BASE_DIR, "spy.db")
 
 
 def main():

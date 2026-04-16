@@ -17,13 +17,15 @@ Wednesday, then track:
   4. Conditioning on time of hit, trend state, Phase Oscillator
 """
 
+import os
 import sqlite3
 import pandas as pd
 import numpy as np
 from collections import defaultdict
 from datetime import timedelta
 
-DB_PATH = "/root/spy/spy.db"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.path.join(BASE_DIR, "spy.db")
 
 
 def main():

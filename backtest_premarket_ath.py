@@ -7,12 +7,14 @@ it tends to fade during the morning trading session — making these good short 
 Focus: Max morning drawdown from the open (the profit potential for a short).
 """
 
+import os
 import sqlite3
 import pandas as pd
 import numpy as np
 import json
 
-DB_PATH = "/root/spy/spy.db"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.path.join(BASE_DIR, "spy.db")
 
 
 def main():
@@ -712,10 +714,10 @@ def main():
             "hit_25bp": round(ydf["hit_25bps_morning"].mean() * 100, 1),
         }
 
-    with open("/root/spy/premarket_ath_results.json", "w") as f:
+    with open(os.path.join(BASE_DIR, "premarket_ath_results.json"), "w") as f:
         json.dump(export, f, indent=2, default=str)
 
-    print(f"  Results exported to /root/spy/premarket_ath_results.json")
+    print(f"  Results exported to {os.path.join(BASE_DIR, 'premarket_ath_results.json')}")
     conn.close()
 
 

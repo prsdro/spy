@@ -4,13 +4,15 @@ Each study gets a JSON file in /root/milkman/data/ keyed by row label,
 with entries [{d:"2024-01-15", h:1}, ...] where h=1 means "yes" (outcome happened).
 """
 
+import os
 import sqlite3
 import pandas as pd
 import numpy as np
 import json
 from collections import defaultdict
 
-DB_PATH = "/root/spy/spy.db"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.path.join(BASE_DIR, "spy.db")
 OUT_DIR = "/root/milkman/data"
 
 

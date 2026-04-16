@@ -9,13 +9,15 @@ This study analyzes SPY behavior on VIX expiration days vs normal days across
 all Saty indicators: ATR levels, Pivot Ribbon, and Phase Oscillator.
 """
 
+import os
 import sqlite3
 import pandas as pd
 import numpy as np
 from datetime import date, timedelta
 from collections import defaultdict
 
-DB_PATH = "/root/spy/spy.db"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.path.join(BASE_DIR, "spy.db")
 
 # ─────────────────────────────────────────────────────────────
 # 1. Compute VIX Expiration Dates

@@ -13,14 +13,16 @@ We import the 1h Pivot Ribbon EMAs and the 1h Phase Oscillator,
 plus the Day Mode ATR levels (daily reference for intraday).
 """
 
+import os
 import pandas as pd
 import sqlite3
 import sys
 import warnings
 warnings.filterwarnings('ignore')
 
-DB_PATH = "/root/spy/spy.db"
-CSV_PATH = "/root/spy/AMEX_SPY, 60 (1).csv"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.path.join(BASE_DIR, "spy.db")
+CSV_PATH = os.path.join(BASE_DIR, "AMEX_SPY, 60 (1).csv")
 
 
 def main():

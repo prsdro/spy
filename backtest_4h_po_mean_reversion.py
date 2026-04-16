@@ -9,13 +9,15 @@ Also studies the broader case of PO extended above 100 then falling below 100.
 Mean reversion = price low touches or crosses below the 4h EMA8.
 """
 
+import os
 import sqlite3
 import pandas as pd
 import numpy as np
 import warnings
 warnings.filterwarnings("ignore")
 
-DB_PATH = "/root/spy/spy.db"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.path.join(BASE_DIR, "spy.db")
 
 
 def main():

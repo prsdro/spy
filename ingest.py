@@ -9,8 +9,9 @@ import os
 import sys
 import time
 
-DB_PATH = "/root/spy/spy.db"
-CSV_DIR = "/root/spy/spy_contents/spy"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.path.join(BASE_DIR, "spy.db")
+CSV_DIR = os.path.join(BASE_DIR, "spy_contents", "spy")
 
 def create_db(conn):
     conn.execute("DROP TABLE IF EXISTS candles_1m")
