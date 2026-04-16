@@ -203,6 +203,46 @@ Columns: `timestamp, open, high, low, close, volume`
 
 ---
 
+## Creating New Studies with Claude Code
+
+This repo includes a `/new-study` slash command for [Claude Code](https://claude.ai/code) that automates creating backtest studies. It gives Claude full context on the database schema, indicator system, and existing study patterns.
+
+### Quick start
+
+```bash
+git clone https://github.com/prsdro/spy.git
+cd spy
+pip install pandas numpy
+python3 ingest.py && python3 indicators.py   # build the database (~5 min)
+claude                                         # launch Claude Code
+```
+
+Then in Claude Code:
+
+```
+/new-study does the Phase Oscillator zone at GG entry predict completion rate?
+```
+
+Claude will read the knowledge base, write a backtest script, run it against the database, and present the results.
+
+### What the skill does
+
+1. Reads `KNOWLEDGE.md` and existing backtest scripts for context
+2. Writes a new `backtest_<name>.py` using the same patterns as the 26 existing studies
+3. Runs it against the 25-year database
+4. Presents findings and offers to build a visualization
+
+### Example prompts
+
+```
+/new-study what happens when both bull and bear triggers fire on the same day?
+/new-study does compression duration predict the size of the expansion move?
+/new-study is there a day-of-week effect on Golden Gate completion rates?
+/new-study how does overnight gap direction correlate with intraday ATR range?
+```
+
+---
+
 ## Implementation Notes
 
 - ATR uses **Wilder's RMA** (not SMA) — matches TradingView's `ta.atr()`
