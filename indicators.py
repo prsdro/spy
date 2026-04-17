@@ -5,6 +5,7 @@ for all timeframes and store in SQLite.
 Usage: python3 indicators.py [--test]  (--test processes only 2025-10 1m data)
 """
 
+import os
 import sqlite3
 import pandas as pd
 import numpy as np
@@ -197,13 +198,21 @@ def compute_atr_levels(df, daily_ref=None):
         df[f"atr_upper_{label}"] = prev_close + fib * atr_14
         df[f"atr_lower_{label}"] = prev_close - fib * atr_14
 
-    # Extension levels
+    # Extension levels (1x - 2x ATR)
     upper_1 = prev_close + atr_14
     lower_1 = prev_close - atr_14
     ext_labels = {0.236: "1236", 0.382: "1382", 0.5: "150", 0.618: "1618", 0.786: "1786", 1.0: "200"}
     for ext, label in ext_labels.items():
         df[f"atr_upper_{label}"] = upper_1 + ext * atr_14
         df[f"atr_lower_{label}"] = lower_1 - ext * atr_14
+
+    # Deep extension levels (2x - 3x ATR), matching ToS full range
+    upper_2 = prev_close + 2 * atr_14
+    lower_2 = prev_close - 2 * atr_14
+    deep_ext_labels = {0.236: "2236", 0.382: "2382", 0.5: "250", 0.618: "2618", 0.786: "2786", 1.0: "300"}
+    for ext, label in deep_ext_labels.items():
+        df[f"atr_upper_{label}"] = upper_2 + ext * atr_14
+        df[f"atr_lower_{label}"] = lower_2 - ext * atr_14
 
     # Range vs ATR
     df["period_high"] = df["high"]
@@ -222,6 +231,75 @@ def compute_atr_levels(df, daily_ref=None):
             0  # neutral
         )
     )
+
+    return df
+
+
+# ──────────────────────────────────────────────
+# Saty ATR Levels — Scalp mode (4-hour reference)
+# Matches ToS "Scalp" trading_type which uses
+# AggregationPeriod.FOUR_HOURS for ATR and prev close.
+# Uses [1] shift (previous completed 4h period).
+# ──────────────────────────────────────────────
+
+def compute_scalp_atr_levels(df, four_hour_ref):
+    """Compute scalp (4h-based) ATR levels for sub-4h timeframe bars.
+
+    Uses the previous completed 4h period's close and ATR, matching the ToS
+    Scalp mode behavior: close(period=FOUR_HOURS)[1] and WildersAverage(...)[1].
+
+    Adds columns with 'scalp_' prefix alongside existing daily ATR levels.
+    """
+    # Compute ATR on 4h bars
+    ref_atr = atr(four_hour_ref, 14)
+
+    # Build reference with [1] shift — previous completed 4h period values
+    ref = pd.DataFrame({
+        "scalp_prev_close": four_hour_ref["close"].shift(1),
+        "scalp_atr_14": ref_atr.shift(1),
+    }, index=four_hour_ref.index)
+    ref = ref.dropna().reset_index()
+
+    # Map each sub-bar to its most recent 4h period via merge_asof
+    df_ts = df.reset_index()[["timestamp"]]
+    mapped = pd.merge_asof(
+        df_ts, ref,
+        on="timestamp",
+        direction="backward",
+    )
+
+    df["scalp_atr_14"] = mapped["scalp_atr_14"].values
+    df["scalp_prev_close"] = mapped["scalp_prev_close"].values
+
+    s_atr = df["scalp_atr_14"]
+    s_pc = df["scalp_prev_close"]
+    trigger_pct = 0.236
+
+    # Trigger levels
+    df["scalp_atr_upper_trigger"] = s_pc + trigger_pct * s_atr
+    df["scalp_atr_lower_trigger"] = s_pc - trigger_pct * s_atr
+
+    # Key Fibonacci levels
+    for fib, label in {0.382: "0382", 0.5: "050", 0.618: "0618", 0.786: "0786", 1.0: "100"}.items():
+        df[f"scalp_atr_upper_{label}"] = s_pc + fib * s_atr
+        df[f"scalp_atr_lower_{label}"] = s_pc - fib * s_atr
+
+    # Extension levels (1x - 2x ATR)
+    s_upper_1 = s_pc + s_atr
+    s_lower_1 = s_pc - s_atr
+    for ext, label in {0.236: "1236", 0.382: "1382", 0.5: "150", 0.618: "1618", 0.786: "1786", 1.0: "200"}.items():
+        df[f"scalp_atr_upper_{label}"] = s_upper_1 + ext * s_atr
+        df[f"scalp_atr_lower_{label}"] = s_lower_1 - ext * s_atr
+
+    # Deep extensions (2x - 3x ATR)
+    s_upper_2 = s_pc + 2 * s_atr
+    s_lower_2 = s_pc - 2 * s_atr
+    for ext, label in {0.236: "2236", 0.382: "2382", 0.5: "250", 0.618: "2618", 0.786: "2786", 1.0: "300"}.items():
+        df[f"scalp_atr_upper_{label}"] = s_upper_2 + ext * s_atr
+        df[f"scalp_atr_lower_{label}"] = s_lower_2 - ext * s_atr
+
+    # Scalp range vs ATR
+    df["scalp_range_pct_of_atr"] = ((df["high"] - df["low"]) / s_atr * 100)
 
     return df
 
@@ -325,15 +403,27 @@ def load_daily_ref(conn):
     return df
 
 
+def load_4h_ref(conn):
+    """Load 4-hour candles for use as scalp ATR level reference."""
+    query = "SELECT timestamp, open, high, low, close, volume FROM candles_4h ORDER BY timestamp"
+    df = pd.read_sql_query(query, conn, parse_dates=["timestamp"])
+    df = df.set_index("timestamp").sort_index()
+    return df
+
+
 # Intraday tables that need daily ATR reference
 INTRADAY_TABLES = {"candles_1m", "candles_3m", "candles_10m", "candles_1h", "candles_4h"}
 
+# Sub-4h tables that also get scalp (4h-based) ATR levels
+SCALP_TABLES = {"candles_1m", "candles_3m", "candles_10m", "candles_1h"}
 
-def process_table_chunked(conn, table_name, daily_ref, chunk_months=3):
+
+def process_table_chunked(conn, table_name, daily_ref, four_hour_ref=None, chunk_months=3):
     """Process large tables in time-based chunks to avoid OOM.
     Uses overlapping windows so EMA warmup is handled correctly."""
     out_table = f"ind_{table_name.replace('candles_', '')}"
     is_intraday = table_name in INTRADAY_TABLES
+    needs_scalp = table_name in SCALP_TABLES and four_hour_ref is not None
 
     # Get date range
     min_ts, max_ts = conn.execute(
@@ -367,6 +457,8 @@ def process_table_chunked(conn, table_name, daily_ref, chunk_months=3):
 
         df = compute_pivot_ribbon(df)
         df = compute_atr_levels(df, daily_ref=daily_ref if is_intraday else None)
+        if needs_scalp:
+            df = compute_scalp_atr_levels(df, four_hour_ref)
         df = compute_phase_oscillator(df)
 
         # Trim off warmup period
@@ -387,10 +479,11 @@ def process_table_chunked(conn, table_name, daily_ref, chunk_months=3):
     return total_rows
 
 
-def process_table(conn, table_name, daily_ref, test_mode=False):
+def process_table(conn, table_name, daily_ref, four_hour_ref=None, test_mode=False):
     """Process a table — use chunking for large tables, direct for small ones."""
     out_table = f"ind_{table_name.replace('candles_', '')}"
     is_intraday = table_name in INTRADAY_TABLES
+    needs_scalp = table_name in SCALP_TABLES and four_hour_ref is not None
 
     if test_mode:
         where = "WHERE timestamp >= '2025-10-01' AND timestamp < '2025-11-01'"
@@ -401,6 +494,8 @@ def process_table(conn, table_name, daily_ref, test_mode=False):
             return 0
         df = compute_pivot_ribbon(df)
         df = compute_atr_levels(df, daily_ref=daily_ref if is_intraday else None)
+        if needs_scalp:
+            df = compute_scalp_atr_levels(df, four_hour_ref)
         df = compute_phase_oscillator(df)
         conn.execute(f"DROP TABLE IF EXISTS {out_table}")
         save_df_to_table(conn, out_table, df, "replace")
@@ -412,7 +507,7 @@ def process_table(conn, table_name, daily_ref, test_mode=False):
     row_count = conn.execute(f"SELECT COUNT(*) FROM {table_name}").fetchone()[0]
 
     if row_count > 500_000:
-        return process_table_chunked(conn, table_name, daily_ref, chunk_months=6)
+        return process_table_chunked(conn, table_name, daily_ref, four_hour_ref, chunk_months=6)
     else:
         query = f"SELECT timestamp, open, high, low, close, volume FROM {table_name} ORDER BY timestamp"
         df = pd.read_sql_query(query, conn, parse_dates=["timestamp"])
@@ -421,6 +516,8 @@ def process_table(conn, table_name, daily_ref, test_mode=False):
             return 0
         df = compute_pivot_ribbon(df)
         df = compute_atr_levels(df, daily_ref=daily_ref if is_intraday else None)
+        if needs_scalp:
+            df = compute_scalp_atr_levels(df, four_hour_ref)
         df = compute_phase_oscillator(df)
         conn.execute(f"DROP TABLE IF EXISTS {out_table}")
         save_df_to_table(conn, out_table, df, "replace")
@@ -438,10 +535,14 @@ def main():
     conn.execute("PRAGMA journal_mode=WAL")
     conn.execute("PRAGMA synchronous=NORMAL")
 
-    # Load daily reference data for ATR levels on intraday tables
+    # Load reference data for ATR levels
     print("Loading daily reference for ATR levels...", flush=True)
     daily_ref = load_daily_ref(conn)
-    print(f"  {len(daily_ref):,} daily bars loaded\n")
+    print(f"  {len(daily_ref):,} daily bars loaded")
+
+    print("Loading 4-hour reference for scalp ATR levels...", flush=True)
+    four_hour_ref = load_4h_ref(conn)
+    print(f"  {len(four_hour_ref):,} 4h bars loaded\n")
 
     tables = TABLES
     if test_mode:
@@ -450,8 +551,9 @@ def main():
     for table_name in tables:
         t0 = time.time()
         out_name = f"ind_{table_name.replace('candles_', '')}"
-        print(f"Computing indicators for {table_name} -> {out_name}...", end=" ", flush=True)
-        count = process_table(conn, table_name, daily_ref, test_mode)
+        scalp_tag = " +scalp" if table_name in SCALP_TABLES else ""
+        print(f"Computing indicators{scalp_tag} for {table_name} -> {out_name}...", end=" ", flush=True)
+        count = process_table(conn, table_name, daily_ref, four_hour_ref, test_mode)
         elapsed = time.time() - t0
         print(f"{count:,} rows ({elapsed:.1f}s)")
 

@@ -188,3 +188,59 @@ Bearish expansions have slightly higher profit at open and close.
 | Multi-Day | Weekly | 65% | 72% | 74% (daily PO) | 94% (daily PO) |
 | Swing | Monthly | 11% | 34% | — (weak signal) | — (weak signal) |
 Bearish moves are faster at EVERY timeframe. Higher TF PO = less edge.
+
+## 14. 4H PO ROLLOVER + OpEx WINDOW (EXTENDED CONDITIONS)
+Signal: 4H PO peak ≥ 80, crosses below 80 (classic "leaving distribution").
+Baseline sample: 118 signals over 25 years. Baseline ≥1% 5d hit rate = 50.8%.
+
+### OpEx timing suppresses then releases drop probability
+Signals clustered by trading days relative to monthly OpEx (3rd Friday).
+Within the OpEx Fri + Post-OpEx 1-5d window (n=26 unfiltered):
+| Horizon |  N  | ≥0.5% | ≥1.0% | ≥1.5% | ≥2.0% | Median |  25th |
+| 1d      |  26 |  42%  |  19%  |  15%  |   4%  | -0.40% | -0.83%|
+| 3d      |  26 |  62%  |  46%  |  23%  |  15%  | -0.95% | -1.40%|
+| 5d      |  26 |  73%  |  50%  |  27%  |  23%  | -0.99% | -1.57%|
+| 10d     |  26 |  77%  |  69%  |  46%  |  38%  | -1.37% | -2.68%|
+KEY: Hit rates climb sharply from 1d to 10d as pin-release plays out.
+
+### Extended filter: weekly OR monthly ATR position ≥ 0.618 (n=21)
+| Horizon |  N  | ≥0.5% | ≥1.0% | ≥1.5% | ≥2.0% | Median |  25th | Worst |
+| 1d      |  21 |  43%  |  14%  |  14%  |   5%  | -0.47% | -0.77%| -2.11%|
+| 3d      |  21 |  57%  |  38%  |  19%  |  14%  | -0.77% | -1.12%| -5.11%|
+| 5d      |  21 |  71%  |  43%  |  24%  |  24%  | -0.92% | -1.48%| -5.11%|
+| 10d     |  21 |  71%  |  62%  |  43%  |  38%  | -1.25% | -2.44%| -8.65%|
+← 10d window is the money zone: 62% hit 1%, 43% hit 1.5%, 38% hit 2%.
+
+### Deep extended: weekly OR monthly ATR position ≥ 1.0 (n=12)
+| Horizon |  N  | ≥0.5% | ≥1.0% | ≥1.5% | ≥2.0% | Median | Worst |
+| 1d      |  12 |  42%  |   8%  |   8%  |   0%  | -0.41% | -1.56%|
+| 3d      |  12 |  50%  |  33%  |  17%  |   8%  | -0.63% | -2.54%|
+| 5d      |  12 |  67%  |  33%  |  17%  |  17%  | -0.83% | -4.83%|
+| 10d     |  12 |  67%  |  50%  |  33%  |  33%  | -1.05% | -8.65%|
+Deep extension underperforms moderate extension in 5d but tail risk skews larger
+(Feb 2018 -8.65%, May 2001 -4.83%).
+
+### OpEx offset breakdown (unfiltered, 5d horizon)
+| Bucket                    |  N  | ≥0.5% | ≥1.0% | ≥1.5% | Med5d |
+| OpEx Friday (day 0)       |  5  |  80%  |  80%  |  40%  | -1.48%|
+| Post-OpEx day 1 (Mon)     |  6  | 100%  |  67%  |  33%  | -1.08%|
+| Post-OpEx day 2 (Tue)     |  5  |  60%  |  20%  |  20%  | -0.70%|
+| Post-OpEx day 3 (Wed)     |  2  | (too small)                  |
+| Post-OpEx day 4 (Thu)     |  4  |  50%  |  25%  |   0%  | -0.65%|
+| Post-OpEx day 5 (Fri)     |  4  |  75%  |  75%  |  50%  | -1.57%|
+| Non-OpEx window           | 92  |  75%  |  51%  |  34%  | -1.07%|
+KEY: OpEx Fri + Post-Mon is the strongest pair. Post-Tue/Wed/Thu weaken as
+the suppression fades and dealers unwind delta.
+
+### TAKEAWAYS
+1. A 4H PO rollover that fires within the OpEx Fri + Post-OpEx 1-5d window under
+   extended conditions (wk or mo ATR ≥ 0.618) produces a meaningful edge over the
+   10d horizon: 62% hit 1%, 43% hit 1.5%, 38% hit 2%, median drawdown -1.25%.
+2. Short-horizon (1d, 3d) hit rates are modest — don't expect an immediate dump.
+   The drop plays out over days as dealer gamma unwinds.
+3. 25th-percentile 10d drawdown is -2.44% under extended, -2.74% under deep extended
+   — the tail is where the trade pays. Long-dated puts preferred over weeklies.
+4. Deep extension (wk or mo ATR ≥ 1.0) underperforms moderate extension at 5d but
+   has fatter left tails at 10d (worst case -8.65%, Feb 2018).
+5. The non-OpEx-window baseline (n=92) at 5d = 51% hit 1% — same as the full baseline.
+   The OpEx-proximate edge isn't hit rate at 5d, it's tail expansion at 10d.
