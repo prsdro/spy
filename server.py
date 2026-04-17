@@ -936,6 +936,283 @@ def _run_trigger_box_study(direction):
     return results
 
 
+def _third_friday(year, month):
+    """Return date of the 3rd Friday of given year/month."""
+    d = pd.Timestamp(year=year, month=month, day=1)
+    first_fri_offset = (4 - d.dayofweek) % 7
+    return (d + pd.Timedelta(days=first_fri_offset + 14)).normalize()
+
+
+def _trading_days_to_opex(date, trading_days_index):
+    """Return trading days to nearest monthly OpEx (negative=after, positive=before, 0=OpEx)."""
+    y, m = date.year, date.month
+    candidates = []
+    for delta_m in [-1, 0, 1]:
+        ny = y + (1 if m + delta_m > 12 else (-1 if m + delta_m < 1 else 0))
+        nm = ((m + delta_m - 1) % 12) + 1
+        candidates.append(_third_friday(ny, nm))
+    diffs = []
+    for opex in candidates:
+        try:
+            opex_idx = trading_days_index.searchsorted(opex)
+            if opex_idx >= len(trading_days_index):
+                continue
+            date_idx = trading_days_index.searchsorted(date)
+            if date_idx >= len(trading_days_index):
+                continue
+            diffs.append(opex_idx - date_idx)
+        except Exception:
+            continue
+    if not diffs:
+        return None
+    return min(diffs, key=abs)
+
+
+def _load_4h_po_opex_frames():
+    """Load frames needed for the 4H PO OpEx study. Cached."""
+    if hasattr(_load_4h_po_opex_frames, "_cache"):
+        return _load_4h_po_opex_frames._cache
+
+    c = _conn()
+    try:
+        df4h = pd.read_sql(
+            "SELECT timestamp, close, phase_oscillator FROM ind_4h ORDER BY timestamp",
+            c, parse_dates=["timestamp"]
+        ).set_index("timestamp").dropna(subset=["phase_oscillator"])
+
+        df1d = pd.read_sql(
+            "SELECT timestamp, open, high, low, close FROM ind_1d ORDER BY timestamp",
+            c, parse_dates=["timestamp"]
+        ).set_index("timestamp")
+    finally:
+        c.close()
+
+    # Weekly ATR reference (prev week close + prev week ATR)
+    wk_close = df1d["close"].resample("W-FRI").last()
+    wk_high = df1d["high"].resample("W-FRI").max()
+    wk_low = df1d["low"].resample("W-FRI").min()
+    pc = wk_close.shift(1)
+    tr_df = pd.DataFrame({"h": wk_high, "l": wk_low, "pc": pc})
+    tr_df["tr"] = tr_df.apply(
+        lambda r: max(r["h"] - r["l"],
+                      abs(r["h"] - r["pc"]) if pd.notna(r["pc"]) else 0,
+                      abs(r["l"] - r["pc"]) if pd.notna(r["pc"]) else 0),
+        axis=1
+    )
+    wk_ref = pd.DataFrame({
+        "prev_wk_close": wk_close.shift(1),
+        "wk_atr": tr_df["tr"].rolling(14).mean().shift(1),
+    })
+    df1d_enr = pd.merge_asof(
+        df1d.reset_index().sort_values("timestamp"),
+        wk_ref.reset_index().sort_values("timestamp"),
+        on="timestamp", direction="backward"
+    ).set_index("timestamp")
+
+    # Monthly ATR reference
+    m = df1d.resample("ME").agg({"high": "max", "low": "min", "close": "last"})
+    m["pc"] = m["close"].shift(1)
+    m["tr"] = m.apply(
+        lambda r: max(r["high"] - r["low"],
+                      abs(r["high"] - r["pc"]) if pd.notna(r["pc"]) else 0,
+                      abs(r["low"] - r["pc"]) if pd.notna(r["pc"]) else 0),
+        axis=1
+    )
+    mo_ref = pd.DataFrame({
+        "prev_month_close": m["close"].shift(1),
+        "monthly_atr": m["tr"].rolling(14).mean().shift(1),
+    }).reindex(df1d.index, method="ffill")
+    df1d_enr = df1d_enr.join(mo_ref)
+
+    _load_4h_po_opex_frames._cache = (df4h, df1d_enr)
+    return _load_4h_po_opex_frames._cache
+
+
+def _run_4h_po_opex_study(ext_min=0.618, drop_threshold=1.0, horizon_days=10):
+    """4H PO rollover (peak ≥80, cross below 80) near monthly OpEx, under extended ATR.
+
+    Event = ≥ drop_threshold% intraday drop within horizon_days trading days.
+    OpEx window = signal fires on OpEx Friday or the following 1-5 trading days.
+    Extended = weekly OR monthly ATR position ≥ ext_min.
+    """
+    df4h, df1d = _load_4h_po_opex_frames()
+    trading_days = df1d.index
+
+    # Find V2 signals
+    po = df4h["phase_oscillator"]
+    was_above = False
+    peak = 0
+    signals = []
+    for i in range(1, len(df4h)):
+        cur = po.iloc[i]
+        prev = po.iloc[i - 1]
+        if prev >= 80:
+            if not was_above:
+                was_above = True
+                peak = prev
+            elif prev > peak:
+                peak = prev
+        if was_above and prev >= 80 and cur < 80:
+            signals.append({
+                "signal_time": df4h.index[i],
+                "peak_po": peak,
+                "signal_close": df4h.iloc[i]["close"],
+            })
+            was_above = False
+            peak = 0
+
+    results = []
+    for s in signals:
+        sig_time = s["signal_time"]
+        sig_date = sig_time.normalize()
+        sig_close = s["signal_close"]
+
+        dloc = df1d.index.searchsorted(sig_date)
+        if dloc >= len(df1d):
+            continue
+        if df1d.index[dloc] < sig_date:
+            dloc += 1
+        if dloc >= len(df1d):
+            continue
+        drow = df1d.iloc[dloc]
+        actual_date = df1d.index[dloc]
+
+        opex_offset = _trading_days_to_opex(actual_date, trading_days)
+        if opex_offset is None:
+            continue
+        # Window: OpEx Fri (0) or post-OpEx 1-5 trading days (offsets -1 to -5)
+        if not (-5 <= opex_offset <= 0):
+            continue
+
+        # Extended filter
+        wk_pos = None
+        if pd.notna(drow.get("prev_wk_close")) and pd.notna(drow.get("wk_atr")) and drow["wk_atr"] > 0:
+            wk_pos = (sig_close - drow["prev_wk_close"]) / drow["wk_atr"]
+        mo_pos = None
+        if pd.notna(drow.get("prev_month_close")) and pd.notna(drow.get("monthly_atr")) and drow["monthly_atr"] > 0:
+            mo_pos = (sig_close - drow["prev_month_close"]) / drow["monthly_atr"]
+
+        extended = ((wk_pos is not None and wk_pos >= ext_min) or
+                    (mo_pos is not None and mo_pos >= ext_min))
+        if not extended:
+            continue
+
+        # Forward drop
+        end = min(dloc + horizon_days + 1, len(df1d))
+        fut = df1d.iloc[dloc + 1:end]
+        if len(fut) == 0:
+            continue
+        hit = (fut["low"] <= sig_close * (1 - drop_threshold / 100)).any()
+
+        results.append({
+            "date": str(actual_date.date()),
+            "result": "for" if hit else "against",
+            "trigger_time": sig_time.strftime("%H:%M"),
+        })
+
+    return results
+
+
+# ═══════════════════════════════════════════════════════════════
+# Gap Up Pre-Noon Study
+# ═══════════════════════════════════════════════════════════════
+
+def _load_gap_up_frames():
+    """Load ind_10m frames for gap-up pre-noon study (includes extension levels)."""
+    if hasattr(_load_gap_up_frames, "_cache"):
+        return _load_gap_up_frames._cache
+
+    c = _conn()
+    try:
+        df = pd.read_sql(
+            """SELECT timestamp, open, high, low, close,
+               prev_close, atr_14,
+               atr_upper_trigger, atr_lower_trigger,
+               atr_upper_0382, atr_lower_0382,
+               atr_upper_0618, atr_lower_0618,
+               atr_upper_100, atr_lower_100,
+               atr_upper_1236
+               FROM ind_10m ORDER BY timestamp""",
+            c, parse_dates=["timestamp"],
+        )
+        df = df.set_index("timestamp").sort_index()
+        df = df.between_time("09:30", "15:59")
+        df = df.dropna(subset=["prev_close", "atr_14"])
+        df["date"] = df.index.date
+    finally:
+        c.close()
+
+    _load_gap_up_frames._cache = df
+    return df
+
+
+def _run_gap_up_pre_noon_study(opex_only=False, non_opex_friday=False, outcome="hold"):
+    """Gap up + >1% gain before noon study.
+    outcome:
+      'hold'       – for = day closed > prev_close
+      'cont_1atr'  – for = touched +1 ATR (100%) level rest of day
+      'reversed'   – for = retraced all the way back to prev_close
+    """
+    df = _load_gap_up_frames()
+    results = []
+
+    for date_val, group in df.groupby("date"):
+        first = group.iloc[0]
+        prev_close = first["prev_close"]
+        atr_14 = first["atr_14"]
+        if pd.isna(prev_close) or prev_close <= 0 or pd.isna(atr_14) or atr_14 <= 0:
+            continue
+
+        d = pd.Timestamp(date_val)
+        is_opex = d.weekday() == 4 and 15 <= d.day <= 21
+        is_friday = d.dayofweek == 4
+
+        if opex_only and not is_opex:
+            continue
+        if non_opex_friday and not (is_friday and not is_opex):
+            continue
+
+        # Must gap up
+        if first["open"] <= prev_close:
+            continue
+
+        # Pre-noon bars: hours 9, 10, 11
+        pre_noon = group[group.index.hour < 12]
+        if len(pre_noon) == 0:
+            continue
+
+        max_pre_noon = pre_noon["high"].max()
+        if (max_pre_noon - prev_close) / prev_close < 0.01:
+            continue
+
+        # First bar where pre-noon crossed +1%
+        trigger_bars = pre_noon[pre_noon["high"] >= prev_close * 1.01]
+        trigger_time = trigger_bars.index[0]
+        remaining = group[group.index >= trigger_time]
+
+        remaining_low = remaining["low"].min()
+        remaining_high = remaining["high"].max()
+        day_close = group.iloc[-1]["close"]
+
+        if outcome == "hold":
+            hit = day_close > prev_close
+        elif outcome == "cont_1atr":
+            upper_100 = first["atr_upper_100"]
+            hit = (not pd.isna(upper_100)) and (remaining_high >= upper_100)
+        elif outcome == "reversed":
+            hit = remaining_low <= prev_close
+        else:
+            hit = day_close > prev_close
+
+        results.append({
+            "date": str(date_val),
+            "result": "for" if hit else "against",
+            "trigger_time": trigger_time.strftime("%H:%M"),
+        })
+
+    return results
+
+
 # Study catalog definition
 STUDY_CATALOG = [
     {
@@ -1007,6 +1284,48 @@ STUDY_CATALOG = [
         "category": "Trigger Box",
         "desc": "Open in bear box (below PDC, above put trigger) → GG opens?",
         "runner": lambda: _run_trigger_box_study("bear"),
+    },
+    {
+        "id": "opex_4h_po_rollover_ext",
+        "name": "4H PO OpEx (Extended)",
+        "category": "OpEx",
+        "desc": "4H PO peak ≥80 rolls under 80 in OpEx Fri + post 1-5d window, wk/mo ATR ≥0.618 → ≥1% drop in 10d?",
+        "runner": lambda: _run_4h_po_opex_study(ext_min=0.618, drop_threshold=1.0, horizon_days=10),
+    },
+    {
+        "id": "opex_4h_po_rollover_deep",
+        "name": "4H PO OpEx (Deep Ext)",
+        "category": "OpEx",
+        "desc": "Same as above but wk/mo ATR ≥1.0 (deep extension) → ≥1% drop in 10d?",
+        "runner": lambda: _run_4h_po_opex_study(ext_min=1.0, drop_threshold=1.0, horizon_days=10),
+    },
+    {
+        "id": "opex_4h_po_rollover_ext_15pct",
+        "name": "4H PO OpEx (Ext, ≥1.5%)",
+        "category": "OpEx",
+        "desc": "4H PO OpEx-window rollover under extension → ≥1.5% drop in 10d?",
+        "runner": lambda: _run_4h_po_opex_study(ext_min=0.618, drop_threshold=1.5, horizon_days=10),
+    },
+    {
+        "id": "gap_up_pre_noon_hold",
+        "name": "Gap Up Pre-Noon: Holds",
+        "category": "Gap Up",
+        "desc": "Gap up + >1% gain before noon → day closes positive vs prev_close? (88% historical)",
+        "runner": lambda: _run_gap_up_pre_noon_study(outcome="hold"),
+    },
+    {
+        "id": "gap_up_pre_noon_cont",
+        "name": "Gap Up Pre-Noon: +1ATR Ext",
+        "category": "Gap Up",
+        "desc": "Gap up + >1% before noon → price touches +1 ATR level rest of day? (52% historical)",
+        "runner": lambda: _run_gap_up_pre_noon_study(outcome="cont_1atr"),
+    },
+    {
+        "id": "gap_up_pre_noon_opex_pin",
+        "name": "Gap Up Pre-Noon: OpEx Pin",
+        "category": "Gap Up",
+        "desc": "Same setup on OpEx Fridays only → price retraces to prev_close? (35% historical pin risk)",
+        "runner": lambda: _run_gap_up_pre_noon_study(opex_only=True, outcome="reversed"),
     },
 ]
 
