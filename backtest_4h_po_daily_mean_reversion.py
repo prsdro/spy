@@ -18,6 +18,7 @@ import sqlite3
 import pandas as pd
 import numpy as np
 import warnings
+from study_utils import dedupe_signals_by_daily_cooldown, intraday_signal_daily_locs
 warnings.filterwarnings("ignore")
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -103,36 +104,31 @@ def analyze(df4h, df1d, peak_threshold, cross_threshold):
             was_above_peak = False
             peak_po = 0
 
-    print(f"\n4H PO rollover signals found: {len(signals)}")
+    max_days_forward = 40  # look ahead up to 40 trading days
+    signals = dedupe_signals_by_daily_cooldown(signals, df1d.index, max_days_forward)
+
+    print(f"\nIndependent 4H PO rollover signals found: {len(signals)}")
     if len(signals) == 0:
         return
 
     # ─── Step 2: For each signal, track forward on daily chart ───
-    max_days_forward = 40  # look ahead up to 40 trading days
     results = []
 
     for sig in signals:
-        signal_date = sig["signal_date"]
-
-        # Find the signal day in daily data
-        # The 4H signal might fire intraday; use that day's daily bar
-        daily_idx = df1d.index.searchsorted(signal_date)
-        if daily_idx >= len(df1d):
-            continue
-        # Make sure we're on or after the signal date
-        if df1d.index[daily_idx] < signal_date:
-            daily_idx += 1
-        if daily_idx >= len(df1d):
+        daily_idx, prior_daily_idx, next_daily_idx = intraday_signal_daily_locs(
+            df1d.index, sig["signal_time"]
+        )
+        if daily_idx is None or prior_daily_idx is None or next_daily_idx is None:
             continue
 
-        signal_day = df1d.index[daily_idx]
-        signal_row = df1d.iloc[daily_idx]
-        signal_close = signal_row["close"]
-        signal_ema21 = signal_row["ema_21"]
-        signal_ema48 = signal_row["ema_48"]
+        signal_day = sig["signal_time"].normalize()
+        prior_daily_row = df1d.iloc[prior_daily_idx]
+        signal_close = sig["signal_4h_close"]
+        signal_ema21 = prior_daily_row["ema_21"]
+        signal_ema48 = prior_daily_row["ema_48"]
 
-        # Skip if price is already at or below daily 21 EMA at signal time
-        if signal_row["low"] <= signal_ema21:
+        # Use the most recent completed daily EMA levels available at signal time.
+        if signal_close <= signal_ema21:
             continue
 
         gap_at_signal = signal_close - signal_ema21

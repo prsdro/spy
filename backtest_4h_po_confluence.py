@@ -23,6 +23,7 @@ import sqlite3
 import pandas as pd
 import numpy as np
 import warnings
+from study_utils import dedupe_signals_by_daily_cooldown
 warnings.filterwarnings("ignore")
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -98,7 +99,8 @@ def main():
             was_above = False
             peak = 0
 
-    print(f"V2 signals: {len(signals)}")
+    signals = dedupe_signals_by_daily_cooldown(signals, df1d.index, 5)
+    print(f"Independent V2 signals: {len(signals)}")
 
     # ─── For each signal, collect confluence factors + forward outcome ───
     df1d_sorted = df1d.sort_index()
@@ -164,13 +166,13 @@ def main():
 
         # Daily ATR position (signal close vs prev day close in daily ATR units)
         d_atr_pos = None
-        if prev_drow is not None and pd.notna(drow.get("atr_14")) and drow["atr_14"] > 0:
-            d_atr_pos = (sig_close - prev_drow["close"]) / drow["atr_14"]
+        if prev_drow is not None and pd.notna(prev_drow.get("atr_14")) and prev_drow["atr_14"] > 0:
+            d_atr_pos = (sig_close - prev_drow["close"]) / prev_drow["atr_14"]
 
         # Daily EMA21 position
         d_above_ema21 = None
-        if pd.notna(drow.get("ema_21")):
-            d_above_ema21 = sig_close > drow["ema_21"]
+        if prev_drow is not None and pd.notna(prev_drow.get("ema_21")):
+            d_above_ema21 = sig_close > prev_drow["ema_21"]
 
         # 4H EMA trend (EMA8 vs EMA21)
         sig_4h = df4h.iloc[idx_4h]

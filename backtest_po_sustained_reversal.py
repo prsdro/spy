@@ -51,7 +51,12 @@ def main():
         cross_bar = None
         for i in range(len(first_30)):
             row = first_30.iloc[i]
-            if row["phase_oscillator"] > 61.8 and row["compression"] != 1:
+            bull_expanding = (
+                row.get("fast_cloud_bullish", 0) == 1 and
+                row.get("slow_cloud_bullish", 0) == 1 and
+                row["compression"] != 1
+            )
+            if row["phase_oscillator"] > 61.8 and bull_expanding:
                 if i == 0:
                     cross_bar = first_30.index[i]
                     break
@@ -63,8 +68,12 @@ def main():
 
         if cross_bar is None:
             first_po = first_30.iloc[0]["phase_oscillator"]
-            first_comp = first_30.iloc[0]["compression"]
-            if first_po > 61.8 and first_comp != 1:
+            first_bull_expanding = (
+                first_30.iloc[0].get("fast_cloud_bullish", 0) == 1 and
+                first_30.iloc[0].get("slow_cloud_bullish", 0) == 1 and
+                first_30.iloc[0]["compression"] != 1
+            )
+            if first_po > 61.8 and first_bull_expanding:
                 cross_bar = first_30.index[0]
 
         if cross_bar is None:

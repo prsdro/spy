@@ -117,6 +117,8 @@ def main():
 
             first_30m = group[group.index.time < pd.Timestamp("10:00").time()]
             first_1h = group[group.index.time < pd.Timestamp("10:30").time()]
+            after_30m = group[group.index.time >= pd.Timestamp("10:00").time()]
+            after_1h = group[group.index.time >= pd.Timestamp("10:30").time()]
 
             if direction == "bear":
                 held_30m = not (first_30m["close"] > pdc).any()
@@ -127,39 +129,51 @@ def main():
 
             # Determine which conditions this day matches
             day_conds = ["all"]
+            cond_windows = {"all": group}
             if held_30m:
                 day_conds.append("held_30m")
+                cond_windows["held_30m"] = after_30m
                 if direction == "bear":
                     if in_top_half:
                         day_conds.append("held_30m_top")
+                        cond_windows["held_30m_top"] = after_30m
                     else:
                         day_conds.append("held_30m_bottom")
+                        cond_windows["held_30m_bottom"] = after_30m
                 else:
                     if in_top_half:
                         day_conds.append("held_30m_top")
+                        cond_windows["held_30m_top"] = after_30m
                     else:
                         day_conds.append("held_30m_bottom")
+                        cond_windows["held_30m_bottom"] = after_30m
             if held_1h:
                 day_conds.append("held_1h")
+                cond_windows["held_1h"] = after_1h
                 if direction == "bear":
                     if in_top_half:
                         day_conds.append("held_1h_top")
+                        cond_windows["held_1h_top"] = after_1h
                     else:
                         day_conds.append("held_1h_bottom")
+                        cond_windows["held_1h_bottom"] = after_1h
                 else:
                     if in_top_half:
                         day_conds.append("held_1h_top")
+                        cond_windows["held_1h_top"] = after_1h
                     else:
                         day_conds.append("held_1h_bottom")
-
-            # Check each strike level
-            day_high = group["high"].max()
-            day_low = group["low"].min()
+                        cond_windows["held_1h_bottom"] = after_1h
 
             for cond_name, cond_key in conditions:
                 if cond_key not in day_conds:
                     continue
+                window = cond_windows.get(cond_key, group)
+                if len(window) == 0:
+                    continue
                 results[cond_name]["n"] += 1
+                day_high = window["high"].max()
+                day_low = window["low"].min()
 
                 for strike_name, strike_col, strike_dir in strike_levels:
                     strike_val = first[strike_col]

@@ -137,7 +137,7 @@ def main():
                     entered = False
                     entry_price = None
                     entry_idx = None
-                    for i, (ts, bar) in enumerate(remaining.iterrows()):
+                    for i, (ts, bar) in enumerate(remaining.iloc[1:].iterrows(), start=1):
                         try:
                             if check_fn(first, bar):
                                 entry_price = price_fn(first, bar)
@@ -152,16 +152,17 @@ def main():
 
                 stats[name]["entry_appeared"] += 1
 
-                # Check if target is reached after entry
-                after_entry = remaining.iloc[entry_idx:]
+                # Require completion after the entry bar so same-bar path ordering
+                # does not decide the result.
+                after_entry = remaining.iloc[entry_idx + 1:]
                 if direction == "bull":
-                    completed = (after_entry["high"] >= target_level).any()
+                    completed = len(after_entry) > 0 and (after_entry["high"] >= target_level).any()
                     reward = (target_level - entry_price) / atr_val * 100  # in ATR%
                     # Risk = distance from entry back to trigger (natural stop)
                     stop = first["atr_upper_trigger"]
                     risk = (entry_price - stop) / atr_val * 100
                 else:
-                    completed = (after_entry["low"] <= target_level).any()
+                    completed = len(after_entry) > 0 and (after_entry["low"] <= target_level).any()
                     reward = (entry_price - target_level) / atr_val * 100
                     stop = first["atr_lower_trigger"]
                     risk = (stop - entry_price) / atr_val * 100

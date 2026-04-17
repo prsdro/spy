@@ -21,7 +21,7 @@ def main():
     conn = sqlite3.connect(DB_PATH)
 
     # ═══════════════════════════════════════════════════════════════
-    # 1. Build running ATH from daily RTH bars
+    # 1. Load daily close context
     # ═══════════════════════════════════════════════════════════════
     print("Loading daily data...", flush=True)
     daily = pd.read_sql_query(
@@ -30,19 +30,7 @@ def main():
     )
     daily = daily.set_index("timestamp").sort_index()
     daily["date"] = daily.index.date
-    daily["running_ath"] = daily["high"].cummax()
-    daily["prior_ath"] = daily["running_ath"].shift(1)
-    daily["prev_day_new_ath"] = (daily["high"] == daily["running_ath"]).shift(1).fillna(False)
     daily["prev_close"] = daily["close"].shift(1)
-
-    date_info = {}
-    for idx, row in daily.iterrows():
-        d = row["date"]
-        date_info[d] = {
-            "prior_ath": row["prior_ath"],
-            "prev_day_new_ath": row["prev_day_new_ath"],
-            "prev_close": row["prev_close"],
-        }
 
     # ═══════════════════════════════════════════════════════════════
     # 2. Load 10m indicator data (all hours)
@@ -61,6 +49,22 @@ def main():
     )
     df = df.set_index("timestamp").sort_index()
     df["date"] = df.index.date
+
+    session_stats = df.groupby("date").agg(session_high=("high", "max"))
+    session_stats["running_ath"] = session_stats["session_high"].cummax()
+    session_stats["prior_ath"] = session_stats["running_ath"].shift(1)
+    session_stats["prev_day_new_ath"] = (
+        session_stats["session_high"] == session_stats["running_ath"]
+    ).shift(1).fillna(False)
+    prev_close_by_date = daily.set_index("date")["prev_close"]
+
+    date_info = {}
+    for date, row in session_stats.iterrows():
+        date_info[date] = {
+            "prior_ath": row["prior_ath"],
+            "prev_day_new_ath": row["prev_day_new_ath"],
+            "prev_close": prev_close_by_date.get(date, np.nan),
+        }
 
     # ═══════════════════════════════════════════════════════════════
     # 3. Process each day

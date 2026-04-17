@@ -123,11 +123,10 @@ def main():
         # Did PO peak intraday? (any bar higher than both previous and next)
         if len(day_bars) >= 3:
             po_vals = day_bars["po_4h"].values
-            peaked = False
-            for k in range(1, len(po_vals)):
-                if po_vals[k] < po_vals[k - 1]:
-                    peaked = True
-                    break
+            peaked = any(
+                po_vals[k] > po_vals[k - 1] and po_vals[k] > po_vals[k + 1]
+                for k in range(1, len(po_vals) - 1)
+            )
             po_4h_peaked.append(1 if peaked else 0)
         else:
             po_4h_peaked.append(np.nan)

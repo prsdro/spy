@@ -74,8 +74,13 @@ def main():
             row = first_30.iloc[i]
             po = row["phase_oscillator"]
             compression = row["compression"]
+            bull_expanding = (
+                row.get("fast_cloud_bullish", 0) == 1 and
+                row.get("slow_cloud_bullish", 0) == 1 and
+                compression != 1
+            )
 
-            if po > 61.8 and compression != 1:
+            if po > 61.8 and bull_expanding:
                 # Check that it's a cross (previous bar was <= 61.8)
                 if i == 0:
                     # First bar of day — check if PO is above 61.8
@@ -97,8 +102,12 @@ def main():
         # Also check: did PO start the day already above 61.8?
         if cross_bar is None:
             first_po = first_30.iloc[0]["phase_oscillator"]
-            first_comp = first_30.iloc[0]["compression"]
-            if first_po > 61.8 and first_comp != 1:
+            first_bull_expanding = (
+                first_30.iloc[0].get("fast_cloud_bullish", 0) == 1 and
+                first_30.iloc[0].get("slow_cloud_bullish", 0) == 1 and
+                first_30.iloc[0]["compression"] != 1
+            )
+            if first_po > 61.8 and first_bull_expanding:
                 cross_bar = first_30.index[0]
 
         if cross_bar is None:

@@ -113,20 +113,18 @@ def main():
         # Look at all bars after the trigger close
         remaining = group[group.index > trigger_time]
 
-        # Did price hit 38.2%?
+        # Only count target hits that occurred after the close-confirmation bar.
         hit_target = False
         bars_to_hit = None
-        if trigger_bar["high"] >= target_0382:
-            # The trigger bar itself hit the target
-            hit_target = True
-            bars_to_hit = 0
-        elif len(remaining) > 0:
+        target_hit_time = None
+        if len(remaining) > 0:
             target_hits = remaining[remaining["high"] >= target_0382]
             if len(target_hits) > 0:
                 hit_target = True
+                target_hit_time = target_hits.index[0]
                 # Count bars from trigger to target
                 trigger_pos = group.index.get_loc(trigger_time)
-                target_pos = group.index.get_loc(target_hits.index[0])
+                target_pos = group.index.get_loc(target_hit_time)
                 bars_to_hit = target_pos - trigger_pos
 
         # Did we get a 3m close back below the trigger? (invalidation)
@@ -147,11 +145,8 @@ def main():
         # - Did invalidation happen BEFORE hitting the target?
         invalidated_before_target = False
         if invalidated and hit_target:
-            if bars_to_hit is not None and bars_to_hit > 0:
-                target_hit_time = remaining[remaining["high"] >= target_0382].index[0]
-                if invalidation_time < target_hit_time:
-                    invalidated_before_target = True
-            # If bars_to_hit == 0, target was hit on trigger bar itself, so no invalidation before
+            if target_hit_time is not None and invalidation_time < target_hit_time:
+                invalidated_before_target = True
         elif invalidated and not hit_target:
             invalidated_before_target = True
 

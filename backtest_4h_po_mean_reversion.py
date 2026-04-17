@@ -14,6 +14,7 @@ import sqlite3
 import pandas as pd
 import numpy as np
 import warnings
+from study_utils import dedupe_records_by_index_gap
 warnings.filterwarnings("ignore")
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -125,14 +126,16 @@ def analyze_threshold(df4h, df1h, peak_threshold, cross_threshold):
             was_above_peak = False
             peak_po = 0
 
-    print(f"\nTotal events found: {len(events)}")
+    max_bars_forward = 50  # look ahead up to 50 4h bars (~200 hours)
+    events = dedupe_records_by_index_gap(events, "signal_idx", max_bars_forward)
+
+    print(f"\nIndependent events found: {len(events)}")
     if len(events) == 0:
         print("No events to analyze.")
         return
 
     # Track forward from each event
     results = []
-    max_bars_forward = 50  # look ahead up to 50 4h bars (~200 hours)
 
     for evt in events:
         i = evt["signal_idx"]
@@ -142,21 +145,6 @@ def analyze_threshold(df4h, df1h, peak_threshold, cross_threshold):
 
         # How far is price from EMA8 at signal time?
         gap_pct = (close_at_signal - ema8_at_signal) / ema8_at_signal * 100
-
-        # Check if price was already at/below EMA8 at signal bar
-        if df4h.iloc[i]["low"] <= ema8_at_signal:
-            results.append({
-                **evt,
-                "touched_ema8": True,
-                "bars_to_touch": 0,
-                "hours_to_touch": 0,
-                "gap_pct_at_signal": gap_pct,
-                "touch_time": signal_time,
-                "overshoot_pct": (df4h.iloc[i]["low"] - ema8_at_signal) / ema8_at_signal * 100,
-                "price_at_touch": df4h.iloc[i]["low"],
-                "ema8_at_touch": ema8_at_signal,
-            })
-            continue
 
         # Look forward bar by bar (EMA8 changes each bar!)
         touched = False
@@ -256,7 +244,6 @@ def analyze_threshold(df4h, df1h, peak_threshold, cross_threshold):
     if n_touched >= 5:
         print(f"\n  Timing Distribution (bars to touch EMA8):")
         for bucket_label, lo, hi in [
-            ("Same bar (0)", 0, 0),
             ("1-2 bars (4-8h)", 1, 2),
             ("3-5 bars (12-20h)", 3, 5),
             ("6-10 bars (24-40h)", 6, 10),
@@ -308,12 +295,14 @@ def analyze_threshold_bearish(df4h, df1h, peak_threshold, cross_threshold):
             was_below_peak = False
             trough_po = 0
 
-    print(f"\nTotal events found: {len(events)}")
+    max_bars_forward = 50
+    events = dedupe_records_by_index_gap(events, "signal_idx", max_bars_forward)
+
+    print(f"\nIndependent events found: {len(events)}")
     if len(events) == 0:
         print("No events to analyze.")
         return
 
-    max_bars_forward = 50
     results = []
 
     for evt in events:
@@ -325,17 +314,6 @@ def analyze_threshold_bearish(df4h, df1h, peak_threshold, cross_threshold):
         gap_pct = (close_at_signal - ema8_at_signal) / ema8_at_signal * 100
 
         # Bearish: price is below EMA8, mean reversion = price HIGH touches EMA8
-        if df4h.iloc[i]["high"] >= ema8_at_signal:
-            results.append({
-                **evt,
-                "touched_ema8": True,
-                "bars_to_touch": 0,
-                "hours_to_touch": 0,
-                "gap_pct_at_signal": gap_pct,
-                "touch_time": signal_time,
-            })
-            continue
-
         touched = False
         for j in range(i + 1, min(i + max_bars_forward + 1, len(df4h))):
             bar = df4h.iloc[j]
@@ -409,7 +387,6 @@ def analyze_threshold_bearish(df4h, df1h, peak_threshold, cross_threshold):
         touched_df = rdf[rdf["touched_ema8"]]
         print(f"\n  Timing Distribution (bars to touch EMA8):")
         for bucket_label, lo, hi in [
-            ("Same bar (0)", 0, 0),
             ("1-2 bars (4-8h)", 1, 2),
             ("3-5 bars (12-20h)", 3, 5),
             ("6-10 bars (24-40h)", 6, 10),

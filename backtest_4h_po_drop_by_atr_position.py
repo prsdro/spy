@@ -17,6 +17,7 @@ import sqlite3
 import pandas as pd
 import numpy as np
 import warnings
+from study_utils import dedupe_signals_by_daily_cooldown
 warnings.filterwarnings("ignore")
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -152,7 +153,8 @@ def main():
             was_above = False
             peak = 0
 
-    print(f"Total signals: {len(signals)}")
+    signals = dedupe_signals_by_daily_cooldown(signals, df1d_enriched.index, 10)
+    print(f"Independent signals: {len(signals)}")
 
     # ─── For each signal, compute ATR position and forward drops ───
     results = []
@@ -170,6 +172,7 @@ def main():
             continue
 
         drow = df1d_enriched.iloc[dloc]
+        prev_drow = df1d_enriched.iloc[dloc - 1] if dloc > 0 else None
         sig_close = sig["signal_close_4h"]
 
         # Weekly ATR position: (sig_close - prev_wk_close) / wk_atr
@@ -184,8 +187,8 @@ def main():
 
         # Daily ATR position (where today's close sits relative to prev close)
         d_pos = None
-        if pd.notna(drow.get("prev_close")) and pd.notna(drow.get("atr_14")) and drow["atr_14"] > 0:
-            d_pos = (sig_close - drow["prev_close"]) / drow["atr_14"]
+        if prev_drow is not None and pd.notna(prev_drow.get("close")) and pd.notna(prev_drow.get("atr_14")) and prev_drow["atr_14"] > 0:
+            d_pos = (sig_close - prev_drow["close"]) / prev_drow["atr_14"]
 
         # ─── Forward drops: max drop from sig_close over horizons ───
         drop_data = {}
