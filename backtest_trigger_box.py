@@ -102,48 +102,66 @@ def main():
             first_30m = group[group.index.time < pd.Timestamp("10:00").time()]
             # First 1 hour: bars from 09:30 to 10:29
             first_1h = group[group.index.time < pd.Timestamp("10:30").time()]
+            after_30m = group[group.index.time >= pd.Timestamp("10:00").time()]
+            after_1h = group[group.index.time >= pd.Timestamp("10:30").time()]
 
             if direction == "bear":
                 # "Held" = no 10m candle closed ABOVE PDC
                 held_30m = not (first_30m["close"] > pdc).any()
                 held_1h = not (first_1h["close"] > pdc).any()
                 # "Reclaimed" = at least one 10m candle closed ABOVE PDC in first hour
-                reclaimed_1h = (first_1h["close"] > pdc).any()
+                reclaim_bars = first_1h[first_1h["close"] > pdc]
+                reclaimed_1h = len(reclaim_bars) > 0
             else:
                 # "Held" = no 10m candle closed BELOW PDC
                 held_30m = not (first_30m["close"] < pdc).any()
                 held_1h = not (first_1h["close"] < pdc).any()
                 # "Reclaimed" = at least one 10m candle closed BELOW PDC
-                reclaimed_1h = (first_1h["close"] < pdc).any()
+                reclaim_bars = first_1h[first_1h["close"] < pdc]
+                reclaimed_1h = len(reclaim_bars) > 0
 
             if held_30m:
                 stats["held_30m"] += 1
-                if gg_opened:
+                if direction == "bear":
+                    held_30m_opened = len(after_30m) > 0 and (after_30m["low"] <= bear_gg_entry).any()
+                    held_30m_completed = len(after_30m) > 0 and (after_30m["low"] <= bear_gg_exit).any()
+                else:
+                    held_30m_opened = len(after_30m) > 0 and (after_30m["high"] >= bull_gg_entry).any()
+                    held_30m_completed = len(after_30m) > 0 and (after_30m["high"] >= bull_gg_exit).any()
+                if held_30m_opened:
                     stats["held_30m_gg"] += 1
-                if gg_completed:
+                if held_30m_completed:
                     stats["held_30m_gg_complete"] += 1
 
             if held_1h:
                 stats["held_1h"] += 1
-                if gg_opened:
+                if direction == "bear":
+                    held_1h_opened = len(after_1h) > 0 and (after_1h["low"] <= bear_gg_entry).any()
+                    held_1h_completed = len(after_1h) > 0 and (after_1h["low"] <= bear_gg_exit).any()
+                else:
+                    held_1h_opened = len(after_1h) > 0 and (after_1h["high"] >= bull_gg_entry).any()
+                    held_1h_completed = len(after_1h) > 0 and (after_1h["high"] >= bull_gg_exit).any()
+                if held_1h_opened:
                     stats["held_1h_gg"] += 1
-                if gg_completed:
+                if held_1h_completed:
                     stats["held_1h_gg_complete"] += 1
 
             if reclaimed_1h:
                 stats["reclaimed_1h"] += 1
+                reclaim_time = reclaim_bars.index[0]
+                after_reclaim = group[group.index > reclaim_time]
                 if direction == "bear":
                     # Price reclaimed PDC — did it reach the CALL trigger?
-                    reached_call = (group["high"] >= call_trigger).any()
-                    reached_bull_gg = (group["high"] >= bull_gg_entry).any()
+                    reached_call = len(after_reclaim) > 0 and (after_reclaim["high"] >= call_trigger).any()
+                    reached_bull_gg = len(after_reclaim) > 0 and (after_reclaim["high"] >= bull_gg_entry).any()
                     if reached_call:
                         stats["reclaimed_1h_reached_opp_trigger"] += 1
                     if reached_bull_gg:
                         stats["reclaimed_1h_reached_opp_gg"] += 1
                 else:
                     # Price fell back below PDC — did it reach the PUT trigger?
-                    reached_put = (group["low"] <= put_trigger).any()
-                    reached_bear_gg = (group["low"] <= bear_gg_entry).any()
+                    reached_put = len(after_reclaim) > 0 and (after_reclaim["low"] <= put_trigger).any()
+                    reached_bear_gg = len(after_reclaim) > 0 and (after_reclaim["low"] <= bear_gg_entry).any()
                     if reached_put:
                         stats["reclaimed_1h_reached_opp_trigger"] += 1
                     if reached_bear_gg:

@@ -27,6 +27,7 @@ import sqlite3
 import pandas as pd
 import numpy as np
 import warnings
+from study_utils import compute_resampled_atr_ref, dedupe_signals_by_daily_cooldown
 warnings.filterwarnings("ignore")
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -75,38 +76,15 @@ def days_to_opex(date, trading_days):
 
 
 def compute_weekly_ref(df_d, atr_period=14):
-    wk_close = df_d["close"].resample("W-FRI").last()
-    wk_high = df_d["high"].resample("W-FRI").max()
-    wk_low = df_d["low"].resample("W-FRI").min()
-    pc = wk_close.shift(1)
-    tr_df = pd.DataFrame({"h": wk_high, "l": wk_low, "pc": pc})
-    tr_df["tr"] = tr_df.apply(
-        lambda r: max(r["h"] - r["l"],
-                      abs(r["h"] - r["pc"]) if pd.notna(r["pc"]) else 0,
-                      abs(r["l"] - r["pc"]) if pd.notna(r["pc"]) else 0),
-        axis=1
+    return compute_resampled_atr_ref(df_d, "W-FRI", atr_period).rename(
+        columns={"prev_close": "prev_wk_close", "atr": "wk_atr"}
     )
-    atr = tr_df["tr"].rolling(atr_period).mean()
-    return pd.DataFrame({
-        "prev_wk_close": wk_close.shift(1),
-        "wk_atr": atr.shift(1),
-    })
 
 
 def compute_monthly_ref(df_d, atr_period=14):
-    m = df_d.resample("ME").agg({"high": "max", "low": "min", "close": "last"})
-    m["pc"] = m["close"].shift(1)
-    m["tr"] = m.apply(
-        lambda r: max(r["high"] - r["low"],
-                      abs(r["high"] - r["pc"]) if pd.notna(r["pc"]) else 0,
-                      abs(r["low"] - r["pc"]) if pd.notna(r["pc"]) else 0),
-        axis=1
+    ref = compute_resampled_atr_ref(df_d, "ME", atr_period).rename(
+        columns={"prev_close": "prev_month_close", "atr": "monthly_atr"}
     )
-    m["atr"] = m["tr"].rolling(atr_period).mean()
-    ref = pd.DataFrame({
-        "prev_month_close": m["close"].shift(1),
-        "monthly_atr": m["atr"].shift(1),
-    })
     return ref.reindex(df_d.index, method="ffill")
 
 
@@ -157,6 +135,8 @@ def main():
             })
             was_above = False
             peak = 0
+
+    sigs = dedupe_signals_by_daily_cooldown(sigs, df1d.index, 10)
 
     # ─── Build results ───
     results = []

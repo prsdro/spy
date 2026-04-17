@@ -183,7 +183,6 @@ def compute_level_to_level_probabilities(conn):
     print(f"{'Transition':<35s} {'Up':>8s} {'Down':>8s} {'Claim':>8s}")
 
     transitions = [
-        ("Close → Trigger (23.6%)", "upper_trigger", "lower_trigger", n, n, "80%"),
         ("Trigger → 38.2%", "upper_trigger_then_0382", "lower_trigger_then_0382",
          results["upper_trigger"], results["lower_trigger"], "80%"),
         ("38.2% → 61.8%", "upper_0382_then_0618", "lower_0382_then_0618",
@@ -238,10 +237,10 @@ def compute_golden_gate_subway_stats(conn):
 
     for date, group in df.groupby("date"):
         first = group.iloc[0]
-        upper_trigger = first["atr_upper_0382"]   # GG entry at 38.2%
-        lower_trigger = first["atr_lower_0382"]
-        upper_gate = first["atr_upper_0618"]     # GG completion at 61.8%
-        lower_gate = first["atr_lower_0618"]
+        upper_trigger = first["atr_upper_trigger"]
+        lower_trigger = first["atr_lower_trigger"]
+        upper_gate = first["atr_upper_0382"]
+        lower_gate = first["atr_lower_0382"]
 
         if pd.isna(upper_trigger):
             continue
@@ -262,7 +261,10 @@ def compute_golden_gate_subway_stats(conn):
 
         if trigger_cat is not None and trigger_cat in bullish_stats:
             bullish_stats[trigger_cat]["total"] += 1
-            remaining = group[group.index >= trigger_time]
+            if trigger_cat == "open":
+                remaining = group[group.index >= trigger_time]
+            else:
+                remaining = group[group.index > trigger_time]
             completion = remaining[remaining["high"] >= upper_gate]
             if len(completion) > 0:
                 comp_hour = completion.index[0].hour
@@ -283,7 +285,10 @@ def compute_golden_gate_subway_stats(conn):
 
         if trigger_cat is not None and trigger_cat in bearish_stats:
             bearish_stats[trigger_cat]["total"] += 1
-            remaining = group[group.index >= trigger_time]
+            if trigger_cat == "open":
+                remaining = group[group.index >= trigger_time]
+            else:
+                remaining = group[group.index > trigger_time]
             completion = remaining[remaining["low"] <= lower_gate]
             if len(completion) > 0:
                 comp_hour = completion.index[0].hour

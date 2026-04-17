@@ -36,8 +36,9 @@ def main():
     daily["ema_21_prev"] = daily["ema_21"].shift(1)
     daily["ema_21_slope"] = np.where(daily["ema_21"] > daily["ema_21_prev"], "bullish", "bearish")
 
-    # Load 1h compression state at market open each day
-    # Use the 09:00 hourly bar (covers 9:00-9:59, includes market open at 9:30)
+    # Load the last fully completed 1h compression state before the open.
+    # The 08:00 bar is the final full pre-open hour; the 09:00 bar contains
+    # post-open data and cannot be used as an at-open filter.
     print("Loading 1h compression...", flush=True)
     hourly = pd.read_sql_query(
         "SELECT timestamp, compression FROM ind_1h ORDER BY timestamp",
@@ -45,10 +46,9 @@ def main():
     )
     hourly = hourly.set_index("timestamp").sort_index()
 
-    # Build a date -> compression lookup from the 09:00 bar each day
-    hourly_9am = hourly[hourly.index.hour == 9].copy()
-    hourly_9am["date"] = hourly_9am.index.date
-    compression_by_date = hourly_9am.set_index("date")["compression"]
+    hourly_8am = hourly[hourly.index.hour == 8].copy()
+    hourly_8am["date"] = hourly_8am.index.date
+    compression_by_date = hourly_8am.set_index("date")["compression"]
 
     daily["compression_1h"] = daily["date"].map(compression_by_date)
 

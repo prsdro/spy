@@ -149,7 +149,7 @@ def main():
         # Find earliest bar that crossed +1%
         trigger_bars = pre_noon[pre_noon["high"] >= prev_close * 1.01]
         trigger_time = trigger_bars.index[0]
-        remaining = group[group.index >= trigger_time]
+        remaining = group[group.index > trigger_time]
 
         remaining_low = remaining["low"].min()
         remaining_high = remaining["high"].max()

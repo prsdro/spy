@@ -80,22 +80,46 @@ def main():
     monthly["atr_14"] = rma(tr, 14)
     monthly["prev_close"] = prev_close
 
-    # Monthly ATR levels
-    for name, fib in [("trigger", 0.236), ("0382", 0.382), ("0618", 0.618), ("100", 1.0)]:
-        monthly[f"upper_{name}"] = monthly["prev_close"] + fib * monthly["atr_14"]
-        monthly[f"lower_{name}"] = monthly["prev_close"] - fib * monthly["atr_14"]
+    monthly["level_prev_close"] = monthly["close"].shift(1)
+    monthly["level_atr_14"] = monthly["atr_14"].shift(1)
 
-    # Map monthly levels to daily
-    monthly_lookup = monthly.copy()
-    monthly_lookup.index = monthly_lookup.index.to_timestamp()
-    mr = monthly_lookup.reset_index().rename(columns={"month": "timestamp"})
-    m2 = pd.merge_asof(dr[["timestamp"]], mr, on="timestamp", direction="backward",
-                        suffixes=("", "_mo"))
-    for col in ["prev_close", "atr_14", "upper_trigger", "lower_trigger",
-                "upper_0382", "lower_0382", "upper_0618", "lower_0618",
-                "upper_100", "lower_100"]:
-        if col in m2.columns:
-            daily[f"mo_{col}"] = m2[col].values
+    # Monthly ATR levels for the current trading month must come from the
+    # previously completed monthly bar.
+    for name, fib in [("trigger", 0.236), ("0382", 0.382), ("0618", 0.618), ("100", 1.0)]:
+        monthly[f"upper_{name}"] = monthly["level_prev_close"] + fib * monthly["level_atr_14"]
+        monthly[f"lower_{name}"] = monthly["level_prev_close"] - fib * monthly["level_atr_14"]
+
+    monthly_lookup = monthly.rename(
+        columns={
+            "level_prev_close": "mo_prev_close",
+            "level_atr_14": "mo_atr_14",
+            "upper_trigger": "mo_upper_trigger",
+            "lower_trigger": "mo_lower_trigger",
+            "upper_0382": "mo_upper_0382",
+            "lower_0382": "mo_lower_0382",
+            "upper_0618": "mo_upper_0618",
+            "lower_0618": "mo_lower_0618",
+            "upper_100": "mo_upper_100",
+            "lower_100": "mo_lower_100",
+        }
+    )
+    daily = daily.join(
+        monthly_lookup[
+            [
+                "mo_prev_close",
+                "mo_atr_14",
+                "mo_upper_trigger",
+                "mo_lower_trigger",
+                "mo_upper_0382",
+                "mo_lower_0382",
+                "mo_upper_0618",
+                "mo_lower_0618",
+                "mo_upper_100",
+                "mo_lower_100",
+            ]
+        ],
+        on="month",
+    )
 
     dates = daily.index.tolist()
     n_days = len(dates)

@@ -19,6 +19,7 @@ Buckets:
 import os
 import sqlite3
 import pandas as pd
+from study_utils import dedupe_signals_by_daily_cooldown
 import numpy as np
 import warnings
 warnings.filterwarnings("ignore")
@@ -114,7 +115,8 @@ def main():
             was_above = False
             peak = 0
 
-    print(f"V2 signals: {len(signals)}")
+    signals = dedupe_signals_by_daily_cooldown(signals, df1d.index, 10)
+    print(f"Independent V2 signals: {len(signals)}")
 
     # ─── Build results with OpEx context ───
     results = []

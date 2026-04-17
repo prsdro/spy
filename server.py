@@ -12,6 +12,7 @@ from fastapi.staticfiles import StaticFiles
 import sqlite3
 import pandas as pd
 import numpy as np
+from study_utils import compute_resampled_atr_ref, dedupe_signals_by_daily_cooldown
 
 app = FastAPI(title="SPY Visualizer")
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -877,7 +878,8 @@ def _run_gg_study(direction, po_filter=None):
                 continue
 
         # Check completion
-        remaining = group.iloc[trigger_idx:]
+        start_idx = trigger_idx if trigger_hour == "open" else trigger_idx + 1
+        remaining = group.iloc[start_idx:]
         if direction == "bull":
             completed = (remaining["high"] >= gate_exit).any()
         else:
@@ -987,41 +989,18 @@ def _load_4h_po_opex_frames():
     finally:
         c.close()
 
-    # Weekly ATR reference (prev week close + prev week ATR)
-    wk_close = df1d["close"].resample("W-FRI").last()
-    wk_high = df1d["high"].resample("W-FRI").max()
-    wk_low = df1d["low"].resample("W-FRI").min()
-    pc = wk_close.shift(1)
-    tr_df = pd.DataFrame({"h": wk_high, "l": wk_low, "pc": pc})
-    tr_df["tr"] = tr_df.apply(
-        lambda r: max(r["h"] - r["l"],
-                      abs(r["h"] - r["pc"]) if pd.notna(r["pc"]) else 0,
-                      abs(r["l"] - r["pc"]) if pd.notna(r["pc"]) else 0),
-        axis=1
+    wk_ref = compute_resampled_atr_ref(df1d, "W-FRI").rename(
+        columns={"prev_close": "prev_wk_close", "atr": "wk_atr"}
     )
-    wk_ref = pd.DataFrame({
-        "prev_wk_close": wk_close.shift(1),
-        "wk_atr": tr_df["tr"].rolling(14).mean().shift(1),
-    })
     df1d_enr = pd.merge_asof(
         df1d.reset_index().sort_values("timestamp"),
         wk_ref.reset_index().sort_values("timestamp"),
         on="timestamp", direction="backward"
     ).set_index("timestamp")
 
-    # Monthly ATR reference
-    m = df1d.resample("ME").agg({"high": "max", "low": "min", "close": "last"})
-    m["pc"] = m["close"].shift(1)
-    m["tr"] = m.apply(
-        lambda r: max(r["high"] - r["low"],
-                      abs(r["high"] - r["pc"]) if pd.notna(r["pc"]) else 0,
-                      abs(r["low"] - r["pc"]) if pd.notna(r["pc"]) else 0),
-        axis=1
-    )
-    mo_ref = pd.DataFrame({
-        "prev_month_close": m["close"].shift(1),
-        "monthly_atr": m["tr"].rolling(14).mean().shift(1),
-    }).reindex(df1d.index, method="ffill")
+    mo_ref = compute_resampled_atr_ref(df1d, "ME").rename(
+        columns={"prev_close": "prev_month_close", "atr": "monthly_atr"}
+    ).reindex(df1d.index, method="ffill")
     df1d_enr = df1d_enr.join(mo_ref)
 
     _load_4h_po_opex_frames._cache = (df4h, df1d_enr)
@@ -1060,6 +1039,8 @@ def _run_4h_po_opex_study(ext_min=0.618, drop_threshold=1.0, horizon_days=10):
             })
             was_above = False
             peak = 0
+
+    signals = dedupe_signals_by_daily_cooldown(signals, df1d.index, horizon_days)
 
     results = []
     for s in signals:
@@ -1188,7 +1169,7 @@ def _run_gap_up_pre_noon_study(opex_only=False, non_opex_friday=False, outcome="
         # First bar where pre-noon crossed +1%
         trigger_bars = pre_noon[pre_noon["high"] >= prev_close * 1.01]
         trigger_time = trigger_bars.index[0]
-        remaining = group[group.index >= trigger_time]
+        remaining = group[group.index > trigger_time]
 
         remaining_low = remaining["low"].min()
         remaining_high = remaining["high"].max()
