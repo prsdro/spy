@@ -1,0 +1,356 @@
+
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.4.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+Traceback (most recent call last):  File "/root/spy/backtest_4h_po_daily_mean_reversion.py", line 18, in <module>
+    import pandas as pd
+  File "/usr/local/lib/python3.12/dist-packages/pandas/__init__.py", line 46, in <module>
+    from pandas.core.api import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/api.py", line 27, in <module>
+    from pandas.core.arrays import Categorical
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/__init__.py", line 1, in <module>
+    from pandas.core.arrays.arrow import ArrowExtensionArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/arrow/__init__.py", line 5, in <module>
+    from pandas.core.arrays.arrow.array import ArrowExtensionArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/arrow/array.py", line 65, in <module>
+    from pandas.core import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/ops/__init__.py", line 9, in <module>
+    from pandas.core.ops.array_ops import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/ops/array_ops.py", line 55, in <module>
+    from pandas.core.computation import expressions
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/computation/expressions.py", line 22, in <module>
+    from pandas.core.computation.check import NUMEXPR_INSTALLED
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/computation/check.py", line 5, in <module>
+    ne = import_optional_dependency("numexpr", errors="warn")
+  File "/usr/local/lib/python3.12/dist-packages/pandas/compat/_optional.py", line 158, in import_optional_dependency
+    module = importlib.import_module(name)
+  File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "/usr/lib/python3/dist-packages/numexpr/__init__.py", line 24, in <module>
+    from numexpr.interpreter import MAX_THREADS, use_vml, __BLOCK_SIZE1__
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/dist-packages/numpy/core/_multiarray_umath.py", line 46, in __getattr__
+    raise ImportError(msg)
+ImportError: 
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.4.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+
+
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.4.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+Traceback (most recent call last):  File "/root/spy/backtest_4h_po_daily_mean_reversion.py", line 18, in <module>
+    import pandas as pd
+  File "/usr/local/lib/python3.12/dist-packages/pandas/__init__.py", line 46, in <module>
+    from pandas.core.api import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/api.py", line 27, in <module>
+    from pandas.core.arrays import Categorical
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/__init__.py", line 1, in <module>
+    from pandas.core.arrays.arrow import ArrowExtensionArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/arrow/__init__.py", line 5, in <module>
+    from pandas.core.arrays.arrow.array import ArrowExtensionArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/arrow/array.py", line 79, in <module>
+    from pandas.core.arrays.masked import BaseMaskedArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/masked.py", line 56, in <module>
+    from pandas.core import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/nanops.py", line 54, in <module>
+    bn = import_optional_dependency("bottleneck", errors="warn")
+  File "/usr/local/lib/python3.12/dist-packages/pandas/compat/_optional.py", line 158, in import_optional_dependency
+    module = importlib.import_module(name)
+  File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "/usr/lib/python3/dist-packages/bottleneck/__init__.py", line 7, in <module>
+    from .move import (move_argmax, move_argmin, move_max, move_mean, move_median,
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/dist-packages/numpy/core/_multiarray_umath.py", line 46, in __getattr__
+    raise ImportError(msg)
+ImportError: 
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.4.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+
+Loading 4h data...
+Loading daily data...
+
+==========================================================================================
+STUDY A: 4H PO Peaked Above 110 → Falls Below 100 → Daily 21 EMA Mean Reversion
+==========================================================================================
+
+Independent 4H PO rollover signals found: 6
+
+══════════════════════════════════════════════════════════════════════════════════════════
+  SUMMARY (6 events where price was above daily 21 EMA at signal)
+══════════════════════════════════════════════════════════════════════════════════════════
+
+  Touch Rates (within 40 trading days):
+    Daily 21 EMA: 6/6 = 100.0%
+    Daily 48 EMA: 4/6 = 66.7%
+
+  Timing to Daily 21 EMA (trading days):
+    Median:  16 days
+    Mean:    15.2 days
+    Min:     5 days
+    Max:     22 days
+    25th %%:  12 days
+    75th %%:  20 days
+
+  Gap at Signal (close vs daily 21 EMA):
+    Median:  2.36%
+    Mean:    2.43%
+    Max:     3.36%
+
+  Max Drawdown (signal close → lowest low before EMA21 touch):
+    Median:  -1.07%
+    Mean:    -1.40%
+    Worst:   -3.60%
+
+══════════════════════════════════════════════════════════════════════════════════════════
+  GAP DECOMPOSITION: How did the gap between price and daily 21 EMA close?
+══════════════════════════════════════════════════════════════════════════════════════════
+
+  Overall averages:
+    EMA rising (consolidation):  111.8% of gap closure
+    Price dropping:              -11.8% of gap closure
+    Median EMA contribution:     116.1%
+
+  Classification:
+    CONSOLIDATION (EMA ≥60%):  5/6 = 83.3%
+      → Price went sideways, daily 21 EMA rose up to meet it
+    DROP (Price ≥60%):         1/6 = 16.7%
+      → Price fell sharply/steadily to the daily 21 EMA
+    MIXED (40-60% each):       0/6 = 0.0%
+      → Both contributed meaningfully
+
+  CONSOLIDATION events (5):
+    Median days to touch: 18
+    Mean days to touch:   17.2
+    Median gap at signal: 2.13%
+
+  DROP events (1):
+    Median days to touch: 5
+    Mean days to touch:   5.0
+    Median gap at signal: 2.94%
+
+══════════════════════════════════════════════════════════════════════════════════════════
+  POST-TOUCH BEHAVIOR (after price touches daily 21 EMA)
+══════════════════════════════════════════════════════════════════════════════════════════
+
+  10-day post-touch classification:
+    BOUNCE (>1.5% up, <0.5% further down):       3/6 = 50.0%
+    CHOP (modest moves both ways):                1/6 = 16.7%
+    CONTINUATION DOWN (>1.5% further drop):       2/6 = 33.3%
+
+  10-day post-touch stats:
+    Max bounce (median):        +1.93%
+    Max further drop (median):  -0.91%
+
+  Day +1 after touch:
+    Close above daily 21 EMA: 3/6 = 50.0%
+    Median distance from EMA21: 0.03%
+
+  Day +3 after touch:
+    Close above daily 21 EMA: 4/6 = 66.7%
+    Median distance from EMA21: 0.49%
+
+  Day +5 after touch:
+    Close above daily 21 EMA: 4/6 = 66.7%
+    Median distance from EMA21: 0.91%
+
+  Day +10 after touch:
+    Close above daily 21 EMA: 5/6 = 83.3%
+    Median distance from EMA21: 0.70%
+
+══════════════════════════════════════════════════════════════════════════════════════════
+  TIMING DISTRIBUTION (trading days to daily 21 EMA)
+══════════════════════════════════════════════════════════════════════════════════════════
+    1 day                         :   0 (  0.0%)
+    2-3 days                      :   0 (  0.0%)
+    4-5 days (1 week)             :   1 ( 16.7%)
+    6-10 days (1-2 weeks)         :   0 (  0.0%)
+    11-15 days (2-3 weeks)        :   2 ( 33.3%)
+    16-20 days (3-4 weeks)        :   1 ( 16.7%)
+    21-30 days (4-6 weeks)        :   2 ( 33.3%)
+    31+ days                      :   0 (  0.0%)
+
+══════════════════════════════════════════════════════════════════════════════════════════
+  EVENT DETAILS
+══════════════════════════════════════════════════════════════════════════════════════════
+  Signal Date    PkPO   Gap%  Days  EMA%  Prc% Type                     Post    DD%
+  ──────────────────────────────────────────────────────────────────────────────────────
+  2004-11-08      111   3.36    22   126   -26 CONSOLIDATION          BOUNCE   -0.2
+  2011-07-05      117   2.94     5    38    62 DROP                     CHOP   -2.3
+  2016-12-12      111   2.59    12    64    36 CONSOLIDATION          BOUNCE   -1.5
+  2017-02-16      118   2.11    21   140   -40 CONSOLIDATION  CONTINUATION_DOWN   -0.6
+  2017-10-06      122   1.46    13   106    -6 CONSOLIDATION          BOUNCE   -0.1
+  2018-01-08      112   2.13    18   196   -96 CONSOLIDATION  CONTINUATION_DOWN   -3.6
+
+══════════════════════════════════════════════════════════════════════════════════════════
+  CROSS-TAB: Gap Closure Type → Post-Touch Behavior
+══════════════════════════════════════════════════════════════════════════════════════════
+  Type                N     BOUNCE       CHOP  CONT_DOWN
+  ────────────────────────────────────────────────────
+  CONSOLIDATION       5    3 (  60%)    0 (   0%)    2 (  40%)
+  DROP                1    0 (   0%)    1 ( 100%)    0 (   0%)
+
+==========================================================================================
+STUDY B: 4H PO Peaked Above 100 → Falls Below 100 → Daily 21 EMA Mean Reversion
+==========================================================================================
+
+Independent 4H PO rollover signals found: 18
+
+══════════════════════════════════════════════════════════════════════════════════════════
+  SUMMARY (18 events where price was above daily 21 EMA at signal)
+══════════════════════════════════════════════════════════════════════════════════════════
+
+  Touch Rates (within 40 trading days):
+    Daily 21 EMA: 18/18 = 100.0%
+    Daily 48 EMA: 16/18 = 88.9%
+
+  Timing to Daily 21 EMA (trading days):
+    Median:  14 days
+    Mean:    14.6 days
+    Min:     2 days
+    Max:     35 days
+    25th %%:  11 days
+    75th %%:  19 days
+
+  Gap at Signal (close vs daily 21 EMA):
+    Median:  2.77%
+    Mean:    3.11%
+    Max:     6.12%
+
+  Max Drawdown (signal close → lowest low before EMA21 touch):
+    Median:  -1.93%
+    Mean:    -2.20%
+    Worst:   -7.42%
+
+══════════════════════════════════════════════════════════════════════════════════════════
+  GAP DECOMPOSITION: How did the gap between price and daily 21 EMA close?
+══════════════════════════════════════════════════════════════════════════════════════════
+
+  Overall averages:
+    EMA rising (consolidation):  104.3% of gap closure
+    Price dropping:              -4.3% of gap closure
+    Median EMA contribution:     90.4%
+
+  Classification:
+    CONSOLIDATION (EMA ≥60%):  15/18 = 83.3%
+      → Price went sideways, daily 21 EMA rose up to meet it
+    DROP (Price ≥60%):         2/18 = 11.1%
+      → Price fell sharply/steadily to the daily 21 EMA
+    MIXED (40-60% each):       1/18 = 5.6%
+      → Both contributed meaningfully
+
+  CONSOLIDATION events (15):
+    Median days to touch: 15
+    Mean days to touch:   16.7
+    Median gap at signal: 2.58%
+
+  DROP events (2):
+    Median days to touch: 4
+    Mean days to touch:   3.5
+    Median gap at signal: 4.53%
+
+  MIXED events (1):
+    Median days to touch: 6
+    Mean days to touch:   6.0
+    Median gap at signal: 3.76%
+
+══════════════════════════════════════════════════════════════════════════════════════════
+  POST-TOUCH BEHAVIOR (after price touches daily 21 EMA)
+══════════════════════════════════════════════════════════════════════════════════════════
+
+  10-day post-touch classification:
+    BOUNCE (>1.5% up, <0.5% further down):       5/18 = 27.8%
+    CHOP (modest moves both ways):                3/18 = 16.7%
+    CONTINUATION DOWN (>1.5% further drop):       10/18 = 55.6%
+
+  10-day post-touch stats:
+    Max bounce (median):        +2.19%
+    Max further drop (median):  -1.76%
+
+  Day +1 after touch:
+    Close above daily 21 EMA: 10/18 = 55.6%
+    Median distance from EMA21: 0.25%
+
+  Day +3 after touch:
+    Close above daily 21 EMA: 12/18 = 66.7%
+    Median distance from EMA21: 0.87%
+
+  Day +5 after touch:
+    Close above daily 21 EMA: 10/18 = 55.6%
+    Median distance from EMA21: 0.20%
+
+  Day +10 after touch:
+    Close above daily 21 EMA: 11/18 = 61.1%
+    Median distance from EMA21: 0.26%
+
+══════════════════════════════════════════════════════════════════════════════════════════
+  TIMING DISTRIBUTION (trading days to daily 21 EMA)
+══════════════════════════════════════════════════════════════════════════════════════════
+    1 day                         :   0 (  0.0%)
+    2-3 days                      :   1 (  5.6%)
+    4-5 days (1 week)             :   1 (  5.6%)
+    6-10 days (1-2 weeks)         :   2 ( 11.1%)
+    11-15 days (2-3 weeks)        :   7 ( 38.9%)
+    16-20 days (3-4 weeks)        :   4 ( 22.2%)
+    21-30 days (4-6 weeks)        :   2 ( 11.1%)
+    31+ days                      :   1 (  5.6%)
+
+══════════════════════════════════════════════════════════════════════════════════════════
+  EVENT DETAILS
+══════════════════════════════════════════════════════════════════════════════════════════
+  Signal Date    PkPO   Gap%  Days  EMA%  Prc% Type                     Post    DD%
+  ──────────────────────────────────────────────────────────────────────────────────────
+  2000-03-17      100   5.28    12   107    -7 CONSOLIDATION  CONTINUATION_DOWN   -3.6
+  2004-11-08      111   3.36    22   126   -26 CONSOLIDATION          BOUNCE   -0.2
+  2005-11-28      109   2.45    15    76    24 CONSOLIDATION            CHOP   -1.7
+  2007-04-17      101   2.03    35   287  -187 CONSOLIDATION  CONTINUATION_DOWN   -0.1
+  2007-09-19      106   3.81    19   102    -2 CONSOLIDATION  CONTINUATION_DOWN   -2.3
+  2011-07-05      117   2.94     5    38    62 DROP                     CHOP   -2.3
+  2012-03-14      104   2.58    11    78    22 CONSOLIDATION  CONTINUATION_DOWN   -3.0
+  2014-06-09      104   2.21    13    73    27 CONSOLIDATION          BOUNCE   -1.2
+  2016-12-12      111   2.59    12    64    36 CONSOLIDATION          BOUNCE   -1.5
+  2017-02-16      118   2.11    21   140   -40 CONSOLIDATION  CONTINUATION_DOWN   -0.6
+  2017-10-06      122   1.46    13   106    -6 CONSOLIDATION          BOUNCE   -0.1
+  2018-01-08      112   2.13    18   196   -96 CONSOLIDATION  CONTINUATION_DOWN   -3.6
+  2020-06-09      105   6.12     2    15    85 DROP                     CHOP   -7.4
+  2020-08-27      102   3.76     6    52    48 MIXED          CONTINUATION_DOWN   -5.0
+  2021-04-06      101   3.14    20   155   -55 CONSOLIDATION  CONTINUATION_DOWN   -0.5
+  2021-07-06      107   1.53     9    78    22 CONSOLIDATION          BOUNCE   -2.1
+  2021-11-05      109   3.34    14    67    33 CONSOLIDATION  CONTINUATION_DOWN   -2.8
+  2022-07-29      101   5.17    16   116   -16 CONSOLIDATION  CONTINUATION_DOWN   -1.5
+
+══════════════════════════════════════════════════════════════════════════════════════════
+  CROSS-TAB: Gap Closure Type → Post-Touch Behavior
+══════════════════════════════════════════════════════════════════════════════════════════
+  Type                N     BOUNCE       CHOP  CONT_DOWN
+  ────────────────────────────────────────────────────
+  CONSOLIDATION      15    5 (  33%)    1 (   7%)    9 (  60%)
+  DROP                2    0 (   0%)    2 ( 100%)    0 (   0%)
+  MIXED               1    0 (   0%)    0 (   0%)    1 ( 100%)

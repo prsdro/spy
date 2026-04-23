@@ -1,0 +1,321 @@
+
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.4.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+Traceback (most recent call last):  File "/root/spy/backtest_gg_chop_zone.py", line 24, in <module>
+    import pandas as pd
+  File "/usr/local/lib/python3.12/dist-packages/pandas/__init__.py", line 46, in <module>
+    from pandas.core.api import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/api.py", line 27, in <module>
+    from pandas.core.arrays import Categorical
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/__init__.py", line 1, in <module>
+    from pandas.core.arrays.arrow import ArrowExtensionArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/arrow/__init__.py", line 5, in <module>
+    from pandas.core.arrays.arrow.array import ArrowExtensionArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/arrow/array.py", line 65, in <module>
+    from pandas.core import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/ops/__init__.py", line 9, in <module>
+    from pandas.core.ops.array_ops import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/ops/array_ops.py", line 55, in <module>
+    from pandas.core.computation import expressions
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/computation/expressions.py", line 22, in <module>
+    from pandas.core.computation.check import NUMEXPR_INSTALLED
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/computation/check.py", line 5, in <module>
+    ne = import_optional_dependency("numexpr", errors="warn")
+  File "/usr/local/lib/python3.12/dist-packages/pandas/compat/_optional.py", line 158, in import_optional_dependency
+    module = importlib.import_module(name)
+  File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "/usr/lib/python3/dist-packages/numexpr/__init__.py", line 24, in <module>
+    from numexpr.interpreter import MAX_THREADS, use_vml, __BLOCK_SIZE1__
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/dist-packages/numpy/core/_multiarray_umath.py", line 46, in __getattr__
+    raise ImportError(msg)
+ImportError: 
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.4.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+
+
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.4.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+Traceback (most recent call last):  File "/root/spy/backtest_gg_chop_zone.py", line 24, in <module>
+    import pandas as pd
+  File "/usr/local/lib/python3.12/dist-packages/pandas/__init__.py", line 46, in <module>
+    from pandas.core.api import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/api.py", line 27, in <module>
+    from pandas.core.arrays import Categorical
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/__init__.py", line 1, in <module>
+    from pandas.core.arrays.arrow import ArrowExtensionArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/arrow/__init__.py", line 5, in <module>
+    from pandas.core.arrays.arrow.array import ArrowExtensionArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/arrow/array.py", line 79, in <module>
+    from pandas.core.arrays.masked import BaseMaskedArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/masked.py", line 56, in <module>
+    from pandas.core import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/nanops.py", line 54, in <module>
+    bn = import_optional_dependency("bottleneck", errors="warn")
+  File "/usr/local/lib/python3.12/dist-packages/pandas/compat/_optional.py", line 158, in import_optional_dependency
+    module = importlib.import_module(name)
+  File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "/usr/lib/python3/dist-packages/bottleneck/__init__.py", line 7, in <module>
+    from .move import (move_argmax, move_argmin, move_max, move_mean, move_median,
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/dist-packages/numpy/core/_multiarray_umath.py", line 46, in __getattr__
+    raise ImportError(msg)
+ImportError: 
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.4.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+
+Loading 10m indicator data...
+Loaded 256,349 bars across 6,582 trading days
+
+======================================================================
+GOLDEN GATE CHOP ZONE: TIME BETWEEN 61.8% AND 78.6%
+======================================================================
+
+Total GG completions: 4,313
+  Bullish: 2,192
+  Bearish: 2,121
+
+───────────────────────────────────────────────────────
+OVERALL RESOLUTION
+───────────────────────────────────────────────────────
+
+  BULL (n=2,192):
+         instant_continuation:   388 ( 17.7%)
+                 continuation:   505 ( 23.0%)
+                     reversal:  1233 ( 56.2%)
+                  eod_in_chop:    66 (  3.0%)
+
+  BEAR (n=2,121):
+         instant_continuation:   501 ( 23.6%)
+                 continuation:   491 ( 23.1%)
+                     reversal:  1087 ( 51.2%)
+                  eod_in_chop:    42 (  2.0%)
+
+  COMBINED (n=4,313):
+         instant_continuation:   889 ( 20.6%)
+                 continuation:   996 ( 23.1%)
+                     reversal:  2320 ( 53.8%)
+                  eod_in_chop:   108 (  2.5%)
+
+───────────────────────────────────────────────────────
+CHOP ZONE EVENTS (excluding instant continuations)
+───────────────────────────────────────────────────────
+  Total events that entered chop: 3,424
+  Continuation (hit 78.6%): 996 (29.1%)
+  Reversal (fell below 61.8%): 2320 (67.8%)
+  EOD still in chop: 108 (3.2%)
+
+───────────────────────────────────────────────────────
+REVERSAL RATE BY TIME IN CHOP (10-minute bars)
+───────────────────────────────────────────────────────
+
+  COMBINED (Bull + Bear):
+    Bars  Minutes      n   Cont    Rev    EOD    Rev%   Cont%  Cum Rev%
+       0       0m   2446    514   1859     73   76.0%   21.0%    70.0%  ***
+       1      10m    523    249    254     20   48.6%   47.6%    48.9%
+       2      20m    206    109     91      6   44.2%   52.9%    47.0%
+       3      30m     88     43     42      3   47.7%   48.9%    48.3%
+       4      40m     57     26     29      2   50.9%   45.6%    47.7%
+       5      50m     34     14     18      2   52.9%   41.2%    45.0%
+       6      60m     21     15      6      0   28.6%   71.4%    39.7%
+       7      70m     12      7      5      0   41.7%   58.3%    44.7%
+       8      80m     12      7      5      0   41.7%   58.3%    45.7%
+       9      90m      4      2      1      1   25.0%   50.0%    47.8%
+
+───────────────────────────────────────────────────────
+REVERSAL RATE BY CHOP DURATION BUCKET
+───────────────────────────────────────────────────────
+
+  BULL:
+                        Bucket      n   Cont    Rev    Rev%   Cont%
+         0 bars (instant exit)   1201    207    950   82.1%   17.9% <<<
+                1 bar (10 min)    285    133    142   51.6%   48.4%
+               2 bars (20 min)    131     69     58   45.7%   54.3%
+               3 bars (30 min)     61     31     28   47.5%   52.5%
+          4-5 bars (40-50 min)     69     32     33   50.8%   49.2%
+          6-8 bars (60-80 min)     34     21     13   38.2%   61.8%
+        9-12 bars (90-120 min)     14      8      5   38.5%   61.5%
+      13-18 bars (130-180 min)      7      3      3   50.0%   50.0%
+           19+ bars (190+ min)      2      1      1   50.0%   50.0%
+
+  BEAR:
+                        Bucket      n   Cont    Rev    Rev%   Cont%
+         0 bars (instant exit)   1245    307    909   74.8%   25.2% <<<
+                1 bar (10 min)    238    116    112   49.1%   50.9%
+               2 bars (20 min)     75     40     33   45.2%   54.8%
+               3 bars (30 min)     27     12     14   53.8%   46.2%
+          4-5 bars (40-50 min)     22      8     14   63.6%   36.4%
+          6-8 bars (60-80 min)     11      8      3   27.3%   72.7%
+        9-12 bars (90-120 min)      2      0      2  100.0%    0.0%
+
+  COMBINED:
+                        Bucket      n   Cont    Rev    Rev%   Cont%
+         0 bars (instant exit)   2446    514   1859   78.3%   21.7% <<<
+                1 bar (10 min)    523    249    254   50.5%   49.5%
+               2 bars (20 min)    206    109     91   45.5%   54.5%
+               3 bars (30 min)     88     43     42   49.4%   50.6%
+          4-5 bars (40-50 min)     91     40     47   54.0%   46.0%
+          6-8 bars (60-80 min)     45     29     16   35.6%   64.4%
+        9-12 bars (90-120 min)     16      8      7   46.7%   53.3%
+      13-18 bars (130-180 min)      7      3      3   50.0%   50.0%
+           19+ bars (190+ min)      2      1      1   50.0%   50.0%
+
+───────────────────────────────────────────────────────
+SURVIVAL ANALYSIS: If chopping for at least N bars...
+───────────────────────────────────────────────────────
+
+   >=Bars   Min   Still  Will Cont   Will Rev    Rev%
+      0b    0m    3424   996 (30.0%)  2320 (70.0%) <<<
+      1b   10m     978   482 (51.1%)   461 (48.9%)
+      2b   20m     455   233 (53.0%)   207 (47.0%)
+      3b   30m     249   124 (51.7%)   116 (48.3%)
+      4b   40m     161    81 (52.3%)    74 (47.7%)
+      5b   50m     104    55 (55.0%)    45 (45.0%)
+      6b   60m      70    41 (60.3%)    27 (39.7%)
+      8b   80m      37    19 (54.3%)    16 (45.7%)
+     10b  100m      21    10 (50.0%)    10 (50.0%)
+     12b  120m      14     6 (46.2%)     7 (53.8%)
+
+───────────────────────────────────────────────────────
+CHOP RESOLUTION BY GG COMPLETION HOUR
+───────────────────────────────────────────────────────
+
+  BULL:
+    Hour      n   Cont    Rev    EOD    Rev%  Avg Chop
+  09:00    537    204    333      0   62.0%     0.6 bars
+  10:00    402    110    292      0   72.6%     1.0 bars
+  11:00    214     63    151      0   70.6%     1.2 bars
+  12:00    154     29    125      0   81.2%     1.3 bars
+  13:00    132     24    107      1   81.7%     1.3 bars
+  14:00    161     48    112      1   70.0%     1.0 bars
+  15:00    204     27    113     64   80.7%     0.4 bars
+
+  BEAR:
+    Hour      n   Cont    Rev    EOD    Rev%  Avg Chop
+  09:00    423    139    284      0   67.1%     0.3 bars
+  10:00    386    129    257      0   66.6%     0.4 bars
+  11:00    207     63    144      0   69.6%     0.5 bars
+  12:00    127     35     92      0   72.4%     0.5 bars
+  13:00    138     36    102      0   73.9%     0.6 bars
+  14:00    150     40    110      0   73.3%     0.5 bars
+  15:00    189     49     98     42   66.7%     0.3 bars
+
+───────────────────────────────────────────────────────
+PO AT GG COMPLETION vs RESOLUTION
+───────────────────────────────────────────────────────
+
+  BULLISH GG completions:
+                 PO Zone     n   Cont%    Rev%  Avg Chop
+       PO -23.6 to +23.6   156   26.5%   73.5%     0.4 bars
+       PO +23.6 to +61.8   751   25.2%   74.8%     0.9 bars
+        PO +61.8 to +100   699   30.7%   69.3%     1.0 bars
+               PO > +100   187   40.0%   60.0%     0.8 bars
+
+  BEARISH GG completions:
+                 PO Zone     n   Cont%    Rev%  Avg Chop
+              PO < -61.8   856   33.3%   66.7%     0.5 bars
+       PO -61.8 to -23.6   607   29.7%   70.3%     0.4 bars
+       PO -23.6 to +23.6   150   25.3%   74.7%     0.2 bars
+
+───────────────────────────────────────────────────────
+FAST CLOUD (10m) AT GG COMPLETION vs RESOLUTION
+───────────────────────────────────────────────────────
+
+  BULL:
+       Bullish cloud: n= 1756, cont=29.1%, rev=70.9%, avg chop=0.9 bars
+       Bearish cloud: n=   48, cont=27.1%, rev=72.9%, avg chop=0.4 bars
+
+  BEAR:
+       Bullish cloud: n=   43, cont=16.3%, rev=83.7%, avg chop=0.1 bars
+       Bearish cloud: n= 1577, cont=31.5%, rev=68.5%, avg chop=0.4 bars
+
+───────────────────────────────────────────────────────
+COMPRESSION AT GG COMPLETION vs RESOLUTION
+───────────────────────────────────────────────────────
+
+  BULL:
+      In compression: n=  585, cont=28.9%, rev=71.1%, avg chop=0.8 bars
+        In expansion: n= 1219, cont=29.1%, rev=70.9%, avg chop=0.9 bars
+
+  BEAR:
+      In compression: n=  489, cont=30.1%, rev=69.9%, avg chop=0.4 bars
+        In expansion: n= 1131, cont=31.6%, rev=68.4%, avg chop=0.4 bars
+
+───────────────────────────────────────────────────────
+COMBINED SIGNAL: CHOP DURATION + PO ZONE
+───────────────────────────────────────────────────────
+
+  BULLISH — chop bars >= N AND PO < 61.8 at completion:
+    >= 3 bars + PO < 61.8: n=91, cont=44, rev=43, rev%=49.4%
+    >= 5 bars + PO < 61.8: n=42, cont=21, rev=19, rev%=47.5%
+    >= 6 bars + PO < 61.8: n=28, cont=14, rev=13, rev%=48.1%
+    >= 8 bars + PO < 61.8: n=14, cont=6, rev=7, rev%=53.8%
+
+  BULLISH — chop bars >= N AND PO >= 61.8 at completion:
+    >= 3 bars + PO >= 61.8: n=96, cont=52, rev=40, rev%=43.5%
+    >= 5 bars + PO >= 61.8: n=43, cont=23, rev=18, rev%=43.9%
+    >= 6 bars + PO >= 61.8: n=29, cont=19, rev=9, rev%=32.1%
+    >= 8 bars + PO >= 61.8: n=19, cont=11, rev=7, rev%=38.9%
+    >= 10 bars + PO >= 61.8: n=15, cont=8, rev=6, rev%=42.9%
+
+  BEARISH — chop bars >= N AND PO > -61.8 at completion:
+    >= 3 bars + PO > -61.8: n=25, cont=13, rev=11, rev%=45.8%
+
+───────────────────────────────────────────────────────
+AFTER REVERSAL: Does price recover back above 61.8%?
+───────────────────────────────────────────────────────
+  Price recovered back to 61.8% after reversal: 1864/2279 (81.8%)
+
+───────────────────────────────────────────────────────
+CHOP DURATION STATISTICS (for events that entered chop)
+───────────────────────────────────────────────────────
+
+  BULL:
+    Mean chop bars:   0.9 (9 min)
+    Median chop bars: 0 (0 min)
+    75th pctl:        1 bars (10 min)
+    90th pctl:        3 bars (30 min)
+    Max:              24 bars (240 min)
+    continuation avg chop: 1.6 bars (16 min)
+    reversal avg chop: 0.6 bars (6 min)
+
+  BEAR:
+    Mean chop bars:   0.4 (4 min)
+    Median chop bars: 0 (0 min)
+    75th pctl:        0 bars (0 min)
+    90th pctl:        1 bars (10 min)
+    Max:              12 bars (120 min)
+    continuation avg chop: 0.7 bars (7 min)
+    reversal avg chop: 0.3 bars (3 min)
+
+✓ Study complete.

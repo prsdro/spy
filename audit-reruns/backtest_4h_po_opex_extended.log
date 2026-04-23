@@ -1,0 +1,208 @@
+
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.4.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+Traceback (most recent call last):  File "/root/spy/backtest_4h_po_opex_extended.py", line 27, in <module>
+    import pandas as pd
+  File "/usr/local/lib/python3.12/dist-packages/pandas/__init__.py", line 46, in <module>
+    from pandas.core.api import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/api.py", line 27, in <module>
+    from pandas.core.arrays import Categorical
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/__init__.py", line 1, in <module>
+    from pandas.core.arrays.arrow import ArrowExtensionArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/arrow/__init__.py", line 5, in <module>
+    from pandas.core.arrays.arrow.array import ArrowExtensionArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/arrow/array.py", line 65, in <module>
+    from pandas.core import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/ops/__init__.py", line 9, in <module>
+    from pandas.core.ops.array_ops import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/ops/array_ops.py", line 55, in <module>
+    from pandas.core.computation import expressions
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/computation/expressions.py", line 22, in <module>
+    from pandas.core.computation.check import NUMEXPR_INSTALLED
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/computation/check.py", line 5, in <module>
+    ne = import_optional_dependency("numexpr", errors="warn")
+  File "/usr/local/lib/python3.12/dist-packages/pandas/compat/_optional.py", line 158, in import_optional_dependency
+    module = importlib.import_module(name)
+  File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "/usr/lib/python3/dist-packages/numexpr/__init__.py", line 24, in <module>
+    from numexpr.interpreter import MAX_THREADS, use_vml, __BLOCK_SIZE1__
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/dist-packages/numpy/core/_multiarray_umath.py", line 46, in __getattr__
+    raise ImportError(msg)
+ImportError: 
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.4.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+
+
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.4.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+Traceback (most recent call last):  File "/root/spy/backtest_4h_po_opex_extended.py", line 27, in <module>
+    import pandas as pd
+  File "/usr/local/lib/python3.12/dist-packages/pandas/__init__.py", line 46, in <module>
+    from pandas.core.api import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/api.py", line 27, in <module>
+    from pandas.core.arrays import Categorical
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/__init__.py", line 1, in <module>
+    from pandas.core.arrays.arrow import ArrowExtensionArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/arrow/__init__.py", line 5, in <module>
+    from pandas.core.arrays.arrow.array import ArrowExtensionArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/arrow/array.py", line 79, in <module>
+    from pandas.core.arrays.masked import BaseMaskedArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/masked.py", line 56, in <module>
+    from pandas.core import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/nanops.py", line 54, in <module>
+    bn = import_optional_dependency("bottleneck", errors="warn")
+  File "/usr/local/lib/python3.12/dist-packages/pandas/compat/_optional.py", line 158, in import_optional_dependency
+    module = importlib.import_module(name)
+  File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "/usr/lib/python3/dist-packages/bottleneck/__init__.py", line 7, in <module>
+    from .move import (move_argmax, move_argmin, move_max, move_mean, move_median,
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/dist-packages/numpy/core/_multiarray_umath.py", line 46, in __getattr__
+    raise ImportError(msg)
+ImportError: 
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.4.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+
+Loading data...
+Total V2 signals: 81
+Extended (wk or mo ≥0.618): 72
+Deep extended (wk or mo ≥1.0): 41
+
+════════════════════════════════════════════════════════════════════════════════
+  ALL V2 SIGNALS (unfiltered baseline)   (N total = 81)
+════════════════════════════════════════════════════════════════════════════════
+  Bucket                                        N   ≥0.5%5d   ≥1.0%5d   ≥1.5%5d    Med5d   Med10d
+  OpEx Friday (day 0)                           3       67%       67%       67%   -2.34%   -2.34%
+  Post-OpEx day 1                               4      100%       75%       25%   -1.08%   -1.35%
+  Post-OpEx day 2                               3       67%       33%       33%   -0.76%   -2.44%
+  Post-OpEx day 3                               0   (no events)
+  Post-OpEx day 4                               2       50%        0%        0%   -0.47%   -0.47%
+  Post-OpEx day 5                               3       67%       67%       67%   -2.04%   -2.04%
+  Post-OpEx day 1-5 (combined)                 12       75%       50%       33%   -0.99%   -1.35%
+  OpEx Fri + Post-OpEx 1-5 (full window)       15       73%       53%       40%   -1.01%   -1.54%
+  Other (not in OpEx window)                   66       74%       45%       32%   -0.93%   -1.34%
+
+  ─── KEY WINDOW (OpEx Fri + Post 1-5d), forward horizons ───
+  Horizon       N   ≥0.5%   ≥1.0%   ≥1.5%   ≥2.0%   Median     25th    Worst
+  1d           15     53%     33%     27%      7%   -0.76%   -1.28%   -2.11%
+  3d           15     73%     53%     40%     27%   -1.01%   -1.83%   -5.11%
+  5d           15     73%     53%     40%     33%   -1.01%   -2.19%   -5.11%
+  10d          15     73%     67%     53%     40%   -1.54%   -2.39%   -5.11%
+
+  ─── KEY WINDOW EVENT LIST ───
+  Signal Date   OpEx Off   PkPO   WkATR   MoATR   Drop1d   Drop3d   Drop5d   Drop10d
+  2000-03-20          -1    100    0.67    0.49    -1.01    -1.01    -1.01     -1.01
+  2001-04-20          +0    100    0.81   -0.02    -1.57    -2.34    -2.34     -2.34
+  2001-05-22          -2     83    1.05    1.11    -1.56    -2.54    -4.83     -4.83
+  2005-05-20          +0     89    1.29    0.18     0.09    -0.21    -0.21     -0.21
+  2005-11-22          -2     88    0.79    0.51     0.42     0.29    -0.31     -0.31
+  2007-03-23          -5     93    1.69   -0.06    -0.98    -1.55    -2.04     -2.04
+  2011-10-28          -5     83    0.65    0.63    -2.11    -5.11    -5.11     -5.11
+  2015-10-23          -5     83    0.52    0.85     0.03    -0.34    -0.34     -0.34
+  2017-10-23          -1     81    0.61    1.02    -0.32    -1.16    -1.16     -1.16
+  2019-01-22          -1     93    0.58   -0.77    -1.60    -1.60    -1.60     -1.60
+  2019-04-24          -2     81    0.35    0.85    -0.76    -0.76    -0.76     -2.44
+  2019-11-18          -1     80    0.41    0.92    -0.23    -0.92    -0.92     -1.54
+  2019-12-27          -4     92    0.36    1.20    -0.84    -0.97    -0.97     -0.97
+  2021-10-21          -4     94    1.26   -0.03     0.02     0.02     0.02      0.02
+  2023-05-19          +0     81    0.52    0.26    -0.28    -2.06    -2.76     -2.76
+
+════════════════════════════════════════════════════════════════════════════════
+  EXTENDED (weekly OR monthly ATR ≥ 0.618)   (N total = 72)
+════════════════════════════════════════════════════════════════════════════════
+  Bucket                                        N   ≥0.5%5d   ≥1.0%5d   ≥1.5%5d    Med5d   Med10d
+  OpEx Friday (day 0)                           2       50%       50%       50%   -1.28%   -1.28%
+  Post-OpEx day 1                               3      100%       67%        0%   -1.01%   -1.16%
+  Post-OpEx day 2                               3       67%       33%       33%   -0.76%   -2.44%
+  Post-OpEx day 3                               0   (no events)
+  Post-OpEx day 4                               2       50%        0%        0%   -0.47%   -0.47%
+  Post-OpEx day 5                               3       67%       67%       67%   -2.04%   -2.04%
+  Post-OpEx day 1-5 (combined)                 11       73%       45%       27%   -0.97%   -1.16%
+  OpEx Fri + Post-OpEx 1-5 (full window)       13       69%       46%       31%   -0.97%   -1.16%
+  Other (not in OpEx window)                   59       73%       47%       32%   -0.95%   -1.41%
+
+  ─── KEY WINDOW (OpEx Fri + Post 1-5d), forward horizons ───
+  Horizon       N   ≥0.5%   ≥1.0%   ≥1.5%   ≥2.0%   Median     25th    Worst
+  1d           13     54%     31%     23%      8%   -0.76%   -1.01%   -2.11%
+  3d           13     69%     46%     31%     23%   -0.97%   -1.55%   -5.11%
+  5d           13     69%     46%     31%     31%   -0.97%   -2.04%   -5.11%
+  10d          13     69%     62%     46%     38%   -1.16%   -2.34%   -5.11%
+
+  ─── KEY WINDOW EVENT LIST ───
+  Signal Date   OpEx Off   PkPO   WkATR   MoATR   Drop1d   Drop3d   Drop5d   Drop10d
+  2000-03-20          -1    100    0.67    0.49    -1.01    -1.01    -1.01     -1.01
+  2001-04-20          +0    100    0.81   -0.02    -1.57    -2.34    -2.34     -2.34
+  2001-05-22          -2     83    1.05    1.11    -1.56    -2.54    -4.83     -4.83
+  2005-05-20          +0     89    1.29    0.18     0.09    -0.21    -0.21     -0.21
+  2005-11-22          -2     88    0.79    0.51     0.42     0.29    -0.31     -0.31
+  2007-03-23          -5     93    1.69   -0.06    -0.98    -1.55    -2.04     -2.04
+  2011-10-28          -5     83    0.65    0.63    -2.11    -5.11    -5.11     -5.11
+  2015-10-23          -5     83    0.52    0.85     0.03    -0.34    -0.34     -0.34
+  2017-10-23          -1     81    0.61    1.02    -0.32    -1.16    -1.16     -1.16
+  2019-04-24          -2     81    0.35    0.85    -0.76    -0.76    -0.76     -2.44
+  2019-11-18          -1     80    0.41    0.92    -0.23    -0.92    -0.92     -1.54
+  2019-12-27          -4     92    0.36    1.20    -0.84    -0.97    -0.97     -0.97
+  2021-10-21          -4     94    1.26   -0.03     0.02     0.02     0.02      0.02
+
+════════════════════════════════════════════════════════════════════════════════
+  DEEP EXTENDED (weekly OR monthly ATR ≥ 1.0)   (N total = 41)
+════════════════════════════════════════════════════════════════════════════════
+  Bucket                                        N   ≥0.5%5d   ≥1.0%5d   ≥1.5%5d    Med5d   Med10d
+  OpEx Friday (day 0)                           1        0%        0%        0%   -0.21%   -0.21%
+  Post-OpEx day 1                               1      100%      100%        0%   -1.16%   -1.16%
+  Post-OpEx day 2                               1      100%      100%      100%   -4.83%   -4.83%
+  Post-OpEx day 3                               0   (no events)
+  Post-OpEx day 4                               2       50%        0%        0%   -0.47%   -0.47%
+  Post-OpEx day 5                               1      100%      100%      100%   -2.04%   -2.04%
+  Post-OpEx day 1-5 (combined)                  5       80%       60%       40%   -1.16%   -1.16%
+  OpEx Fri + Post-OpEx 1-5 (full window)        6       67%       50%       33%   -1.06%   -1.06%
+  Other (not in OpEx window)                   35       80%       57%       43%   -1.41%   -1.68%
+
+  ─── KEY WINDOW (OpEx Fri + Post 1-5d), forward horizons ───
+  Horizon       N   ≥0.5%   ≥1.0%   ≥1.5%   ≥2.0%   Median     25th    Worst
+  1d            6     50%     17%     17%      0%   -0.58%   -0.94%   -1.56%
+  3d            6     67%     50%     33%     17%   -1.06%   -1.46%   -2.54%
+  5d            6     67%     50%     33%     33%   -1.06%   -1.82%   -4.83%
+  10d           6     67%     50%     33%     33%   -1.06%   -1.82%   -4.83%
+
+  ─── KEY WINDOW EVENT LIST ───
+  Signal Date   OpEx Off   PkPO   WkATR   MoATR   Drop1d   Drop3d   Drop5d   Drop10d
+  2001-05-22          -2     83    1.05    1.11    -1.56    -2.54    -4.83     -4.83
+  2005-05-20          +0     89    1.29    0.18     0.09    -0.21    -0.21     -0.21
+  2007-03-23          -5     93    1.69   -0.06    -0.98    -1.55    -2.04     -2.04
+  2017-10-23          -1     81    0.61    1.02    -0.32    -1.16    -1.16     -1.16
+  2019-12-27          -4     92    0.36    1.20    -0.84    -0.97    -0.97     -0.97
+  2021-10-21          -4     94    1.26   -0.03     0.02     0.02     0.02      0.02
+
+Saved to opex_extended_results.csv

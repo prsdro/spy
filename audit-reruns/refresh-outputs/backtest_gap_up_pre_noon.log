@@ -1,0 +1,417 @@
+
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.4.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+Traceback (most recent call last):  File "/root/spy/backtest_gap_up_pre_noon.py", line 10, in <module>
+    import pandas as pd
+  File "/usr/local/lib/python3.12/dist-packages/pandas/__init__.py", line 46, in <module>
+    from pandas.core.api import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/api.py", line 27, in <module>
+    from pandas.core.arrays import Categorical
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/__init__.py", line 1, in <module>
+    from pandas.core.arrays.arrow import ArrowExtensionArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/arrow/__init__.py", line 5, in <module>
+    from pandas.core.arrays.arrow.array import ArrowExtensionArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/arrow/array.py", line 65, in <module>
+    from pandas.core import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/ops/__init__.py", line 9, in <module>
+    from pandas.core.ops.array_ops import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/ops/array_ops.py", line 55, in <module>
+    from pandas.core.computation import expressions
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/computation/expressions.py", line 22, in <module>
+    from pandas.core.computation.check import NUMEXPR_INSTALLED
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/computation/check.py", line 5, in <module>
+    ne = import_optional_dependency("numexpr", errors="warn")
+  File "/usr/local/lib/python3.12/dist-packages/pandas/compat/_optional.py", line 158, in import_optional_dependency
+    module = importlib.import_module(name)
+  File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "/usr/lib/python3/dist-packages/numexpr/__init__.py", line 24, in <module>
+    from numexpr.interpreter import MAX_THREADS, use_vml, __BLOCK_SIZE1__
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/dist-packages/numpy/core/_multiarray_umath.py", line 46, in __getattr__
+    raise ImportError(msg)
+ImportError: 
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.4.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+
+
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.4.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+Traceback (most recent call last):  File "/root/spy/backtest_gap_up_pre_noon.py", line 10, in <module>
+    import pandas as pd
+  File "/usr/local/lib/python3.12/dist-packages/pandas/__init__.py", line 46, in <module>
+    from pandas.core.api import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/api.py", line 27, in <module>
+    from pandas.core.arrays import Categorical
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/__init__.py", line 1, in <module>
+    from pandas.core.arrays.arrow import ArrowExtensionArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/arrow/__init__.py", line 5, in <module>
+    from pandas.core.arrays.arrow.array import ArrowExtensionArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/arrow/array.py", line 79, in <module>
+    from pandas.core.arrays.masked import BaseMaskedArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/masked.py", line 56, in <module>
+    from pandas.core import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/nanops.py", line 54, in <module>
+    bn = import_optional_dependency("bottleneck", errors="warn")
+  File "/usr/local/lib/python3.12/dist-packages/pandas/compat/_optional.py", line 158, in import_optional_dependency
+    module = importlib.import_module(name)
+  File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "/usr/lib/python3/dist-packages/bottleneck/__init__.py", line 7, in <module>
+    from .move import (move_argmax, move_argmin, move_max, move_mean, move_median,
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/dist-packages/numpy/core/_multiarray_umath.py", line 46, in __getattr__
+    raise ImportError(msg)
+ImportError: 
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.4.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+
+Loading 10m indicator data...
+
+Total qualifying days (gap up AND >1% before noon): 947
+Date range: 2000-01-10 to 2026-04-08
+
+======================================================================
+  ALL QUALIFYING DAYS  (n=947)
+======================================================================
+  Already >1% at open:  302 ( 31.9%)  — gap itself was big
+  Ran up to 1% intra:   645 ( 68.1%)  — gap < 1%, ran up before noon
+  Median gap:         +0.76%
+  Median pre-noon H:  +1.41% above prev_close
+  Median daily ATR:   1.78% of price
+  Hit +1 ATR (100%):  335 ( 35.4%)
+
+  WHERE THE DAY CLOSES (vs prev_close):
+    Above +2x ATR                                 11    1.2%
+    Between +1 ATR and +2 ATR                    280   29.6%
+    Between +61.8% ATR and +1 ATR                294   31.0%
+    Between +23.6% ATR and +61.8% ATR            176   18.6%
+    Between 0% and +23.6% ATR                     73    7.7%
+    Flat (closed ≤ 0%)                           113   11.9%
+      Closed below -23.6% ATR                     64    6.8%
+      Closed below -1 ATR                          5    0.5%
+    Median close:                             +1.226%
+    Closed positive:                 834   88.1%
+
+  CONTINUATION (remaining day touched these upward levels):
+    +100% ATR (full ATR touched)               491   51.8%
+    +123.6% ATR (1st extension)                284   30.0%
+    +161.8% ATR (2nd extension)                 72    7.6%
+    +200% ATR (2x full ATR)                     17    1.8%
+
+  RETRACEMENT (remaining day touched these downward levels):
+    Prev_close — full gap fill (0%)            265   28.0%
+    -23.6% ATR — lower trigger                 146   15.4%
+    -38.2% ATR — lower GG entry                 93    9.8%
+    -61.8% ATR                                  57    6.0%
+    -100% ATR — 1 full ATR down                 18    1.9%
+    -200% ATR — 2 full ATRs down                 2    0.2%
+
+======================================================================
+  NON-FRIDAY DAYS  (n=782)
+======================================================================
+  Already >1% at open:  249 ( 31.8%)  — gap itself was big
+  Ran up to 1% intra:   533 ( 68.2%)  — gap < 1%, ran up before noon
+  Median gap:         +0.75%
+  Median pre-noon H:  +1.41% above prev_close
+  Median daily ATR:   1.79% of price
+  Hit +1 ATR (100%):  275 ( 35.2%)
+
+  WHERE THE DAY CLOSES (vs prev_close):
+    Above +2x ATR                                 11    1.4%
+    Between +1 ATR and +2 ATR                    227   29.0%
+    Between +61.8% ATR and +1 ATR                232   29.7%
+    Between +23.6% ATR and +61.8% ATR            151   19.3%
+    Between 0% and +23.6% ATR                     63    8.1%
+    Flat (closed ≤ 0%)                            98   12.5%
+      Closed below -23.6% ATR                     56    7.2%
+      Closed below -1 ATR                          5    0.6%
+    Median close:                             +1.201%
+    Closed positive:                 684   87.5%
+
+  CONTINUATION (remaining day touched these upward levels):
+    +100% ATR (full ATR touched)               407   52.0%
+    +123.6% ATR (1st extension)                237   30.3%
+    +161.8% ATR (2nd extension)                 63    8.1%
+    +200% ATR (2x full ATR)                     16    2.0%
+
+  RETRACEMENT (remaining day touched these downward levels):
+    Prev_close — full gap fill (0%)            223   28.5%
+    -23.6% ATR — lower trigger                 120   15.3%
+    -38.2% ATR — lower GG entry                 78   10.0%
+    -61.8% ATR                                  45    5.8%
+    -100% ATR — 1 full ATR down                 13    1.7%
+    -200% ATR — 2 full ATRs down                 1    0.1%
+
+======================================================================
+  ALL FRIDAYS  (n=165)
+======================================================================
+  Already >1% at open:   53 ( 32.1%)  — gap itself was big
+  Ran up to 1% intra:   112 ( 67.9%)  — gap < 1%, ran up before noon
+  Median gap:         +0.83%
+  Median pre-noon H:  +1.42% above prev_close
+  Median daily ATR:   1.71% of price
+  Hit +1 ATR (100%):  60 ( 36.4%)
+
+  WHERE THE DAY CLOSES (vs prev_close):
+    Above +2x ATR                                  0    0.0%
+    Between +1 ATR and +2 ATR                     53   32.1%
+    Between +61.8% ATR and +1 ATR                 62   37.6%
+    Between +23.6% ATR and +61.8% ATR             25   15.2%
+    Between 0% and +23.6% ATR                     10    6.1%
+    Flat (closed ≤ 0%)                            15    9.1%
+      Closed below -23.6% ATR                      8    4.8%
+      Closed below -1 ATR                          0    0.0%
+    Median close:                             +1.317%
+    Closed positive:                 150   90.9%
+
+  CONTINUATION (remaining day touched these upward levels):
+    +100% ATR (full ATR touched)                84   50.9%
+    +123.6% ATR (1st extension)                 47   28.5%
+    +161.8% ATR (2nd extension)                  9    5.5%
+    +200% ATR (2x full ATR)                      1    0.6%
+
+  RETRACEMENT (remaining day touched these downward levels):
+    Prev_close — full gap fill (0%)             42   25.5%
+    -23.6% ATR — lower trigger                  26   15.8%
+    -38.2% ATR — lower GG entry                 15    9.1%
+    -61.8% ATR                                  12    7.3%
+    -100% ATR — 1 full ATR down                  5    3.0%
+    -200% ATR — 2 full ATRs down                 1    0.6%
+
+======================================================================
+  OPEX FRIDAYS (3rd Friday of month)  (n=23)
+======================================================================
+  Already >1% at open:    9 ( 39.1%)  — gap itself was big
+  Ran up to 1% intra:    14 ( 60.9%)  — gap < 1%, ran up before noon
+  Median gap:         +0.89%
+  Median pre-noon H:  +1.55% above prev_close
+  Median daily ATR:   2.07% of price
+  Hit +1 ATR (100%):  7 ( 30.4%)
+
+  WHERE THE DAY CLOSES (vs prev_close):
+    Above +2x ATR                                  0    0.0%
+    Between +1 ATR and +2 ATR                      3   13.0%
+    Between +61.8% ATR and +1 ATR                 14   60.9%
+    Between +23.6% ATR and +61.8% ATR              1    4.3%
+    Between 0% and +23.6% ATR                      2    8.7%
+    Flat (closed ≤ 0%)                             3   13.0%
+      Closed below -23.6% ATR                      2    8.7%
+      Closed below -1 ATR                          0    0.0%
+    Median close:                             +1.308%
+    Closed positive:                  20   87.0%
+
+  CONTINUATION (remaining day touched these upward levels):
+    +100% ATR (full ATR touched)                 9   39.1%
+    +123.6% ATR (1st extension)                  5   21.7%
+    +161.8% ATR (2nd extension)                  2    8.7%
+    +200% ATR (2x full ATR)                      1    4.3%
+
+  RETRACEMENT (remaining day touched these downward levels):
+    Prev_close — full gap fill (0%)              8   34.8%
+    -23.6% ATR — lower trigger                   7   30.4%
+    -38.2% ATR — lower GG entry                  5   21.7%
+    -61.8% ATR                                   4   17.4%
+    -100% ATR — 1 full ATR down                  2    8.7%
+    -200% ATR — 2 full ATRs down                 1    4.3%
+
+======================================================================
+  NON-OPEX FRIDAYS  (n=142)
+======================================================================
+  Already >1% at open:   44 ( 31.0%)  — gap itself was big
+  Ran up to 1% intra:    98 ( 69.0%)  — gap < 1%, ran up before noon
+  Median gap:         +0.83%
+  Median pre-noon H:  +1.42% above prev_close
+  Median daily ATR:   1.68% of price
+  Hit +1 ATR (100%):  53 ( 37.3%)
+
+  WHERE THE DAY CLOSES (vs prev_close):
+    Above +2x ATR                                  0    0.0%
+    Between +1 ATR and +2 ATR                     50   35.2%
+    Between +61.8% ATR and +1 ATR                 48   33.8%
+    Between +23.6% ATR and +61.8% ATR             24   16.9%
+    Between 0% and +23.6% ATR                      8    5.6%
+    Flat (closed ≤ 0%)                            12    8.5%
+      Closed below -23.6% ATR                      6    4.2%
+      Closed below -1 ATR                          0    0.0%
+    Median close:                             +1.321%
+    Closed positive:                 130   91.5%
+
+  CONTINUATION (remaining day touched these upward levels):
+    +100% ATR (full ATR touched)                75   52.8%
+    +123.6% ATR (1st extension)                 42   29.6%
+    +161.8% ATR (2nd extension)                  7    4.9%
+    +200% ATR (2x full ATR)                      0    0.0%
+
+  RETRACEMENT (remaining day touched these downward levels):
+    Prev_close — full gap fill (0%)             34   23.9%
+    -23.6% ATR — lower trigger                  19   13.4%
+    -38.2% ATR — lower GG entry                 10    7.0%
+    -61.8% ATR                                   8    5.6%
+    -100% ATR — 1 full ATR down                  3    2.1%
+    -200% ATR — 2 full ATRs down                 0    0.0%
+
+======================================================================
+  ERA 2000–2009  (n=411)
+======================================================================
+  Already >1% at open:  120 ( 29.2%)  — gap itself was big
+  Ran up to 1% intra:   291 ( 70.8%)  — gap < 1%, ran up before noon
+  Median gap:         +0.68%
+  Median pre-noon H:  +1.43% above prev_close
+  Median daily ATR:   2.09% of price
+  Hit +1 ATR (100%):  92 ( 22.4%)
+
+  WHERE THE DAY CLOSES (vs prev_close):
+    Above +2x ATR                                  2    0.5%
+    Between +1 ATR and +2 ATR                     99   24.1%
+    Between +61.8% ATR and +1 ATR                111   27.0%
+    Between +23.6% ATR and +61.8% ATR             96   23.4%
+    Between 0% and +23.6% ATR                     41   10.0%
+    Flat (closed ≤ 0%)                            62   15.1%
+      Closed below -23.6% ATR                     36    8.8%
+      Closed below -1 ATR                          3    0.7%
+    Median close:                             +1.182%
+    Closed positive:                 349   84.9%
+
+  CONTINUATION (remaining day touched these upward levels):
+    +100% ATR (full ATR touched)               165   40.1%
+    +123.6% ATR (1st extension)                 91   22.1%
+    +161.8% ATR (2nd extension)                 20    4.9%
+    +200% ATR (2x full ATR)                      5    1.2%
+
+  RETRACEMENT (remaining day touched these downward levels):
+    Prev_close — full gap fill (0%)            152   37.0%
+    -23.6% ATR — lower trigger                  81   19.7%
+    -38.2% ATR — lower GG entry                 51   12.4%
+    -61.8% ATR                                  29    7.1%
+    -100% ATR — 1 full ATR down                  8    1.9%
+    -200% ATR — 2 full ATRs down                 2    0.5%
+
+======================================================================
+  ERA 2010–2019  (n=286)
+======================================================================
+  Already >1% at open:   91 ( 31.8%)  — gap itself was big
+  Ran up to 1% intra:   195 ( 68.2%)  — gap < 1%, ran up before noon
+  Median gap:         +0.79%
+  Median pre-noon H:  +1.34% above prev_close
+  Median daily ATR:   1.38% of price
+  Hit +1 ATR (100%):  141 ( 49.3%)
+
+  WHERE THE DAY CLOSES (vs prev_close):
+    Above +2x ATR                                  5    1.7%
+    Between +1 ATR and +2 ATR                    108   37.8%
+    Between +61.8% ATR and +1 ATR                 91   31.8%
+    Between +23.6% ATR and +61.8% ATR             38   13.3%
+    Between 0% and +23.6% ATR                     20    7.0%
+    Flat (closed ≤ 0%)                            24    8.4%
+      Closed below -23.6% ATR                     11    3.8%
+      Closed below -1 ATR                          0    0.0%
+    Median close:                             +1.235%
+    Closed positive:                 262   91.6%
+
+  CONTINUATION (remaining day touched these upward levels):
+    +100% ATR (full ATR touched)               181   63.3%
+    +123.6% ATR (1st extension)                109   38.1%
+    +161.8% ATR (2nd extension)                 28    9.8%
+    +200% ATR (2x full ATR)                      7    2.4%
+
+  RETRACEMENT (remaining day touched these downward levels):
+    Prev_close — full gap fill (0%)             57   19.9%
+    -23.6% ATR — lower trigger                  33   11.5%
+    -38.2% ATR — lower GG entry                 19    6.6%
+    -61.8% ATR                                  14    4.9%
+    -100% ATR — 1 full ATR down                  6    2.1%
+    -200% ATR — 2 full ATRs down                 0    0.0%
+
+======================================================================
+  ERA 2020–2025  (n=250)
+======================================================================
+  Already >1% at open:   91 ( 36.4%)  — gap itself was big
+  Ran up to 1% intra:   159 ( 63.6%)  — gap < 1%, ran up before noon
+  Median gap:         +0.84%
+  Median pre-noon H:  +1.50% above prev_close
+  Median daily ATR:   1.72% of price
+  Hit +1 ATR (100%):  102 ( 40.8%)
+
+  WHERE THE DAY CLOSES (vs prev_close):
+    Above +2x ATR                                  4    1.6%
+    Between +1 ATR and +2 ATR                     73   29.2%
+    Between +61.8% ATR and +1 ATR                 92   36.8%
+    Between +23.6% ATR and +61.8% ATR             42   16.8%
+    Between 0% and +23.6% ATR                     12    4.8%
+    Flat (closed ≤ 0%)                            27   10.8%
+      Closed below -23.6% ATR                     17    6.8%
+      Closed below -1 ATR                          2    0.8%
+    Median close:                             +1.295%
+    Closed positive:                 223   89.2%
+
+  CONTINUATION (remaining day touched these upward levels):
+    +100% ATR (full ATR touched)               145   58.0%
+    +123.6% ATR (1st extension)                 84   33.6%
+    +161.8% ATR (2nd extension)                 24    9.6%
+    +200% ATR (2x full ATR)                      5    2.0%
+
+  RETRACEMENT (remaining day touched these downward levels):
+    Prev_close — full gap fill (0%)             56   22.4%
+    -23.6% ATR — lower trigger                  32   12.8%
+    -38.2% ATR — lower GG entry                 23    9.2%
+    -61.8% ATR                                  14    5.6%
+    -100% ATR — 1 full ATR down                  4    1.6%
+    -200% ATR — 2 full ATRs down                 0    0.0%
+
+
+===============================================================================================
+  COMPARISON SUMMARY
+===============================================================================================
+
+  Category                       n  Close+   RetPDC  Ret-1ATR  Cont+1ATR  Cont+200%   MedClose
+  ---------------------------------------------------------------------------------------------
+  All days                     947   88.1%    28.0%      1.9%      51.8%       1.8%     +1.23%
+  Non-Friday                   782   87.5%    28.5%      1.7%      52.0%       2.0%     +1.20%
+  All Fridays                  165   90.9%    25.5%      3.0%      50.9%       0.6%     +1.32%
+  OpEx Friday                   23   87.0%    34.8%      8.7%      39.1%       4.3%     +1.31%
+  Non-OpEx Friday              142   91.5%    23.9%      2.1%      52.8%       0.0%     +1.32%
+  2000–2009                    411   84.9%    37.0%      1.9%      40.1%       1.2%     +1.18%
+  2010–2019                    286   91.6%    19.9%      2.1%      63.3%       2.4%     +1.23%
+  2020–2025                    250   89.2%    22.4%      1.6%      58.0%       2.0%     +1.29%
+
+
+===============================================================================================
+  SUB-ANALYSIS: Days that hit the +1 ATR level (100%) before noon
+  (stricter subset of above — price crossed the actual ATR 100% line)
+===============================================================================================
+
+  Category                       n  Close+   RetPDC  Ret-1ATR  Cont+1ATR  Cont+200%   MedClose
+  ---------------------------------------------------------------------------------------------
+  All days (hit +1ATR)         335   96.4%     8.4%      1.2%      98.5%       4.8%     +1.43%
+  Non-Friday                   275   96.0%     7.6%      1.1%      98.9%       5.5%     +1.43%
+  All Fridays                   60   98.3%    11.7%      1.7%      96.7%       1.7%     +1.40%
+  OpEx Friday                    7  100.0%    28.6%     14.3%     100.0%      14.3%     +1.80%

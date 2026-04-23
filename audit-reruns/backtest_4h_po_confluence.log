@@ -1,0 +1,211 @@
+
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.4.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+Traceback (most recent call last):  File "/root/spy/backtest_4h_po_confluence.py", line 23, in <module>
+    import pandas as pd
+  File "/usr/local/lib/python3.12/dist-packages/pandas/__init__.py", line 46, in <module>
+    from pandas.core.api import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/api.py", line 27, in <module>
+    from pandas.core.arrays import Categorical
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/__init__.py", line 1, in <module>
+    from pandas.core.arrays.arrow import ArrowExtensionArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/arrow/__init__.py", line 5, in <module>
+    from pandas.core.arrays.arrow.array import ArrowExtensionArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/arrow/array.py", line 65, in <module>
+    from pandas.core import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/ops/__init__.py", line 9, in <module>
+    from pandas.core.ops.array_ops import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/ops/array_ops.py", line 55, in <module>
+    from pandas.core.computation import expressions
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/computation/expressions.py", line 22, in <module>
+    from pandas.core.computation.check import NUMEXPR_INSTALLED
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/computation/check.py", line 5, in <module>
+    ne = import_optional_dependency("numexpr", errors="warn")
+  File "/usr/local/lib/python3.12/dist-packages/pandas/compat/_optional.py", line 158, in import_optional_dependency
+    module = importlib.import_module(name)
+  File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "/usr/lib/python3/dist-packages/numexpr/__init__.py", line 24, in <module>
+    from numexpr.interpreter import MAX_THREADS, use_vml, __BLOCK_SIZE1__
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/dist-packages/numpy/core/_multiarray_umath.py", line 46, in __getattr__
+    raise ImportError(msg)
+ImportError: 
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.4.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+
+
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.4.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+Traceback (most recent call last):  File "/root/spy/backtest_4h_po_confluence.py", line 23, in <module>
+    import pandas as pd
+  File "/usr/local/lib/python3.12/dist-packages/pandas/__init__.py", line 46, in <module>
+    from pandas.core.api import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/api.py", line 27, in <module>
+    from pandas.core.arrays import Categorical
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/__init__.py", line 1, in <module>
+    from pandas.core.arrays.arrow import ArrowExtensionArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/arrow/__init__.py", line 5, in <module>
+    from pandas.core.arrays.arrow.array import ArrowExtensionArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/arrow/array.py", line 79, in <module>
+    from pandas.core.arrays.masked import BaseMaskedArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/masked.py", line 56, in <module>
+    from pandas.core import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/nanops.py", line 54, in <module>
+    bn = import_optional_dependency("bottleneck", errors="warn")
+  File "/usr/local/lib/python3.12/dist-packages/pandas/compat/_optional.py", line 158, in import_optional_dependency
+    module = importlib.import_module(name)
+  File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "/usr/lib/python3/dist-packages/bottleneck/__init__.py", line 7, in <module>
+    from .move import (move_argmax, move_argmin, move_max, move_mean, move_median,
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/dist-packages/numpy/core/_multiarray_umath.py", line 46, in __getattr__
+    raise ImportError(msg)
+ImportError: 
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.4.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+
+Loading data...
+Independent V2 signals: 88
+
+Valid events: 88
+Baseline ≥1.0% 5d hit rate: 48.9%
+Baseline ≥1.5% 5d hit rate: 31.8%
+Baseline median 5d max drop: -0.97%
+
+──────────────────────────────────────────────────────────────────────
+  F1: DAILY PO ZONE × DIRECTION
+──────────────────────────────────────────────────────────────────────
+  Group                                  N   ≥0.5%   ≥1.0%   ≥1.5%    Med5d
+  Daily PO high + rising                45     78%     44%     29%   -0.95%
+  Daily PO high + falling                1   (too small)
+  Daily PO mid + rising                 41     73%     56%     37%   -1.13%
+  Daily PO mid + falling                 1   (too small)
+  Daily PO low + rising                  0   (too small)
+  Daily PO low + falling                 0   (too small)
+
+──────────────────────────────────────────────────────────────────────
+  F1b: DAILY PO ZONE (any direction)
+──────────────────────────────────────────────────────────────────────
+  Group                                  N   ≥0.5%   ≥1.0%   ≥1.5%    Med5d
+  Daily PO high                         46     78%     43%     28%   -0.94%
+  Daily PO mid                          42     74%     55%     36%   -1.09%
+  Daily PO low                           0   (too small)
+
+──────────────────────────────────────────────────────────────────────
+  F2: WEEKLY PO ZONE
+──────────────────────────────────────────────────────────────────────
+  Group                                  N   ≥0.5%   ≥1.0%   ≥1.5%    Med5d
+  Weekly PO high                        17     76%     41%      6%   -0.84%
+  Weekly PO mid                         71     76%     51%     38%   -1.01%
+  Weekly PO low                          0   (too small)
+
+──────────────────────────────────────────────────────────────────────
+  F3: 1H PO COMPRESSION STATE AT SIGNAL
+──────────────────────────────────────────────────────────────────────
+  Group                                  N   ≥0.5%   ≥1.0%   ≥1.5%    Med5d
+  1H in compression                     20     65%     25%     15%   -0.68% ←
+  1H NOT in compression                 68     79%     56%     37%   -1.13%
+  1H recent compression (4h)            25     64%     32%     20%   -0.70% ←
+  1H no recent compression              63     81%     56%     37%   -1.12%
+
+──────────────────────────────────────────────────────────────────────
+  F4: 1H PO ZONE AT SIGNAL
+──────────────────────────────────────────────────────────────────────
+  Group                                  N   ≥0.5%   ≥1.0%   ≥1.5%    Med5d
+  1H PO high                            34     82%     53%     38%   -1.14%
+  1H PO mid                             54     72%     46%     28%   -0.95%
+  1H PO low                              0   (too small)
+
+──────────────────────────────────────────────────────────────────────
+  F5: 4H SIGNAL BAR TIME-OF-DAY
+──────────────────────────────────────────────────────────────────────
+  Group                                  N   ≥0.5%   ≥1.0%   ≥1.5%    Med5d
+  04:00 signal bar                      17     71%     41%     35%   -0.80%
+  08:00 signal bar                      39     82%     59%     38%   -1.32% ←
+  12:00 signal bar                      15     73%     53%     27%   -1.01%
+  16:00 signal bar                      17     71%     29%     18%   -0.78% ←
+
+──────────────────────────────────────────────────────────────────────
+  F6: 4H SIGNAL DAY-OF-WEEK
+──────────────────────────────────────────────────────────────────────
+  Group                                  N   ≥0.5%   ≥1.0%   ≥1.5%    Med5d
+  Mon                                   24     79%     54%     29%   -1.03%
+  Tue                                   21     81%     48%     43%   -0.97%
+  Wed                                   13     54%     23%     23%   -0.59% ←
+  Thu                                   13     77%     69%     38%   -1.13% ←
+  Fri                                   17     82%     47%     24%   -0.97%
+
+──────────────────────────────────────────────────────────────────────
+  F7: DAILY ATR POSITION AT SIGNAL
+──────────────────────────────────────────────────────────────────────
+  Group                                  N   ≥0.5%   ≥1.0%   ≥1.5%    Med5d
+  Below -trigger (-0.236)               24     75%     46%     38%   -0.91%
+  Bear trigger box (-0.236 to 0)        33     76%     58%     39%   -1.16%
+  Bull trigger box (0 to 0.236)         18     83%     44%     11%   -0.96%
+  Above trigger (0.236 to 0.618)         8     62%     25%     25%   -0.75% ←
+  Past 61.8% (>=0.618)                   5     80%     60%     40%   -1.14% ←
+
+──────────────────────────────────────────────────────────────────────
+  F8: PRICE vs DAILY EMA21
+──────────────────────────────────────────────────────────────────────
+  Group                                  N   ≥0.5%   ≥1.0%   ≥1.5%    Med5d
+  Above daily EMA21                     87     76%     48%     31%   -0.97%
+  Below daily EMA21                      1   (too small)
+
+──────────────────────────────────────────────────────────────────────
+  F9: 4H EMA8 vs EMA21 AT SIGNAL
+──────────────────────────────────────────────────────────────────────
+  Group                                  N   ≥0.5%   ≥1.0%   ≥1.5%    Med5d
+  4H EMA8 > EMA21 (bullish trend)       88     76%     49%     32%   -0.97%
+  4H EMA8 < EMA21 (bearish trend)        0   (too small)
+
+══════════════════════════════════════════════════════════════════════
+  TOP COMBINATIONS
+══════════════════════════════════════════════════════════════════════
+
+──────────────────────────────────────────────────────────────────────
+  Combinations
+──────────────────────────────────────────────────────────────────────
+  Group                                  N   ≥0.5%   ≥1.0%   ≥1.5%    Med5d
+  Weekly PO mid + Daily PO high         30     80%     43%     40%   -0.94%
+  Weekly PO high + Daily PO high        16     75%     44%      6%   -0.91%
+  Daily PO high + falling                1   (too small)
+  Daily PO high + falling + Weekly high    0   (too small)
+  1H in compression + Daily PO high     12     67%     25%      8%   -0.68% ←
+  1H recent compression + Daily PO high   15     60%     27%     13%   -0.67% ←
+  Daily PO high + 4H EMA bearish (rollover confirmed)    0   (too small)
+  4H EMA bearish cross at signal         0   (too small)
+  Daily ATR >= 0.618 + Daily PO high     0   (too small)
+  Daily ATR in trigger box + Weekly high   10     70%     50%     10%   -1.06%
+
+Saved to confluence_results.csv

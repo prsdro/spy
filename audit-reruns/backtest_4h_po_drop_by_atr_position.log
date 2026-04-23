@@ -1,0 +1,194 @@
+
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.4.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+Traceback (most recent call last):  File "/root/spy/backtest_4h_po_drop_by_atr_position.py", line 17, in <module>
+    import pandas as pd
+  File "/usr/local/lib/python3.12/dist-packages/pandas/__init__.py", line 46, in <module>
+    from pandas.core.api import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/api.py", line 27, in <module>
+    from pandas.core.arrays import Categorical
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/__init__.py", line 1, in <module>
+    from pandas.core.arrays.arrow import ArrowExtensionArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/arrow/__init__.py", line 5, in <module>
+    from pandas.core.arrays.arrow.array import ArrowExtensionArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/arrow/array.py", line 65, in <module>
+    from pandas.core import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/ops/__init__.py", line 9, in <module>
+    from pandas.core.ops.array_ops import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/ops/array_ops.py", line 55, in <module>
+    from pandas.core.computation import expressions
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/computation/expressions.py", line 22, in <module>
+    from pandas.core.computation.check import NUMEXPR_INSTALLED
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/computation/check.py", line 5, in <module>
+    ne = import_optional_dependency("numexpr", errors="warn")
+  File "/usr/local/lib/python3.12/dist-packages/pandas/compat/_optional.py", line 158, in import_optional_dependency
+    module = importlib.import_module(name)
+  File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "/usr/lib/python3/dist-packages/numexpr/__init__.py", line 24, in <module>
+    from numexpr.interpreter import MAX_THREADS, use_vml, __BLOCK_SIZE1__
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/dist-packages/numpy/core/_multiarray_umath.py", line 46, in __getattr__
+    raise ImportError(msg)
+ImportError: 
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.4.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+
+
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.4.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+Traceback (most recent call last):  File "/root/spy/backtest_4h_po_drop_by_atr_position.py", line 17, in <module>
+    import pandas as pd
+  File "/usr/local/lib/python3.12/dist-packages/pandas/__init__.py", line 46, in <module>
+    from pandas.core.api import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/api.py", line 27, in <module>
+    from pandas.core.arrays import Categorical
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/__init__.py", line 1, in <module>
+    from pandas.core.arrays.arrow import ArrowExtensionArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/arrow/__init__.py", line 5, in <module>
+    from pandas.core.arrays.arrow.array import ArrowExtensionArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/arrow/array.py", line 79, in <module>
+    from pandas.core.arrays.masked import BaseMaskedArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/masked.py", line 56, in <module>
+    from pandas.core import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/nanops.py", line 54, in <module>
+    bn = import_optional_dependency("bottleneck", errors="warn")
+  File "/usr/local/lib/python3.12/dist-packages/pandas/compat/_optional.py", line 158, in import_optional_dependency
+    module = importlib.import_module(name)
+  File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "/usr/lib/python3/dist-packages/bottleneck/__init__.py", line 7, in <module>
+    from .move import (move_argmax, move_argmin, move_max, move_mean, move_median,
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/dist-packages/numpy/core/_multiarray_umath.py", line 46, in __getattr__
+    raise ImportError(msg)
+ImportError: 
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.4.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+
+Loading 4h data...
+Loading daily data...
+Loading weekly data...
+
+Finding 4H PO rollover signals (peak >=100, cross below 100)...
+Independent signals: 19
+
+Valid events (with weekly ATR data): 18
+
+==========================================================================================
+  BASELINE: Drop Rates After 4H PO Rollover (all events)
+==========================================================================================
+  ≥0.5% drop within 5d               : 11/18 = 61.1%
+  ≥1.0% drop within 5d               : 9/18 = 50.0%
+  ≥1.5% drop within 5d               : 5/18 = 27.8%
+  ≥2.0% drop within 5d               : 2/18 = 11.1%
+
+  Max drop stats (percent):
+    1-day: median -0.17%, mean -0.26%, worst -1.12%, 25th -0.49%
+    2-day: median -0.40%, mean -0.84%, worst -6.40%, 25th -1.01%
+    3-day: median -0.42%, mean -1.02%, worst -6.84%, 25th -1.15%
+    5-day: median -0.97%, mean -1.30%, worst -7.42%, 25th -1.57%
+    10-day: median -1.12%, mean -1.76%, worst -7.42%, 25th -2.07%
+
+==========================================================================================
+  CURRENT ATR POSITION DISTRIBUTION (at signal time)
+==========================================================================================
+
+  Daily ATR position (signal close vs prev day close, in ATR units):
+    Median: -0.09  Mean: -0.04
+    Range:  -0.83 to 1.08
+
+  Weekly ATR position (signal close vs prev week close, in weekly ATR units):
+    Median: 0.84  Mean: 1.07
+    Range:  0.48 to 2.06
+
+  Monthly ATR position (signal close vs prev month close):
+    Median: 0.88  Mean: 0.80
+    Range:  -0.14 to 1.64
+
+==========================================================================================
+  DROP RATES STRATIFIED BY WEEKLY ATR POSITION
+==========================================================================================
+
+  Bucket                                      N    ≥0.5%    ≥1.0%    ≥1.5%    ≥2.0%    Med5d  Worst5d
+  ────────────────────────────────────────────────────────────────────────────────────────────────────
+  0.382 to 0.618 (GG open)                    2     100%      50%       0%       0%   -0.97%   -1.11%
+  0.618 to 1.00 (past GG 61.8%)               9      56%      56%      22%      11%   -1.13%   -7.42%
+  1.236+ (super extended)                     7      57%      43%      43%      14%   -0.65%   -3.40%
+
+==========================================================================================
+  DROP RATES STRATIFIED BY MONTHLY (SWING) ATR POSITION
+==========================================================================================
+
+  Bucket                                      N    ≥0.5%    ≥1.0%    ≥1.5%    ≥2.0%    Med5d  Worst5d
+  ────────────────────────────────────────────────────────────────────────────────────────────────────
+  -0.236 to 0.236 (trigger box)               3     100%     100%      67%      33%   -1.81%   -3.40%
+  0.382 to 0.618 (GG open)                    1     100%       0%       0%       0%   -0.84%   -0.84%
+  0.618 to 1.00 (past GG 61.8%)               4      50%      50%       0%       0%   -0.66%   -1.16%
+  1.00 to 1.236 (past full ATR)               4      25%      25%      25%      25%   -0.14%   -7.42%
+  1.236+ (super extended)                     3     100%     100%      67%       0%   -1.64%   -1.89%
+
+==========================================================================================
+  CROSS-TAB: Weekly × Monthly ATR Position (≥1.0% drop rate within 5d)
+==========================================================================================
+
+  Weekly \ Monthly             Low (<0.382) Mid (0.382-0.618)  High (0.618-1.0)  Extended (>=1.0)
+  ──────────────────────────────────────────────────────────────────────────────────────────────
+  Low (<0.382)                            —                 —                 —                 —
+  Mid (0.382-0.618)                       —     1:     0%          1:   100%                      —
+  High (0.618-1.0)            1:   100%                      —     3:    33%          4:    75%     
+  Extended (>=1.0)            2:   100%                      —                 —     3:    33%     
+
+==========================================================================================
+  EVENT DETAILS (sorted by weekly ATR position, extended first)
+==========================================================================================
+  Date           PkPO   WkATR   MoATR  Drop1d  Drop3d  Drop5d  ≥1%5d
+  ───────────────────────────────────────────────────────────────────────────
+  2011-07-05      117    2.06   -0.14   -0.50   -0.50   -1.81    YES
+  2018-01-08      112    1.98    1.05    0.35   -0.08   -0.08     no
+  2020-10-12      100    1.76    0.13   -1.12   -2.81   -3.40    YES
+  2016-12-12      111    1.53       —    0.38   -0.35   -0.65     no
+  2004-11-08      111    1.38    1.05   -0.21   -0.21   -0.21     no
+  2007-09-19      106    1.34    1.25   -0.82   -1.31   -1.89    YES
+  2017-02-16      118    1.27       —   -0.25   -0.25   -0.25     no
+  2021-11-05      109    0.95    1.64   -0.06   -1.38   -1.38    YES
+  2020-08-27      102    0.86    1.37   -0.04   -0.04   -1.64    YES
+  2021-04-06      101    0.82    0.74   -0.11   -0.11   -0.11     no
+  2017-10-06      122    0.77       —   -0.13   -0.13   -0.13     no
+  2022-07-29      101    0.73   -0.05   -0.74   -1.13   -1.13    YES
+  2012-03-14      104    0.72    0.88   -0.12   -0.12   -0.21     no
+  2014-06-09      104    0.69    0.79   -0.23   -1.16   -1.16    YES
+  2007-04-17      101    0.66    1.03    0.08   -0.06   -0.06     no
+  2020-06-09      105    0.63    1.14   -0.72   -6.84   -7.42    YES
+  2005-11-28      109    0.59    0.79   -0.47   -1.11   -1.11    YES
+  2021-07-06      107    0.48    0.40    0.08   -0.84   -0.84     no
+
+Results saved to drop_by_atr_position_results.csv

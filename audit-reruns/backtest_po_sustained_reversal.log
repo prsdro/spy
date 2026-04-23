@@ -1,0 +1,279 @@
+
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.4.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+Traceback (most recent call last):  File "/root/spy/backtest_po_sustained_reversal.py", line 15, in <module>
+    import pandas as pd
+  File "/usr/local/lib/python3.12/dist-packages/pandas/__init__.py", line 46, in <module>
+    from pandas.core.api import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/api.py", line 27, in <module>
+    from pandas.core.arrays import Categorical
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/__init__.py", line 1, in <module>
+    from pandas.core.arrays.arrow import ArrowExtensionArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/arrow/__init__.py", line 5, in <module>
+    from pandas.core.arrays.arrow.array import ArrowExtensionArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/arrow/array.py", line 65, in <module>
+    from pandas.core import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/ops/__init__.py", line 9, in <module>
+    from pandas.core.ops.array_ops import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/ops/array_ops.py", line 55, in <module>
+    from pandas.core.computation import expressions
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/computation/expressions.py", line 22, in <module>
+    from pandas.core.computation.check import NUMEXPR_INSTALLED
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/computation/check.py", line 5, in <module>
+    ne = import_optional_dependency("numexpr", errors="warn")
+  File "/usr/local/lib/python3.12/dist-packages/pandas/compat/_optional.py", line 158, in import_optional_dependency
+    module = importlib.import_module(name)
+  File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "/usr/lib/python3/dist-packages/numexpr/__init__.py", line 24, in <module>
+    from numexpr.interpreter import MAX_THREADS, use_vml, __BLOCK_SIZE1__
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/dist-packages/numpy/core/_multiarray_umath.py", line 46, in __getattr__
+    raise ImportError(msg)
+ImportError: 
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.4.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+
+
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.4.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+Traceback (most recent call last):  File "/root/spy/backtest_po_sustained_reversal.py", line 15, in <module>
+    import pandas as pd
+  File "/usr/local/lib/python3.12/dist-packages/pandas/__init__.py", line 46, in <module>
+    from pandas.core.api import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/api.py", line 27, in <module>
+    from pandas.core.arrays import Categorical
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/__init__.py", line 1, in <module>
+    from pandas.core.arrays.arrow import ArrowExtensionArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/arrow/__init__.py", line 5, in <module>
+    from pandas.core.arrays.arrow.array import ArrowExtensionArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/arrow/array.py", line 79, in <module>
+    from pandas.core.arrays.masked import BaseMaskedArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/masked.py", line 56, in <module>
+    from pandas.core import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/nanops.py", line 54, in <module>
+    bn = import_optional_dependency("bottleneck", errors="warn")
+  File "/usr/local/lib/python3.12/dist-packages/pandas/compat/_optional.py", line 158, in import_optional_dependency
+    module = importlib.import_module(name)
+  File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "/usr/lib/python3/dist-packages/bottleneck/__init__.py", line 7, in <module>
+    from .move import (move_argmax, move_argmin, move_max, move_mean, move_median,
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/dist-packages/numpy/core/_multiarray_umath.py", line 46, in __getattr__
+    raise ImportError(msg)
+ImportError: 
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.4.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+
+Loading 10m indicator data...
+Qualifying days: 274
+
+======================================================================
+1. PO LEAVING DISTRIBUTION — TIMING & PRICE IMPACT
+======================================================================
+
+Days where PO left distribution: 273/274
+
+  When PO leaves distribution:
+    11:00: n=  69 ( 25.3%), avg leave→close=-0.131%, negative=52%
+    11:30: n=  69 ( 25.3%), avg leave→close=-0.026%, negative=41%
+    12:00: n=  40 ( 14.7%), avg leave→close=+0.030%, negative=42%
+    12:30: n=  35 ( 12.8%), avg leave→close=+0.150%, negative=34%
+    13:00: n=  21 (  7.7%), avg leave→close=+0.010%, negative=52%
+    13:30: n=  21 (  7.7%), avg leave→close=+0.084%, negative=48%
+    14:00: n=   8 (  2.9%), avg leave→close=+0.100%, negative=38%
+    14:30: n=   5 (  1.8%), avg leave→close=+0.115%, negative=40%
+    15:00: n=   3 (  1.1%), avg leave→close=+0.011%, negative=67%
+    15:30: n=   2 (  0.7%), avg leave→close=+0.024%, negative=50%
+
+  After PO leaves distribution:
+    Return to close: mean=-0.003%, median=+0.034%
+    Negative: 122/273 (44.7%)
+    Max gain after:  mean=+0.366%, median=+0.266%
+    Max DD after:    mean=-0.442%, median=-0.223%
+
+  Made NEW HIGH after leaving distribution: 164/273 (60.1%)
+  Pullback from day high to close: mean=-0.406%, median=-0.234%
+
+======================================================================
+2. WHERE DOES PRICE TOP OUT? (Day High vs ATR Levels)
+======================================================================
+
+  Day high ATR position: mean=111.8%, median=112.7%
+
+  Day high falls in which ATR bracket:
+            < 61.8%:   26 (  9.5%) ████
+         61.8-78.6%:   34 ( 12.4%) ██████
+          78.6-100%:   36 ( 13.1%) ██████
+         100-123.6%:   73 ( 26.6%) █████████████
+       123.6-161.8%:   85 ( 31.0%) ███████████████
+           > 161.8%:   20 (  7.3%) ███
+
+  When does the day high occur:
+    09:30:    2 (  0.7%) 
+    10:00:   21 (  7.7%) ███
+    10:30:   30 ( 10.9%) █████
+    11:00:   18 (  6.6%) ███
+    11:30:   15 (  5.5%) ██
+    12:00:   12 (  4.4%) ██
+    12:30:   14 (  5.1%) ██
+    13:00:   10 (  3.6%) █
+    13:30:   15 (  5.5%) ██
+    14:00:   16 (  5.8%) ██
+    14:30:   12 (  4.4%) ██
+    15:00:   25 (  9.1%) ████
+    15:30:   84 ( 30.7%) ███████████████
+
+======================================================================
+3. PIVOT RIBBON STATE AT KEY MOMENTS
+======================================================================
+
+  Fast cloud flipped bearish after 11am: 124/274 (45.3%)
+  When fast cloud flips:
+    11:30:    3 (  2.4%)
+    12:00:    7 (  5.6%)
+    12:30:   14 ( 11.3%)
+    13:00:   15 ( 12.1%)
+    13:30:    8 (  6.5%)
+    14:00:   17 ( 13.7%)
+    14:30:   23 ( 18.5%)
+    15:00:   19 ( 15.3%)
+    15:30:   18 ( 14.5%)
+
+  After fast cloud flips bearish:
+    Return flip→close: mean=-0.102%, median=-0.022%
+    Negative: 66/124 (53.2%)
+
+  Days where fast cloud STAYED bullish all day: 150/274
+    11am→close: mean=+0.399%, median=+0.278%
+
+  Compression activated after 11am: 251/274 (91.6%)
+
+======================================================================
+4. PO SLOPE AS EARLY WARNING (while PO still > 61.8)
+======================================================================
+
+  Peak PO value: mean=119.9, median=116.6
+  Peak PO time:
+    09:30:   44 ( 16.1%)
+    10:00:  122 ( 44.5%)
+    10:30:   66 ( 24.1%)
+    11:00:   26 (  9.5%)
+
+  First PO downtick (after 10am, while still > 61.8):
+    10:00: n= 199, avg decline→close=+0.201%
+    10:30: n=  67, avg decline→close=+0.022%
+    11:00: n=   8, avg decline→close=+0.221%
+
+  After first PO downtick:
+    Return to close: mean=+0.158%, median=+0.162%
+    Negative: 98/274 (35.8%)
+
+======================================================================
+5. DRAWDOWN FROM DAY HIGH
+======================================================================
+
+  Drawdown from day high to post-high low:
+    Mean:   -0.753%
+    Median: -0.503%
+    25th:   -0.906%
+    75th:   -0.267%
+
+  Close relative to day high:
+    Mean:   -0.481%
+    Median: -0.276%
+
+  PO at the moment of day high:
+    Mean: 82.4, Median: 80.0
+
+  PO at high vs subsequent drawdown:
+           PO < 40: n= 16, avg drawdown=-0.732%, avg close from high=-0.421%
+        PO 40-61.8: n= 44, avg drawdown=-0.588%, avg close from high=-0.291%
+        PO 61.8-80: n= 50, avg drawdown=-0.573%, avg close from high=-0.380%
+         PO 80-100: n= 44, avg drawdown=-0.785%, avg close from high=-0.579%
+          PO > 100: n= 67, avg drawdown=-0.980%, avg close from high=-0.630%
+
+======================================================================
+6. DEEP MEAN REVERSION: PO drops below 23.6 after sustained > 61.8
+======================================================================
+
+  Days where PO dropped below 23.6: 224/274 (81.8%)
+
+  When PO crosses below 23.6:
+    11:00: n=   4, avg ret to close=-0.126%
+    11:30: n=  29, avg ret to close=-0.201%
+    12:00: n=  29, avg ret to close=-0.160%
+    12:30: n=  23, avg ret to close=-0.124%
+    13:00: n=  34, avg ret to close=+0.118%
+    13:30: n=  27, avg ret to close=-0.128%
+    14:00: n=  31, avg ret to close=+0.112%
+    14:30: n=  20, avg ret to close=-0.053%
+    15:00: n=  13, avg ret to close=+0.020%
+    15:30: n=  14, avg ret to close=+0.064%
+
+  After PO drops below 23.6:
+    Return to close: mean=-0.043%, median=+0.021%
+    Negative: 102/224 (45.5%)
+    Max gain: mean=+0.319%
+    Max DD: mean=-0.424%
+    PO went negative (bearish): 167/224 (74.6%)
+
+======================================================================
+SYNTHESIS: REVERSAL SIGNAL SCORECARD
+======================================================================
+
+  On these 289 days where 10m PO sustained > 61.8 through 11am:
+
+  SIGNAL 1 — PO Leaves Distribution (drops below 61.8):
+    Occurs on 273/274 days (100%)
+    Avg return after: -0.003%
+    Goes negative: 122/273 (45%)
+
+  SIGNAL 2 — Fast Cloud Flips Bearish:
+    Occurs on 124/274 days (45%)
+    Avg return after flip: -0.102%
+    Goes negative: 66/124 (53%)
+
+  SIGNAL 3 — PO First Downtick (slope turns negative while > 61.8):
+    Avg return after: +0.158%
+    Goes negative: 98/274 (36%)
+
+  SIGNAL 4 — PO Drops Below 23.6 (deep reversion):
+    Occurs on 224/274 days (82%)
+    Avg return after: -0.043% (n=224)
+
+  DAY HIGH PROFILE:
+    Median high at 113% of ATR
+    Avg drawdown from high: -0.753%
+    Avg close from high: -0.481%
+
+✓ Reversal analysis complete.

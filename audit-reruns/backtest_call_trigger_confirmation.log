@@ -1,0 +1,192 @@
+
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.4.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+Traceback (most recent call last):  File "/root/spy/backtest_call_trigger_confirmation.py", line 16, in <module>
+    import pandas as pd
+  File "/usr/local/lib/python3.12/dist-packages/pandas/__init__.py", line 46, in <module>
+    from pandas.core.api import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/api.py", line 27, in <module>
+    from pandas.core.arrays import Categorical
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/__init__.py", line 1, in <module>
+    from pandas.core.arrays.arrow import ArrowExtensionArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/arrow/__init__.py", line 5, in <module>
+    from pandas.core.arrays.arrow.array import ArrowExtensionArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/arrow/array.py", line 65, in <module>
+    from pandas.core import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/ops/__init__.py", line 9, in <module>
+    from pandas.core.ops.array_ops import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/ops/array_ops.py", line 55, in <module>
+    from pandas.core.computation import expressions
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/computation/expressions.py", line 22, in <module>
+    from pandas.core.computation.check import NUMEXPR_INSTALLED
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/computation/check.py", line 5, in <module>
+    ne = import_optional_dependency("numexpr", errors="warn")
+  File "/usr/local/lib/python3.12/dist-packages/pandas/compat/_optional.py", line 158, in import_optional_dependency
+    module = importlib.import_module(name)
+  File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "/usr/lib/python3/dist-packages/numexpr/__init__.py", line 24, in <module>
+    from numexpr.interpreter import MAX_THREADS, use_vml, __BLOCK_SIZE1__
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/dist-packages/numpy/core/_multiarray_umath.py", line 46, in __getattr__
+    raise ImportError(msg)
+ImportError: 
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.4.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+
+
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.4.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+Traceback (most recent call last):  File "/root/spy/backtest_call_trigger_confirmation.py", line 16, in <module>
+    import pandas as pd
+  File "/usr/local/lib/python3.12/dist-packages/pandas/__init__.py", line 46, in <module>
+    from pandas.core.api import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/api.py", line 27, in <module>
+    from pandas.core.arrays import Categorical
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/__init__.py", line 1, in <module>
+    from pandas.core.arrays.arrow import ArrowExtensionArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/arrow/__init__.py", line 5, in <module>
+    from pandas.core.arrays.arrow.array import ArrowExtensionArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/arrow/array.py", line 79, in <module>
+    from pandas.core.arrays.masked import BaseMaskedArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/masked.py", line 56, in <module>
+    from pandas.core import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/nanops.py", line 54, in <module>
+    bn = import_optional_dependency("bottleneck", errors="warn")
+  File "/usr/local/lib/python3.12/dist-packages/pandas/compat/_optional.py", line 158, in import_optional_dependency
+    module = importlib.import_module(name)
+  File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "/usr/lib/python3/dist-packages/bottleneck/__init__.py", line 7, in <module>
+    from .move import (move_argmax, move_argmin, move_max, move_mean, move_median,
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/dist-packages/numpy/core/_multiarray_umath.py", line 46, in __getattr__
+    raise ImportError(msg)
+ImportError: 
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.4.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+
+Loading 3m data...
+Total RTH 3m bars: 853,981
+
+======================================================================
+CALL TRIGGER CONFIRMATION STUDY
+Setup: Open inside trigger box → 3m close above call trigger → 38.2%
+======================================================================
+
+--- Universe ---
+  Total trading days:               6,582
+  Days opening inside trigger box:   3,254 (49.4%)
+  Days with 3m close above trigger:  2,027 (62.3% of box days)
+
+--- Question 1: Probability of hitting 38.2% after confirmed trigger ---
+  Hit 38.2%: 1,492 / 2,027 = 73.6%
+  Missed:    535 / 2,027 = 26.4%
+
+  Time to target (when hit):
+    Median: 6 bars (18 min)
+    Mean:   17.2 bars (51.6 min)
+    75th:   20 bars (61 min)
+    90th:   52 bars (156 min)
+    Hit on trigger bar itself: 0 times
+
+--- Question 2: Probability by time of day ---
+  Hour      Total    Hit    Hit%   Clean   Inval
+  ------------------------------------------
+  09:00      834    677   81.2%   38.4%   61.6%
+  10:00      517    387   74.9%   36.9%   63.1%
+  11:00      209    150   71.8%   34.9%   65.1%
+  12:00      108     72   66.7%   25.9%   74.1%
+  13:00      104     68   65.4%   31.7%   68.3%
+  14:00      152     99   65.1%   41.4%   57.9%
+  15:00      103     39   37.9%   25.2%   53.4%
+
+  By half-hour (with clean/invalid split):
+  Time      Total    Hit    Hit%   ClnN ClnHit    Cln%   InvN InvHit    Inv%     Edge
+  ------------------------------------------------------------------------------------------
+  09:30      834    677   81.2%    320    320  100.0%    514    357   69.5%   +30.5pp
+  10:00      328    249   75.9%    122    122  100.0%    206    127   61.7%   +38.3pp
+  10:30      189    138   73.0%     69     69  100.0%    120     69   57.5%   +42.5pp
+  11:00      131     96   73.3%     44     44  100.0%     87     52   59.8%   +40.2pp
+  11:30       78     54   69.2%     29     29  100.0%     49     25   51.0%   +49.0pp
+  12:00       63     49   77.8%     16     16  100.0%     47     33   70.2%   +29.8pp
+  12:30       45     23   51.1%     12     12  100.0%     33     11   33.3%   +66.7pp *
+  13:00       55     37   67.3%     17     17  100.0%     38     20   52.6%   +47.4pp
+  13:30       49     31   63.3%     16     16  100.0%     33     15   45.5%   +54.5pp *
+  14:00       77     57   74.0%     39     39  100.0%     38     18   47.4%   +52.6pp
+  14:30       75     42   56.0%     25     24   96.0%     50     18   36.0%   +60.0pp
+  15:00       48     24   50.0%     18     14   77.8%     30     10   33.3%   +44.4pp *
+  15:30       55     15   27.3%     30     12   40.0%     25      3   12.0%   +28.0pp
+
+--- Question 3: Does a 3m close back below trigger invalidate? ---
+  Days with invalidation (close back below trigger): 1,270 (62.7%)
+  Days without invalidation (clean run):             757 (37.3%)
+
+  After invalidation:
+    Still hit 38.2%: 758 / 1,270 = 59.7%
+    Did NOT hit:     512 / 1,270 = 40.3%
+
+  Without invalidation (clean):
+    Hit 38.2%:   734 / 757 = 97.0%
+    Did NOT hit: 23 / 757 = 3.0%
+
+  EDGE from avoiding invalidated trades: +37.3 percentage points
+  Clean trades hit rate:       97.0%
+  Invalidated trades hit rate: 59.7%
+
+  Invalidation impact by trigger hour:
+  Hour       Clean%    (n)   Inval%    (n)     Edge
+  ----------------------------------------------
+  09:00     100.0%    320    69.5%    514   +30.5pp
+  10:00     100.0%    191    60.1%    326   +39.9pp
+  11:00     100.0%     73    56.6%    136   +43.4pp
+  12:00     100.0%*    28    55.0%     80   +45.0pp
+  13:00     100.0%     33    49.3%     71   +50.7pp
+  14:00      98.4%     64    40.9%     88   +57.5pp
+  15:00      54.2%     48    23.6%     55   +30.5pp
+
+--- Max Adverse Excursion (before hitting 38.2%) ---
+  Median: 0.044%
+  Mean:   0.127%
+  75th:   0.162%
+  90th:   0.395%
+
+
+--- DATA FOR VISUALIZATION (JSON-ready) ---
+OVERALL: {'total_days': 6582, 'box_days': 3254, 'trigger_days': 2027, 'hit_0382': 1492, 'hit_pct': 73.6, 'invalidated': 1270, 'invalidated_hit': 758, 'clean_total': 757, 'clean_hit': 734}
+
+BY_HOUR: {9: {'total': 103, 'hit': 39, 'hit_pct': 37.9, 'clean_n': 48, 'clean_hit': 26, 'inv_n': 55, 'inv_hit': 13}, 10: {'total': 103, 'hit': 39, 'hit_pct': 37.9, 'clean_n': 48, 'clean_hit': 26, 'inv_n': 55, 'inv_hit': 13}, 11: {'total': 103, 'hit': 39, 'hit_pct': 37.9, 'clean_n': 48, 'clean_hit': 26, 'inv_n': 55, 'inv_hit': 13}, 12: {'total': 103, 'hit': 39, 'hit_pct': 37.9, 'clean_n': 48, 'clean_hit': 26, 'inv_n': 55, 'inv_hit': 13}, 13: {'total': 103, 'hit': 39, 'hit_pct': 37.9, 'clean_n': 48, 'clean_hit': 26, 'inv_n': 55, 'inv_hit': 13}, 14: {'total': 103, 'hit': 39, 'hit_pct': 37.9, 'clean_n': 48, 'clean_hit': 26, 'inv_n': 55, 'inv_hit': 13}, 15: {'total': 103, 'hit': 39, 'hit_pct': 37.9, 'clean_n': 48, 'clean_hit': 26, 'inv_n': 55, 'inv_hit': 13}}
+
+BY_HALFHOUR: {'09:30': {'total': 103, 'hit': 39, 'hit_pct': 37.9}, '10:00': {'total': 103, 'hit': 39, 'hit_pct': 37.9}, '10:30': {'total': 103, 'hit': 39, 'hit_pct': 37.9}, '11:00': {'total': 103, 'hit': 39, 'hit_pct': 37.9}, '11:30': {'total': 103, 'hit': 39, 'hit_pct': 37.9}, '12:00': {'total': 103, 'hit': 39, 'hit_pct': 37.9}, '12:30': {'total': 103, 'hit': 39, 'hit_pct': 37.9}, '13:00': {'total': 103, 'hit': 39, 'hit_pct': 37.9}, '13:30': {'total': 103, 'hit': 39, 'hit_pct': 37.9}, '14:00': {'total': 103, 'hit': 39, 'hit_pct': 37.9}, '14:30': {'total': 103, 'hit': 39, 'hit_pct': 37.9}, '15:00': {'total': 103, 'hit': 39, 'hit_pct': 37.9}, '15:30': {'total': 103, 'hit': 39, 'hit_pct': 37.9}}
+
+TIME_TO_TARGET: {'median_bars': 6, 'median_min': 18, 'p75_bars': 20, 'p75_min': 60, 'p90_bars': 52, 'p90_min': 156, 'on_trigger_bar': 0}
+
+Exported 2027 dates to /root/milkman/data/call-trigger-dates.json

@@ -1,0 +1,206 @@
+
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.4.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+Traceback (most recent call last):  File "/root/spy/backtest_4h_po_drop_softened.py", line 17, in <module>
+    import pandas as pd
+  File "/usr/local/lib/python3.12/dist-packages/pandas/__init__.py", line 46, in <module>
+    from pandas.core.api import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/api.py", line 27, in <module>
+    from pandas.core.arrays import Categorical
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/__init__.py", line 1, in <module>
+    from pandas.core.arrays.arrow import ArrowExtensionArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/arrow/__init__.py", line 5, in <module>
+    from pandas.core.arrays.arrow.array import ArrowExtensionArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/arrow/array.py", line 65, in <module>
+    from pandas.core import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/ops/__init__.py", line 9, in <module>
+    from pandas.core.ops.array_ops import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/ops/array_ops.py", line 55, in <module>
+    from pandas.core.computation import expressions
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/computation/expressions.py", line 22, in <module>
+    from pandas.core.computation.check import NUMEXPR_INSTALLED
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/computation/check.py", line 5, in <module>
+    ne = import_optional_dependency("numexpr", errors="warn")
+  File "/usr/local/lib/python3.12/dist-packages/pandas/compat/_optional.py", line 158, in import_optional_dependency
+    module = importlib.import_module(name)
+  File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "/usr/lib/python3/dist-packages/numexpr/__init__.py", line 24, in <module>
+    from numexpr.interpreter import MAX_THREADS, use_vml, __BLOCK_SIZE1__
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/dist-packages/numpy/core/_multiarray_umath.py", line 46, in __getattr__
+    raise ImportError(msg)
+ImportError: 
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.4.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+
+
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.4.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+Traceback (most recent call last):  File "/root/spy/backtest_4h_po_drop_softened.py", line 17, in <module>
+    import pandas as pd
+  File "/usr/local/lib/python3.12/dist-packages/pandas/__init__.py", line 46, in <module>
+    from pandas.core.api import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/api.py", line 27, in <module>
+    from pandas.core.arrays import Categorical
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/__init__.py", line 1, in <module>
+    from pandas.core.arrays.arrow import ArrowExtensionArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/arrow/__init__.py", line 5, in <module>
+    from pandas.core.arrays.arrow.array import ArrowExtensionArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/arrow/array.py", line 79, in <module>
+    from pandas.core.arrays.masked import BaseMaskedArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/masked.py", line 56, in <module>
+    from pandas.core import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/nanops.py", line 54, in <module>
+    bn = import_optional_dependency("bottleneck", errors="warn")
+  File "/usr/local/lib/python3.12/dist-packages/pandas/compat/_optional.py", line 158, in import_optional_dependency
+    module = importlib.import_module(name)
+  File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "/usr/lib/python3/dist-packages/bottleneck/__init__.py", line 7, in <module>
+    from .move import (move_argmax, move_argmin, move_max, move_mean, move_median,
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/dist-packages/numpy/core/_multiarray_umath.py", line 46, in __getattr__
+    raise ImportError(msg)
+ImportError: 
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.4.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+
+Loading data...
+
+==========================================================================================
+  V1: Peak ≥ 61.8, cross below 61.8 (leaving distribution zone)  —  196 signals
+==========================================================================================
+
+  N = 196
+
+  Baseline hit rates (intraday low reaches target within N days):
+  Target                3d       5d      10d
+  ≥0.5%                60%      65%      71%
+  ≥1.0%                40%      48%      59%
+  ≥2.0%                14%      22%      36%
+
+  Max drop distribution:
+    3d: median -0.68%, 25th -1.40%, worst -7.21%
+    5d: median -0.87%, 25th -1.84%, worst -8.23%
+    10d: median -1.28%, 25th -2.73%, worst -13.83%
+
+  ─ WEEKLY ATR POSITION → 1% drop in 5d ─
+  Bucket                          N   ≥0.5%   ≥1.0%   ≥2.0%    Med5d
+  Neutral (-0.236 to 0.382)      31     65%     48%     32%   -0.98%
+  Bullish (0.382 to 1.0)        110     67%     49%     17%   -0.94%
+  Extended (>= 1.0)              54     63%     46%     26%   -0.71%
+
+  ─ MONTHLY ATR POSITION → 1% drop in 5d ─
+  Bucket                          N   ≥0.5%   ≥1.0%   ≥2.0%    Med5d
+  Bearish (<-0.236)              25     60%     48%     32%   -0.84%
+  Neutral (-0.236 to 0.382)      53     62%     49%     28%   -0.90%
+  Bullish (0.382 to 1.0)         90     64%     44%     19%   -0.74%
+  Extended (>= 1.0)              28     79%     57%     11%   -1.18%
+
+  ─ CROSS-TAB: Weekly × Monthly (1% drop in 5d hit rate) ─
+  Weekly \ Monthly                   Bearish (<-0.236)Neutral (-0.236 to 0.382)  Bullish (0.382 to 1.0)       Extended (>= 1.0)
+  Bearish (<-0.236)                                n=1                     n=0                     n=0                     n=0
+  Neutral (-0.236 to 0.382)           n=4: 75% / -2.6%        n=6: 50% / -1.2%       n=18: 44% / -0.8%        n=3: 33% / -1.0%
+  Bullish (0.382 to 1.0)               n=9: 22% / 0.0%       n=25: 56% / -1.3%       n=59: 46% / -0.7%       n=17: 65% / -1.2%
+  Extended (>= 1.0)                  n=11: 64% / -1.5%       n=22: 41% / -0.7%       n=13: 38% / -0.6%        n=8: 50% / -1.0%
+
+==========================================================================================
+  V2: Peak ≥ 80, cross below 80 (moderate extension rollover)  —  81 signals
+==========================================================================================
+
+  N = 81
+
+  Baseline hit rates (intraday low reaches target within N days):
+  Target                3d       5d      10d
+  ≥0.5%                58%      74%      77%
+  ≥1.0%                40%      47%      58%
+  ≥2.0%                17%      25%      41%
+
+  Max drop distribution:
+    3d: median -0.68%, 25th -1.60%, worst -6.87%
+    5d: median -0.95%, 25th -1.90%, worst -7.95%
+    10d: median -1.41%, 25th -3.19%, worst -12.87%
+
+  ─ WEEKLY ATR POSITION → 1% drop in 5d ─
+  Bucket                          N   ≥0.5%   ≥1.0%   ≥2.0%    Med5d
+  Neutral (-0.236 to 0.382)       4    100%     25%     25%   -0.89%
+  Bullish (0.382 to 1.0)         45     71%     42%     22%   -0.84%
+  Extended (>= 1.0)              32     75%     56%     28%   -1.48%
+
+  ─ MONTHLY ATR POSITION → 1% drop in 5d ─
+  Bucket                          N   ≥0.5%   ≥1.0%   ≥2.0%    Med5d
+  Bearish (<-0.236)               4     75%     75%     50%   -2.90%
+  Neutral (-0.236 to 0.382)      20     70%     60%     25%   -1.49%
+  Bullish (0.382 to 1.0)         43     70%     35%     21%   -0.80%
+  Extended (>= 1.0)              14     93%     57%     29%   -1.22%
+
+  ─ CROSS-TAB: Weekly × Monthly (1% drop in 5d hit rate) ─
+  Weekly \ Monthly                   Bearish (<-0.236)Neutral (-0.236 to 0.382)  Bullish (0.382 to 1.0)       Extended (>= 1.0)
+  Bearish (<-0.236)                                n=0                     n=0                     n=0                     n=0
+  Neutral (-0.236 to 0.382)                        n=1                     n=0                     n=2                     n=1
+  Bullish (0.382 to 1.0)                           n=1        n=9: 44% / -0.6%       n=27: 33% / -0.8%        n=8: 62% / -1.2%
+  Extended (>= 1.0)                                n=2       n=11: 73% / -1.6%       n=14: 43% / -1.0%        n=5: 60% / -1.7%
+
+==========================================================================================
+  V3: Peak ≥ 100, cross below 100 (strict — original)  —  19 signals
+==========================================================================================
+
+  N = 19
+
+  Baseline hit rates (intraday low reaches target within N days):
+  Target                3d       5d      10d
+  ≥0.5%                53%      63%      68%
+  ≥1.0%                42%      53%      58%
+  ≥2.0%                11%      11%      26%
+
+  Max drop distribution:
+    3d: median -0.50%, 25th -1.23%, worst -6.84%
+    5d: median -1.11%, 25th -1.56%, worst -7.42%
+    10d: median -1.13%, 25th -2.01%, worst -7.42%
+
+  ─ WEEKLY ATR POSITION → 1% drop in 5d ─
+  Bucket                          N   ≥0.5%   ≥1.0%   ≥2.0%    Med5d
+  Bullish (0.382 to 1.0)         12     67%     58%      8%   -1.12%
+  Extended (>= 1.0)               7     57%     43%     14%   -0.65%
+
+  ─ MONTHLY ATR POSITION → 1% drop in 5d ─
+  Bucket                          N   ≥0.5%   ≥1.0%   ≥2.0%    Med5d
+  Neutral (-0.236 to 0.382)       3    100%    100%     33%   -1.81%
+  Bullish (0.382 to 1.0)         10     40%     30%      0%   -0.23%
+  Extended (>= 1.0)               6     83%     67%     17%   -1.51%
+
+  ─ CROSS-TAB: Weekly × Monthly (1% drop in 5d hit rate) ─
+  Weekly \ Monthly                   Bearish (<-0.236)Neutral (-0.236 to 0.382)  Bullish (0.382 to 1.0)       Extended (>= 1.0)
+  Bearish (<-0.236)                                n=0                     n=0                     n=0                     n=0
+  Neutral (-0.236 to 0.382)                        n=0                     n=0                     n=0                     n=0
+  Bullish (0.382 to 1.0)                           n=0                     n=1        n=7: 43% / -0.8%        n=4: 75% / -1.5%
+  Extended (>= 1.0)                                n=0                     n=2         n=3: 0% / -0.2%                     n=2

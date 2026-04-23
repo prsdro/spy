@@ -1,0 +1,267 @@
+
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.4.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+Traceback (most recent call last):  File "/root/spy/backtest_ema21_reversion_4h_po.py", line 11, in <module>
+    import pandas as pd
+  File "/usr/local/lib/python3.12/dist-packages/pandas/__init__.py", line 46, in <module>
+    from pandas.core.api import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/api.py", line 27, in <module>
+    from pandas.core.arrays import Categorical
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/__init__.py", line 1, in <module>
+    from pandas.core.arrays.arrow import ArrowExtensionArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/arrow/__init__.py", line 5, in <module>
+    from pandas.core.arrays.arrow.array import ArrowExtensionArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/arrow/array.py", line 65, in <module>
+    from pandas.core import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/ops/__init__.py", line 9, in <module>
+    from pandas.core.ops.array_ops import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/ops/array_ops.py", line 55, in <module>
+    from pandas.core.computation import expressions
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/computation/expressions.py", line 22, in <module>
+    from pandas.core.computation.check import NUMEXPR_INSTALLED
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/computation/check.py", line 5, in <module>
+    ne = import_optional_dependency("numexpr", errors="warn")
+  File "/usr/local/lib/python3.12/dist-packages/pandas/compat/_optional.py", line 158, in import_optional_dependency
+    module = importlib.import_module(name)
+  File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "/usr/lib/python3/dist-packages/numexpr/__init__.py", line 24, in <module>
+    from numexpr.interpreter import MAX_THREADS, use_vml, __BLOCK_SIZE1__
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/dist-packages/numpy/core/_multiarray_umath.py", line 46, in __getattr__
+    raise ImportError(msg)
+ImportError: 
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.4.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+
+
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.4.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+Traceback (most recent call last):  File "/root/spy/backtest_ema21_reversion_4h_po.py", line 11, in <module>
+    import pandas as pd
+  File "/usr/local/lib/python3.12/dist-packages/pandas/__init__.py", line 46, in <module>
+    from pandas.core.api import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/api.py", line 27, in <module>
+    from pandas.core.arrays import Categorical
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/__init__.py", line 1, in <module>
+    from pandas.core.arrays.arrow import ArrowExtensionArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/arrow/__init__.py", line 5, in <module>
+    from pandas.core.arrays.arrow.array import ArrowExtensionArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/arrow/array.py", line 79, in <module>
+    from pandas.core.arrays.masked import BaseMaskedArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/masked.py", line 56, in <module>
+    from pandas.core import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/nanops.py", line 54, in <module>
+    bn = import_optional_dependency("bottleneck", errors="warn")
+  File "/usr/local/lib/python3.12/dist-packages/pandas/compat/_optional.py", line 158, in import_optional_dependency
+    module = importlib.import_module(name)
+  File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "/usr/lib/python3/dist-packages/bottleneck/__init__.py", line 7, in <module>
+    from .move import (move_argmax, move_argmin, move_max, move_mean, move_median,
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/dist-packages/numpy/core/_multiarray_umath.py", line 46, in __getattr__
+    raise ImportError(msg)
+ImportError: 
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.4.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+
+Loading daily data...
+Loading 4h data...
+Merging 4h PO onto daily bars...
+
+Days >4% above daily EMA21: 106
+Days with valid 4h PO: 106
+
+======================================================================
+SECTION 1: HEAD-TO-HEAD — DAILY PO vs 4h PO DECLINING
+======================================================================
+  (All days where close >4% above daily 21 EMA)
+
+  --- Baseline ---
+  All days >4%                                  n=106  1d= -0.427%  3d= -0.619%  5d= -0.700%  10d= -0.482%  1d-green=40%
+
+  --- Daily PO signals ---
+  Daily PO declining                            n= 13  1d= -0.890%  3d= -0.394%  5d= -0.462%  10d= +0.175%  1d-green=31%
+  Daily PO NOT declining                        n= 93  1d= -0.362%  3d= -0.650%  5d= -0.733%  10d= -0.574%  1d-green=41%
+  Daily leaving_distribution                    n=  0 — too few
+
+  --- 4h PO signals (close bar, 16:00) ---
+  4h PO declining (16:00 vs 12:00)              n= 49  1d= -0.499%  3d= -0.712%  5d= -0.746%  10d= -0.454%  1d-green=39%
+  4h PO NOT declining                           n= 57  1d= -0.365%  3d= -0.539%  5d= -0.660%  10d= -0.506%  1d-green=40%
+  4h PO leaving_distribution (any bar)          n= 15  1d= -0.520%  3d= -0.598%  5d= -0.834%  10d= -0.619%  1d-green=47%
+  4h PO leaving_extreme_up (any bar)            n=  5  1d= -0.507%  3d= -1.038%  5d= -0.471%  10d= -0.278%  1d-green=0%
+
+  --- 4h PO intraday signals ---
+  4h PO peaked intraday (rolled over)           n= 32  1d= -0.446%  3d= -0.904%  5d= -0.534%  10d= -0.120%  1d-green=38%
+  4h PO did NOT peak (still rising)             n= 74  1d= -0.419%  3d= -0.496%  5d= -0.772%  10d= -0.639%  1d-green=41%
+  4h midday (12:00) declining vs AM             n= 29  1d= -0.265%  3d= -0.308%  5d= -0.401%  10d= -0.223%  1d-green=45%
+
+======================================================================
+SECTION 2: 4h PO ZONE WHILE >4% ABOVE EMA21
+======================================================================
+
+  4h PO Zone            n   1d Fwd   3d Fwd   5d Fwd      10d   1d Grn
+  ----------------------------------------------------------
+  distribution         45  -0.395%  -0.589%  -0.998%  -1.384%    37.8%
+  neutral_up           47  -0.250%  -0.442%  -0.338%  +0.357%    40.4%
+  neutral              12  -0.960%  -0.373%  -0.143%  +0.365%    50.0% *
+
+======================================================================
+SECTION 3: 4h PO DELTA MAGNITUDE (how fast is PO moving?)
+======================================================================
+
+  4h PO delta stats while >4%:
+    Mean:   -0.16
+    Median: +0.39
+    Std:    5.95
+
+  PO Delta Bucket              n   1d Fwd   3d Fwd   5d Fwd   1d Grn
+  --------------------------------------------------------
+  Big drop (< -10)             7  -1.636%  -1.048%  -0.682%    14.3% *
+  Drop (-10 to -3)            24  -0.290%  -0.143%  -0.727%    41.7%
+  Small drop (-3 to 0)        18  -0.337%  -1.340%  -0.796%    44.4%
+  Small rise (0 to +3)        29  -0.477%  -0.617%  -0.816%    31.0%
+  Rise (3 to 10)              25  -0.316%  -0.689%  -0.773%    48.0%
+  Big rise (> +10)             3  +0.321%  +1.461%  +1.779%    66.7% *
+
+======================================================================
+SECTION 4: COMBINATION SIGNALS WITH 4h PO
+======================================================================
+
+  --- Stacking 4h PO with other conditions ---
+  4h PO declining + red candle                  n= 12  1d= -1.215%  3d= -0.783%  5d= -0.745%  10d= -0.501%  1d-green=33%
+  4h PO declining + dev shrinking               n= 21  1d= -0.654%  3d= -0.346%  5d= -0.783%  10d= -0.923%  1d-green=33%
+  4h PO peaked intraday + red candle            n=  2 — too few
+  4h PO peaked + dev shrinking                  n=  5  1d= -0.747%  3d= -0.886%  5d= -1.062%  10d= -2.130%  1d-green=20%
+  4h LD fired + dev shrinking                   n= 10  1d= -0.658%  3d= -0.618%  5d= -0.756%  10d= -0.232%  1d-green=40%
+  4h PO in distribution + declining             n= 15  1d= -0.510%  3d= -0.173%  5d= -1.388%  10d= -1.799%  1d-green=27%
+  4h PO dropped to neutral zone                 n= 33  1d= -0.487%  3d= -0.766%  5d= -0.325%  10d= +0.261%  1d-green=45%
+  BOTH daily & 4h PO declining                  n= 11  1d= -0.789%  3d= -0.248%  5d= -0.410%  10d= +0.287%  1d-green=36%
+  4h PO declining, daily PO still rising (4h leads) n= 38  1d= -0.415%  3d= -0.846%  5d= -0.843%  10d= -0.669%  1d-green=39%
+
+======================================================================
+SECTION 5: DIRECT COMPARISON — DECLINING PO: DAILY vs 4h
+======================================================================
+
+  Metric                      Daily PO Dec      4h PO Dec      4h Peaked        All >4%
+  -----------------------------------------------------------------------------------
+  1d mean return                   -0.890%        -0.499%        -0.446%        -0.427%
+  3d mean return                   -0.394%        -0.712%        -0.904%        -0.619%
+  5d mean return                   -0.462%        -0.746%        -0.534%        -0.700%
+  10d mean return                  +0.175%        -0.454%        -0.120%        -0.482%
+  1d green %                         30.8%          38.8%          37.5%          39.6%
+  n                                     13             49             32            106
+
+======================================================================
+SECTION 6: SIGNAL FREQUENCY WHILE >4%
+======================================================================
+
+  Signal                                         Fires        %
+  -------------------------------------------------------------
+  Daily PO declining                                13    12.3%
+  4h PO declining (close bar)                       49    46.2%
+  4h PO peaked intraday                             32    30.2%
+  4h PO midday declining                            29    27.4%
+  4h leaving_distribution fired                     15    14.2%
+  4h leaving_extreme_up fired                        5     4.7%
+  Daily leaving_distribution                         0     0.0%
+  Red candle (close < open)                         15    14.2%
+  Deviation shrinking                               31    29.2%
+
+======================================================================
+SECTION 7: FIRST 4h PO DECLINE IN EACH EPISODE
+======================================================================
+  (For each >4% episode: when does the 4h PO first decline?)
+
+    # Start        EpLen  1st 4h Dec  Day#   5d Fwd   10d Fwd
+  ----------------------------------------------------------
+    1 2000-03-16       2       Day 1     1  +4.495%   +2.642%
+    2 2000-03-21       5       Day 3     3  -1.774%   -1.244%
+    3 2001-04-18       3       Day 2     2  +0.843%   +1.968%
+    4 2001-04-27       1       never     —  +1.115%   -0.581%
+    5 2001-05-01       1       never     —  -0.331%   -1.292%
+    6 2001-05-21       1       never     —  -3.392%   -2.201%
+    7 2002-08-19       1       never     —  -0.262%   -7.653%
+    8 2002-08-21       2       never     —  -3.351%   -7.372%
+    9 2002-10-15       1       Day 0     0  +1.074%   +0.204%
+   10 2002-10-17       5       Day 1     1  +1.499%   +2.086%
+   11 2002-11-05       2       Day 1     1  -4.409%   -0.895%
+   12 2002-11-21       1       never     —  +0.085%   -2.236%
+   13 2003-03-19       1       never     —  -0.853%   +0.500%
+   14 2003-03-21       1       never     —  -3.510%   -1.805%
+   15 2003-04-23       1       Day 0     0  -0.347%   +1.204%
+   16 2003-06-04       2       never     —  +1.211%   +2.441%
+   17 2003-06-16       1       never     —  -3.227%   -3.887%
+   18 2009-01-02       3       Day 1     1  -6.250%  -13.125%
+   19 2009-03-18       1       never     —  +1.815%   +1.427%
+   20 2009-03-23       5       Day 1     1  -1.377%   +1.179%
+   21 2009-04-02       3       Day 0     0  +2.889%   +4.460%
+   22 2009-04-09       2       never     —  +1.526%   +0.967%
+   23 2009-04-15       3       never     —  -0.879%   +2.521%
+   24 2009-05-04       5       Day 3     3  -1.541%   -1.805%
+   25 2009-06-01       2       Day 0     0  -0.485%   -2.015%
+   26 2009-07-23       4       Day 0     0  +1.054%   +2.252%
+   27 2009-07-30       1       Day 0     0  +1.185%   +2.908%
+   28 2009-08-03       3       Day 2     2  +0.368%   -0.408%
+   29 2009-08-07       1       Day 0     0  -0.455%   +1.710%
+   30 2009-09-16       1       never     —  -1.109%   -1.603%
+   31 2011-10-14       1       never     —  +1.118%   +4.919%
+   32 2011-10-24       1       Day 0     0  -0.113%   +0.604%
+   33 2011-10-27       2       Day 1     1  -2.441%   -1.493%
+   34 2020-04-08       4       never     —  +1.875%   +1.821%
+   35 2020-04-17       1       Day 0     0  -1.287%   -1.395%
+   36 2020-04-27       1       never     —  -1.202%   +1.898%
+   37 2020-04-29       2       Day 1     1  -0.926%   -1.839%
+   38 2020-05-27       1       never     —  +2.877%   +5.117%
+   39 2020-06-01       8       Day 0     0  +5.782%   +0.475%
+   40 2020-09-02       1       never     —  -6.643%   -6.100%
+   41 2020-10-12       1       Day 0     0  -2.954%   -3.693%
+   42 2020-11-16       1       Day 0     0  -1.371%   +0.974%
+   43 2022-03-29       1       Day 0     0  -2.273%   -5.059%
+   44 2022-07-29       2       Day 0     0  +0.332%   +3.640%
+   45 2022-08-03       1       never     —  +1.337%   +2.958%
+   46 2022-08-12       3       Day 1     1  -3.591%   -6.116%
+   47 2022-11-10       2       never     —  -0.091%   +1.959%
+   48 2022-11-15       1       Day 0     0  +0.334%   +2.241%
+   49 2023-02-02       1       Day 0     0  -2.315%   -2.027%
+   50 2025-05-12       6       Day 0     0  +2.076%   +1.410%
+
+  Episodes with 4h PO decline signal:
+    Mean 5d fwd:  -0.413%  (n=29)
+    Mean 10d fwd: -0.385%  (n=29)
+  Episodes WITHOUT 4h PO decline signal:
+    Mean 5d fwd:  -0.566%  (n=21)
+    Mean 10d fwd: -0.391%  (n=21)
+
+======================================================================
+STUDY COMPLETE
+======================================================================
