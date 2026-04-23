@@ -458,6 +458,9 @@ def _append_yahoo_daily(df, before_date):
     """If DB daily data is stale, try to fill gap with Yahoo + hourly data."""
     if df.empty:
         return df
+    df = df[df.index.notna()].sort_index()
+    if df.empty:
+        return df
     last_date = df.index[-1].strftime("%Y-%m-%d")
     before_ts = pd.Timestamp(before_date)
     last_ts = df.index[-1]

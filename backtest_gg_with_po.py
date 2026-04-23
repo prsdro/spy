@@ -48,6 +48,7 @@ def main():
     df10 = pd.read_sql_query(
         "SELECT timestamp, open, high, low, close, "
         "atr_upper_trigger, atr_lower_trigger, atr_upper_0382, atr_lower_0382, "
+        "atr_upper_0618, atr_lower_0618, "
         "prev_close, atr_14 "
         "FROM ind_10m ORDER BY timestamp",
         conn, parse_dates=["timestamp"]

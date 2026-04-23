@@ -161,18 +161,27 @@ def compute_atr_levels(df, daily_ref=None):
     This matches TradingView's request.security(ticker, 'D', ...) behavior.
 
     If daily_ref is None, computes from the df's own timeframe (used for daily/weekly tables).
+
+    Saty convention (`period_index=1` in the pine script): BOTH `previous_close` and
+    `atr` are sourced from the prior period. So `atr_14` in the stored columns is
+    the PRIOR-period ATR, paired with the prior-period close for level computation.
     """
     if daily_ref is not None:
-        # Compute daily ATR and prev close from the daily reference
-        daily_atr = atr(daily_ref, 14)
+        # Compute daily ATR and prev close from the daily reference.
+        # Shift both by 1 to match Saty's period_index=1.
+        daily_atr_prev = atr(daily_ref, 14).shift(1)
         daily_prev_close = daily_ref["close"].shift(1)
 
         # Build a daily lookup: date -> (prev_close, atr_14)
         daily_lookup = pd.DataFrame({
             "date": daily_ref.index.date,
             "d_prev_close": daily_prev_close.values,
-            "d_atr_14": daily_atr.values,
-        }).set_index("date")
+            "d_atr_14": daily_atr_prev.values,
+        })
+        # Drop NaT/duplicate dates before setting as index. The candle tables
+        # occasionally carry rows with NaT timestamps from import quirks.
+        daily_lookup = daily_lookup[daily_lookup["date"].notna()]
+        daily_lookup = daily_lookup.drop_duplicates(subset="date", keep="last").set_index("date")
 
         # Map each intraday bar to its date's daily values
         bar_dates = df.index.date
@@ -181,7 +190,9 @@ def compute_atr_levels(df, daily_ref=None):
         df["atr_14"] = mapped["d_atr_14"].values
         df["prev_close"] = mapped["d_prev_close"].values
     else:
-        df["atr_14"] = atr(df, 14)
+        # Shift both by 1 to match Saty's period_index=1: levels for period W
+        # are anchored to period W-1's close AND period W-1's ATR.
+        df["atr_14"] = atr(df, 14).shift(1)
         df["prev_close"] = df["close"].shift(1)
 
     atr_14 = df["atr_14"]
