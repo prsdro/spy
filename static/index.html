@@ -1794,11 +1794,17 @@ document.addEventListener('DOMContentLoaded', () => {
   const u = new URLSearchParams(window.location.search);
   const initMode = u.get('mode') || 'day';
   const initDate = u.get('date') || undefined;
+  const isDatedDayLink = initDate && ['day', 'day_3_10', 'day_rth'].includes(initMode);
 
   if (u.get('range')) {
     S._rangeOverride = parseInt(u.get('range'));
     document.querySelectorAll('.range-btn').forEach(b => {
       b.classList.toggle('active', b.dataset.range === u.get('range'));
+    });
+  } else if (isDatedDayLink) {
+    S._rangeOverride = 1;
+    document.querySelectorAll('.range-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.range === '1');
     });
   }
   if (u.get('tf')) {

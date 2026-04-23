@@ -343,6 +343,49 @@ Published: `/ema21-reversion.html`
   1d -1.64% (14%g), 2d -1.29% (29%g)
 - 4h PO zone matters: Distribution zone → 10d return -1.38%; Neutral Up → +0.36%
 
+### 6. Call Trigger to Put Trigger Morning Reversal
+
+Source: `backtest_call_to_put_reversal.py` — 1-minute RTH bars, 6,582 trading days
+
+**Setup**: SPY reaches the daily call trigger before noon, later crosses below PDC, then
+reaches the daily put trigger before noon. Outcomes are measured from the first put-trigger
+touch through the RTH close.
+
+| Outcome after put trigger | Rate |
+|---------------------------|------|
+| Back to PDC | **73.7%** (481 / 653) |
+| Back to call trigger | **43.3%** (283 / 653) |
+| Downside GG opens (-38.2%) | **75.3%** (492 / 653) |
+| Downside GG completes (-61.8%) | **43.6%** (285 / 653) |
+| Reaches -1 ATR | **18.5%** (121 / 653) |
+
+**1h PO state filter** (latest fully completed hourly bar at the put-trigger touch):
+
+| 1h state | N | PDC | Call | GG open | GG complete | -1 ATR | Close below put |
+|----------|---|-----|------|---------|-------------|--------|-----------------|
+| Bullish expansion | 148 | 77.7% | 39.2% | 69.6% | 32.4% | 14.2% | 34.5% |
+| Compression | 331 | 67.1% | 38.7% | 75.8% | 46.8% | 19.6% | **44.7%** |
+| Bearish expansion | 174 | **82.8%** | **55.7%** | **79.3%** | **47.1%** | **20.1%** | 40.2% |
+
+**First major outcome**:
+- Bearish GG before PDC recovery: **32.3%**
+- Bearish GG with no PDC recovery: **25.9%**
+- PDC recovery before bearish GG: **17.2%**
+- PDC recovery with no bearish GG: **24.2%**
+
+**Key insights**:
+- This reversal usually does not mean one clean outcome: both PDC recovery and downside
+  GG open are around 3-in-4 by close.
+- Getting all the way back to the call trigger is much less reliable than a PDC mean
+  reversion: **43.3% vs 73.7%**.
+- Closing below the put trigger is the largest close bucket: **41.2%**.
+- Earlier completion of the reversal is more explosive: put-trigger touches before 10:30
+  reached -1 ATR **23.6%** of the time versus **18.5%** overall.
+- Hourly PO compression is the most bearish filter: lowest PDC recovery (**67.1%**),
+  highest close-below-put rate (**44.7%**), and bearish GG first/only in **61.9%** of events.
+- Bullish hourly expansion suppresses downside follow-through: GG completion drops to
+  **32.4%** and -1 ATR drops to **14.2%**.
+
 ---
 
 ## Analysis TODO
