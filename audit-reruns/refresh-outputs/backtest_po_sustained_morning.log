@@ -1,0 +1,227 @@
+
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.4.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+Traceback (most recent call last):  File "/root/spy/backtest_po_sustained_morning.py", line 26, in <module>
+    import pandas as pd
+  File "/usr/local/lib/python3.12/dist-packages/pandas/__init__.py", line 46, in <module>
+    from pandas.core.api import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/api.py", line 27, in <module>
+    from pandas.core.arrays import Categorical
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/__init__.py", line 1, in <module>
+    from pandas.core.arrays.arrow import ArrowExtensionArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/arrow/__init__.py", line 5, in <module>
+    from pandas.core.arrays.arrow.array import ArrowExtensionArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/arrow/array.py", line 65, in <module>
+    from pandas.core import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/ops/__init__.py", line 9, in <module>
+    from pandas.core.ops.array_ops import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/ops/array_ops.py", line 55, in <module>
+    from pandas.core.computation import expressions
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/computation/expressions.py", line 22, in <module>
+    from pandas.core.computation.check import NUMEXPR_INSTALLED
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/computation/check.py", line 5, in <module>
+    ne = import_optional_dependency("numexpr", errors="warn")
+  File "/usr/local/lib/python3.12/dist-packages/pandas/compat/_optional.py", line 158, in import_optional_dependency
+    module = importlib.import_module(name)
+  File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "/usr/lib/python3/dist-packages/numexpr/__init__.py", line 24, in <module>
+    from numexpr.interpreter import MAX_THREADS, use_vml, __BLOCK_SIZE1__
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/dist-packages/numpy/core/_multiarray_umath.py", line 46, in __getattr__
+    raise ImportError(msg)
+ImportError: 
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.4.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+
+
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.4.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+Traceback (most recent call last):  File "/root/spy/backtest_po_sustained_morning.py", line 26, in <module>
+    import pandas as pd
+  File "/usr/local/lib/python3.12/dist-packages/pandas/__init__.py", line 46, in <module>
+    from pandas.core.api import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/api.py", line 27, in <module>
+    from pandas.core.arrays import Categorical
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/__init__.py", line 1, in <module>
+    from pandas.core.arrays.arrow import ArrowExtensionArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/arrow/__init__.py", line 5, in <module>
+    from pandas.core.arrays.arrow.array import ArrowExtensionArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/arrow/array.py", line 79, in <module>
+    from pandas.core.arrays.masked import BaseMaskedArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/masked.py", line 56, in <module>
+    from pandas.core import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/nanops.py", line 54, in <module>
+    bn = import_optional_dependency("bottleneck", errors="warn")
+  File "/usr/local/lib/python3.12/dist-packages/pandas/compat/_optional.py", line 158, in import_optional_dependency
+    module = importlib.import_module(name)
+  File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "/usr/lib/python3/dist-packages/bottleneck/__init__.py", line 7, in <module>
+    from .move import (move_argmax, move_argmin, move_max, move_mean, move_median,
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/dist-packages/numpy/core/_multiarray_umath.py", line 46, in __getattr__
+    raise ImportError(msg)
+ImportError: 
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.4.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+
+Loading 10m indicator data...
+Loaded 256,349 bars across 6,582 trading days
+
+======================================================================
+SUSTAINED MORNING PO > 61.8 IN BULLISH EXPANSION — RESULTS
+======================================================================
+
+Qualifying days: 274 out of 6580 total (4.2%)
+
+──────────────────────────────────────────────────
+PRICE ACTION FROM 11:00 AM TO CLOSE
+──────────────────────────────────────────────────
+
+  Return 11am → Close:
+    Mean:   +0.027%
+    Median: +0.095%
+    Stdev:  0.637%
+    Min:    -2.507%
+    Max:    +2.418%
+    Positive: 156 (56.9%)
+    Negative: 117 (42.7%)
+
+  Max Gain from 11am:
+    Mean:   +0.417%
+    Median: +0.284%
+
+  Max Drawdown from 11am:
+    Mean:   -0.470%
+    Median: -0.254%
+
+  Full Day Return (Open → Close):
+    Mean:   +0.651%
+    Median: +0.570%
+    Green days: 229 (83.6%)
+
+──────────────────────────────────────────────────
+ATR LEVEL HITS (AFTER 11:00 AM)
+──────────────────────────────────────────────────
+  Reached +61.8% (Midrange): 244/274 (89.1%)
+  Reached +78.6%: 213/274 (77.7%)
+  Reached +100% (Full ATR): 175/274 (63.9%)
+
+──────────────────────────────────────────────────
+ATR POSITION (% of ATR from prev close)
+──────────────────────────────────────────────────
+  Max upside (rest of day):   110.7% ATR avg, 109.9% median
+  Max downside (rest of day): -47.3% ATR avg, -57.5% median
+  Close position:             81.9% ATR avg, 94.3% median
+
+──────────────────────────────────────────────────
+PHASE OSCILLATOR BEHAVIOR AFTER 11AM
+──────────────────────────────────────────────────
+  PO at 11am:   91.3 avg, 89.5 median
+  PO at close:  8.5 avg, 10.8 median
+  PO stayed >= 61.8 ALL day: 1/274 (0.4%)
+  Avg % of afternoon bars above 61.8: 31.4%
+
+──────────────────────────────────────────────────
+11AM→CLOSE RETURN DISTRIBUTION
+──────────────────────────────────────────────────
+             < -1.0%:   22 (  8.0%) ████
+      -1.0% to -0.5%:   19 (  6.9%) ███
+     -0.5% to -0.25%:   23 (  8.4%) ████
+      -0.25% to 0.0%:   53 ( 19.3%) █████████
+      0.0% to +0.25%:   76 ( 27.7%) █████████████
+     +0.25% to +0.5%:   40 ( 14.6%) ███████
+      +0.5% to +1.0%:   26 (  9.5%) ████
+             > +1.0%:   15 (  5.5%) ██
+
+──────────────────────────────────────────────────
+BY ERA
+──────────────────────────────────────────────────
+  2000-2004: n=  69, avg return=+0.083%, positive=59%
+  2005-2009: n=  35, avg return=+0.042%, positive=60%
+  2010-2014: n=  53, avg return=+0.054%, positive=64%
+  2015-2019: n=  52, avg return=-0.033%, positive=52%
+  2020-2025: n=  61, avg return=-0.017%, positive=51%
+
+──────────────────────────────────────────────────
+BASELINE COMPARISON (ALL DAYS)
+──────────────────────────────────────────────────
+  All days 11am→Close: mean=+0.012%, median=+0.038%, positive=53.3%
+  Study days 11am→Close: mean=+0.027%, median=+0.095%, positive=56.9%
+  Edge vs baseline: +0.015%
+
+──────────────────────────────────────────────────
+AVERAGE PRICE PATH (% from 11am price)
+──────────────────────────────────────────────────
+  11:00: avg=+0.0000%, median=+0.0000%, positive=0% (n=274)
+  11:30: avg=+0.0227%, median=+0.0073%, positive=51% (n=274)
+  12:00: avg=+0.0267%, median=+0.0200%, positive=54% (n=274)
+  12:30: avg=+0.0326%, median=+0.0350%, positive=55% (n=274)
+  13:00: avg=+0.0290%, median=+0.0628%, positive=59% (n=274)
+  13:30: avg=+0.0247%, median=+0.0433%, positive=58% (n=272)
+  14:00: avg=+0.0070%, median=+0.0422%, positive=58% (n=272)
+  14:30: avg=+0.0205%, median=+0.0730%, positive=59% (n=272)
+  15:00: avg=+0.0234%, median=+0.0808%, positive=61% (n=272)
+  15:30: avg=+0.0096%, median=+0.0776%, positive=59% (n=272)
+
+──────────────────────────────────────────────────
+SAMPLE QUALIFYING DAYS (most recent 15)
+──────────────────────────────────────────────────
+          Date    Cross   11am→Close   Open→Close  PO@11am   PO@EOD
+    2022-12-29    09:30      +0.196%      +0.990%    95.1     4.8
+    2023-01-09    09:50      -1.354%      -0.642%    93.3   -85.6
+    2023-02-13    09:50      +0.304%      +1.003%   103.4    41.6
+    2023-03-23    09:50      -1.442%      -0.496%   120.6   -25.6
+    2023-05-05    09:30      +0.426%      +0.905%    84.3    40.6
+    2023-06-15    09:50      +0.664%      +1.437%    68.3    41.1
+    2023-11-14    09:30      -0.109%      +0.535%    91.0    12.3
+    2024-01-08    09:50      +0.921%      +1.309%    73.0    98.8
+    2024-06-12    09:30      -0.353%      -0.054%    61.9   -25.2
+    2024-12-11    09:30      +0.115%      +0.284%    73.6    -6.9
+    2025-07-03    09:50      -0.076%      +0.432%    93.6     2.0
+    2026-01-05    09:30      -0.119%      +0.173%    79.4   -16.3
+    2026-01-21    09:40      +0.172%      +0.836%    96.2    35.1
+    2026-01-26    09:30      -0.020%      +0.322%    82.8   -14.4
+    2026-02-02    09:40      +0.092%      +0.853%    74.5   -10.9
+
+──────────────────────────────────────────────────
+CONTROL: PO crossed > 61.8 early but DIPPED below before 11am
+──────────────────────────────────────────────────
+  n = 630
+  11am→Close: mean=+0.039%, median=+0.062%, positive=54.8%
+
+  COMPARISON:
+    Sustained (stayed > 61.8): +0.027% avg, 57% positive (n=274)
+    Dipped (crossed but lost it): +0.039% avg, 55% positive (n=630)
+    All days baseline:           +0.012% avg, 53% positive
+
+✓ Study complete.

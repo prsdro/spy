@@ -1,0 +1,198 @@
+
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.4.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+Traceback (most recent call last):  File "/root/spy/backtest_po_sustained_cloud_mtf.py", line 13, in <module>
+    import pandas as pd
+  File "/usr/local/lib/python3.12/dist-packages/pandas/__init__.py", line 46, in <module>
+    from pandas.core.api import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/api.py", line 27, in <module>
+    from pandas.core.arrays import Categorical
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/__init__.py", line 1, in <module>
+    from pandas.core.arrays.arrow import ArrowExtensionArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/arrow/__init__.py", line 5, in <module>
+    from pandas.core.arrays.arrow.array import ArrowExtensionArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/arrow/array.py", line 65, in <module>
+    from pandas.core import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/ops/__init__.py", line 9, in <module>
+    from pandas.core.ops.array_ops import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/ops/array_ops.py", line 55, in <module>
+    from pandas.core.computation import expressions
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/computation/expressions.py", line 22, in <module>
+    from pandas.core.computation.check import NUMEXPR_INSTALLED
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/computation/check.py", line 5, in <module>
+    ne = import_optional_dependency("numexpr", errors="warn")
+  File "/usr/local/lib/python3.12/dist-packages/pandas/compat/_optional.py", line 158, in import_optional_dependency
+    module = importlib.import_module(name)
+  File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "/usr/lib/python3/dist-packages/numexpr/__init__.py", line 24, in <module>
+    from numexpr.interpreter import MAX_THREADS, use_vml, __BLOCK_SIZE1__
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/dist-packages/numpy/core/_multiarray_umath.py", line 46, in __getattr__
+    raise ImportError(msg)
+ImportError: 
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.4.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+
+
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.4.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+Traceback (most recent call last):  File "/root/spy/backtest_po_sustained_cloud_mtf.py", line 13, in <module>
+    import pandas as pd
+  File "/usr/local/lib/python3.12/dist-packages/pandas/__init__.py", line 46, in <module>
+    from pandas.core.api import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/api.py", line 27, in <module>
+    from pandas.core.arrays import Categorical
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/__init__.py", line 1, in <module>
+    from pandas.core.arrays.arrow import ArrowExtensionArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/arrow/__init__.py", line 5, in <module>
+    from pandas.core.arrays.arrow.array import ArrowExtensionArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/arrow/array.py", line 79, in <module>
+    from pandas.core.arrays.masked import BaseMaskedArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/masked.py", line 56, in <module>
+    from pandas.core import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/nanops.py", line 54, in <module>
+    bn = import_optional_dependency("bottleneck", errors="warn")
+  File "/usr/local/lib/python3.12/dist-packages/pandas/compat/_optional.py", line 158, in import_optional_dependency
+    module = importlib.import_module(name)
+  File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "/usr/lib/python3/dist-packages/bottleneck/__init__.py", line 7, in <module>
+    from .move import (move_argmax, move_argmin, move_max, move_mean, move_median,
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/dist-packages/numpy/core/_multiarray_umath.py", line 46, in __getattr__
+    raise ImportError(msg)
+ImportError: 
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.4.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+
+Loading 10m data for qualifying dates...
+Qualifying days: 289
+Loading 3m data...
+Loading 1h data...
+
+======================================================================
+MULTI-TIMEFRAME FAST CLOUD FLIP ANALYSIS
+On days where 10m PO sustained > 61.8 through 11am
+======================================================================
+
+  ───────────────────────────────────────────────────────
+  3-MINUTE FAST CLOUD (EMA8/EMA21)
+  ───────────────────────────────────────────────────────
+  Flipped bearish after 11am: 280/289 (96.9%)
+  Stayed bullish all day:     9/289 (3.1%)
+
+  AFTER FAST CLOUD FLIPS BEARISH:
+    Flip → Close:  mean=-0.019%, median=+0.036%
+    Negative: 125/280 (44.6%)
+    11am → Close (flip days): mean=-0.004%, median=+0.062%
+
+    Flip timing:
+      11:00: n= 47, avg flip→close=-0.286%
+      11:30: n= 62, avg flip→close=-0.017%
+      12:00: n= 52, avg flip→close=-0.131%
+      12:30: n= 40, avg flip→close=+0.176%
+      13:00: n= 26, avg flip→close=+0.053%
+      13:30: n= 25, avg flip→close=+0.279%
+      14:00: n= 13, avg flip→close=-0.035%
+      14:30: n=  4, avg flip→close=+0.077%
+      15:00: n=  6, avg flip→close=+0.068%
+      15:30: n=  5, avg flip→close=+0.083%
+
+  WHEN FAST CLOUD STAYS BULLISH:
+    11am → Close: mean=+0.689%, median=+0.682%
+    Positive: 9/9 (100.0%)
+
+  EDGE (no-flip vs flip, 11am→close): +0.693%
+
+  ───────────────────────────────────────────────────────
+  10-MINUTE FAST CLOUD (EMA8/EMA21)
+  ───────────────────────────────────────────────────────
+  Flipped bearish after 11am: 132/289 (45.7%)
+  Stayed bullish all day:     157/289 (54.3%)
+
+  AFTER FAST CLOUD FLIPS BEARISH:
+    Flip → Close:  mean=-0.106%, median=-0.022%
+    Negative: 70/132 (53.0%)
+    11am → Close (flip days): mean=-0.430%, median=-0.260%
+
+    Flip timing:
+      11:30: n=  4, avg flip→close=-0.295%
+      12:00: n=  8, avg flip→close=+0.068%
+      12:30: n= 14, avg flip→close=-0.294%
+      13:00: n= 15, avg flip→close=-0.256%
+      13:30: n= 10, avg flip→close=-0.034%
+      14:00: n= 18, avg flip→close=-0.201%
+      14:30: n= 23, avg flip→close=-0.014%
+      15:00: n= 20, avg flip→close=-0.109%
+      15:30: n= 20, avg flip→close=+0.052%
+
+  WHEN FAST CLOUD STAYS BULLISH:
+    11am → Close: mean=+0.391%, median=+0.270%
+    Positive: 141/157 (89.8%)
+
+  EDGE (no-flip vs flip, 11am→close): +0.821%
+
+  ───────────────────────────────────────────────────────
+  1-HOUR FAST CLOUD (EMA8/EMA21)
+  ───────────────────────────────────────────────────────
+  Flipped bearish after 11am: 14/289 (4.8%)
+  Stayed bullish all day:     275/289 (95.2%)
+
+  AFTER FAST CLOUD FLIPS BEARISH:
+    Flip → Close:  mean=+0.082%, median=+0.000%
+    Negative: 3/14 (21.4%)
+    11am → Close (flip days): mean=-1.121%, median=-1.153%
+
+    Flip timing:
+      14:00: n=  6, avg flip→close=+0.150%
+      15:00: n=  7, avg flip→close=+0.000%
+
+  WHEN FAST CLOUD STAYS BULLISH:
+    11am → Close: mean=+0.059%, median=+0.075%
+    Positive: 162/275 (58.9%)
+
+  EDGE (no-flip vs flip, 11am→close): +1.180%
+
+======================================================================
+HEAD-TO-HEAD COMPARISON
+======================================================================
+
+     Timeframe   Flip%   Flip→Close   Neg%   NoFlip→Close   Pos%     Edge
+  ──────────────────────────────────────────────────────────────────────
+      3-MINUTE   96.9%      -0.019%  44.6%        +0.689% 100.0%  +0.693%
+     10-MINUTE   45.7%      -0.106%  53.0%        +0.391%  89.8%  +0.821%
+        1-HOUR    4.8%      +0.082%  21.4%        +0.059%  58.9%  +1.180%
+
+Exporting data for visualization...
+✓ Data exported to po_sustained_viz_data.json
+
+✓ Multi-timeframe analysis complete.

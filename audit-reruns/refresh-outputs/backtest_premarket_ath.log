@@ -1,0 +1,336 @@
+
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.4.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+Traceback (most recent call last):  File "/root/spy/backtest_premarket_ath.py", line 12, in <module>
+    import pandas as pd
+  File "/usr/local/lib/python3.12/dist-packages/pandas/__init__.py", line 46, in <module>
+    from pandas.core.api import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/api.py", line 27, in <module>
+    from pandas.core.arrays import Categorical
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/__init__.py", line 1, in <module>
+    from pandas.core.arrays.arrow import ArrowExtensionArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/arrow/__init__.py", line 5, in <module>
+    from pandas.core.arrays.arrow.array import ArrowExtensionArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/arrow/array.py", line 65, in <module>
+    from pandas.core import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/ops/__init__.py", line 9, in <module>
+    from pandas.core.ops.array_ops import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/ops/array_ops.py", line 55, in <module>
+    from pandas.core.computation import expressions
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/computation/expressions.py", line 22, in <module>
+    from pandas.core.computation.check import NUMEXPR_INSTALLED
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/computation/check.py", line 5, in <module>
+    ne = import_optional_dependency("numexpr", errors="warn")
+  File "/usr/local/lib/python3.12/dist-packages/pandas/compat/_optional.py", line 158, in import_optional_dependency
+    module = importlib.import_module(name)
+  File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "/usr/lib/python3/dist-packages/numexpr/__init__.py", line 24, in <module>
+    from numexpr.interpreter import MAX_THREADS, use_vml, __BLOCK_SIZE1__
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/dist-packages/numpy/core/_multiarray_umath.py", line 46, in __getattr__
+    raise ImportError(msg)
+ImportError: 
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.4.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+
+
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.4.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+Traceback (most recent call last):  File "/root/spy/backtest_premarket_ath.py", line 12, in <module>
+    import pandas as pd
+  File "/usr/local/lib/python3.12/dist-packages/pandas/__init__.py", line 46, in <module>
+    from pandas.core.api import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/api.py", line 27, in <module>
+    from pandas.core.arrays import Categorical
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/__init__.py", line 1, in <module>
+    from pandas.core.arrays.arrow import ArrowExtensionArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/arrow/__init__.py", line 5, in <module>
+    from pandas.core.arrays.arrow.array import ArrowExtensionArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/arrow/array.py", line 79, in <module>
+    from pandas.core.arrays.masked import BaseMaskedArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/masked.py", line 56, in <module>
+    from pandas.core import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/nanops.py", line 54, in <module>
+    bn = import_optional_dependency("bottleneck", errors="warn")
+  File "/usr/local/lib/python3.12/dist-packages/pandas/compat/_optional.py", line 158, in import_optional_dependency
+    module = importlib.import_module(name)
+  File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "/usr/lib/python3/dist-packages/bottleneck/__init__.py", line 7, in <module>
+    from .move import (move_argmax, move_argmin, move_max, move_mean, move_median,
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/dist-packages/numpy/core/_multiarray_umath.py", line 46, in __getattr__
+    raise ImportError(msg)
+ImportError: 
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.4.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+
+Loading daily data...
+Loading 10m indicator data...
+Processing days...
+
+===========================================================================
+  PREMARKET ALL-TIME HIGHS AS SHORT OPPORTUNITIES — SPY 2000–2026
+  Focus: Max morning drawdown from the open
+===========================================================================
+
+  Universe: 6,582 trading days
+  ├─ Premarket ATH days:    243  (3.7%)
+  ├─ RTH-only ATH days:     182  (2.8%)
+  └─ Non-ATH days:         6157  (93.5%)
+
+  Date range: 2013-04-11 → 2026-01-28
+
+───────────────────────────────────────────────────────────────────────────
+  A. MAX DRAWDOWN FROM OPEN (short profit potential)
+───────────────────────────────────────────────────────────────────────────
+
+  Window                           PM ATH              RTH ATH              Non-ATH
+  ------------------------------------------------------------------------------
+  First 30 min          -0.140% / -0.113%    -0.080% / -0.055%    -0.253% / -0.177%
+  First hour            -0.188% / -0.144%    -0.103% / -0.072%    -0.350% / -0.242%
+  Morning (→12:00)      -0.249% / -0.192%    -0.126% / -0.083%    -0.480% / -0.328%
+  Full day              -0.362% / -0.266%    -0.174% / -0.102%    -0.699% / -0.472%
+
+  (format: mean / median)
+
+───────────────────────────────────────────────────────────────────────────
+  B. DRAWDOWN THRESHOLD HIT RATES (% of days price drops at least X)
+───────────────────────────────────────────────────────────────────────────
+
+  Threshold       PM ATH AM  PM ATH Day   Non-ATH AM  Non-ATH Day
+  ------------------------------------------------------------
+  ≥ 0.10%             73.7%       79.4%        83.0%        87.3%
+  ≥ 0.25%             37.9%       52.3%        59.8%        70.0%
+  ≥ 0.50%             11.1%       25.9%        34.7%        47.9%
+  ≥ 0.75%              3.3%       13.2%        19.5%        32.8%
+  ≥ 1.00%              2.1%        3.7%        11.3%        22.2%
+
+───────────────────────────────────────────────────────────────────────────
+  C. SPEED: Time to hit drawdown thresholds (minutes from open)
+───────────────────────────────────────────────────────────────────────────
+
+  Threshold          Mean   Median    25th%    75th%  n hit    of
+  -------------------------------------------------------
+  ≥ 0.10%             36m      10m       0m      40m   193   243
+  ≥ 0.25%            104m      50m      30m     170m   127   243
+  ≥ 0.50%            180m     180m      80m     285m    63   243
+
+───────────────────────────────────────────────────────────────────────────
+  D. WHEN DOES THE MORNING LOW HAPPEN? (minutes from open)
+───────────────────────────────────────────────────────────────────────────
+
+  PM ATH: mean 54m, median 40m, 25th 10m, 75th 100m
+    0-30m: 40%   30-60m: 21%   60-90m: 11%   90-120m: 9%   120-150m: 20%   
+
+  Non-ATH: mean 56m, median 40m, 25th 10m, 75th 100m
+    0-30m: 38%   30-60m: 17%   60-90m: 13%   90-120m: 13%   120-150m: 19%   
+
+───────────────────────────────────────────────────────────────────────────
+  E. RUNNING LOW PROFILE: worst drawdown from open by time elapsed
+───────────────────────────────────────────────────────────────────────────
+
+    Time   PM ATH Mean   PM ATH Med   Non-ATH Mean  Non-ATH Med   PM Max Up
+  ------------------------------------------------------------------------
+     10m       -0.120%      -0.100%        -0.210%      -0.150%     +0.090%
+     20m       -0.140%      -0.113%        -0.253%      -0.177%     +0.104%
+     30m       -0.158%      -0.122%        -0.299%      -0.208%     +0.115%
+     40m       -0.177%      -0.135%        -0.328%      -0.228%     +0.125%
+     50m       -0.188%      -0.144%        -0.350%      -0.242%     +0.133%
+   1h00m       -0.199%      -0.147%        -0.372%      -0.258%     +0.143%
+   1h30m       -0.222%      -0.165%        -0.425%      -0.295%     +0.160%
+   2h00m       -0.241%      -0.185%        -0.459%      -0.315%     +0.174%
+   2h30m       -0.256%      -0.196%        -0.489%      -0.333%     +0.185%
+   3h00m       -0.265%      -0.202%        -0.512%      -0.348%     +0.196%
+   3h30m       -0.279%      -0.206%        -0.533%      -0.360%     +0.208%
+   4h00m       -0.293%      -0.210%        -0.554%      -0.379%     +0.218%
+   4h30m       -0.306%      -0.220%        -0.581%      -0.399%     +0.225%
+   5h00m       -0.323%      -0.239%        -0.607%      -0.420%     +0.233%
+   5h30m       -0.333%      -0.241%        -0.637%      -0.438%     +0.241%
+   6h00m       -0.348%      -0.260%        -0.672%      -0.457%     +0.250%
+   6h30m       -0.362%      -0.266%        -0.699%      -0.472%     +0.266%
+
+───────────────────────────────────────────────────────────────────────────
+  F. DISTRIBUTION: Max morning drawdown (PM ATH vs Non-ATH)
+───────────────────────────────────────────────────────────────────────────
+
+  Max DD Bucket            PM ATH      %   Non-ATH      %
+  -------------------------------------------------------
+  < -1.50%                     0   0.0%      260   4.2%  
+  -1.50 to -1.00%              5   2.1%      436   7.1%  █
+  -1.00 to -0.75%              3   1.2%      503   8.2%  
+  -0.75 to -0.50%             19   7.8%      939  15.3%  ███
+  -0.50 to -0.25%             65  26.7%     1546  25.1%  █████████████
+  -0.25 to -0.10%             87  35.8%     1428  23.2%  █████████████████
+  -0.10 to  0.00%             62  25.5%      989  16.1%  ████████████
+   0.00% (no dd)               2   0.8%       56   0.9%  
+
+───────────────────────────────────────────────────────────────────────────
+  G. MAX DRAWDOWN BY ATH EXTENSION SIZE
+───────────────────────────────────────────────────────────────────────────
+
+  Extension                 N     DD 30m     DD 1h   DD Morn    DD Day  ≥25bp ≥50bp
+  ------------------------------------------------------------------------------
+  Marginal (<0.05%)        44    -0.116%   -0.151%   -0.178%   -0.338%    25%    5%
+  Small (0.05–0.15%)       77    -0.135%   -0.186%   -0.247%   -0.335%    40%   10%
+  Medium (0.15–0.40%)     100    -0.137%   -0.196%   -0.271%   -0.365%    40%   13%
+  Large (≥0.40%)           22    -0.212%   -0.236%   -0.301%   -0.489%    45%   18%
+
+───────────────────────────────────────────────────────────────────────────
+  H. MAX DRAWDOWN BY GAP SIZE (prev close → open)
+───────────────────────────────────────────────────────────────────────────
+
+  Gap                       N     DD 30m     DD 1h   DD Morn    DD Day  ≥25bp ≥50bp
+  ------------------------------------------------------------------------------
+  Gap down                 31    -0.142%   -0.171%   -0.210%   -0.312%    35%    0%
+  Tiny up (0–0.25%)       118    -0.123%   -0.173%   -0.231%   -0.322%    36%    9%
+  Small up (0.25–0.5%)     61    -0.137%   -0.179%   -0.245%   -0.355%    33%   13%
+  Large up (≥0.5%)         33    -0.203%   -0.274%   -0.357%   -0.564%    55%   24%
+
+───────────────────────────────────────────────────────────────────────────
+  I. MAX DRAWDOWN BY PHASE OSCILLATOR ZONE AT OPEN
+───────────────────────────────────────────────────────────────────────────
+
+  PO Zone                 N     DD 30m     DD 1h   DD Morn  ≥25bp ≥50bp
+  -----------------------------------------------------------------
+  accumulation           16    -0.204%   -0.271%   -0.316%    44%    6%
+  neutral_down           45    -0.187%   -0.234%   -0.284%    56%   11%
+  neutral                90    -0.139%   -0.195%   -0.263%    38%   16%
+  neutral_up             58    -0.133%   -0.189%   -0.269%    36%   12%
+  distribution           24    -0.065%   -0.079%   -0.119%    17%    0%
+  extended_up            10    -0.045%   -0.045%   -0.063%    10%    0%
+
+───────────────────────────────────────────────────────────────────────────
+  J. MAX DRAWDOWN BY OPEN POSITION IN ATR FRAMEWORK
+───────────────────────────────────────────────────────────────────────────
+
+  ATR Position                    N     DD 30m     DD 1h   DD Morn  ≥25bp ≥50bp
+  ------------------------------------------------------------------------
+  Below prev close               31    -0.142%   -0.171%   -0.210%    35%    0%
+  0–Trigger (0–23.6%)            84    -0.129%   -0.183%   -0.249%    39%   12%
+  Trigger–GG (23.6–38.2%)        54    -0.129%   -0.172%   -0.232%    39%    6%
+  GG zone (38.2–61.8%)           39    -0.149%   -0.198%   -0.264%    33%   21%
+  GG exit–ATR (61.8–100%)        28    -0.125%   -0.187%   -0.244%    32%   14%
+  Beyond full ATR                 7    -0.351%   -0.391%   -0.503%    71%   29%
+
+───────────────────────────────────────────────────────────────────────────
+  K. FRESH ATH vs CONTINUATION ATH
+───────────────────────────────────────────────────────────────────────────
+
+  Fresh (prev day NOT ATH) (n=68)
+    DD 30m:    mean -0.159%, med -0.119%
+    DD 1h:     mean -0.235%, med -0.171%
+    DD Morn:   mean -0.319%, med -0.206%
+    DD Day:    mean -0.459%, med -0.313%
+    Hit ≥25bp (AM): 43%   Hit ≥50bp (AM): 21%
+
+  Continuation (prev day WAS ATH) (n=175)
+    DD 30m:    mean -0.132%, med -0.109%
+    DD 1h:     mean -0.170%, med -0.142%
+    DD Morn:   mean -0.222%, med -0.172%
+    DD Day:    mean -0.324%, med -0.254%
+    Hit ≥25bp (AM): 36%   Hit ≥50bp (AM): 7%
+
+───────────────────────────────────────────────────────────────────────────
+  L. RISK/REWARD: Max adverse (up) vs favorable (down) excursion
+───────────────────────────────────────────────────────────────────────────
+
+  First 30m:
+    PM ATH  — down +0.140%, up +0.104%, R:R med 1.26
+    Non-ATH — down +0.253%, up +0.241%, R:R med 1.00
+
+  First hour:
+    PM ATH  — down +0.188%, up +0.133%, R:R med 1.37
+    Non-ATH — down +0.350%, up +0.330%, R:R med 1.01
+
+  Morning:
+    PM ATH  — down +0.249%, up +0.181%, R:R med 1.41
+    Non-ATH — down +0.480%, up +0.441%, R:R med 1.06
+
+  Full day:
+    PM ATH  — down +0.362%, up +0.266%, R:R med 1.34
+    Non-ATH — down +0.699%, up +0.635%, R:R med 1.05
+
+───────────────────────────────────────────────────────────────────────────
+  M. YEAR-BY-YEAR (Premarket ATH days)
+───────────────────────────────────────────────────────────────────────────
+
+  Year      N     DD 30m     DD 1h   DD Morn    DD Day  ≥25bp
+  ----------------------------------------------------------
+  2013     23    -0.126%   -0.182%   -0.226%   -0.333%    30%
+  2014     28    -0.164%   -0.224%   -0.294%   -0.385%    50%
+  2015      2    -0.122%   -0.122%   -0.122%   -0.148%     0%
+  2016     15    -0.113%   -0.167%   -0.228%   -0.279%    33%
+  2017     37    -0.083%   -0.108%   -0.160%   -0.262%    22%
+  2018     11    -0.077%   -0.084%   -0.172%   -0.259%    27%
+  2019     22    -0.171%   -0.250%   -0.287%   -0.380%    41%
+  2020     19    -0.220%   -0.249%   -0.312%   -0.476%    53%
+  2021     44    -0.166%   -0.224%   -0.271%   -0.395%    45%
+  2022      1    -0.034%   -0.106%   -0.584%   -0.760%   100%
+  2024     32    -0.130%   -0.176%   -0.254%   -0.405%    31%
+  2025      7    -0.129%   -0.156%   -0.278%   -0.418%    43%
+  2026      2    -0.101%   -0.318%   -0.428%   -0.521%   100%
+
+───────────────────────────────────────────────────────────────────────────
+  N. BY DAY OF WEEK
+───────────────────────────────────────────────────────────────────────────
+
+  Day      N     DD 30m     DD 1h   DD Morn  ≥25bp ≥50bp
+  ----------------------------------------------------
+  Mon     43    -0.154%   -0.203%   -0.267%    40%    9%
+  Tue     48    -0.120%   -0.164%   -0.241%    44%    8%
+  Wed     41    -0.114%   -0.167%   -0.235%    37%   12%
+  Thu     58    -0.152%   -0.225%   -0.278%    38%   21%
+  Fri     53    -0.152%   -0.173%   -0.221%    32%    4%
+
+===========================================================================
+  VERDICT
+===========================================================================
+
+  Premarket ATH days: 243 (3.7% of all days)
+
+  MAX MORNING DRAWDOWN (short profit potential):
+    PM ATH mean:  -0.249%   vs  Non-ATH: -0.480%
+    PM ATH med:   -0.192%   vs  Non-ATH: -0.328%
+
+  THRESHOLD HIT RATES (morning):
+    ≥ 25bp drop:  PM ATH 38%  vs  Non-ATH 60%
+    ≥ 50bp drop:  PM ATH 11%  vs  Non-ATH 35%
+
+  ADVERSE EXCURSION (max run-up = risk for shorts):
+    Morning mean: PM ATH +0.181%  vs  Non-ATH +0.441%
+
+  KEY INSIGHT: PM ATH days have 48% smaller morning drawdowns than average.
+  The drawdown is smaller because ATH days are low-volatility bullish days.
+  But the adverse excursion is also smaller — the range is compressed.
+    
+  Results exported to /root/spy/premarket_ath_results.json

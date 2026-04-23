@@ -1,0 +1,144 @@
+
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.4.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+Traceback (most recent call last):  File "/root/spy/backtest_gg_with_po.py", line 12, in <module>
+    import pandas as pd
+  File "/usr/local/lib/python3.12/dist-packages/pandas/__init__.py", line 46, in <module>
+    from pandas.core.api import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/api.py", line 27, in <module>
+    from pandas.core.arrays import Categorical
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/__init__.py", line 1, in <module>
+    from pandas.core.arrays.arrow import ArrowExtensionArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/arrow/__init__.py", line 5, in <module>
+    from pandas.core.arrays.arrow.array import ArrowExtensionArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/arrow/array.py", line 65, in <module>
+    from pandas.core import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/ops/__init__.py", line 9, in <module>
+    from pandas.core.ops.array_ops import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/ops/array_ops.py", line 55, in <module>
+    from pandas.core.computation import expressions
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/computation/expressions.py", line 22, in <module>
+    from pandas.core.computation.check import NUMEXPR_INSTALLED
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/computation/check.py", line 5, in <module>
+    ne = import_optional_dependency("numexpr", errors="warn")
+  File "/usr/local/lib/python3.12/dist-packages/pandas/compat/_optional.py", line 158, in import_optional_dependency
+    module = importlib.import_module(name)
+  File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "/usr/lib/python3/dist-packages/numexpr/__init__.py", line 24, in <module>
+    from numexpr.interpreter import MAX_THREADS, use_vml, __BLOCK_SIZE1__
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/dist-packages/numpy/core/_multiarray_umath.py", line 46, in __getattr__
+    raise ImportError(msg)
+ImportError: 
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.4.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+
+
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.4.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+Traceback (most recent call last):  File "/root/spy/backtest_gg_with_po.py", line 12, in <module>
+    import pandas as pd
+  File "/usr/local/lib/python3.12/dist-packages/pandas/__init__.py", line 46, in <module>
+    from pandas.core.api import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/api.py", line 27, in <module>
+    from pandas.core.arrays import Categorical
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/__init__.py", line 1, in <module>
+    from pandas.core.arrays.arrow import ArrowExtensionArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/arrow/__init__.py", line 5, in <module>
+    from pandas.core.arrays.arrow.array import ArrowExtensionArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/arrow/array.py", line 79, in <module>
+    from pandas.core.arrays.masked import BaseMaskedArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/masked.py", line 56, in <module>
+    from pandas.core import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/nanops.py", line 54, in <module>
+    bn = import_optional_dependency("bottleneck", errors="warn")
+  File "/usr/local/lib/python3.12/dist-packages/pandas/compat/_optional.py", line 158, in import_optional_dependency
+    module = importlib.import_module(name)
+  File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "/usr/lib/python3/dist-packages/bottleneck/__init__.py", line 7, in <module>
+    from .move import (move_argmax, move_argmin, move_max, move_mean, move_median,
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/dist-packages/numpy/core/_multiarray_umath.py", line 46, in __getattr__
+    raise ImportError(msg)
+ImportError: 
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.4.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+
+Loading 10m data...
+Loading 60m Phase Oscillator...
+Mapping 10m bars to 60m PO snapshots...
+Computing conditioned Golden Gate stats...
+
+================================================================================
+GOLDEN GATE COMPLETION RATES BY 60m PHASE OSCILLATOR SNAPSHOT
+================================================================================
+
+Baseline: Bull GG 2192/3472 = 63.1%   Bear GG 2121/3254 = 65.2%
+
+PO Snapshot                          Bull N   Bull%  Bear N   Bear%  Total N
+--------------------------------------------------------------------------------
+  (mid, falling, compression)           347   48.1%    1373   64.1%     1720
+  (mid, rising, compression)           1306   60.0%     325   45.5%     1631
+  (mid, rising, bull_exp)               687   69.6%      37   37.8%      724
+  (mid, falling, bear_exp)               65   53.8%     643   68.9%      708
+  (mid, rising, bear_exp)               294   64.3%     277   66.8%      571
+  (mid, falling, bull_exp)              260   55.8%     217   51.2%      477
+  (high, rising, bull_exp)              362   77.1%       0    0.0%      362
+  (low, falling, bear_exp)                2   50.0%     268   90.3%      270
+  (high, falling, bull_exp)             109   78.9%      10   50.0%      119
+  (low, rising, bear_exp)                10   70.0%     100   89.0%      110
+  (high, rising, compression)            26   76.9%       0    0.0%       26
+
+--- By Zone ---
+  high        Bull:  387/501  =  77.2%   Bear:    5/10   =  50.0%
+  mid         Bull: 1797/2959 =  60.7%   Bear: 1781/2872 =  62.0%
+  low         Bull:    8/12   =  66.7%   Bear:  335/372  =  90.1%
+
+--- By Slope ---
+  rising      Bull: 1756/2685 =  65.4%   Bear:  436/739  =  59.0%
+  falling     Bull:  436/787  =  55.4%   Bear: 1685/2515 =  67.0%
+
+--- By State ---
+  bull_exp       Bull:  988/1418 =  69.7%   Bear:  130/264  =  49.2%
+  bear_exp       Bull:  232/371  =  62.5%   Bear:  959/1288 =  74.5%
+  compression    Bull:  972/1683 =  57.8%   Bear: 1032/1702 =  60.6%
+
+--- Best & Worst Snapshots (min 50 triggers) ---
+
+  BULLISH Golden Gate:
+    Best:     (high,falling,bull_exp) 78.9% (n=109)  (high,rising,bull_exp) 77.1% (n=362)  (mid,rising,bull_exp) 69.6% (n=687)
+    Worst:    (mid,falling,bull_exp) 55.8% (n=260)  (mid,falling,bear_exp) 53.8% (n=65)  (mid,falling,compression) 48.1% (n=347)
+
+  BEARISH Golden Gate:
+    Best:     (low,falling,bear_exp) 90.3% (n=268)  (low,rising,bear_exp) 89.0% (n=100)  (mid,falling,bear_exp) 68.9% (n=643)
+    Worst:    (mid,falling,compression) 64.1% (n=1373)  (mid,falling,bull_exp) 51.2% (n=217)  (mid,rising,compression) 45.5% (n=325)

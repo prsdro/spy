@@ -1,0 +1,161 @@
+
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.4.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+Traceback (most recent call last):  File "/root/spy/backtest_4h_po_opex.py", line 21, in <module>
+    import pandas as pd
+  File "/usr/local/lib/python3.12/dist-packages/pandas/__init__.py", line 46, in <module>
+    from pandas.core.api import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/api.py", line 27, in <module>
+    from pandas.core.arrays import Categorical
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/__init__.py", line 1, in <module>
+    from pandas.core.arrays.arrow import ArrowExtensionArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/arrow/__init__.py", line 5, in <module>
+    from pandas.core.arrays.arrow.array import ArrowExtensionArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/arrow/array.py", line 65, in <module>
+    from pandas.core import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/ops/__init__.py", line 9, in <module>
+    from pandas.core.ops.array_ops import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/ops/array_ops.py", line 55, in <module>
+    from pandas.core.computation import expressions
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/computation/expressions.py", line 22, in <module>
+    from pandas.core.computation.check import NUMEXPR_INSTALLED
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/computation/check.py", line 5, in <module>
+    ne = import_optional_dependency("numexpr", errors="warn")
+  File "/usr/local/lib/python3.12/dist-packages/pandas/compat/_optional.py", line 158, in import_optional_dependency
+    module = importlib.import_module(name)
+  File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "/usr/lib/python3/dist-packages/numexpr/__init__.py", line 24, in <module>
+    from numexpr.interpreter import MAX_THREADS, use_vml, __BLOCK_SIZE1__
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/dist-packages/numpy/core/_multiarray_umath.py", line 46, in __getattr__
+    raise ImportError(msg)
+ImportError: 
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.4.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+
+
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.4.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+Traceback (most recent call last):  File "/root/spy/backtest_4h_po_opex.py", line 21, in <module>
+    import pandas as pd
+  File "/usr/local/lib/python3.12/dist-packages/pandas/__init__.py", line 46, in <module>
+    from pandas.core.api import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/api.py", line 27, in <module>
+    from pandas.core.arrays import Categorical
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/__init__.py", line 1, in <module>
+    from pandas.core.arrays.arrow import ArrowExtensionArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/arrow/__init__.py", line 5, in <module>
+    from pandas.core.arrays.arrow.array import ArrowExtensionArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/arrow/array.py", line 79, in <module>
+    from pandas.core.arrays.masked import BaseMaskedArray
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/masked.py", line 56, in <module>
+    from pandas.core import (
+  File "/usr/local/lib/python3.12/dist-packages/pandas/core/nanops.py", line 54, in <module>
+    bn = import_optional_dependency("bottleneck", errors="warn")
+  File "/usr/local/lib/python3.12/dist-packages/pandas/compat/_optional.py", line 158, in import_optional_dependency
+    module = importlib.import_module(name)
+  File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "/usr/lib/python3/dist-packages/bottleneck/__init__.py", line 7, in <module>
+    from .move import (move_argmax, move_argmin, move_max, move_mean, move_median,
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/dist-packages/numpy/core/_multiarray_umath.py", line 46, in __getattr__
+    raise ImportError(msg)
+ImportError: 
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.4.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+
+Loading data...
+Independent V2 signals: 81
+
+Valid events: 81
+Baseline ≥1.0% 5d: 46.9%
+Baseline ≥1.5% 5d: 33.3%
+
+═══════════════════════════════════════════════════════════════════════════
+  OpEx BUCKET (5d window)
+═══════════════════════════════════════════════════════════════════════════
+  Bucket                                 N   ≥0.5%   ≥1.0%   ≥1.5%    Med5d
+  Week Before OpEx                      26     69%     54%     35%   -1.11%
+  OpEx Week Mon-Thu                     17     65%     41%     29%   -0.67%
+  OpEx Friday                            3     67%     67%     67%   -2.34% ←
+  Post-OpEx Week (Mon-Thu after)         6     83%     67%     33%   -1.08% ←
+  Week After OpEx                        5    100%     60%     60%   -1.85% ←
+  2 Weeks After OpEx                    15     80%     33%     27%   -0.71% ←
+
+═══════════════════════════════════════════════════════════════════════════
+  DAYS TO NEAREST OpEx (negative = after, positive = before)
+═══════════════════════════════════════════════════════════════════════════
+  Day                N   ≥0.5%   ≥1.0%   ≥1.5%    Med5d
+  -17d after         6     83%     33%     33%   -0.83%
+  -14d after         5     80%     20%      0%   -0.57% ←
+  -12d after         3     67%     33%     33%   -0.59%
+  -11d after         3    100%     33%     33%   -0.78%
+  -7d after          4     75%     50%     50%   -1.51%
+  -4d after          3     67%     67%     67%   -1.60% ←
+  -3d after          3    100%     67%      0%   -1.01% ←
+  0d OpEx            3     67%     67%     67%   -2.34% ←
+  1d before          4     75%     50%     25%   -0.84%
+  2d before          6     50%     17%     17%   -0.54% ←
+  4d before          5     60%     40%     20%   -0.67%
+  8d before          3     67%     67%     67%   -3.41% ←
+  9d before          3     33%     33%     33%    0.25%
+  10d before        10     70%     50%     40%   -1.02%
+  11d before         8     75%     62%     25%   -1.27% ←
+
+═══════════════════════════════════════════════════════════════════════════
+  OpEx BUCKET (10d window — captures post-OpEx releases)
+═══════════════════════════════════════════════════════════════════════════
+  Bucket                                 N   ≥1.0%   ≥1.5%   ≥2.0%   Med10d
+  Week Before OpEx                      26     65%     50%     46%   -1.62%
+  OpEx Week Mon-Thu                     17     47%     41%     29%   -0.90%
+  OpEx Friday                            3     67%     67%     67%   -2.34%
+  Post-OpEx Week (Mon-Thu after)         6     83%     50%     17%   -1.35%
+  Week After OpEx                        5     80%     80%     80%   -5.47%
+  2 Weeks After OpEx                    15     47%     40%     40%   -0.95%
+
+═══════════════════════════════════════════════════════════════════════════
+  SIGNAL FIRES ON OpEx FRIDAY → FORWARD 10d
+═══════════════════════════════════════════════════════════════════════════
+
+  N = 3
+  ≥0.5% in 10d: 67%
+  ≥1.0% in 10d: 67%
+  ≥1.5% in 10d: 67%
+  ≥2.0% in 10d: 67%
+  Median 10d max drop: -2.34%
+
+  Individual events:
+  Date           PkPO   Drop5d  Drop10d
+  2001-04-20      100    -2.34    -2.34
+  2005-05-20       89    -0.21    -0.21
+  2023-05-19       81    -2.76    -2.76
