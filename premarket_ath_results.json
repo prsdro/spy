@@ -1474,33 +1474,33 @@
     },
     "0\u2013Trigger": {
       "n": 84,
-      "dd_morning_mean": -0.2488,
+      "dd_morning_mean": -0.2426,
       "hit_25bp": 39.3,
-      "hit_50bp": 11.9
+      "hit_50bp": 10.7
     },
     "Trigger\u2013GG": {
-      "n": 54,
-      "dd_morning_mean": -0.2318,
-      "hit_25bp": 38.9,
-      "hit_50bp": 5.6
+      "n": 52,
+      "dd_morning_mean": -0.2429,
+      "hit_25bp": 40.4,
+      "hit_50bp": 7.7
     },
     "GG zone": {
-      "n": 39,
-      "dd_morning_mean": -0.2642,
-      "hit_25bp": 33.3,
-      "hit_50bp": 20.5
+      "n": 40,
+      "dd_morning_mean": -0.2591,
+      "hit_25bp": 30.0,
+      "hit_50bp": 20.0
     },
     "GG exit\u2013ATR": {
-      "n": 28,
-      "dd_morning_mean": -0.2435,
-      "hit_25bp": 32.1,
-      "hit_50bp": 14.3
+      "n": 27,
+      "dd_morning_mean": -0.2158,
+      "hit_25bp": 29.6,
+      "hit_50bp": 11.1
     },
     "Beyond ATR": {
-      "n": 7,
-      "dd_morning_mean": -0.5034,
-      "hit_25bp": 71.4,
-      "hit_50bp": 28.6
+      "n": 9,
+      "dd_morning_mean": -0.5406,
+      "hit_25bp": 77.8,
+      "hit_50bp": 33.3
     }
   },
   "by_year": {
