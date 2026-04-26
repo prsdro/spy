@@ -46,3 +46,8 @@ site/data/*.csv.gz.part_*
 site/*.mp4
 site/*.gif
 site/data/scripts.zip
+
+# Analyst service — never commit (lives separately, runs on PM2)
+analyst/server.py
+analyst/extension/
+site/analyst.html
