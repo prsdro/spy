@@ -377,6 +377,11 @@ body{
   <p class="lede">The Saty Phase Oscillator on the 60-minute timeframe tells you whether a Golden Gate entry (at 38.2%) has real momentum to complete through 61.8% &mdash; or if it's likely to stall. Across 6,582 trading days and 25 years of SPY data, the difference is dramatic.</p>
 </header>
 
+<div role="alert" style="margin:0 0 2.5rem;padding:1rem 1.2rem;background:linear-gradient(180deg,#1a1400 0%,#1f1808 100%);border:1px solid #3d3200;border-left:3px solid #fbbf24;border-radius:6px;color:#e8d9a8;font-size:.88rem;line-height:1.6">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:.65rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#fbbf24;margin-bottom:.4rem">Draft &mdash; Demoted from Core 2026-04-26</div>
+  This study is being rebuilt due to a confirmed <strong style="color:#fbbf24">look-ahead bug</strong> in the 1h Phase Oscillator join: the backtest reads the not-yet-closed current hour bar at trigger time, leaking up to 60&nbsp;min of forward information. Point-in-time-safe reruns show the headline 90% bear cohort is closer to ~85% and the worst buckets partly invert. Treat all numbers below as <em>upper bounds</em> until the rebuild lands. Full reasoning &rarr; <a href="/drafts.html#bilbo-golden-gate" style="color:#fbbf24;text-decoration:underline;text-underline-offset:2px">drafts.html#bilbo-golden-gate</a>.
+</div>
+
 <!-- ── Section 1: The Edge ── -->
 <div class="section reveal">
   <div class="section-label">01 &mdash; The Edge</div>

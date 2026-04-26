@@ -101,3 +101,27 @@ These cover entry, continuation, risk-off, and regime in roughly the order a 0DT
 ### Bottom line
 
 The catalog is healthy at the top. The seven core keepers form a coherent intraday system: identify regime (sustained-po, gg-chop-zone, gap-fills), pick the entry (call-trigger, bilbo-golden-gate, gg-entries), manage risk (gg-invalidation), and extend horizon when needed (multiday-gg, swing-gg). The middle tier is fine as supporting material. The bottom tier is mostly **publication overhead** — under-powered, under-frequency, or stat-questionable pages that dilute the brand without adding tradable edge. Trim three (kill list), rebuild three (4h-po-reversal, bilbo-continuation, bilbo-10m or absorb), and relabel two (trigger-box-spreads, bilbo-box-breakout). After that pass, the published catalog goes from "34 pages of mixed quality" to "≈18 pages, every one of which has a clear edge, a clear entry, and a clear risk rule."
+
+---
+
+## Addendum 2026-04-26 evening — bilbo-golden-gate demoted to DRAFT
+
+After the original audit went out, both Codex 5.5 and Opus 4.7 independently re-reviewed `backtest_gg_with_po.py` and confirmed two material findings (full diagnoses in `audit-reruns/codex_gg_bug_review_2026-04-26.md` and `audit-reruns/opus_gg_bug_review_2026-04-26.md`):
+
+1. **Look-ahead bias in the PO join.** `merge_asof(direction="backward")` against left-labeled 1h bars produced by `aggregate.py:57-66` lets the 10-minute trigger (e.g. 09:40) read the not-yet-closed 09:00–09:59 hour bar. Up to **60 minutes of forward leakage** depending on where in the hour the trigger fires. The reference pattern in `backtest_bilbo_box_htf_po_exits.py:126-145` already shifts HTF timestamps forward by one bar duration before the join — `backtest_gg_with_po.py` does not.
+2. **Inflated Subway "trigger → 38.2 = 80%" headline.** That figure conflates Cat A (opens beyond trigger), Cat B (gap-opens inside and crosses), and the actually tradable residual. Codex's reproduction of the residual cohort (open inside, cross intraday) is **52.0% bull (1224/2355)** and **56.6% bear (1325/2339)** — a different number than the published headline. The Subway page is salvageable with proper framing; the GG-with-PO study is not, in its current form.
+
+**Codex's quantified impact when the join is made point-in-time safe:**
+- Bear PO Low+Falling: **89.6% → 85.1%**
+- Bull PO High+Rising: 75.9% → 71.0%
+- Bull PO Mid+Falling: 50.9% → 63.0% (worst bucket partly inverts)
+- Bear PO Mid+Rising: 54.5% → 69.6%
+
+**Action taken on the site (this addendum):**
+- `bilbo-golden-gate` removed from the Day Trading core (homepage now shows 5 core + 4 supporting cards instead of 6 + 4).
+- New 9th draft entry on `/drafts.html#bilbo-golden-gate` documenting the bug + corrected stats.
+- Amber draft banner added to `bilbo-golden-gate.html` linking back to the drafts entry.
+- Honest-residual callout (52% bull / 56% bear) added to `golden-gate.html` above the Subway tables.
+- `cheatsheet-bilbo.html` archived to `_archive_cheatsheet-bilbo.html`; link removed from the master cheat sheet.
+
+The original review's "core 7-study playbook" framing is now a **6-study core** (call-trigger, gg-invalidation, gg-entries, trigger-box, call-to-put-reversal on the day side, plus multiday-gg on the swing side). Bilbo Golden Gate stays demoted until a rebuilt version with bar-end PO joins lands and the residual stats hold up under the corrected math.

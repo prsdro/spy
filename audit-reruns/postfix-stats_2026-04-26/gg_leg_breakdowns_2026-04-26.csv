@@ -1,0 +1,17 @@
+leg,direction,category,category_label,published_buggy_total,published_buggy_completed,published_buggy_rate_pct,corrected_total,corrected_completed,corrected_rate_pct,po_join_sensitive
+trigger_23.6_to_38.2,bull,overall,All triggered samples,4355,3421,78.6,4355,3421,78.6,False
+trigger_23.6_to_38.2,bull,cat_a,Open already beyond target,1066,1066,100.0,1066,1066,100.0,False
+trigger_23.6_to_38.2,bull,cat_b,Open between base and target,767,666,86.8,767,666,86.8,False
+trigger_23.6_to_38.2,bull,residual,"Open before base, then crosses intraday",2522,1689,67.0,2522,1689,67.0,False
+trigger_23.6_to_38.2,bear,overall,All triggered samples,4044,3196,79.0,4044,3196,79.0,False
+trigger_23.6_to_38.2,bear,cat_a,Open already beyond target,857,857,100.0,857,857,100.0,False
+trigger_23.6_to_38.2,bear,cat_b,Open between base and target,582,520,89.3,582,520,89.3,False
+trigger_23.6_to_38.2,bear,residual,"Open before base, then crosses intraday",2605,1819,69.8,2605,1819,69.8,False
+gg_38.2_to_61.8,bull,overall,All triggered samples,3421,2139,62.5,3421,2139,62.5,False
+gg_38.2_to_61.8,bull,cat_a,Open already beyond target,368,368,100.0,368,368,100.0,False
+gg_38.2_to_61.8,bull,cat_b,Open between base and target,698,547,78.4,698,547,78.4,False
+gg_38.2_to_61.8,bull,residual,"Open before base, then crosses intraday",2355,1224,52.0,2355,1224,52.0,False
+gg_38.2_to_61.8,bear,overall,All triggered samples,3196,2090,65.4,3196,2090,65.4,False
+gg_38.2_to_61.8,bear,cat_a,Open already beyond target,375,375,100.0,375,375,100.0,False
+gg_38.2_to_61.8,bear,cat_b,Open between base and target,482,390,80.9,482,390,80.9,False
+gg_38.2_to_61.8,bear,residual,"Open before base, then crosses intraday",2339,1325,56.6,2339,1325,56.6,False

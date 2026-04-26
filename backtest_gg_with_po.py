@@ -64,21 +64,19 @@ def main():
         "FROM ind_1h ORDER BY timestamp",
         conn, parse_dates=["timestamp"]
     )
+    df60 = df60.dropna(subset=["phase_oscillator"]).copy()
     df60 = df60.set_index("timestamp").sort_index()
 
-    # Pre-compute PO slope (current vs previous bar)
+    # Pre-compute PO slope (current vs previous completed bar).
     df60["po_prev"] = df60["phase_oscillator"].shift(1)
 
-    # For fast lookup: for a given 10m timestamp, find the most recent 60m bar
-    # Build a mapping: each 10m bar -> nearest prior 60m PO reading
+    # aggregate.py writes left-labeled 1h bars, so a row stamped 09:00 contains
+    # the hour that closes at 10:00. Shift to bar-end timestamps before the
+    # backward merge so 10m triggers only see fully closed 1h PO values.
     print("Mapping 10m bars to 60m PO snapshots...", flush=True)
-    po_vals = df60["phase_oscillator"]
-    po_prevs = df60["po_prev"]
-    po_comp = df60["compression"]
-
-    # Use merge_asof for efficient time-based join
     df10_reset = df10.reset_index()
     df60_reset = df60.reset_index()
+    df60_reset["timestamp"] = df60_reset["timestamp"] + pd.Timedelta(hours=1)
     merged = pd.merge_asof(
         df10_reset[["timestamp"]],
         df60_reset[["timestamp", "phase_oscillator", "po_prev", "compression"]],

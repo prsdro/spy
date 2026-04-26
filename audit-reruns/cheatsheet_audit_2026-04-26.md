@@ -99,3 +99,9 @@ Run on dev (live nginx serves `/root/milkman/`):
 ```
 
 All cheat sheets in the active catalog return 200; the archived spreads URL correctly 404s.
+
+---
+
+## Addendum 2026-04-26 evening — cheatsheet-bilbo archived
+
+Following the bilbo-golden-gate demotion (see `milkman_editorial_audit_2026-04-26.md` addendum), `cheatsheet-bilbo.html` has been moved to `_archive_cheatsheet-bilbo.html` and removed from the master cheat sheet's link bar. The cheat sheet is dedicated entirely to the contaminated 1h PO × Golden Gate stats; rather than band-aid the numbers, it's pulled offline until the bug-fixed rerun produces a verified PO grid worth printing again. Master cheat sheet positions renumbered: Basics(01) → Entries(02) → Pullbacks(03) → 3m Close(04) → Timing(05).

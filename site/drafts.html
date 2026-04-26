@@ -200,7 +200,7 @@
       <div class="logo sub">studies that didn&rsquo;t make the core playbook</div>
 
       <p class="preamble">
-        These pages live outside the core 7-study playbook for a reason. Every study here was reviewed against the same two filters used for the keepers: <strong>quality</strong> (sample size, edge magnitude, caveats acknowledged) and <strong>actionability</strong> (entry/exit clarity, real-time identifiability, fit for 0DTE/short-dated SPX/SPY).
+        These pages live outside the core playbook for a reason. Every study here was reviewed against the same two filters used for the keepers: <strong>quality</strong> (sample size, edge magnitude, caveats acknowledged) and <strong>actionability</strong> (entry/exit clarity, real-time identifiability, fit for 0DTE/short-dated SPX/SPY).
       </p>
       <p class="preamble">
         Listing them transparently &mdash; rather than burying them &mdash; keeps the catalog honest. The point of a research site is to publish what worked <em>and</em> what didn&rsquo;t.
@@ -211,11 +211,21 @@
     <div class="section section-draft" id="drafts">
       <div class="section-label">
         <span>Draft Studies &mdash; In Progress</span>
-        <span class="count">8 studies</span>
+        <span class="count">9 studies</span>
       </div>
       <div class="section-intro">
         Real signal but a weak frame. These need tweaks &mdash; sample-size deepening, reframed metrics, rebuilt code, or merging into adjacent studies &mdash; before an edge can be confirmed. Treat as research drafts, not playbook material.
       </div>
+
+      <a class="study-card" id="bilbo-golden-gate" href="/bilbo-golden-gate.html">
+        <div class="head">
+          <span class="name">Bilbo Golden Gate <span style="font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--draft);letter-spacing:.06em;text-transform:uppercase;margin-left:.4rem">Demoted from Core</span></span>
+          <span class="arrow">&rarr;</span>
+        </div>
+        <div class="reason">
+          <strong>Look-ahead bias confirmed.</strong> The 1h Phase Oscillator is sampled from the not-yet-closed current hour bar &mdash; up to 60 min of forward leakage via <code>merge_asof(direction="backward")</code> against left-labeled HTF bars. Point-in-time-safe rerun shows the flagship <strong>90.3% bear (PO Low+Falling)</strong> cohort is closer to <strong>~85%</strong>, the bull <strong>75.9%</strong> drops to <strong>~71%</strong>, and the worst &ldquo;Mid+Falling/Mid+Rising&rdquo; buckets partly invert (50.9% &rarr; 63.0%, 54.5% &rarr; 69.6%). Needs full rebuild with bar-end PO joins before it goes back in the playbook. See <code>audit-reruns/codex_gg_bug_review_2026-04-26.md</code> &amp; <code>opus_gg_bug_review_2026-04-26.md</code>.
+        </div>
+      </a>
 
       <a class="study-card" href="/trigger-box-spreads.html">
         <div class="head">
