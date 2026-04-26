@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bilbo Golden Gate — 10m vs 60m Phase Oscillator | Milkman Trades</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥛</text></svg>">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,300&family=JetBrains+Mono:wght@400;500;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0c0e12;--surface:#13161c;--surface-2:#181c24;--border:#1e2230;
+  --text:#e8eaed;--text-dim:#6b7280;--text-mid:#9ca3af;
+  --bull:#1cd48a;--bear:#ef6c00;--accent:#fbbf24;--blue:#60a5fa;
+}
+html{font-size:15px;scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
+.page{max-width:760px;margin:0 auto;padding:3rem 1.5rem 5rem}
+.back{display:inline-flex;align-items:center;gap:.4rem;font-size:.8rem;color:var(--text-dim);text-decoration:none;margin-bottom:2.5rem;transition:color .2s}
+.back:hover{color:var(--text)}
+.back svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2}
+.draft{background:#1a1400;border:1px solid #3d3200;border-radius:6px;padding:.6rem 1rem;margin-bottom:1.5rem;font-size:.75rem;color:#d4a800;line-height:1.5}
+.draft strong{color:#fbbf24}
+.hero{margin-bottom:3.5rem}
+.hero .kicker{font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:.75rem}
+.hero h1{font-size:2.2rem;font-weight:700;letter-spacing:-.03em;line-height:1.15;margin-bottom:1rem}
+.hero h1 em{font-style:normal;color:var(--blue)}
+.hero .lede{font-size:1.05rem;color:var(--text-mid);font-weight:300;max-width:600px;line-height:1.65}
+.section{margin-bottom:3.5rem}
+.section-label{font-family:'JetBrains Mono',monospace;font-size:.65rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim);padding-bottom:.6rem;border-bottom:1px solid var(--border);margin-bottom:1.5rem}
+.prose{font-size:.95rem;color:var(--text-mid);font-weight:300;line-height:1.7;margin-bottom:1.5rem}
+.prose strong{color:var(--text);font-weight:500}
+
+/* Comparison grid */
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin:1.5rem 0}
+@media(max-width:640px){.compare{grid-template-columns:1fr}}
+.compare-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1.25rem;position:relative;overflow:hidden}
+.compare-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.compare-card.c60::before{background:linear-gradient(90deg,var(--accent),transparent)}
+.compare-card.c10::before{background:linear-gradient(90deg,var(--blue),transparent)}
+.compare-card .card-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:1rem}
+.compare-card .card-title{font-size:.85rem;font-weight:600}
+.compare-card .card-tf{font-family:'JetBrains Mono',monospace;font-size:.65rem;font-weight:500;padding:.15em .5em;border-radius:3px}
+.c60 .card-tf{background:#2a2000;color:var(--accent)}
+.c10 .card-tf{background:#0c1a2e;color:var(--blue)}
+
+/* Data rows */
+.drow{display:flex;align-items:center;gap:.5rem;margin-bottom:.35rem;font-size:.8rem}
+.drow .dlabel{flex:0 0 115px;color:var(--text-mid);font-size:.78rem}
+.drow .dbar-bg{flex:1;height:16px;background:var(--surface-2);border-radius:4px;overflow:hidden;position:relative}
+.drow .dbar{height:100%;border-radius:4px;transition:width .8s cubic-bezier(.22,1,.36,1)}
+.drow .dval{flex:0 0 48px;text-align:right;font-family:'JetBrains Mono',monospace;font-size:.75rem;font-weight:600}
+.drow .dn{flex:0 0 55px;text-align:right;font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--text-dim)}
+.drow.best .dlabel{color:var(--text);font-weight:500}
+.drow.baseline{opacity:.5}
+.drow.baseline .dlabel{font-style:italic}
+
+/* Verdict */
+.verdict{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:2rem 0;text-align:center}
+.verdict .big{font-family:'JetBrains Mono',monospace;font-size:1.8rem;font-weight:700;margin-bottom:.3rem}
+.verdict .big .v60{color:var(--accent)}
+.verdict .big .vs{color:var(--text-dim);font-size:1rem;font-weight:400;margin:0 .3rem}
+.verdict .big .v10{color:var(--blue)}
+.verdict .sub{font-size:.85rem;color:var(--text-mid);font-weight:300}
+
+.callout{background:var(--surface);border-left:3px solid var(--accent);padding:1rem 1.25rem;margin:2rem 0;border-radius:0 6px 6px 0}
+.callout p{font-size:.85rem;color:var(--text-mid);font-weight:300;line-height:1.6}
+.callout strong{color:var(--accent);font-weight:500}
+
+.footer{text-align:center;padding-top:2.5rem;border-top:1px solid var(--border);color:var(--text-dim);font-size:.72rem;font-weight:300;line-height:1.8}
+.footer a{color:var(--text-dim);text-decoration:underline;text-underline-offset:2px}
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease}
+.reveal.visible{opacity:1;transform:none}
+
+/* ── Mobile ── */
+@media(max-width:767px){
+  .hero h1{font-size:1.6rem}
+  .compare{grid-template-columns:1fr}
+  .drow .dlabel{flex:0 0 90px;font-size:.7rem}
+  .drow .dval{flex:0 0 40px;font-size:.7rem}
+  .drow .dn{flex:0 0 45px;font-size:.55rem}
+  .verdict .big{font-size:1.4rem}
+}
+.cheatsheet-banner{display:block;text-align:center;padding:1.5rem 1rem;margin:2rem 0 0;background:var(--surface);border:1px solid var(--border);border-radius:8px;text-decoration:none;transition:border-color .2s,background .2s}
+.cheatsheet-banner:hover{border-color:#fbbf24;background:var(--surface-2)}
+.cheatsheet-banner span{font-size:.95rem;color:var(--text);font-weight:500}
+</style>
+<script src="/nav.js"></script>
+</head>
+<body>
+<div class="page">
+
+<div style="background:#2a0b0b;border:1px solid #5d0f0f;border-radius:6px;padding:.75rem 1rem;margin-bottom:1.5rem;font-size:.8rem;color:#ff8787;font-weight:400;line-height:1.55">
+  <strong style="color:#ff6b6b">Under Re-Verification (2026-04-23) &mdash;</strong> The 10-minute PO comparison column was produced by an ad-hoc variant not currently in the repo and is pending rebuild. The embedded 60-minute PO values on this page also predate the audit (e.g. High+Rising 77.7% should be 77.1%, n=372 should be 388) &mdash; refer to the <a href="/bilbo-golden-gate.html" style="color:#ffb05c">Bilbo Golden Gate</a> page for current 60m values. <strong style="color:#ff6b6b">The directional conclusion (60m &gt; 10m) is plausible but specific numbers are stale.</strong>
+</div>
+
+<a href="/" style="display:inline-flex;align-items:center;gap:.4rem;font-size:.8rem;color:var(--text-dim);text-decoration:none;margin-bottom:.5rem;transition:color .2s" onmouseover="this.style.color='#e8eaed'" onmouseout="this.style.color=''"><svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0h4"/></svg>Home</a>
+<a href="/bilbo-golden-gate.html" class="back">
+  <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+  Bilbo Golden Gate (60m PO)
+</a>
+
+<header class="hero reveal">
+  <div class="kicker">Study &mdash; Timeframe Comparison</div>
+  <h1>The 60-minute PO is the<br>better Bilbo filter.<br><em>The 10-minute PO is noise.</em></h1>
+  <p class="lede">Does the Phase Oscillator timeframe matter for predicting Golden Gate completion? We tested 10-minute vs 60-minute PO snapshots at the moment the 38.2% level is hit. The higher timeframe wins decisively.</p>
+</header>
+
+<!-- Bullish -->
+<div class="section reveal">
+  <div class="section-label">Bullish Golden Gate &mdash; 38.2% &rarr; 61.8%</div>
+
+  <div class="compare">
+    <div class="compare-card c60">
+      <div class="card-head">
+        <div class="card-title">60-Minute PO</div>
+        <div class="card-tf">60m</div>
+      </div>
+      <div class="drow best"><div class="dlabel">High + Rising</div><div class="dbar-bg"><div class="dbar" style="width:0%;background:var(--accent)" data-w="77.7"></div></div><div class="dval" style="color:var(--accent)">77.7%</div><div class="dn n-clickable" data-row="bull_PO High + Rising" data-title="Bull 60m PO High + Rising">n=372</div></div>
+      <div class="drow"><div class="dlabel">High + Falling</div><div class="dbar-bg"><div class="dbar" style="width:0%;background:var(--accent);opacity:.6" data-w="77.6"></div></div><div class="dval">77.6%</div><div class="dn n-clickable" data-row="bull_PO High + Falling" data-title="Bull 60m PO High + Falling">n=107</div></div>
+      <div class="drow"><div class="dlabel">Mid + Rising</div><div class="dbar-bg"><div class="dbar" style="width:0%;background:var(--accent);opacity:.4" data-w="63.3"></div></div><div class="dval">63.3%</div><div class="dn n-clickable" data-row="bull_PO Mid + Rising" data-title="Bull 60m PO Mid + Rising">n=2256</div></div>
+      <div class="drow"><div class="dlabel">Mid + Falling</div><div class="dbar-bg"><div class="dbar" style="width:0%;background:var(--accent);opacity:.3" data-w="51.5"></div></div><div class="dval">51.5%</div><div class="dn n-clickable" data-row="bull_PO Mid + Falling" data-title="Bull 60m PO Mid + Falling">n=664</div></div>
+      <div class="drow baseline"><div class="dlabel">Baseline</div><div class="dbar-bg"><div class="dbar" style="width:0%;background:#4a4f5c" data-w="63.0"></div></div><div class="dval" style="color:var(--text-dim)">63.0%</div><div class="dn">n=3411</div></div>
+    </div>
+    <div class="compare-card c10">
+      <div class="card-head">
+        <div class="card-title">10-Minute PO</div>
+        <div class="card-tf">10m</div>
+      </div>
+      <div class="drow best"><div class="dlabel">High + Rising</div><div class="dbar-bg"><div class="dbar" style="width:0%;background:var(--blue)" data-w="66.1"></div></div><div class="dval" style="color:var(--blue)">66.1%</div><div class="dn">n=985</div></div>
+      <div class="drow"><div class="dlabel">High + Falling</div><div class="dbar-bg"><div class="dbar" style="width:0%;background:var(--blue);opacity:.6" data-w="39.0"></div></div><div class="dval">39.0%</div><div class="dn">n=41</div></div>
+      <div class="drow"><div class="dlabel">Mid + Rising</div><div class="dbar-bg"><div class="dbar" style="width:0%;background:var(--blue);opacity:.4" data-w="62.4"></div></div><div class="dval">62.4%</div><div class="dn">n=1908</div></div>
+      <div class="drow"><div class="dlabel">Mid + Falling</div><div class="dbar-bg"><div class="dbar" style="width:0%;background:var(--blue);opacity:.3" data-w="61.1"></div></div><div class="dval">61.1%</div><div class="dn">n=475</div></div>
+      <div class="drow baseline"><div class="dlabel">Baseline</div><div class="dbar-bg"><div class="dbar" style="width:0%;background:#4a4f5c" data-w="63.0"></div></div><div class="dval" style="color:var(--text-dim)">63.0%</div><div class="dn">n=3411</div></div>
+    </div>
+  </div>
+
+  <div class="verdict">
+    <div class="big"><span class="v60">+14.7%</span><span class="vs">vs</span><span class="v10">+3.1%</span></div>
+    <div class="sub">Edge over baseline when PO is High + Rising (bullish)</div>
+  </div>
+</div>
+
+<!-- Bearish -->
+<div class="section reveal">
+  <div class="section-label">Bearish Golden Gate &mdash; -38.2% &rarr; -61.8%</div>
+
+  <div class="compare">
+    <div class="compare-card c60">
+      <div class="card-head">
+        <div class="card-title">60-Minute PO</div>
+        <div class="card-tf">60m</div>
+      </div>
+      <div class="drow best"><div class="dlabel">Low + Falling</div><div class="dbar-bg"><div class="dbar" style="width:0%;background:var(--accent)" data-w="90.2"></div></div><div class="dval" style="color:var(--accent)">90.2%</div><div class="dn n-clickable" data-row="bear_PO Low + Falling" data-title="Bear 60m PO Low + Falling">n=265</div></div>
+      <div class="drow"><div class="dlabel">Low + Rising</div><div class="dbar-bg"><div class="dbar" style="width:0%;background:var(--accent);opacity:.6" data-w="88.5"></div></div><div class="dval">88.5%</div><div class="dn n-clickable" data-row="bear_PO Low + Rising" data-title="Bear 60m PO Low + Rising">n=96</div></div>
+      <div class="drow"><div class="dlabel">Mid + Falling</div><div class="dbar-bg"><div class="dbar" style="width:0%;background:var(--accent);opacity:.4" data-w="64.0"></div></div><div class="dval">64.0%</div><div class="dn n-clickable" data-row="bear_PO Mid + Falling" data-title="Bear 60m PO Mid + Falling">n=2203</div></div>
+      <div class="drow"><div class="dlabel">Mid + Rising</div><div class="dbar-bg"><div class="dbar" style="width:0%;background:var(--accent);opacity:.3" data-w="54.2"></div></div><div class="dval">54.2%</div><div class="dn n-clickable" data-row="bear_PO Mid + Rising" data-title="Bear 60m PO Mid + Rising">n=626</div></div>
+      <div class="drow baseline"><div class="dlabel">Baseline</div><div class="dbar-bg"><div class="dbar" style="width:0%;background:#4a4f5c" data-w="65.0"></div></div><div class="dval" style="color:var(--text-dim)">65.0%</div><div class="dn">n=3200</div></div>
+    </div>
+    <div class="compare-card c10">
+      <div class="card-head">
+        <div class="card-title">10-Minute PO</div>
+        <div class="card-tf">10m</div>
+      </div>
+      <div class="drow best"><div class="dlabel">Low + Falling</div><div class="dbar-bg"><div class="dbar" style="width:0%;background:var(--blue)" data-w="67.1"></div></div><div class="dval" style="color:var(--blue)">67.1%</div><div class="dn">n=1072</div></div>
+      <div class="drow"><div class="dlabel">Low + Rising</div><div class="dbar-bg"><div class="dbar" style="width:0%;background:var(--blue);opacity:.6" data-w="51.7"></div></div><div class="dval">51.7%</div><div class="dn">n=60</div></div>
+      <div class="drow"><div class="dlabel">Mid + Falling</div><div class="dbar-bg"><div class="dbar" style="width:0%;background:var(--blue);opacity:.4" data-w="63.0"></div></div><div class="dval">63.0%</div><div class="dn">n=1683</div></div>
+      <div class="drow"><div class="dlabel">Mid + Rising</div><div class="dbar-bg"><div class="dbar" style="width:0%;background:var(--blue);opacity:.3" data-w="69.4"></div></div><div class="dval">69.4%</div><div class="dn">n=376</div></div>
+      <div class="drow baseline"><div class="dlabel">Baseline</div><div class="dbar-bg"><div class="dbar" style="width:0%;background:#4a4f5c" data-w="65.0"></div></div><div class="dval" style="color:var(--text-dim)">65.0%</div><div class="dn">n=3199</div></div>
+    </div>
+  </div>
+
+  <div class="verdict">
+    <div class="big"><span class="v60">+25.2%</span><span class="vs">vs</span><span class="v10">+2.1%</span></div>
+    <div class="sub">Edge over baseline when PO is Low + Falling (bearish)</div>
+  </div>
+</div>
+
+<!-- Takeaway -->
+<div class="section reveal">
+  <div class="section-label">Takeaway</div>
+
+  <div class="callout">
+    <p><strong>The 60-minute Phase Oscillator is 5&ndash;12x more predictive</strong> than the 10-minute for Golden Gate completion. The 10m PO captures short-term noise &mdash; the bar-by-bar oscillator swings don't reflect the kind of sustained momentum needed to push price through the entire 38.2%&ndash;61.8% range. The 60m PO filters for genuine directional conviction.</p>
+  </div>
+
+  <p class="prose">
+    This is consistent with how the indicators are designed. The Phase Oscillator measures how far price has deviated from its 21-period mean, normalized by ATR. On a 10-minute chart, &ldquo;high&rdquo; can mean a momentary spike. On a 60-minute chart, &ldquo;high&rdquo; means <strong>sustained buying pressure over multiple hours</strong> &mdash; exactly the condition that drives Golden Gate completions.
+  </p>
+</div>
+
+<a href="/cheatsheet.html" class="cheatsheet-banner"><span>&#x1F4CB; View the complete Golden Gate Cheat Sheet &rarr;</span></a>
+
+<footer class="footer">
+  ATR Levels &amp; Phase Oscillator by <a href="https://satyland.com" target="_blank" rel="noopener">Saty Mahajan</a><br>
+  Analysis inspired by <a href="https://x.com/tesrak" target="_blank" rel="noopener">@tesrak</a> &middot; With thanks to <a href="https://x.com/todaborrego" target="_blank" rel="noopener">@todor</a> for the data<br>
+  25 years of SPY data (2000&ndash;2025) &middot; <a href="https://milkmantrades.com">Milkman Trades</a>
+</footer>
+
+</div>
+
+<script>
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting){
+      e.target.classList.add('visible');
+      setTimeout(() => {
+        e.target.querySelectorAll('[data-w]').forEach(bar => {
+          bar.style.width = bar.dataset.w + '%';
+        });
+      }, 200);
+      obs.unobserve(e.target);
+    }
+  });
+}, {threshold:0.15});
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+document.querySelector('.hero').classList.add('visible');
+</script>
+<script src="/study-drawer.js"></script>
+<script>StudyDrawer.loadData('/data/bilbo-gg-dates.json');</script>
+</body>
+</html>

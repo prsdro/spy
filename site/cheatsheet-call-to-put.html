@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Call→Put Morning Reversal Cheat Sheet | Milkman Trades</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥛</text></svg>">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0c0e12;--card:#11131a;--card2:#161922;--border:#1c1f2a;
+  --t:#e4e5e9;--t2:#b0b3c0;--t3:#7a7e90;
+  --bull:#1cd48a;--bear:#ef6c00;--acc:#fbbf24;--red:#ef4444;--blue:#60a5fa;
+}
+html{font-size:14px}
+body{background:#060709;color:var(--t);font-family:'DM Sans',system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;padding:2rem 1rem 4rem}
+.save-bar{width:1200px;display:flex;justify-content:flex-end;margin-bottom:.75rem}
+.save-btn{padding:.5rem 1.2rem;background:var(--acc);color:#000;border:none;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:.75rem;font-weight:600;cursor:pointer;transition:opacity .15s}
+.save-btn:hover{opacity:.85}
+.poster{width:1200px;background:var(--bg);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.hdr{padding:1.8rem 2rem 1.4rem;background:linear-gradient(135deg,#0e1018,#12151f);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-end}
+.hdr-left h1{font-family:'JetBrains Mono',monospace;font-size:1.5rem;font-weight:700;line-height:1;margin-bottom:.35rem}
+.hdr-left h1 span{color:var(--acc)}
+.hdr-left .sub{font-size:.8rem;color:var(--t3)}
+.hdr-right{text-align:right}
+.hdr-right .url{font-size:.75rem;color:var(--t3)}
+.hdr-right .back{font-size:.65rem;color:var(--blue);text-decoration:none;margin-right:.8rem}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.sec{border-right:1px solid var(--border);border-bottom:1px solid var(--border);padding:1.4rem 1.6rem}
+.sec:nth-child(even){border-right:none}
+.sec.full{grid-column:1/-1;border-right:none}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:.6rem;font-weight:600;color:var(--acc);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.6rem}
+.sec-title{font-size:1rem;font-weight:700;margin-bottom:.8rem;line-height:1.2}
+.desc{font-size:.85rem;color:var(--t2);line-height:1.6;margin-bottom:.8rem}
+.stats{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:.8rem}
+.stat{flex:1;min-width:100px;background:var(--card);border:1px solid var(--border);border-radius:5px;padding:.6rem .7rem}
+.stat-val{font-family:'JetBrains Mono',monospace;font-size:1.4rem;font-weight:700;line-height:1}
+.stat-label{font-size:.75rem;color:var(--t3);margin-top:.2rem;line-height:1.3}
+.bull{color:var(--bull)}.bear{color:var(--bear)}.acc{color:var(--acc)}.red{color:var(--red)}
+.mtable{width:100%;border-collapse:collapse;font-size:.75rem;margin:.5rem 0}
+.mtable th{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--t3);text-align:right;padding:.3rem .4rem;border-bottom:1px solid var(--border);text-transform:uppercase;letter-spacing:.04em}
+.mtable th:first-child{text-align:left}
+.mtable td{padding:.35rem .4rem;border-bottom:1px solid #13151d;text-align:right;font-family:'JetBrains Mono',monospace;color:var(--t2)}
+.mtable td:first-child{text-align:left;font-family:'DM Sans',sans-serif;color:var(--t)}
+.mtable tr.hi td{font-weight:600;color:var(--t)}
+.blist{list-style:none;font-size:.85rem;color:var(--t2);line-height:1.7}
+.blist li::before{content:'›';color:var(--acc);font-weight:700;margin-right:.4rem}
+.blist .key{color:var(--t);font-weight:500}
+.blist .val{font-family:'JetBrains Mono',monospace;font-weight:600}
+.ftr{padding:.8rem 2rem;border-top:1px solid var(--border);font-size:.6rem;color:var(--t3);display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace}
+@media(max-width:767px){
+  body{padding:1rem .5rem 3rem}
+  .save-bar{width:100%}.poster{width:100%}
+  .hdr{flex-direction:column;align-items:flex-start;gap:.6rem;padding:1.2rem 1rem 1rem}
+  .hdr-left h1{font-size:1.1rem}.hdr-right{text-align:left}
+  .grid{grid-template-columns:1fr}
+  .sec{border-right:none !important;padding:1.1rem 1rem}
+  .stats{flex-direction:column}.stat{min-width:0}
+  .mtable{font-size:.65rem}.mtable th,.mtable td{padding:.25rem .3rem}
+  .ftr{flex-direction:column;gap:.4rem;font-size:.55rem;padding:.7rem 1rem}
+}
+</style>
+<script src="/nav.js"></script>
+<script src="/mobile-png.js"></script>
+</head>
+<body>
+
+<div class="save-bar">
+  <button class="save-btn save-mobile-btn" onclick="saveMobilePNG()" style="background:#60a5fa;margin-right:.5rem">📱 Mobile PNG</button>
+  <button class="save-btn" onclick="savePNG()">&#11015; Save as PNG</button>
+</div>
+
+<div class="poster" id="poster">
+
+<div class="hdr">
+  <div class="hdr-left">
+    <h1>Milkman Trades &mdash; <span>Call→Put Morning Reversal</span></h1>
+    <div class="sub">Full intraday flip: call trigger → PDC break → put trigger before noon (n=653)</div>
+  </div>
+  <div class="hdr-right">
+    <a class="back" href="cheatsheet.html">&larr; Master Sheet</a>
+    <span class="url">milkmantrades.com</span>
+  </div>
+</div>
+
+<div class="grid">
+
+<div class="sec full">
+  <div class="sec-num">01 &mdash; The Setup</div>
+  <div class="sec-title">A morning fade with three sequential gates</div>
+  <div class="desc">
+    SPY tags the daily <strong style="color:var(--bull)">+23.6% call trigger</strong>, then loses <strong>previous day close</strong>, then prints the daily <strong style="color:var(--bear)">−23.6% put trigger</strong> before 12:00 ET. All outcomes are measured from the first put-trigger bar through the RTH close. <strong>n=653 days</strong> over 25 years of SPY.
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="stat-val acc">73.7%</div><div class="stat-label">Recovered PDC<br>481/653 days</div></div>
+    <div class="stat"><div class="stat-val bear">75.3%</div><div class="stat-label">Opened downside GG<br>(−38.2% ATR)</div></div>
+    <div class="stat"><div class="stat-val bull">43.3%</div><div class="stat-label">Recovered call trigger<br>283/653 days</div></div>
+    <div class="stat"><div class="stat-val bear">41.2%</div><div class="stat-label">Closed below put trigger<br>269/653 days</div></div>
+  </div>
+</div>
+
+<div class="sec">
+  <div class="sec-num">02 &mdash; The Race</div>
+  <div class="sec-title">Which fires first after the put trigger?</div>
+  <ul class="blist">
+    <li><span class="key bear">Bear GG before PDC recovery:</span> <span class="val">58.2%</span> of events</li>
+    <li><span class="key bull">PDC reclaim before bear GG:</span> <span class="val">41.4%</span></li>
+    <li><span class="key">Trading read:</span> after the put trigger, PDC is a real bounce magnet but the bear GG is <em>not</em> invalidated by a PDC tag &mdash; both prints are common in the same session.</li>
+  </ul>
+</div>
+
+<div class="sec">
+  <div class="sec-num">03 &mdash; Where the Day Closes</div>
+  <div class="sec-title">Distribution of RTH close after the reversal</div>
+  <table class="mtable">
+    <thead><tr><th>Close zone</th><th>Days</th><th>Share</th></tr></thead>
+    <tbody>
+      <tr class="hi"><td class="bear">Below put trigger</td><td>269</td><td class="bear">41.2%</td></tr>
+      <tr><td>Put → PDC</td><td>141</td><td>21.6%</td></tr>
+      <tr><td>PDC → Call</td><td>109</td><td>16.7%</td></tr>
+      <tr><td class="bull">Above call trigger</td><td>134</td><td class="bull">20.5%</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="sec full">
+  <div class="sec-num">04 &mdash; Hourly PO Filter at the Put Trigger</div>
+  <div class="sec-title">Compression is the most bearish flavor of this setup</div>
+  <table class="mtable">
+    <thead><tr><th>Hourly PO state</th><th>PDC recovery</th><th>Call recovery</th><th>Closes &lt; put trigger</th><th>Bear GG first/only</th></tr></thead>
+    <tbody>
+      <tr class="hi"><td>Compression</td><td>67.1%</td><td class="red">32.3%</td><td class="bear">44.7%</td><td class="bear">61.9%</td></tr>
+      <tr><td>Bullish expansion (PO ≥ 0)</td><td>75.3%</td><td>45.5%</td><td>38.0%</td><td>56.0%</td></tr>
+      <tr><td>Bearish expansion (PO &lt; 0)</td><td>75.0%</td><td class="bull">46.0%</td><td>40.0%</td><td>58.0%</td></tr>
+    </tbody>
+  </table>
+  <div style="font-size:.7rem;color:var(--t3);margin-top:.3rem;font-style:italic">Filter uses the latest fully completed 1h bar at the moment the put trigger is touched.</div>
+</div>
+
+</div><!-- /grid -->
+
+<div class="sec full" style="background:linear-gradient(135deg,#0f1118,#131620);border-bottom:none">
+  <div class="sec-num" style="color:var(--acc)">&#9733; Bottom Line</div>
+  <div class="sec-title">How to trade the morning fade</div>
+  <ul class="blist">
+    <li><span class="key">Both sides print often.</span> 75% downside GG continuation AND 74% PDC recovery happen in the same bucket of days &mdash; size for whichever target you take first, then re-enter for the other if path allows.</li>
+    <li><span class="key">PDC is a realistic mean-reversion magnet</span>, but a full retrace back to the morning <em>call trigger</em> only happens 43% of the time. Don't expect a full V-shape.</li>
+    <li><span class="key">Compression is the bearish flavor.</span> When hourly PO is in compression at the put trigger, PDC recovery drops to 67% and the day closes below the put trigger 45% of the time.</li>
+    <li><span class="key">The largest single close bucket is below the put trigger</span> (41%). Selling cascades that already broke PDC carry into the close more often than they fully reverse.</li>
+  </ul>
+</div>
+
+<div class="ftr">
+  <span>milkmantrades.com &middot; ATR Levels &amp; Phase Oscillator by Saty Mahajan</span>
+  <span>Source: /call-to-put-reversal.html &middot; 25 years of SPY (2000&ndash;2025)</span>
+</div>
+
+</div><!-- /poster -->
+
+<script>
+function savePNG() {
+  const btn = document.querySelector('.save-btn:not(.save-mobile-btn)');
+  btn.textContent = 'Rendering...';
+  html2canvas(document.getElementById('poster'),{scale:2,backgroundColor:'#0c0e12',useCORS:true}).then(c=>{
+    const a=document.createElement('a');a.download='call-to-put-reversal-cheatsheet.png';a.href=c.toDataURL('image/png');a.click();
+    btn.textContent='✓ Saved';setTimeout(()=>btn.textContent='⬇ Save as PNG',2000);
+  });
+}
+</script>
+</body>
+</html>

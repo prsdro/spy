@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bilbo Continuation — How Far Does Momentum Carry? | Milkman Trades</title>
+<meta name="description" content="When the 1-hour Phase Oscillator confirms a Golden Gate, how far does price continue beyond 61.8%? Extension levels tested across 25 years of SPY.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥛</text></svg>">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,300&family=JetBrains+Mono:wght@400;500;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0c0e12;--surface:#13161c;--surface-2:#181c24;--border:#1e2230;--text:#e8eaed;--text-dim:#6b7280;--text-mid:#9ca3af;--bull:#1cd48a;--bear:#ef6c00;--accent:#fbbf24;--red:#ef4444;--green:#22c55e}
+html{font-size:15px;scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
+.page{max-width:760px;margin:0 auto;padding:3rem 1.5rem 5rem}
+.draft{background:#1a1400;border:1px solid #3d3200;border-radius:6px;padding:.6rem 1rem;margin-bottom:1.5rem;font-size:.75rem;color:#d4a800;line-height:1.5}
+.draft strong{color:#fbbf24}
+.back{display:inline-flex;align-items:center;gap:.4rem;font-size:.8rem;color:var(--text-dim);text-decoration:none;margin-bottom:2.5rem;transition:color .2s}
+.back:hover{color:var(--text)}
+.back svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2}
+.hero{margin-bottom:3.5rem}
+.hero .kicker{font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:.75rem}
+.hero h1{font-size:2.2rem;font-weight:700;letter-spacing:-.03em;line-height:1.15;margin-bottom:1rem}
+.hero h1 em{font-style:normal;background:linear-gradient(135deg,var(--bear),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero .lede{font-size:1.05rem;color:var(--text-mid);font-weight:300;max-width:600px;line-height:1.65}
+.section{margin-bottom:3.5rem}
+.section-label{font-family:'JetBrains Mono',monospace;font-size:.65rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim);padding-bottom:.6rem;border-bottom:1px solid var(--border);margin-bottom:1.5rem}
+.prose{font-size:.92rem;color:var(--text-mid);font-weight:300;line-height:1.7;margin-bottom:1.5rem}
+.prose strong{color:var(--text);font-weight:500}
+.bigstat{display:flex;gap:1.5rem;margin:2rem 0;flex-wrap:wrap}
+.bigstat-item{flex:1;min-width:160px;padding:1.25rem;background:var(--surface);border:1px solid var(--border);border-radius:8px}
+.bigstat-num{font-family:'JetBrains Mono',monospace;font-size:1.8rem;font-weight:700;line-height:1;margin-bottom:.3rem}
+.bigstat-label{font-size:.72rem;color:var(--text-dim);line-height:1.4}
+
+/* Cascade chart */
+.cascade{margin:1.5rem 0 2.5rem}
+.cascade-title{font-size:.9rem;font-weight:600;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
+.cascade-title .dot{width:8px;height:8px;border-radius:50%}
+.cascade-header{display:grid;grid-template-columns:100px 1fr 55px;gap:.5rem;padding:0 0 .4rem;border-bottom:1px solid var(--border);margin-bottom:.25rem}
+.cascade-header span{font-family:'JetBrains Mono',monospace;font-size:.6rem;font-weight:500;letter-spacing:.05em;text-transform:uppercase;color:var(--text-dim)}
+.cascade-header span:last-child{text-align:right}
+
+.cascade-row{display:grid;grid-template-columns:100px 1fr 55px;gap:.5rem;align-items:center;margin-bottom:.25rem}
+.cascade-level{font-family:'JetBrains Mono',monospace;font-size:.75rem;font-weight:500}
+.cascade-bars{display:flex;gap:3px;align-items:center;height:24px}
+.cascade-bar{height:100%;border-radius:3px;position:relative;display:flex;align-items:center;justify-content:center;min-width:32px;transition:width .8s cubic-bezier(.22,1,.36,1)}
+.cascade-bar span{font-family:'JetBrains Mono',monospace;font-size:.6rem;font-weight:600;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.5);white-space:nowrap}
+.cascade-n{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--text-dim);text-align:right}
+
+.cascade-legend{display:flex;gap:1rem;margin-top:.75rem;flex-wrap:wrap}
+.cascade-legend-item{display:flex;align-items:center;gap:.35rem;font-size:.7rem;color:var(--text-dim)}
+.cascade-legend-item .swatch{width:10px;height:10px;border-radius:2px}
+
+.callout{background:var(--surface);border-left:3px solid var(--accent);padding:1rem 1.25rem;margin:2rem 0;border-radius:0 6px 6px 0}
+.callout p{font-size:.85rem;color:var(--text-mid);font-weight:300;line-height:1.6}
+.callout strong{color:var(--accent);font-weight:500}
+.footer{text-align:center;padding-top:2.5rem;border-top:1px solid var(--border);color:var(--text-dim);font-size:.72rem;font-weight:300;line-height:1.8}
+.footer a{color:var(--text-dim);text-decoration:underline;text-underline-offset:2px}
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease}
+.reveal.visible{opacity:1;transform:none}
+
+/* ── Mobile ── */
+@media(max-width:767px){
+  .hero h1{font-size:1.6rem}
+  .bigstat{flex-direction:column;gap:1rem}
+  .bigstat-item{min-width:0}
+  .bigstat-num{font-size:1.5rem}
+  .cascade-row{grid-template-columns:70px 1fr 40px;gap:.3rem}
+  .cascade-header{grid-template-columns:70px 1fr 40px;gap:.3rem}
+  .cascade-level{font-size:.65rem}
+  .cascade-bar span{font-size:.55rem}
+  .cascade-bars{gap:2px}
+}
+.cascade-bar.n-clickable{text-decoration:none}
+.cascade-bar.n-clickable:hover{opacity:1 !important;filter:brightness(1.25)}
+.cheatsheet-banner{display:block;text-align:center;padding:1.5rem 1rem;margin:2rem 0 0;background:var(--surface);border:1px solid var(--border);border-radius:8px;text-decoration:none;transition:border-color .2s,background .2s}
+.cheatsheet-banner:hover{border-color:#fbbf24;background:var(--surface-2)}
+.cheatsheet-banner span{font-size:.95rem;color:var(--text);font-weight:500}
+</style>
+<script src="/nav.js"></script>
+</head>
+<body>
+<div class="page">
+
+<div style="background:#2a0b0b;border:1px solid #5d0f0f;border-radius:6px;padding:.75rem 1rem;margin-bottom:1.5rem;font-size:.8rem;color:#ff8787;font-weight:400;line-height:1.55">
+  <strong style="color:#ff6b6b">Under Re-Verification (2026-04-23) &mdash;</strong> The extension-level (78.6% &rarr; 200%) continuation rates on this page were produced by an analysis not currently in the repo, and extension rates are pending rebuild under the post-audit methodology. The displayed GG-to-61.8% completion rates and sample sizes also predate the audit &mdash; refer to the <a href="/bilbo-golden-gate.html" style="color:#ffb05c">Bilbo Golden Gate</a> page for current values. <strong style="color:#ff6b6b">Do not trade from specific numbers on this page until the rebuild lands.</strong>
+</div>
+
+<a href="/" style="display:inline-flex;align-items:center;gap:.4rem;font-size:.8rem;color:var(--text-dim);text-decoration:none;margin-bottom:.5rem;transition:color .2s" onmouseover="this.style.color='#e8eaed'" onmouseout="this.style.color=''"><svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0h4"/></svg>Home</a>
+<a href="/bilbo-golden-gate.html" class="back">
+  <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+  Bilbo Golden Gate
+</a>
+
+<header class="hero reveal">
+  <div class="kicker">Study &mdash; Bilbo Continuation</div>
+  <h1>When a Bilbo GG fires,<br>how far does price <em>keep going?</em></h1>
+  <p class="lede">The Bilbo Golden Gate study showed that momentum-confirmed triggers complete to 61.8% far more often. But 61.8% is just the first target. What are the odds of reaching 78.6%, full ATR, or beyond?</p>
+</header>
+
+<div class="section reveal">
+  <div class="section-label">The Question</div>
+  <p class="prose">
+    After price enters the Golden Gate at 38.2%, we tracked whether it reached each subsequent ATR level &mdash; 61.8%, 78.6%, 100% (full ATR), and the extension levels at 123.6%, 161.8%, and 200% &mdash; all within the same RTH session. We then split the results by the <strong>1-hour Phase Oscillator</strong> state at the moment the 38.2% level was hit.
+  </p>
+</div>
+
+<div class="section reveal">
+  <div class="section-label">Key Finding</div>
+
+  <div class="bigstat">
+    <div class="bigstat-item">
+      <div class="bigstat-num" style="color:var(--bear)">66%</div>
+      <div class="bigstat-label">Bearish Bilbo reaches full ATR<br>(vs 31% baseline)</div>
+    </div>
+    <div class="bigstat-item">
+      <div class="bigstat-num" style="color:var(--bear)">44%</div>
+      <div class="bigstat-label">Bearish Bilbo reaches 123.6%<br>(vs 18% baseline)</div>
+    </div>
+    <div class="bigstat-item">
+      <div class="bigstat-num" style="color:var(--bull)">39%</div>
+      <div class="bigstat-label">Bullish Bilbo reaches full ATR<br>(vs 26% baseline)</div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <p><strong>The bearish Bilbo is extraordinary.</strong> When the 1-hour PO is Low + Falling at the moment of Golden Gate entry, the probability of reaching a full ATR move (66%) is <em>higher</em> than the baseline probability of just completing the Golden Gate to 61.8% (65%). Strong bearish momentum doesn't just complete the Golden Gate &mdash; it blows through it.</p>
+  </div>
+</div>
+
+<div class="section reveal">
+  <div class="section-label">Level-by-Level Continuation</div>
+
+  <div class="cascade" id="bull-cascade">
+    <div class="cascade-title"><div class="dot" style="background:var(--bull)"></div> Bullish — % of GG entries reaching each level</div>
+    <div class="cascade-header"><span>ATR Level</span><span></span><span>N</span></div>
+  </div>
+
+  <div class="cascade" id="bear-cascade">
+    <div class="cascade-title"><div class="dot" style="background:var(--bear)"></div> Bearish — % of GG entries reaching each level</div>
+    <div class="cascade-header"><span>ATR Level</span><span></span><span>N</span></div>
+  </div>
+
+  <div class="cascade-legend">
+    <div class="cascade-legend-item"><div class="swatch" style="background:var(--accent)"></div> PO Aligned (Bilbo)</div>
+    <div class="cascade-legend-item"><div class="swatch" style="background:var(--text-dim)"></div> Baseline</div>
+    <div class="cascade-legend-item"><div class="swatch" style="background:#334155;opacity:.6"></div> PO Counter-trend</div>
+  </div>
+</div>
+
+<div class="section reveal">
+  <div class="section-label">Practical Takeaways</div>
+  <p class="prose">
+    <strong>Consider letting Bilbo winners run.</strong> When the 1-hour PO confirms the Golden Gate direction, the standard target of 61.8% leaves significant edge on the table. For a bearish Bilbo, there's a 66% chance of reaching the full ATR &mdash; and even 44% odds of hitting 123.6%. Consider trailing your stop rather than taking profit at the first target.
+  </p>
+  <p class="prose">
+    <strong>Counter-trend entries are significantly weaker at every level.</strong> A bullish GG when the PO is mid + falling completes to 61.8% only 52% of the time and reaches the full ATR just 19%. The momentum filter doesn't just improve the first target &mdash; it compounds at every subsequent level.
+  </p>
+  <p class="prose">
+    <strong>The bearish edge is consistently stronger than bullish.</strong> Bearish Bilbo entries reach extension levels at roughly 2&ndash;3x the baseline rate, while bullish reaches them at 1.5&ndash;2x. Selling pressure carries further and more reliably than buying pressure.
+  </p>
+</div>
+
+<a href="/cheatsheet.html" class="cheatsheet-banner"><span>&#x1F4CB; View the complete Golden Gate Cheat Sheet &rarr;</span></a>
+
+<footer class="footer">
+  ATR Levels &amp; Phase Oscillator by <a href="https://satyland.com" target="_blank" rel="noopener">Saty Mahajan</a><br>
+  Analysis inspired by <a href="https://x.com/tesrak" target="_blank" rel="noopener">@tesrak</a> &middot; With thanks to <a href="https://x.com/todaborrego" target="_blank" rel="noopener">@todor</a> for the data<br>
+  25 years of SPY data (2000&ndash;2025) &middot; <a href="https://milkmantrades.com">Milkman Trades</a>
+</footer>
+
+</div>
+
+<script>
+const levels = ['61.8%','78.6%','100%','123.6%','161.8%','200%'];
+
+const bullData = {
+  'high + rising': {n:372, pcts:[77.7,58.9,39.2,23.7,5.6,1.9]},
+  'high + falling':{n:107, pcts:[77.6,60.7,31.8,15.9,4.7,1.9]},
+  baseline:        {n:3411,pcts:[63.0,42.7,25.5,12.7,2.9,0.8]},
+  'mid + rising':  {n:2256,pcts:[63.3,42.8,25.1,11.9,2.4,0.4]},
+  'mid + falling': {n:664, pcts:[51.5,30.4,18.5,8.9,2.7,1.1]},
+};
+const bearData = {
+  'low + falling': {n:265, pcts:[90.2,80.0,66.0,43.8,19.2,9.4]},
+  'low + rising':  {n:96,  pcts:[88.5,77.1,66.7,50.0,31.2,12.5]},
+  baseline:        {n:3200,pcts:[65.0,48.1,31.4,18.3,7.7,3.1]},
+  'mid + falling': {n:2203,pcts:[64.0,45.9,27.9,15.1,5.6,2.1]},
+  'mid + rising':  {n:626, pcts:[54.2,37.9,23.5,13.6,6.5,2.4]},
+};
+
+function getBarStyle(key, direction) {
+  if (key === 'baseline') return {color:'#6b7280', opacity:0.6};
+  const aligned = direction === 'bull'
+    ? (key.startsWith('high'))
+    : (key.startsWith('low'));
+  if (aligned) return {color:'var(--accent)', opacity:1};
+  return {color:'#334155', opacity:0.6};
+}
+
+function getLabel(key) {
+  if (key === 'baseline') return 'Baseline';
+  const parts = key.split(' + ');
+  return parts[0].charAt(0).toUpperCase() + parts[0].slice(1) + ' + ' + parts[1];
+}
+
+function toJsonKey(key, direction) {
+  if (key === 'baseline') return null;
+  var prefix = direction === 'bull' ? 'bull_PO ' : 'bear_PO ';
+  var parts = key.split(' + ');
+  return prefix + parts[0].charAt(0).toUpperCase() + parts[0].slice(1) + ' + ' + parts[1].charAt(0).toUpperCase() + parts[1].slice(1);
+}
+
+function buildCascade(id, data, direction) {
+  const el = document.getElementById(id);
+  const keys = Object.keys(data);
+
+  levels.forEach((level, li) => {
+    const row = document.createElement('div');
+    row.className = 'cascade-row';
+
+    const levelEl = document.createElement('div');
+    levelEl.className = 'cascade-level';
+    levelEl.textContent = level;
+    row.appendChild(levelEl);
+
+    const barsEl = document.createElement('div');
+    barsEl.className = 'cascade-bars';
+    barsEl.style.height = '24px';
+
+    keys.forEach(key => {
+      const pct = data[key].pcts[li];
+      const style = getBarStyle(key, direction);
+      const bar = document.createElement('div');
+      bar.className = 'cascade-bar';
+      const jsonKey = toJsonKey(key, direction);
+      if (jsonKey) {
+        bar.classList.add('n-clickable');
+        bar.dataset.row = jsonKey;
+        bar.dataset.title = (direction === 'bull' ? 'Bull' : 'Bear') + ' PO ' + getLabel(key);
+      }
+      bar.style.width = '0px';
+      bar.style.background = style.color;
+      bar.style.opacity = style.opacity;
+      bar.dataset.w = Math.max(pct * 2.5, 32) + 'px';
+      bar.title = getLabel(key) + ': ' + pct.toFixed(1) + '% (n=' + data[key].n + ')';
+      bar.innerHTML = '<span>' + pct.toFixed(0) + '%</span>';
+      barsEl.appendChild(bar);
+    });
+
+    row.appendChild(barsEl);
+
+    const nEl = document.createElement('div');
+    nEl.className = 'cascade-n';
+    row.appendChild(nEl);
+
+    el.appendChild(row);
+  });
+}
+
+buildCascade('bull-cascade', bullData, 'bull');
+buildCascade('bear-cascade', bearData, 'bear');
+
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting){
+      e.target.classList.add('visible');
+      setTimeout(() => {
+        e.target.querySelectorAll('.cascade-bar[data-w]').forEach(bar => {
+          bar.style.width = bar.dataset.w;
+        });
+      }, 200);
+      obs.unobserve(e.target);
+    }
+  });
+}, {threshold:.12});
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+document.querySelector('.hero').classList.add('visible');
+</script>
+<script src="/study-drawer.js"></script>
+<script>StudyDrawer.loadData('/data/bilbo-gg-dates.json');</script>
+</body>
+</html>

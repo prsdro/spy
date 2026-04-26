@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TenAM Traffic — PO Divergence on 3-min SPY | Milkman Trades</title>
+<meta name="description" content="Do textbook PO divergence signals on 3-minute SPY actually work? 36,829 events across 25 years say the regular ones underperform the baseline. The hidden ones carry a small edge — concentrated in a specific window of the day.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥛</text></svg>">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0c0e12;
+  --surface:#13161c;
+  --surface-2:#181c24;
+  --border:#1e2230;
+  --text:#e8eaed;
+  --text-dim:#6b7280;
+  --text-mid:#9ca3af;
+  --accent:#fbbf24;
+  --bull:#1cd48a;
+  --bull-bg:#0a1f15;
+  --bear:#ef6c00;
+  --bear-bg:#1f1208;
+  --blue:#38bdf8;
+  --blue-bg:#082331;
+  --violet:#a78bfa;
+  --danger:#ef4444;
+  --danger-bg:#1c0a0a;
+}
+html{font-size:15px;scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
+body::before{content:'';position:fixed;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(255,255,255,.018),transparent 46%);pointer-events:none}
+.page{max-width:820px;margin:0 auto;padding:3rem 1.5rem 5rem}
+
+.draft{background:#1a1400;border:1px solid #3d3200;border-radius:6px;padding:.6rem 1rem;margin-bottom:1.5rem;font-size:.75rem;color:#d4a800;line-height:1.5}
+.draft strong{color:var(--accent)}
+
+.back{display:inline-flex;align-items:center;gap:.4rem;font-size:.8rem;color:var(--text-dim);text-decoration:none;margin-bottom:.5rem;transition:color .2s}
+.back:hover{color:var(--text)}
+.back svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2}
+
+.hero{margin-bottom:3.5rem}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--violet);margin-bottom:.75rem}
+h1{font-size:2.25rem;font-weight:700;letter-spacing:-.01em;line-height:1.14;text-wrap:balance;margin-bottom:1rem}
+h1 em{font-style:normal;background:linear-gradient(135deg,var(--violet),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.lede{max-width:660px;font-size:1rem;color:var(--text-mid);font-weight:300;line-height:1.7;text-wrap:pretty}
+
+.section{margin-bottom:3.5rem}
+.section-label{font-family:'JetBrains Mono',monospace;font-size:.65rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim);padding-bottom:.6rem;border-bottom:1px solid var(--border);margin-bottom:1.5rem}
+.prose{font-size:.92rem;color:var(--text-mid);font-weight:300;line-height:1.75;margin-bottom:1.5rem;text-wrap:pretty}
+.prose strong{color:var(--text);font-weight:500}
+.prose code{font-family:'JetBrains Mono',monospace;font-size:.82rem;background:var(--surface-2);padding:.1rem .35rem;border-radius:3px;color:var(--text)}
+
+.diverg-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.65rem;margin:1.75rem 0}
+.diverg-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1rem 1.1rem;position:relative;overflow:hidden}
+.diverg-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px}
+.diverg-card.reg-bull::before{background:var(--bull)}
+.diverg-card.hid-bull::before{background:var(--accent)}
+.diverg-card.reg-bear::before{background:var(--bear)}
+.diverg-card.hid-bear::before{background:var(--accent)}
+.diverg-glyph{font-size:1rem;margin-bottom:.35rem}
+.diverg-name{font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--text-dim);margin-bottom:.55rem}
+.diverg-rule{font-size:.85rem;color:var(--text);font-weight:500;line-height:1.4;margin-bottom:.55rem}
+.diverg-pred{font-size:.74rem;color:var(--text-dim);line-height:1.45}
+
+.bigstat{display:grid;grid-template-columns:repeat(4,1fr);gap:.65rem;margin:2rem 0}
+.bigstat-item{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1.15rem;position:relative;overflow:hidden}
+.bigstat-item::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.bigstat-item.bear::before{background:linear-gradient(90deg,var(--bear),transparent)}
+.bigstat-item.bull::before{background:linear-gradient(90deg,var(--bull),transparent)}
+.bigstat-item.danger::before{background:linear-gradient(90deg,var(--danger),transparent)}
+.bigstat-item.blue::before{background:linear-gradient(90deg,var(--blue),transparent)}
+.bigstat-item.accent::before{background:linear-gradient(90deg,var(--accent),transparent)}
+.bigstat-num{font-family:'JetBrains Mono',monospace;font-size:1.8rem;font-weight:700;line-height:1;margin-bottom:.4rem;font-variant-numeric:tabular-nums}
+.bigstat-num.bear{color:var(--bear)}
+.bigstat-num.bull{color:var(--bull)}
+.bigstat-num.danger{color:var(--danger)}
+.bigstat-num.blue{color:var(--blue)}
+.bigstat-num.accent{color:var(--accent)}
+.bigstat-label{font-size:.72rem;color:var(--text-dim);line-height:1.35}
+
+.data-table{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:.8rem}
+.data-table th{font-family:'JetBrains Mono',monospace;font-size:.62rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--text-dim);text-align:right;padding:.62rem .5rem;border-bottom:1px solid var(--border);white-space:nowrap}
+.data-table th:first-child{text-align:left}
+.data-table td{padding:.58rem .5rem;border-bottom:1px solid #151820;text-align:right;font-variant-numeric:tabular-nums}
+.data-table td:first-child{text-align:left;color:var(--text);font-weight:500}
+.data-table tr.group-header td{color:var(--accent);font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;padding-top:1.15rem;padding-bottom:.35rem;border-bottom:1px solid var(--border)}
+.data-table tr.best td{background:rgba(28,212,138,0.05)}
+.data-table tr.worst td{background:rgba(239,108,0,0.05)}
+.pct{font-family:'JetBrains Mono',monospace;font-weight:700}
+.pct.bear{color:var(--bear)}
+.pct.bull{color:var(--bull)}
+.pct.blue{color:var(--blue)}
+.pct.accent{color:var(--accent)}
+.pct.neg{color:var(--bear)}
+.pct.pos{color:var(--bull)}
+.pct.flat{color:var(--text-mid)}
+.pct.danger{color:var(--danger)}
+.n-col{font-family:'JetBrains Mono',monospace;color:var(--text-mid)}
+.pts{font-family:'JetBrains Mono',monospace;color:var(--text)}
+
+.callout{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1rem 1.1rem;margin:1.5rem 0}
+.callout p{font-size:.84rem;color:var(--text-mid);line-height:1.65}
+.callout p+p{margin-top:.55rem}
+.callout strong{color:var(--text);font-weight:500}
+.callout.warn{background:var(--bear-bg);border-color:#3d2108}
+.callout.warn strong{color:var(--bear)}
+.callout.danger{background:var(--danger-bg);border-color:#5d0a0a}
+.callout.danger strong{color:var(--danger)}
+.callout.accent{background:#1a1400;border-color:#3d3200}
+.callout.accent strong{color:var(--accent)}
+
+.combo-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.65rem;margin:1.5rem 0}
+.combo-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1.15rem 1.2rem}
+.combo-card.best{border-color:#0d5738;background:#0a1f15}
+.combo-card.miss{border-color:#3d2108;background:#1f1208}
+.combo-tag{font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);margin-bottom:.55rem}
+.combo-best .combo-tag,.combo-card.best .combo-tag{color:var(--bull)}
+.combo-card.miss .combo-tag{color:var(--bear)}
+.combo-num{font-family:'JetBrains Mono',monospace;font-size:1.5rem;font-weight:700;line-height:1;margin-bottom:.35rem;font-variant-numeric:tabular-nums}
+.combo-card.best .combo-num{color:var(--bull)}
+.combo-card.miss .combo-num{color:var(--bear)}
+.combo-edge{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--text-dim);margin-bottom:.55rem}
+.combo-desc{font-size:.78rem;color:var(--text-mid);line-height:1.5}
+
+.study-links{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin:3rem 0 2rem}
+.study-link{display:flex;align-items:center;justify-content:space-between;gap:.5rem;padding:.8rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text);text-decoration:none;font-size:.82rem;font-weight:500;transition:border-color .15s,background .15s,transform .15s}
+.study-link:hover{border-color:var(--accent);background:var(--surface-2);transform:translateY(-1px)}
+.study-link:active{transform:scale(.96)}
+.study-link svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;flex-shrink:0}
+
+.footer{text-align:center;font-size:.72rem;color:var(--text-dim);line-height:1.7;margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--border)}
+.footer a{color:var(--text-dim);text-decoration:underline;text-underline-offset:2px}
+
+.reveal{opacity:0;transform:translateY(12px);transition:opacity .55s ease,transform .55s ease}
+.reveal.visible{opacity:1;transform:none}
+
+@media(max-width:760px){
+  .page{padding:2rem 1rem 4rem}
+  h1{font-size:1.75rem}
+  .diverg-grid,.bigstat,.combo-grid,.study-links{grid-template-columns:1fr}
+  .data-table{font-size:.72rem}
+  .data-table th,.data-table td{padding:.5rem .35rem}
+}
+</style>
+<script src="/nav.js"></script>
+</head>
+<body>
+<div class="page">
+
+<div class="draft">
+  <strong>Updated 2026-04-25 to a 5-bucket bracket with wash trades resolved at the 10-bar close.</strong> Previous version lumped 60&ndash;70% of signals into a "wash" bucket worth $0; the new resolution splits washes into <em>wash_loss</em> and <em>wash_profit</em> based on actual close, and EV is computed from realized P&amp;L. The qualitative result holds: <strong>only regular bullish carries positive edge</strong> (+$0.011 vs baseline EV of +$0.023). Regular bearish is significantly negative; hidden bull/bear are flat to slight-negative. Sample: 36,829 signals over 6,582 RTH sessions (Jan 2000 &ndash; Apr 2026). Codex-reviewed for look-ahead, baseline fairness, and significance.
+</div>
+
+<a href="/" class="back">
+  <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+  Home
+</a>
+
+<header class="hero reveal">
+  <div class="kicker">Study &mdash; TenAM Traffic PO Divergence (3-min)</div>
+  <h1>Under a realistic dollar bracket, only one of the four PO divergences edges baseline &mdash; <em>regular bullish</em>, the one the textbook says shouldn't work standalone.</h1>
+  <p class="lede">TenAMTrader's "Traffic Signal" indicator flags four divergence types. The original publish used end-of-day direction as the success criterion &mdash; a $0.01 close-up counted as a win &mdash; and hidden divergences looked +2-3 pp above baseline. Re-running with a realistic OCO bracket ($0.50 stop, $0.50 partial, $1.00 full, exit at the 10th bar's close if neither fires) flips the picture. Hidden bull is flat; hidden bear is slightly negative; regular bear is significantly negative; <strong>regular bull edges baseline by +$0.011 per signal</strong> &mdash; the only marginally positive cell, and the one labelled a "failed reversal signal" under the loose EOD view. The headline conclusion: <strong>under realistic stops the indicator does not produce a robust standalone edge</strong>, and the small positive edge that does exist is on the opposite side of where the EOD-direction view pointed.</p>
+</header>
+
+<div class="section reveal">
+  <div class="section-label">01 &mdash; The Four Divergences</div>
+
+  <p class="prose">
+    A pivot is a local extreme of the oscillator. The indicator looks at consecutive PO pivots, compares each to the previous one, and pairs the comparison with the price extreme at the same bar. Four cases &mdash; two reversal (regular) and two continuation (hidden):
+  </p>
+
+  <div class="diverg-grid">
+    <div class="diverg-card reg-bull">
+      <div class="diverg-glyph">🟢</div>
+      <div class="diverg-name">Regular Bullish</div>
+      <div class="diverg-rule">Price prints a <strong>lower low</strong>, oscillator prints a <strong>higher low</strong>.</div>
+      <div class="diverg-pred">Theory: hidden buying. The oscillator says momentum has stopped declining even as price has not. Predicted reversal up.</div>
+    </div>
+    <div class="diverg-card hid-bull">
+      <div class="diverg-glyph">🟡</div>
+      <div class="diverg-name">Hidden Bullish</div>
+      <div class="diverg-rule">Price prints a <strong>higher low</strong>, oscillator prints a <strong>lower low</strong>.</div>
+      <div class="diverg-pred">Theory: trend pause. Price is still making higher pivot lows; the oscillator has flushed deeper. Predicted continuation up.</div>
+    </div>
+    <div class="diverg-card reg-bear">
+      <div class="diverg-glyph">🔴</div>
+      <div class="diverg-name">Regular Bearish</div>
+      <div class="diverg-rule">Price prints a <strong>higher high</strong>, oscillator prints a <strong>lower high</strong>.</div>
+      <div class="diverg-pred">Theory: exhaustion. Price keeps grinding up but the oscillator is fading. Predicted reversal down.</div>
+    </div>
+    <div class="diverg-card hid-bear">
+      <div class="diverg-glyph">🟡</div>
+      <div class="diverg-name">Hidden Bearish</div>
+      <div class="diverg-rule">Price prints a <strong>lower high</strong>, oscillator prints a <strong>higher high</strong>.</div>
+      <div class="diverg-pred">Theory: relief bounce. The oscillator is recovering but price has not made a new high. Predicted continuation down.</div>
+    </div>
+  </div>
+
+  <p class="prose">
+    Pivots use the indicator's defaults: <code>lbL=1, lbR=3</code> &mdash; one bar of confirmation to the left, three to the right. A pivot at bar <em>i</em> is therefore only confirmed at bar <em>i+3</em>; we use that confirmation bar's close as the entry. The previous pivot must be within 60 bars (the indicator's range filter).
+  </p>
+</div>
+
+<div class="section reveal">
+  <div class="section-label">02 &mdash; The Trade-Realistic Test: 5-Bucket Bracket</div>
+
+  <p class="prose">
+    Define success as a trader would. Enter at the close of the confirmation bar. Place a stop $0.50 against you. Take partial profit at $0.50 in your favor. Take full profit at $1.00. <strong>If 10 bars (30 minutes) elapse with neither the stop nor the partial fired, exit at the 10th bar's close at the realized P&amp;L.</strong> This produces five mutually-exclusive outcomes:
+  </p>
+
+  <div class="diverg-grid">
+    <div class="diverg-card reg-bear">
+      <div class="diverg-name">Hard Loss</div>
+      <div class="diverg-rule">Stop fires &mdash; <strong>&minus;$0.50</strong>.</div>
+      <div class="diverg-pred">Within-bar ordering: if a single bar's range contains both stop and partial, the stop fires first (worst-case fill).</div>
+    </div>
+    <div class="diverg-card reg-bear">
+      <div class="diverg-name">Wash Loss</div>
+      <div class="diverg-rule">Neither stop nor partial fires; bar-10 close <strong>against</strong> the signal.</div>
+      <div class="diverg-pred">Realized P&amp;L is the signed price diff &mdash; usually small ($0 to &minus;$0.50).</div>
+    </div>
+    <div class="diverg-card hid-bull">
+      <div class="diverg-name">Wash Profit</div>
+      <div class="diverg-rule">Neither stop nor partial fires; bar-10 close <strong>in favor</strong> of the signal.</div>
+      <div class="diverg-pred">Realized P&amp;L is small ($0 to +$0.50). Most "wash" bars on 3m SPY end here or in wash-loss.</div>
+    </div>
+    <div class="diverg-card hid-bull">
+      <div class="diverg-name">Partial Win</div>
+      <div class="diverg-rule">+$0.50 in-direction fires before stop; $1.00 doesn't fire by bar 10. <strong>+$0.50</strong>.</div>
+      <div class="diverg-pred">Once partial is locked, only a $1.00 full hit upgrades it. Subsequent stop hits don't revert to a loss.</div>
+    </div>
+    <div class="diverg-card reg-bull">
+      <div class="diverg-name">Full Win</div>
+      <div class="diverg-rule">$1.00 in-direction fires within 10 bars (with or without partial first). <strong>+$1.00</strong>.</div>
+      <div class="diverg-pred">The cleanest cells. Rates are 4&ndash;7% across signal kinds vs ~5&ndash;6% baseline.</div>
+    </div>
+  </div>
+
+  <p class="prose">
+    Across 50,000 random RTH 3-minute bars (the unconditional baseline), the 5-bucket distribution and EV are:
+  </p>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Direction</th>
+        <th>Loss%</th>
+        <th>Wash-loss%</th>
+        <th>Wash-profit%</th>
+        <th>Partial%</th>
+        <th>Full%</th>
+        <th>Total win%</th>
+        <th>EV / sig</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Bull</td><td class="pct">18.6%</td><td class="pct">30.1%</td><td class="pct">34.9%</td><td class="pct">11.2%</td><td class="pct">5.3%</td><td class="pct">51.4%</td><td class="pct pos">+$0.023</td></tr>
+      <tr><td>Bear</td><td class="pct">16.8%</td><td class="pct">33.6%</td><td class="pct">31.4%</td><td class="pct">12.1%</td><td class="pct">6.1%</td><td class="pct">49.6%</td><td class="pct pos">+$0.031</td></tr>
+    </tbody>
+  </table>
+
+  <p class="prose">
+    Bull baseline EV is +$0.023; bear baseline EV is +$0.031. (Both are positive because SPY's wash trades drift slightly with direction; bear EV is higher partly because of how within-bar ordering interacts with the bear's stop-on-up rule.) Now the signal results vs matched baseline:
+  </p>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Signal</th>
+        <th>N</th>
+        <th>Loss%</th>
+        <th>Wash-loss%</th>
+        <th>Wash-profit%</th>
+        <th>Partial%</th>
+        <th>Full%</th>
+        <th>Total win%</th>
+        <th>EV / sig</th>
+        <th>Edge vs base</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="best"><td>Regular Bullish</td><td class="n-col">10,042</td><td class="pct">21.4%</td><td class="pct">25.6%</td><td class="pct">33.4%</td><td class="pct">12.8%</td><td class="pct">6.8%</td><td class="pct pos">53.0%</td><td class="pct pos">+$0.034</td><td class="pct pos">+$0.011</td></tr>
+      <tr><td>Hidden Bullish</td><td class="n-col">8,286</td><td class="pct">15.4%</td><td class="pct">32.7%</td><td class="pct">37.6%</td><td class="pct">10.5%</td><td class="pct">3.9%</td><td class="pct">52.0%</td><td class="pct pos">+$0.020</td><td class="pct flat">&minus;$0.003</td></tr>
+      <tr class="worst"><td>Regular Bearish</td><td class="n-col">11,256</td><td class="pct">17.0%</td><td class="pct">33.5%</td><td class="pct">33.4%</td><td class="pct">10.8%</td><td class="pct">5.2%</td><td class="pct">49.5%</td><td class="pct pos">+$0.014</td><td class="pct neg">&minus;$0.017</td></tr>
+      <tr><td>Hidden Bearish</td><td class="n-col">7,245</td><td class="pct">18.6%</td><td class="pct">33.7%</td><td class="pct">28.1%</td><td class="pct">13.0%</td><td class="pct">6.6%</td><td class="pct">47.6%</td><td class="pct pos">+$0.026</td><td class="pct neg">&minus;$0.005</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout danger">
+    <p><strong>Only regular bullish edges baseline.</strong> reg_bull at +$0.011 per signal, with total-win rate 53.0% vs baseline 51.4% &mdash; a 1.7 pp lift in winners and a 1.6 pp drop in losers. With n=10,042 the standard error is roughly $0.005, so the gap is around 2-sigma significant on its own &mdash; small but real on this sample.</p>
+    <p><strong>Regular bearish is significantly negative</strong> at &minus;$0.017 per signal &mdash; shorting on a regular bearish divergence is materially worse than shorting a random RTH bar. The hidden divergences are essentially flat to slightly negative.</p>
+    <p><strong>This is the opposite of what the EOD-direction view said</strong>, where hidden divergences looked +2-3 pp above baseline and regular looked &minus;2-4 pp. The realized-PnL bracket exposes that the apparent "hidden edge" was small drift toward entry, not toward $0.50.</p>
+  </div>
+</div>
+
+<div class="section reveal">
+  <div class="section-label">02b &mdash; Why the Earlier "Hidden Carries Edge" Story Was Wrong</div>
+
+  <p class="prose">
+    The first publish of this study used a looser definition: <em>did price close in the predicted direction by RTH close?</em> Under that test, hidden bullish divergences looked +2.5 pp over baseline and hidden bearish +1.7 pp &mdash; small but statistically real edges. Using a $0.50/$1.00 bracket changes the picture entirely:
+  </p>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Signal</th>
+        <th>EOD-dir edge (loose)</th>
+        <th>Bracket EV edge (real)</th>
+        <th>Same direction?</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="best"><td>Regular Bullish</td><td class="pct neg">&minus;2.43 pp</td><td class="pct pos">+$0.011</td><td class="pct neg">FLIPPED</td></tr>
+      <tr><td>Hidden Bullish</td><td class="pct pos">+2.47 pp</td><td class="pct flat">&minus;$0.003</td><td class="pct neg">FLIPPED</td></tr>
+      <tr><td>Regular Bearish</td><td class="pct neg">&minus;3.82 pp</td><td class="pct neg">&minus;$0.017</td><td class="pct">same (negative)</td></tr>
+      <tr><td>Hidden Bearish</td><td class="pct pos">+1.74 pp</td><td class="pct neg">&minus;$0.005</td><td class="pct neg">FLIPPED</td></tr>
+    </tbody>
+  </table>
+
+  <p class="prose">
+    Three of the four signs flipped. Why? <strong>Hidden divergences select for low-volatility paths.</strong> They produce a slight bias toward modest closes in the predicted direction, but those closes don't get to $0.50 and they sit through paths where the stop fires intraday. A trade that drifts +0.10% by RTH close looked like a win under EOD; in a real bracket it might have already pierced the $0.50 stop hours earlier. <strong>Regular bullish does the opposite</strong>: it's worse on the EOD-correct rate but its bracket distribution shifts more probability mass into <em>both</em> wash_profit (33.4% vs 34.9% baseline &mdash; about even) AND partial+full (19.6% vs 16.5% baseline) at the cost of a higher hard-loss rate (21.4% vs 18.6%). Higher variance, higher stops, but the right-tail is fatter and the realized P&amp;L wins.
+  </p>
+</div>
+
+<div class="section reveal">
+  <div class="section-label">03 &mdash; Reach to ATR Levels</div>
+
+  <p class="prose">
+    Forget end-of-day &mdash; do these signals at least reach the next Saty ATR level in the predicted direction? For each signal, we restrict to cases where the relevant level is unreached at entry and ask <strong>does intraday price get there?</strong>
+  </p>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Signal</th>
+        <th>Trigger (±23.6%)</th>
+        <th>Golden Gate Entry (±38.2%)</th>
+        <th>Midrange (±61.8%)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Regular Bullish (n&asymp;9k)</td><td class="pct neg">21.7%</td><td class="pct neg">16.0%</td><td class="pct neg">9.4%</td></tr>
+      <tr class="best"><td>Hidden Bullish (n&asymp;5k)</td><td class="pct pos">37.8%</td><td class="pct pos">31.9%</td><td class="pct pos">24.0%</td></tr>
+      <tr><td>Regular Bearish (n&asymp;10k)</td><td class="pct neg">18.8%</td><td class="pct neg">14.3%</td><td class="pct neg">8.5%</td></tr>
+      <tr class="best"><td>Hidden Bearish (n&asymp;5k)</td><td class="pct pos">38.8%</td><td class="pct pos">33.1%</td><td class="pct pos">25.5%</td></tr>
+    </tbody>
+  </table>
+
+  <p class="prose" style="font-size:.85rem">
+    Sample sizes vary because the level can already be on the wrong side of entry; those events drop out. <strong>Hidden divergences reach the next ATR level roughly 2&times; as often as regular ones.</strong> That ratio is the most consistent finding in the study.
+  </p>
+
+  <div class="callout">
+    <p><strong>Why hidden &gt; regular here?</strong> The hidden setups are trend-aligned by construction &mdash; the price trend is intact, the oscillator just took a deeper retracement. Trades in the trend direction reach the next ATR level with the wind at their back. The regular setups are trying to pick a top or bottom; against a 25-year drift up, that's a structurally hard ask.</p>
+  </div>
+</div>
+
+<div class="section reveal">
+  <div class="section-label">04 &mdash; Where the Edge Concentrates</div>
+
+  <p class="prose">
+    The author's TenAMTrader handle isn't subtle &mdash; the indicator is meant to fire after the morning chop has cleared. The data agrees, partially. <strong>Hidden divergences in the 10:00&ndash;13:30 window carry the cleanest edge</strong>, and that edge gets a meaningful boost when the Pivot Ribbon trend is the same direction.
+  </p>
+
+  <p class="prose">
+    Same trend-aligned filter (clouds match signal direction) + 10:00&ndash;13:30 morning window, evaluated under the 5-bucket bracket. The morning regime does not rescue any kind:
+  </p>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Filter</th>
+        <th>N</th>
+        <th>Loss%</th>
+        <th>Win%</th>
+        <th>EV / sig</th>
+        <th>Edge vs baseline</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>reg_bull, bull/bull, 10:00&ndash;13:30</td><td class="n-col">479</td><td class="pct">47.0%</td><td class="pct pos">53.0%</td><td class="pct pos">+$0.029</td><td class="pct flat">+$0.006 (not sig)</td></tr>
+      <tr><td>hid_bull, bull/bull, 10:00&ndash;13:30</td><td class="n-col">4,748</td><td class="pct">48.5%</td><td class="pct pos">51.4%</td><td class="pct pos">+$0.019</td><td class="pct flat">&minus;$0.004</td></tr>
+      <tr><td>reg_bear, bear/bear, 10:00&ndash;13:30</td><td class="n-col">454</td><td class="pct">53.3%</td><td class="pct">46.7%</td><td class="pct pos">+$0.011</td><td class="pct neg">&minus;$0.020</td></tr>
+      <tr><td>hid_bear, bear/bear, 10:00&ndash;13:30</td><td class="n-col">3,980</td><td class="pct">53.5%</td><td class="pct">46.5%</td><td class="pct pos">+$0.025</td><td class="pct neg">&minus;$0.006</td></tr>
+    </tbody>
+  </table>
+
+  <p class="prose" style="font-size:.85rem">
+    Under the loose EOD-direction metric, these same combos produced +3.10 pp (hid_bull) and +4.08 pp (hid_bear) "edges." Under the realistic 5-bucket bracket those edges are gone or negative. The "best" combo is reg_bull bull/bull morning at +$0.006 per signal &mdash; positive but n=479 with SE &asymp; $0.018 means it is not statistically distinguishable from baseline. The morning filter shrinks the full-sample reg_bull edge of +$0.011 down to +$0.006.
+  </p>
+
+  <div class="callout warn">
+    <p><strong>The morning trend filter doesn't rescue the indicator.</strong> Stacking the divergence with a same-direction Pivot Ribbon and the 10:00&ndash;13:30 window narrows the sample but doesn't concentrate edge. The full-sample reg_bull edge is bigger than any of these filtered combos &mdash; the trend-and-time filter washes some of the alpha out, suggesting the small reg_bull edge isn't a "morning trend" thing.</p>
+  </div>
+
+  <p class="prose" style="font-size:.85rem">
+    The <code>±0.25%</code> intraday hit-rate (not shown here for brevity) declines monotonically through the day for every signal type &mdash; from ~64% at 09:30&ndash;10:00 to ~12% at 15:30. That's pure hours-remaining decay, not signal quality. EOD-correct%, in contrast, is fairly flat; the small advantage hidden divergences enjoy holds across the day but is concentrated mid-session.
+  </p>
+</div>
+
+<div class="section reveal">
+  <div class="section-label">05 &mdash; The Indicator's Optional Filters Don't Do Anything</div>
+
+  <p class="prose">
+    The Pine inputs include two optional zone filters &mdash; "hide signals when oscillator is between 23.6 and 61.8" (Zone A) and "hide signals when oscillator is between &minus;61.8 and &minus;23.6" (Zone B). Both default to <em>off</em>. We tested both on/off as a filter switch on EOD-correct%:
+  </p>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Filter / Signal</th>
+        <th>In-zone n</th>
+        <th>In-zone EOD%</th>
+        <th>Out-zone n</th>
+        <th>Out-zone EOD%</th>
+        <th>Out &minus; In</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td colspan="6" class="group-header">Zone A (osc in 23.6 – 61.8)</td></tr>
+      <tr><td>Regular Bullish</td><td class="n-col">109</td><td class="pct">49.5%</td><td class="n-col">9,933</td><td class="pct">49.6%</td><td class="pct flat">+0.1</td></tr>
+      <tr><td>Hidden Bullish</td><td class="n-col">2,199</td><td class="pct">55.1%</td><td class="n-col">6,087</td><td class="pct">54.3%</td><td class="pct flat">&minus;0.7</td></tr>
+      <tr><td>Regular Bearish</td><td class="n-col">6,087</td><td class="pct">44.2%</td><td class="n-col">5,169</td><td class="pct">44.3%</td><td class="pct flat">+0.1</td></tr>
+      <tr><td>Hidden Bearish</td><td class="n-col">616</td><td class="pct">50.5%</td><td class="n-col">6,629</td><td class="pct">49.6%</td><td class="pct flat">&minus;0.9</td></tr>
+      <tr><td colspan="6" class="group-header">Zone B (osc in &minus;61.8 – &minus;23.6)</td></tr>
+      <tr><td>Regular Bullish</td><td class="n-col">5,039</td><td class="pct">49.7%</td><td class="n-col">5,003</td><td class="pct">49.5%</td><td class="pct flat">&minus;0.3</td></tr>
+      <tr><td>Hidden Bullish</td><td class="n-col">526</td><td class="pct">52.1%</td><td class="n-col">7,760</td><td class="pct">54.7%</td><td class="pct pos">+2.6</td></tr>
+      <tr><td>Regular Bearish</td><td class="n-col">97</td><td class="pct">42.3%</td><td class="n-col">11,159</td><td class="pct">44.3%</td><td class="pct pos">+2.0</td></tr>
+      <tr><td>Hidden Bearish</td><td class="n-col">1,683</td><td class="pct">52.9%</td><td class="n-col">5,562</td><td class="pct">48.7%</td><td class="pct neg">&minus;4.2</td></tr>
+    </tbody>
+  </table>
+
+  <p class="prose" style="font-size:.85rem">
+    The largest cell is hidden bearish &minus;4.2 pp inside Zone B, meaning suppressing hidden-bearish signals in that zone <em>does</em> help &mdash; modestly, in n=1,683. Zone A is essentially noise across all four signals. <strong>Default-off was the right default.</strong>
+  </p>
+</div>
+
+<div class="section reveal">
+  <div class="section-label">06 &mdash; Stops at the Pivot are Too Tight</div>
+
+  <p class="prose">
+    The natural stop for a divergence trade is the pivot extreme that triggered it &mdash; the local low for a bull, the local high for a bear. We tracked whether price re-pierced that level after entry, and whether the signal still closed correctly by EOD anyway.
+  </p>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Signal</th>
+        <th>Clean n</th>
+        <th>Clean EOD%</th>
+        <th>Stopped n</th>
+        <th>Stopped EOD%</th>
+        <th>Stop rate</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Regular Bullish</td><td class="n-col">2,814</td><td class="pct pos">84.1%</td><td class="n-col">7,228</td><td class="pct neg">36.2%</td><td class="pct neg">72.0%</td></tr>
+      <tr class="best"><td>Hidden Bullish</td><td class="n-col">2,458</td><td class="pct pos">85.9%</td><td class="n-col">5,828</td><td class="pct neg">41.3%</td><td class="pct neg">70.3%</td></tr>
+      <tr><td>Regular Bearish</td><td class="n-col">2,730</td><td class="pct pos">80.9%</td><td class="n-col">8,526</td><td class="pct neg">32.5%</td><td class="pct neg">75.7%</td></tr>
+      <tr><td>Hidden Bearish</td><td class="n-col">1,956</td><td class="pct pos">82.9%</td><td class="n-col">5,289</td><td class="pct neg">37.3%</td><td class="pct neg">73.0%</td></tr>
+    </tbody>
+  </table>
+
+  <p class="prose" style="font-size:.85rem">
+    "Clean" = price never re-pierced the pivot extreme intraday. "Stopped" = it did. Stop rate is the fraction of signals that stopped out at least once before RTH close.
+  </p>
+
+  <div class="callout accent">
+    <p><strong>Clean signals are dramatic.</strong> When price respects the pivot &mdash; about <strong>one in four</strong> signals across all kinds &mdash; the EOD-correct rate jumps to <strong>81&ndash;86%</strong>. That is a genuine signal, hidden inside a noisy outer envelope.</p>
+    <p><strong>Stopped signals are below baseline.</strong> If the pivot gets re-pierced, the EOD-correct rate collapses to 32&ndash;41%. <strong>The pivot break is the real signal here</strong> &mdash; but it's an exit signal, not the entry. The trade is: enter at the confirmation bar, cut on the first close back through the pivot. That's not the same as &ldquo;stop at the pivot tick price,&rdquo; which fires three of every four signals on noise. Use a close-based stop or give the pivot 0.25&ndash;0.50% slip.</p>
+  </div>
+</div>
+
+<div class="section reveal">
+  <div class="section-label">07 &mdash; Practical Takeaways</div>
+
+  <p class="prose">
+    <strong>The only positive-edge signal is regular bullish</strong> at +$0.011 per signal under the 5-bucket bracket. Total win rate 53.0% vs baseline 51.4%. Effect size is small but real on n=10,042. Worth using only if you size for many trades; not worth back-fitting filters that shrink the sample without concentrating alpha.
+  </p>
+  <p class="prose">
+    <strong>Don't trade regular bearish divergences on 3m SPY.</strong> &minus;$0.017 per signal vs baseline (z &asymp; 3) is a meaningful negative edge. The signal selects for setups where shorts get steamrolled.
+  </p>
+  <p class="prose">
+    <strong>Hidden divergences are noise under realistic stops.</strong> Hid_bull is flat (&minus;$0.003), hid_bear is slightly negative (&minus;$0.005). The "+2-3 pp edge over baseline" from the EOD-direction view doesn't survive a $0.50 stop. Hidden divergences select for low-volatility paths that close slightly in-direction by EOD &mdash; useful only if you're answering "is the day green or red", not for a $0.50/$1.00 bracket where the intraday path matters.
+  </p>
+  <p class="prose">
+    <strong>Morning trend filter doesn't help.</strong> Stacking same-direction Pivot Ribbon plus 10:00&ndash;13:30 actually shrinks the reg_bull edge from +$0.011 to +$0.006. The clean positive edge is in the unfiltered reg_bull cell.
+  </p>
+  <p class="prose">
+    <strong>Skip the indicator's zone filters.</strong> Zone A is noise; Zone B has one mildly useful cell (suppressing hidden bearish) and one mildly harmful one. Default-off is correct.
+  </p>
+
+  <div class="callout accent">
+    <p><strong>What this study does not claim.</strong> PO divergences may behave differently on 10m or 1h timeframes; we did not test those. The bracket parameters here ($0.50/$0.50/$1.00, 10 bars) are one specific choice; tighter targets or longer windows would shift the picture. What the study does claim: on 3-min RTH SPY with these stops, only regular bullish has a positive standalone edge, and it is small (&plusmn;$0.011 / signal). The other three signal kinds are flat to significantly negative.</p>
+  </div>
+</div>
+
+<div class="section reveal">
+  <div class="section-label">08 &mdash; Methodology Notes</div>
+
+  <p class="prose">
+    <strong>Data:</strong> 25 years of SPY 1-minute data (Jan 2000 &ndash; Apr 2026), aggregated to <code>ind_3m</code>. Phase Oscillator computed on 3m's own timeframe; ATR Levels computed from the previous day's close and ATR(14) and broadcast to every intraday bar (Saty Day-mode). Pivot Ribbon EMAs validated to 0.000% error vs TradingView on 10m. <strong>3-min Phase Oscillator has not been independently validated against TradingView</strong> &mdash; only 10m and 60m have. The direction of this study's findings (regular fails, hidden small-positive) is the durable result; magnitudes are approximate.
+  </p>
+  <p class="prose">
+    <strong>Pivot detection (not validated against TradingView):</strong> our Python uses strict <code>&lt;</code> on both sides at <code>lbL=1, lbR=3</code>. Pine's exact tie-handling on <code>ta.pivotlow</code> / <code>ta.pivothigh</code> was not independently confirmed. A pivot at bar <em>i</em> in our implementation requires <code>osc[i] &lt; osc[i-1]</code> AND <code>osc[i] &lt; osc[i+1..i+3]</code>. Confirmation bar = <code>i + lbR</code>; entry = close of the confirmation bar &mdash; same bar the indicator can plot it, no look-ahead. If Pine accepts ties on either side our pivot count would be slightly higher, but we expect the qualitative results to hold.
+  </p>
+  <p class="prose">
+    <strong>Forward measurement:</strong> all bracket / MFE / MAE / hit-target / stop-out reads happen on bars <code>conf+1</code> through end-of-day, never on the confirmation bar itself. ATR-level columns (<code>atr_upper_trigger</code> etc.) come from the day's <em>previous</em> close and ATR via the daily-reference broadcast, so they are known at the open and carry no look-ahead.
+  </p>
+  <p class="prose">
+    <strong>5-bucket OCO bracket details:</strong> $0.50 stop against, $0.50 partial in direction, $1.00 full in direction. Path-walk semantics: walk bar-by-bar from <code>conf+1</code>, stop fires before any in-direction level is hit; partial fires if the bar's range crosses $0.50 in direction without first crossing the stop; once partial is locked, only the $1.00 full level can upgrade. <strong>If neither stop nor partial fires within 10 bars (30 min), exit at the bar-10 close at realized P&amp;L</strong> — categorized as wash_loss (close against signal) or wash_profit (close in favor). Five outcomes: loss (&minus;$0.50), wash_loss (signed P&amp;L &lt; 0), wash_profit (signed P&amp;L &gt; 0 but &lt; +$0.50), partial (+$0.50), full (+$1.00). Within-bar conservative ordering: a single bar containing both the stop and the partial is treated as stop-first. Random-bar baseline computed by sampling 50,000 RTH 3m bars and applying the same walk. EV is the sum of realized P&amp;L divided by signal count, so it weights wash trades by their actual closing P&amp;L rather than treating them as zero.
+  </p>
+  <p class="prose">
+    <strong>Per-session reset (changes the signal definition):</strong> pivot tracking restarts each RTH session (09:30&ndash;15:59 ET). On an RTH-only series, yesterday's 15:57 bar and today's 09:30 bar are <em>adjacent</em> (1 bar apart), so cross-day pairs would have passed the 60-bar range filter; we drop them anyway. That is a deliberate definitional choice, not a hygiene tweak: pre-market behaviour is mechanically different and we did not want overnight gaps polluting pivot pairs. A future revision could compare with-overnight vs without.
+  </p>
+  <p class="prose">
+    <strong>Range filter (off by one vs Pine):</strong> Pine's <code>_inBarsRange(plFound[1])</code> using <code>ta.barssince(plFound[1])</code> evaluates to <code>i_curr &minus; i_prev &minus; 1</code> at the current confirmation. Our Python uses <code>i_curr &minus; i_prev</code>, which is one bar stricter at the upper bound. In this sample <code>bars_since_prev</code> never exceeds 38, so the 60-bar cap was never binding either way and aggregate stats are unaffected.
+  </p>
+  <p class="prose">
+    <strong>Baseline:</strong> for each half-hour bucket, P(RTH-close &gt; entry-close) computed over all 853,981 RTH 3m bars in the sample. Edge is computed against a <strong>signal-weighted matched baseline</strong> &mdash; the per-signal-type weighted average of those half-hour P(up) values, accounting for when each signal type tends to fire. Signal-type baselines: bull-direction ~52.0&ndash;52.1%, bear-direction (close-down) ~47.9&ndash;48.1%. Including signal bars in the baseline distorts it by &lt;0.05 pp. The baseline does <em>not</em> control for ribbon, volatility, or trend regime; that is a known confound in the best-filter combos.
+  </p>
+  <p class="prose">
+    <strong>Statistical significance:</strong> with proportions in [44%, 56%] and n in [4,748, 11,256], naive Wald SEs run 0.47&ndash;0.79 pp. Every edge in the headline table is &ge;3&sigma; under the naive (independent-signal) assumption; the +3.10 and +4.08 pp morning combos clear z=4&ndash;5. Caveat: 36,829 signals come from only 6,582 sessions (median ~5 signals/session, max 15), so signal-level independence is violated and a cluster-robust SE would be larger. We did not compute a cluster-bootstrap; treat headline z-scores as upper bounds.
+  </p>
+  <p class="prose">
+    <strong>Early-session coverage:</strong> the lbR=3 confirmation requirement means the earliest possible confirmation timestamp is 09:42 ET, but in practice the EMA21 / ATR(14) warmup masks all signals before 09:48. The "09:30" half-hour bucket reported here actually contains only signals from 09:48&ndash;09:57, n=380 across all four kinds.
+  </p>
+  <p class="prose">
+    Full design doc: <code>/root/spy/proposal_tenam_traffic.md</code>. Implementation: <code>/root/spy/backtest_tenam_traffic.py</code>. Event-level JSON (36,829 records, ~57 MB): <code>/root/spy/tenam_traffic_events.json</code>. <strong>Reviewed by Codex 2026-04-25</strong> for look-ahead, baseline fairness, Pine semantics, and statistical significance; all flagged corrections applied to the published numbers above.
+  </p>
+</div>
+
+<div class="study-links">
+  <a href="/ema21-reversion.html" class="study-link">
+    <span>Daily 21 EMA Reversion</span>
+    <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+  </a>
+  <a href="/4h-po-reversal.html" class="study-link">
+    <span>4h PO Reversal</span>
+    <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+  </a>
+  <a href="/bilbo-box-breakout.html" class="study-link">
+    <span>Bilbo Box Breakout</span>
+    <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+  </a>
+</div>
+
+<footer class="footer">
+  ATR Levels &amp; Phase Oscillator by <a href="https://satyland.com" target="_blank" rel="noopener">Saty Mahajan</a><br>
+  Indicator <a href="https://www.tradingview.com/u/TenAMTrader/" target="_blank" rel="noopener">@TenAMTrader</a> &middot; Analysis inspired by <a href="https://x.com/tesrak" target="_blank" rel="noopener">@tesrak</a><br>
+  25 years of SPY data (2000&ndash;2026) &middot; <a href="https://milkmantrades.com">Milkman Trades</a>
+</footer>
+
+</div>
+
+<script>
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      obs.unobserve(e.target);
+    }
+  });
+}, {threshold: .12});
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+document.querySelector('.hero').classList.add('visible');
+</script>
+</body>
+</html>

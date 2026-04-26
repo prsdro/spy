@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bilbo Box × HTF PO Bracket Study | Milkman Trades</title>
+<meta name="description" content="SPY Bilbo Box × Higher-Timeframe Phase Oscillator study using target-before-stop bracket exits: T1 half box height, T2 one box height, T3 two box heights, 15-bar timeout, and candle-close resolution on same-bar stop/target conflicts.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://milkmantrades.com/bilbo-htf-po.html">
+<meta property="og:title" content="Bilbo Box × HTF PO Bracket Study">
+<meta property="og:description" content="Target-before-stop Bilbo Box breakout study. Same-bar stop/target conflicts wait for candle close instead of auto-counting stop-first.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥛</text></svg>">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}:root{--bg:#0c0e12;--surface:#13161c;--surface2:#181c24;--border:#242938;--text:#e8eaed;--muted:#9ca3af;--dim:#6b7280;--accent:#fbbf24;--bull:#1cd48a;--bear:#ef6c00;--blue:#38bdf8;--red:#ef4444;--violet:#a78bfa}
+html{font-size:15px}body{background:radial-gradient(ellipse at 15% 0%,rgba(251,191,36,.07),transparent 34%),radial-gradient(ellipse at 85% 18%,rgba(56,189,248,.05),transparent 38%),var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans-serif;line-height:1.65;-webkit-font-smoothing:antialiased}.page{max-width:980px;margin:0 auto;padding:3rem 1.3rem 5rem}a{color:inherit}.back{display:inline-flex;gap:.45rem;align-items:center;color:var(--dim);text-decoration:none;font-size:.8rem;margin-bottom:1rem}.back:hover{color:var(--text)}.badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);border:1px solid #3d3200;background:#1a1400;border-radius:999px;padding:.25rem .6rem;margin-bottom:1rem}h1{font-size:2.55rem;line-height:1.08;letter-spacing:-.03em;margin-bottom:1rem}h1 em{font-style:normal;background:linear-gradient(135deg,var(--accent),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent}.lede{max-width:760px;color:var(--muted);font-size:1.05rem;font-weight:300}.section{margin-top:3.4rem}.label{font-family:'JetBrains Mono',monospace;color:var(--dim);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;border-bottom:1px solid var(--border);padding-bottom:.55rem;margin-bottom:1.25rem}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.7rem;margin:1.6rem 0}.card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1rem;position:relative;overflow:hidden}.card:before{content:'';position:absolute;left:0;right:0;top:0;height:2px;background:linear-gradient(90deg,var(--accent),transparent)}.num{font-family:'JetBrains Mono',monospace;font-size:1.55rem;font-weight:700;line-height:1;margin-bottom:.45rem}.cap{font-size:.74rem;color:var(--dim);line-height:1.35}.prose{color:var(--muted);font-weight:300;margin-bottom:1rem}strong{color:var(--text)}code{font-family:'JetBrains Mono',monospace;background:var(--surface2);padding:.08rem .32rem;border-radius:4px;color:var(--text);font-size:.85em}table{width:100%;border-collapse:collapse;margin:1.3rem 0;font-size:.82rem}th{font-family:'JetBrains Mono',monospace;font-size:.62rem;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);text-align:right;border-bottom:1px solid var(--border);padding:.62rem .45rem;white-space:nowrap}td{border-bottom:1px solid #171b25;padding:.62rem .45rem;text-align:right;font-variant-numeric:tabular-nums}th:first-child,td:first-child{text-align:left}td:first-child{font-weight:600;color:var(--text)}.n{font-family:'JetBrains Mono',monospace;color:var(--muted)}.pct{font-family:'JetBrains Mono',monospace}.strong{color:var(--bull);font-weight:700}.stop{color:var(--bear)}tr.good td{background:rgba(28,212,138,.045)}tr.bad td{background:rgba(239,108,0,.045)}.callout{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1rem 1.1rem;margin:1.3rem 0;color:var(--muted);font-size:.9rem}.callout.good{background:#0a1f15;border-color:#17452f}.callout.warn{background:#1f1208;border-color:#3d2108}ul{padding-left:1.2rem}li{margin:.35rem 0;color:var(--muted)}.two{display:grid;grid-template-columns:1fr 1fr;gap:1rem}.footer{margin-top:3rem;border-top:1px solid var(--border);padding-top:1.2rem;color:var(--dim);font-size:.75rem;text-align:center}
+@media(max-width:760px){.page{padding:2rem 1rem 4rem}h1{font-size:1.8rem}.grid,.two{grid-template-columns:1fr}table{font-size:.72rem}th,td{padding:.48rem .28rem}}
+</style><script src="/nav.js"></script></head>
+<body><div class="page">
+<a class="back" href="/">← Home</a>
+<header>
+  <div class="badge">Bracket-exit study · Published 2026-04-25</div>
+  <h1>Bilbo Box × HTF PO with <em>real exits</em>.</h1>
+  <p class="lede">This study tests SPY Bilbo Box breaks against higher-timeframe Phase Oscillator context using a trade-path bracket model: <strong>R = box height / price range</strong>, T1 = 0.5R, T2 = 1R, T3 = 2R, stop = opposite side of the box, and a 15-bar time stop. If a stop and target are both inside the same candle, resolution waits for that candle close.</p>
+</header>
+
+<section class="section">
+  <div class="label">01 — Study method</div>
+  <div class="callout warn"><strong>Why use trade-path exits:</strong> the question is whether a target is reached before a stop, not where price marks after a fixed number of bars.</div>
+  <div class="two">
+    <div class="callout"><strong>Box risk unit.</strong><br>Box “width” is time. The price risk unit is <code>box_high - box_low</code>, i.e. box height.</div>
+    <div class="callout"><strong>Same-bar resolution.</strong><br>If stop and target touch in the same candle, wait for the candle close: close beyond target = target, close beyond stop = stop, otherwise continue.</div>
+  </div>
+  <ul>
+    <li><strong>Entry:</strong> immediate Bilbo boundary break.</li>
+    <li><strong>Stop:</strong> opposite side of the box.</li>
+    <li><strong>Targets:</strong> T1 = 0.5 box height, T2 = 1 box height, T3 = 2 box heights.</li>
+    <li><strong>Time stop:</strong> 15 bars, same RTH session only.</li>
+    <li><strong>Same-bar conflicts observed:</strong> 274 of 18,067 3m bull baseline trades (1.5%) and 76 of 5,224 10m bear baseline trades (1.5%).</li>
+    <li><strong>Lookahead guard:</strong> HTF PO timestamps shifted forward by one full HTF bar before <code>merge_asof</code>.</li>
+  </ul>
+</section>
+
+<section class="section"><div class="label">02 — Headline bracket results</div>
+  <div class="grid">
+    <div class="card"><div class="num">18,067</div><div class="cap">3m bull breaks × 10m PO sample</div></div>
+    <div class="card"><div class="num">38.7%</div><div class="cap">3m baseline T2 hit rate</div></div>
+    <div class="card"><div class="num">5,224</div><div class="cap">10m bear breaks × 1h PO sample</div></div>
+    <div class="card"><div class="num">36.4%</div><div class="cap">10m baseline T2 hit rate</div></div>
+  </div>
+  <table><thead><tr><th>Cohort</th><th>N</th><th>T1 0.5H</th><th>T2 1H</th><th>T3 2H</th><th>Stop</th><th>Timeout</th><th>Med bars</th></tr></thead><tbody>
+    <tr class=''><td>3m bull baseline</td><td class='n'>18,067</td><td class='pct'>62.4%</td><td class='pct strong'>38.7%</td><td class='pct'>14.0%</td><td class='pct stop'>37.6%</td><td class='pct'>48.4%</td><td>12</td></tr>
+    <tr class='good'><td>3m bull × 10m PO compression</td><td class='n'>8,752</td><td class='pct'>61.9%</td><td class='pct strong'>38.0%</td><td class='pct'>13.1%</td><td class='pct stop'>36.7%</td><td class='pct'>50.2%</td><td>12</td></tr>
+    <tr class='good'><td>3m bull × 10m PO high zone</td><td class='n'>1,213</td><td class='pct'>62.8%</td><td class='pct strong'>41.9%</td><td class='pct'>17.4%</td><td class='pct stop'>35.5%</td><td class='pct'>47.1%</td><td>11</td></tr>
+    <tr class='bad'><td>3m bull × 10m PO low zone</td><td class='n'>612</td><td class='pct'>60.3%</td><td class='pct strong'>34.6%</td><td class='pct'>11.6%</td><td class='pct stop'>43.5%</td><td class='pct'>44.9%</td><td>11</td></tr>
+    <tr class=''><td>10m bear baseline</td><td class='n'>5,224</td><td class='pct'>59.3%</td><td class='pct strong'>36.4%</td><td class='pct'>14.6%</td><td class='pct stop'>29.8%</td><td class='pct'>55.6%</td><td>8</td></tr>
+    <tr class='good'><td>10m bear × 1h PO compression</td><td class='n'>2,304</td><td class='pct'>60.5%</td><td class='pct strong'>38.1%</td><td class='pct'>16.3%</td><td class='pct stop'>29.3%</td><td class='pct'>54.4%</td><td>8</td></tr>
+    <tr class='good'><td>10m bear × 1h compression + falling</td><td class='n'>1,399</td><td class='pct'>62.3%</td><td class='pct strong'>38.5%</td><td class='pct'>16.9%</td><td class='pct stop'>26.8%</td><td class='pct'>56.3%</td><td>8</td></tr>
+    <tr class='bad'><td>10m bear × 1h bull_exp + rising</td><td class='n'>411</td><td class='pct'>53.0%</td><td class='pct strong'>32.1%</td><td class='pct'>11.9%</td><td class='pct stop'>32.1%</td><td class='pct'>56.0%</td><td>7</td></tr>
+  </tbody></table>
+  <div class="callout"><strong>Read this as bracket probability.</strong> T2 means price resolved one full box height in favor within 15 bars under the candle-close same-bar rule.</div>
+</section>
+
+<section class="section"><div class="label">03 — What survives?</div>
+  <table><thead><tr><th>Filter</th><th>N</th><th>T2 hit</th><th>Baseline T2</th><th>Δ T2</th><th>Stop</th><th>Baseline stop</th><th>Δ stop</th></tr></thead><tbody>
+    <tr><td>3m bull × 10m compression</td><td class="n">8,752</td><td class="pct strong">38.0%</td><td>38.7%</td><td>-0.6pp</td><td class="stop">36.7%</td><td>37.6%</td><td>-0.9pp</td></tr>
+    <tr class="good"><td>10m bear × 1h compression</td><td class="n">2,304</td><td class="pct strong">38.1%</td><td>36.4%</td><td>+1.7pp</td><td class="stop">29.3%</td><td>29.8%</td><td>-0.6pp</td></tr>
+    <tr class="good"><td>10m bear × 1h compression + falling</td><td class="n">1,399</td><td class="pct strong">38.5%</td><td>36.4%</td><td>+2.1pp</td><td class="stop">26.8%</td><td>29.8%</td><td>-3.0pp</td></tr>
+  </tbody></table>
+  <div class="callout good"><strong>Conclusion:</strong> 10m bear Bilbo breaks with 1h PO compression show a modest improvement: T2 38.1% vs baseline 36.4%, stop 29.3% vs 29.8%. Compression + falling is cleaner: T2 38.5%, stop 26.8%.</div>
+  <div class="callout warn"><strong>3m bull compression remains weak as a green-light.</strong> It lowers stop rate (36.7% vs 37.6%) but also lowers T2/T3 hit rates. Low-zone 10m PO remains the better anti-filter: T2 34.6%, stop 43.5%.</div>
+</section>
+
+<section class="section"><div class="label">04 — Same-direction PO confirmation: 3-contract P&amp;L strategy</div>
+  <div class="callout"><strong>Strategy tested:</strong> take only same-direction PO-confirmed breaks: 3m bull + 10m <code>bull_exp+rising</code>, and 10m bear + 1h <code>bear_exp+falling</code>. Position size = 3 SPY contracts. Take one contract at T1, one at T2, one at T3. The stop stays at the opposite side of the box after T1; after T2, the final-contract stop moves to the break-side edge of the box — box top for bull breaks, box bottom for bear breaks. Unclosed contracts exit after 15 bars.</div>
+  <table><thead><tr><th>Strategy bucket</th><th>Trades</th><th>T1 hits</th><th>T2 hits</th><th>T3 hits</th><th>Stops</th><th>Timeouts</th><th>Win%</th><th>Total P&amp;L pts</th><th>Avg/trade</th></tr></thead><tbody>
+    <tr class='good'><td>3m bull × 10m bull_exp+rising</td><td class='n'>2,419</td><td>1,525 / 63.0%</td><td>951 / 39.3%</td><td>327 / 13.5%</td><td class='stop'>1,031 / 42.6%</td><td>1,061 / 43.9%</td><td class='pct strong'>57.1%</td><td class='pct strong'>+161.8</td><td class='pct strong'>+0.067</td></tr>
+    <tr class='good'><td>10m bear × 1h bear_exp+falling</td><td class='n'>715</td><td>428 / 59.9%</td><td>251 / 35.1%</td><td>80 / 11.2%</td><td class='stop'>252 / 35.2%</td><td>383 / 53.6%</td><td class='pct strong'>55.4%</td><td class='pct strong'>+51.4</td><td class='pct strong'>+0.072</td></tr>
+  </tbody></table>
+  <div class="callout good"><strong>P&amp;L read:</strong> values are SPY points summed across the 3-contract position, not option premium dollars. The less aggressive stop model improves the 3m bull bucket to +161.8 pts across 2,419 trades; the 10m bear bucket remains positive at +51.4 pts across 715 trades.</div>
+  <p class="prose">Important: stops are more frequent here than in the simple bracket table because managed stops can close remaining contracts after partial profits. That is trade management, not a contradiction.</p>
+</section>
+
+<section class="section"><div class="label">05 — Trading takeaway</div>
+  <div class="callout"><strong>Use Bilbo as texture, not a standalone system.</strong> A half-box target hits often, but the full-box target is only ~36–39% baseline and two-box continuation is ~14–16%. Most trades stop or time out inside 15 bars.</div>
+  <ul><li><strong>Best candidate:</strong> 10m bear Bilbo break when 1h PO is compressed, especially compressed + falling.</li><li><strong>3m bull:</strong> avoid low/accumulation 10m PO; do not treat compression alone as a green light.</li><li><strong>Next test:</strong> time-of-day buckets and matched random breakouts with the exact same bracket model.</li></ul>
+</section>
+
+<section class="section"><div class="label">06 — Caveats</div><div class="callout warn"><ul>
+<li><strong>1h PO caveat:</strong> hourly Phase Oscillator has known accuracy drift versus TradingView; treat 1h PO zones directionally.</li>
+<li><strong>Same-bar ambiguity:</strong> candle-close resolution is better than stop-first for these ambiguous bars, but OHLC still cannot know intrabar order.</li>
+<li><strong>Gap-through entries:</strong> if entry occurs beyond the boundary, actual stop distance can exceed one box height; the script tracks <code>actual_stop_R</code>.</li>
+<li><strong>Not an exploit:</strong> the useful findings are modest filters/anti-filters, not an automatic trading strategy.</li>
+</ul></div></section>
+
+<div class="footer">Source: <code>/root/spy/backtest_bilbo_box_htf_po_exits.py</code> · Summary: <code>/root/spy/analyst/bilbo_box_htf_po_exits_summary.json</code> · Log: <code>/root/spy/analyst/bilbo_box_htf_po_exits_run.log</code><br>ATR Levels &amp; Phase Oscillator by <a href="https://satyland.com" target="_blank">Saty Mahajan</a> · Milkman Trades</div>
+</div></body></html>

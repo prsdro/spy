@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Call to Put Morning Reversal | Milkman Trades</title>
+<meta name="description" content="SPY reaches the daily call trigger in the morning, crosses PDC, then reaches the put trigger before noon. Historical outcomes for PDC recovery, downside Golden Gate, call trigger recovery, and ATR extension.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥛</text></svg>">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --bg:#0c0e12;
+  --surface:#13161c;
+  --surface-2:#181c24;
+  --border:#1e2230;
+  --text:#e8eaed;
+  --text-dim:#6b7280;
+  --text-mid:#9ca3af;
+  --accent:#fbbf24;
+  --bull:#1cd48a;
+  --bull-bg:#0a1f15;
+  --bear:#ef6c00;
+  --bear-bg:#1f1208;
+  --blue:#38bdf8;
+  --blue-bg:#082331;
+  --violet:#a78bfa;
+  --violet-bg:#171126;
+}
+
+html{font-size:15px;scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'DM Sans',system-ui,sans-serif;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  z-index:-1;
+  background:linear-gradient(180deg, rgba(255,255,255,.018), transparent 46%);
+  pointer-events:none;
+}
+
+.page{max-width:820px;margin:0 auto;padding:3rem 1.5rem 5rem}
+
+.draft{
+  background:#1a1400;
+  border:1px solid #3d3200;
+  border-radius:6px;
+  padding:.6rem 1rem;
+  margin-bottom:1.5rem;
+  font-size:.75rem;
+  color:#d4a800;
+  line-height:1.5;
+}
+.draft strong{color:var(--accent)}
+
+.hero{margin-bottom:3.5rem}
+.kicker{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.7rem;
+  font-weight:500;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--accent);
+  margin-bottom:.75rem;
+}
+h1{
+  font-size:2.35rem;
+  font-weight:700;
+  letter-spacing:0;
+  line-height:1.12;
+  text-wrap:balance;
+  margin-bottom:1rem;
+}
+h1 em{
+  font-style:normal;
+  background:linear-gradient(135deg,var(--accent),var(--bear));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.lede{
+  max-width:650px;
+  font-size:1rem;
+  color:var(--text-mid);
+  font-weight:300;
+  line-height:1.7;
+  text-wrap:pretty;
+}
+
+.section{margin-bottom:3.5rem}
+.section-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.65rem;
+  font-weight:500;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--text-dim);
+  padding-bottom:.6rem;
+  border-bottom:1px solid var(--border);
+  margin-bottom:1.5rem;
+}
+.prose{
+  font-size:.92rem;
+  color:var(--text-mid);
+  font-weight:300;
+  line-height:1.75;
+  margin-bottom:1.5rem;
+  text-wrap:pretty;
+}
+.prose strong{color:var(--text);font-weight:500}
+
+.setup-strip{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:.5rem;
+  margin:1.75rem 0;
+}
+.setup-step{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:1rem;
+  min-height:118px;
+  position:relative;
+  overflow:hidden;
+}
+.setup-step::before{
+  content:'';
+  position:absolute;
+  left:0;
+  top:0;
+  right:0;
+  height:2px;
+  background:linear-gradient(90deg,var(--accent),transparent);
+}
+.setup-step.bear::before{background:linear-gradient(90deg,var(--bear),transparent)}
+.setup-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.68rem;
+  color:var(--text-dim);
+  margin-bottom:.55rem;
+}
+.setup-title{
+  font-size:.88rem;
+  font-weight:600;
+  color:var(--text);
+  line-height:1.25;
+  margin-bottom:.45rem;
+}
+.setup-desc{
+  font-size:.72rem;
+  color:var(--text-dim);
+  line-height:1.45;
+}
+
+.bigstat{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:.65rem;
+  margin:2rem 0;
+}
+.bigstat-item{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:1.15rem;
+  position:relative;
+  overflow:hidden;
+}
+.bigstat-item::before{
+  content:'';
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  height:2px;
+}
+.bigstat-item.pdc::before{background:linear-gradient(90deg,var(--blue),transparent)}
+.bigstat-item.call::before{background:linear-gradient(90deg,var(--bull),transparent)}
+.bigstat-item.gg::before{background:linear-gradient(90deg,var(--bear),transparent)}
+.bigstat-item.close::before{background:linear-gradient(90deg,var(--accent),transparent)}
+.bigstat-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:1.8rem;
+  font-weight:700;
+  line-height:1;
+  margin-bottom:.4rem;
+  font-variant-numeric:tabular-nums;
+}
+.bigstat-num.pdc{color:var(--blue)}
+.bigstat-num.call{color:var(--bull)}
+.bigstat-num.gg{color:var(--bear)}
+.bigstat-num.close{color:var(--accent)}
+.bigstat-label{
+  font-size:.72rem;
+  color:var(--text-dim);
+  line-height:1.35;
+}
+
+.data-table{
+  width:100%;
+  border-collapse:collapse;
+  margin:1.5rem 0;
+  font-size:.8rem;
+}
+.data-table th{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.62rem;
+  font-weight:500;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:var(--text-dim);
+  text-align:right;
+  padding:.62rem .5rem;
+  border-bottom:1px solid var(--border);
+  white-space:nowrap;
+}
+.data-table th:first-child{text-align:left}
+.data-table td{
+  padding:.58rem .5rem;
+  border-bottom:1px solid #151820;
+  text-align:right;
+  font-variant-numeric:tabular-nums;
+}
+.data-table td:first-child{
+  text-align:left;
+  color:var(--text);
+  font-weight:500;
+}
+.pct{font-family:'JetBrains Mono',monospace;font-weight:700}
+.pct.pdc{color:var(--blue)}
+.pct.call{color:var(--bull)}
+.pct.gg{color:var(--bear)}
+.pct.close{color:var(--accent)}
+.n-col{
+  font-family:'JetBrains Mono',monospace;
+  color:var(--text-mid);
+}
+.bar-cell{width:110px}
+.mini-bar{
+  height:5px;
+  background:#0a0b0f;
+  border-radius:999px;
+  overflow:hidden;
+}
+.mini-bar-fill{
+  height:100%;
+  border-radius:999px;
+  transition:width .9s cubic-bezier(.22,1,.36,1);
+}
+.row-note{font-size:.68rem;color:var(--text-dim);margin-top:-.8rem}
+
+.race-grid{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:.5rem;
+  margin:1.75rem 0;
+}
+.race-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:1rem;
+}
+.race-card .race-pct{
+  font-family:'JetBrains Mono',monospace;
+  font-size:1.35rem;
+  font-weight:700;
+  line-height:1;
+  margin-bottom:.45rem;
+  color:var(--text);
+}
+.race-card.gg .race-pct{color:var(--bear)}
+.race-card.pdc .race-pct{color:var(--blue)}
+.race-title{font-size:.76rem;font-weight:600;color:var(--text);line-height:1.25}
+.race-sub{font-size:.66rem;color:var(--text-dim);margin-top:.25rem;line-height:1.35}
+
+.close-stack{
+  display:flex;
+  height:38px;
+  border-radius:8px;
+  overflow:hidden;
+  border:1px solid var(--border);
+  background:var(--surface);
+  margin:1.25rem 0 .85rem;
+}
+.close-seg{
+  height:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:'JetBrains Mono',monospace;
+  font-size:.68rem;
+  font-weight:700;
+  color:#0b0d10;
+  min-width:44px;
+}
+.close-legend{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:.5rem;
+}
+.legend-item{
+  font-size:.72rem;
+  color:var(--text-dim);
+  line-height:1.35;
+}
+.legend-dot{
+  display:inline-block;
+  width:.55rem;
+  height:.55rem;
+  border-radius:2px;
+  margin-right:.35rem;
+}
+
+.timing-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:.65rem;
+}
+.timing-row{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:1rem;
+}
+.timing-label{
+  font-size:.76rem;
+  color:var(--text-mid);
+  margin-bottom:.35rem;
+}
+.timing-value{
+  font-family:'JetBrains Mono',monospace;
+  font-size:1.4rem;
+  font-weight:700;
+  color:var(--text);
+  font-variant-numeric:tabular-nums;
+}
+.timing-sub{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.66rem;
+  color:var(--text-dim);
+  margin-top:.2rem;
+}
+
+.callout{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:1rem 1.1rem;
+  margin:1.5rem 0;
+}
+.callout p{
+  font-size:.84rem;
+  color:var(--text-mid);
+  line-height:1.65;
+}
+.callout strong{color:var(--text);font-weight:500}
+
+.study-links{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:.6rem;
+  margin:3rem 0 2rem;
+}
+.study-link{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:.5rem;
+  padding:.8rem 1rem;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:6px;
+  color:var(--text);
+  text-decoration:none;
+  font-size:.82rem;
+  font-weight:500;
+  transition:border-color .15s,background .15s,transform .15s;
+}
+.study-link:hover{
+  border-color:var(--accent);
+  background:var(--surface-2);
+  transform:translateY(-1px);
+}
+.study-link:active{transform:scale(.96)}
+.study-link svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;flex-shrink:0}
+
+.footer{
+  text-align:center;
+  font-size:.72rem;
+  color:var(--text-dim);
+  line-height:1.7;
+  margin-top:2rem;
+  padding-top:1.5rem;
+  border-top:1px solid var(--border);
+}
+.footer a{color:var(--text-dim);text-decoration:underline;text-underline-offset:2px}
+
+.reveal{opacity:0;transform:translateY(12px);transition:opacity .55s ease,transform .55s ease}
+.reveal.visible{opacity:1;transform:none}
+
+@media(max-width:760px){
+  .page{padding:2rem 1rem 4rem}
+  h1{font-size:1.9rem}
+  .setup-strip,.bigstat,.race-grid,.close-legend,.study-links{grid-template-columns:1fr}
+  .setup-step{min-height:auto}
+  .timing-grid{grid-template-columns:1fr}
+  .data-table{font-size:.74rem}
+  .data-table th,.data-table td{padding:.5rem .35rem}
+  .bar-cell{display:none}
+}
+</style>
+<script src="/nav.js"></script>
+</head>
+<body>
+<div class="page">
+
+<div class="draft">
+  <strong>Draft &mdash;</strong> These backtests have not yet been independently verified. Do not trade based on this data.
+</div>
+
+<header class="hero reveal">
+  <div class="kicker">Study &mdash; Call Trigger to Put Trigger</div>
+  <h1>When the morning flips from calls to puts,<br>the session usually stays messy &mdash;<br><em>and closes heavy.</em></h1>
+  <p class="lede">SPY first reaches the daily call trigger, then loses previous day close, then tags the daily put trigger before noon. Across 653 qualifying days, PDC recovery and downside Golden Gate continuation both happen about three-quarters of the time. Getting all the way back to the call trigger is the harder ask.</p>
+</header>
+
+<div class="section reveal">
+  <div class="section-label">01 &mdash; The Setup</div>
+
+  <p class="prose">
+    The daily call and put triggers are the &plusmn;23.6% ATR levels around previous day close. This study starts only after a full intramorning reversal: price is above the call trigger at some point, later crosses below PDC, and reaches the put trigger before 12:00 ET. Outcomes are measured from the first put-trigger touch through the RTH close.
+  </p>
+
+  <div class="setup-strip">
+    <div class="setup-step">
+      <div class="setup-num">Step 01</div>
+      <div class="setup-title">Call trigger tagged</div>
+      <div class="setup-desc">High reaches the daily +23.6% ATR trigger during the morning.</div>
+    </div>
+    <div class="setup-step">
+      <div class="setup-num">Step 02</div>
+      <div class="setup-title">PDC breaks</div>
+      <div class="setup-desc">Later in the morning, low crosses back below previous day close.</div>
+    </div>
+    <div class="setup-step bear">
+      <div class="setup-num">Step 03</div>
+      <div class="setup-title">Put trigger tagged</div>
+      <div class="setup-desc">Low reaches the daily -23.6% ATR trigger before noon.</div>
+    </div>
+    <div class="setup-step bear">
+      <div class="setup-num">Sample</div>
+      <div class="setup-title">653 events</div>
+      <div class="setup-desc">1-minute RTH bars across 6,582 available SPY trading days.</div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <p><strong>Path rule:</strong> rebounds to PDC or the call trigger count only after the first put-trigger bar. Downside ATR levels count from that put-trigger bar onward, so the event starts at the moment the bear-side trigger is live.</p>
+  </div>
+</div>
+
+<div class="section reveal">
+  <div class="section-label">02 &mdash; Primary Outcomes</div>
+
+  <div class="bigstat">
+    <div class="bigstat-item pdc">
+      <div class="bigstat-num pdc">73.7%</div>
+      <div class="bigstat-label">Recovered PDC<br>481 / 653 days</div>
+    </div>
+    <div class="bigstat-item gg">
+      <div class="bigstat-num gg">75.3%</div>
+      <div class="bigstat-label">Opened downside GG<br>492 / 653 days</div>
+    </div>
+    <div class="bigstat-item call">
+      <div class="bigstat-num call">43.3%</div>
+      <div class="bigstat-label">Recovered call trigger<br>283 / 653 days</div>
+    </div>
+    <div class="bigstat-item close">
+      <div class="bigstat-num close">41.2%</div>
+      <div class="bigstat-label">Closed below put trigger<br>269 / 653 days</div>
+    </div>
+  </div>
+
+  <p class="prose">
+    This is not a clean binary reversal. PDC recovery is common, but downside continuation is just as common. The key difference is distance: a bounce back to PDC is likely; a full retrace back to the morning call trigger is closer to a coin flip.
+  </p>
+
+  <table class="data-table" id="outcome-table">
+    <thead>
+      <tr>
+        <th>Outcome after put trigger</th>
+        <th>Rate</th>
+        <th>Yes</th>
+        <th>No</th>
+        <th class="bar-cell"></th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+  <div class="row-note">Click any Yes or No count to open the historical dates in the chart drawer.</div>
+</div>
+
+<div class="section reveal">
+  <div class="section-label">03 &mdash; The Race: PDC Recovery vs Downside GG</div>
+
+  <p class="prose">
+    If you care about first resolution, bearish continuation wins more often. In 58.2% of events, the downside Golden Gate opens before any PDC recovery or opens with no PDC recovery at all. PDC wins that race, or recovers without a downside GG, 41.4% of the time.
+  </p>
+
+  <div class="race-grid">
+    <div class="race-card gg">
+      <div class="race-pct">32.3%</div>
+      <div class="race-title">GG before PDC</div>
+      <div class="race-sub">211 events</div>
+    </div>
+    <div class="race-card gg">
+      <div class="race-pct">25.9%</div>
+      <div class="race-title">GG only</div>
+      <div class="race-sub">169 events</div>
+    </div>
+    <div class="race-card pdc">
+      <div class="race-pct">17.2%</div>
+      <div class="race-title">PDC before GG</div>
+      <div class="race-sub">112 events</div>
+    </div>
+    <div class="race-card pdc">
+      <div class="race-pct">24.2%</div>
+      <div class="race-title">PDC only</div>
+      <div class="race-sub">158 events</div>
+    </div>
+    <div class="race-card">
+      <div class="race-pct">0.5%</div>
+      <div class="race-title">Neither</div>
+      <div class="race-sub">3 events</div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <p><strong>Trading read:</strong> after the put trigger, PDC is a realistic mean-reversion magnet, but the downside Golden Gate is not invalidated just because PDC later recovers. Both outcomes print often in the same session.</p>
+  </div>
+</div>
+
+<div class="section reveal">
+  <div class="section-label">04 &mdash; Put-Trigger Timing</div>
+
+  <p class="prose">
+    Earlier flips are more volatile. When the reversal completes before 10:30, the -1 ATR touch rate is 23.6%. Across all events, it is 18.5%. Later morning flips still open downside GG at a high rate, but the call-trigger recovery rate drops.
+  </p>
+
+  <table class="data-table" id="time-table">
+    <thead>
+      <tr>
+        <th>Put time</th>
+        <th>N</th>
+        <th>PDC</th>
+        <th>Call</th>
+        <th>GG open</th>
+        <th>GG comp</th>
+        <th>-1 ATR</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+<div class="section reveal">
+  <div class="section-label">05 &mdash; 1-Hour PO Filter</div>
+
+  <p class="prose">
+    The filter uses the latest fully completed hourly bar at the moment the put trigger is touched. If hourly PO compression is active, the event is labeled compression. Otherwise, hourly PO at or above zero is bullish expansion and hourly PO below zero is bearish expansion.
+  </p>
+
+  <table class="data-table" id="h1-table">
+    <thead>
+      <tr>
+        <th>1h PO state</th>
+        <th>N</th>
+        <th>PDC</th>
+        <th>Call</th>
+        <th>GG open</th>
+        <th>GG comp</th>
+        <th>-1 ATR</th>
+        <th>Close &lt; put</th>
+        <th>Bear first</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <div class="callout">
+    <p><strong>Read:</strong> compression is the most bearish filter: lowest PDC recovery at 67.1%, highest close-below-put rate at 44.7%, and bearish GG first/only in 61.9% of events. Bearish hourly expansion has the strongest call-trigger recovery, but it still has elevated downside continuation.</p>
+  </div>
+</div>
+
+<div class="section reveal">
+  <div class="section-label">06 &mdash; Close Location</div>
+
+  <p class="prose">
+    The largest close bucket is below the put trigger. Only 20.5% close back above the call trigger, and another 16.7% close between PDC and the call trigger.
+  </p>
+
+  <div class="close-stack">
+    <div class="close-seg" style="width:20.5%;background:var(--bull)">20.5%</div>
+    <div class="close-seg" style="width:16.7%;background:var(--blue)">16.7%</div>
+    <div class="close-seg" style="width:21.6%;background:var(--accent)">21.6%</div>
+    <div class="close-seg" style="width:41.2%;background:var(--bear)">41.2%</div>
+  </div>
+  <div class="close-legend">
+    <div class="legend-item"><span class="legend-dot" style="background:var(--bull)"></span>Above call trigger<br>134 days</div>
+    <div class="legend-item"><span class="legend-dot" style="background:var(--blue)"></span>PDC to call<br>109 days</div>
+    <div class="legend-item"><span class="legend-dot" style="background:var(--accent)"></span>Put to PDC<br>141 days</div>
+    <div class="legend-item"><span class="legend-dot" style="background:var(--bear)"></span>Below put trigger<br>269 days</div>
+  </div>
+</div>
+
+<div class="section reveal">
+  <div class="section-label">07 &mdash; Timing and Distance</div>
+
+  <div class="timing-grid">
+    <div class="timing-row">
+      <div class="timing-label">Call trigger touch to put trigger</div>
+      <div class="timing-value">61m</div>
+      <div class="timing-sub">median &middot; mean 65.4m</div>
+    </div>
+    <div class="timing-row">
+      <div class="timing-label">PDC cross to put trigger</div>
+      <div class="timing-value">21m</div>
+      <div class="timing-sub">median &middot; mean 29.8m</div>
+    </div>
+    <div class="timing-row">
+      <div class="timing-label">Put trigger to PDC recovery</div>
+      <div class="timing-value">43m</div>
+      <div class="timing-sub">median when recovered</div>
+    </div>
+    <div class="timing-row">
+      <div class="timing-label">Put trigger to call recovery</div>
+      <div class="timing-value">109m</div>
+      <div class="timing-sub">median when recovered</div>
+    </div>
+    <div class="timing-row">
+      <div class="timing-label">Lowest downside excursion</div>
+      <div class="timing-value">0.564 ATR</div>
+      <div class="timing-sub">median after put trigger</div>
+    </div>
+    <div class="timing-row">
+      <div class="timing-label">Best upside rebound</div>
+      <div class="timing-value">0.186 ATR</div>
+      <div class="timing-sub">median after put trigger</div>
+    </div>
+  </div>
+</div>
+
+<div class="study-links">
+  <a href="/call-trigger.html" class="study-link">
+    3-Minute Close
+    <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+  </a>
+  <a href="/trigger-box.html" class="study-link">
+    Trigger Box Directional
+    <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+  </a>
+  <a href="/golden-gate.html" class="study-link">
+    Subway Timing Stats
+    <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+  </a>
+</div>
+
+<footer class="footer">
+  ATR Levels indicator by <a href="https://satyland.com" target="_blank" rel="noopener">Saty Mahajan</a><br>
+  Analysis inspired by <a href="https://x.com/tesrak" target="_blank" rel="noopener">@tesrak</a> &middot; With thanks to <a href="https://x.com/todaborrego" target="_blank" rel="noopener">@todor</a> for the data<br>
+  Available SPY 1-minute RTH data &middot; 653 qualifying reversals &middot; <a href="https://milkmantrades.com">Milkman Trades</a>
+</footer>
+
+</div>
+
+<script>
+const outcomes = [
+  {key:'pdc_return', label:'Back to PDC', yes:481, total:653, pct:73.7, cls:'pdc'},
+  {key:'call_return', label:'Back to call trigger', yes:283, total:653, pct:43.3, cls:'call'},
+  {key:'bull_gg_return', label:'Back to +38.2% / bullish GG', yes:173, total:653, pct:26.5, cls:'call'},
+  {key:'down_0382', label:'Downside GG opens (-38.2%)', yes:492, total:653, pct:75.3, cls:'gg'},
+  {key:'down_0618', label:'Downside GG completes (-61.8%)', yes:285, total:653, pct:43.6, cls:'gg'},
+  {key:'down_100', label:'Reaches -1 ATR', yes:121, total:653, pct:18.5, cls:'gg'},
+  {key:'close_below_put', label:'Closes below put trigger', yes:269, total:653, pct:41.2, cls:'close'}
+];
+
+const timeRows = [
+  {time:'09:30', n:56, pdc:78.6, call:53.6, gg:82.1, comp:53.6, atr:33.9},
+  {time:'10:00', n:203, pdc:71.9, call:49.8, gg:77.8, comp:48.3, atr:20.7},
+  {time:'10:30', n:154, pdc:79.2, call:44.8, gg:68.8, comp:37.7, atr:16.2},
+  {time:'11:00', n:136, pdc:72.8, call:33.1, gg:77.9, comp:44.1, atr:12.5},
+  {time:'11:30', n:104, pdc:67.3, call:36.5, gg:73.1, comp:37.5, atr:17.3}
+];
+
+const h1Rows = [
+  {key:'bullish_expansion', label:'Bullish expansion', n:148, pdc:77.7, call:39.2, gg:69.6, comp:32.4, atr:14.2, closePut:34.5, bearFirst:52.0},
+  {key:'compression', label:'Compression', n:331, pdc:67.1, call:38.7, gg:75.8, comp:46.8, atr:19.6, closePut:44.7, bearFirst:61.9},
+  {key:'bearish_expansion', label:'Bearish expansion', n:174, pdc:82.8, call:55.7, gg:79.3, comp:47.1, atr:20.1, closePut:40.2, bearFirst:56.3}
+];
+
+(function renderOutcomes(){
+  const tbody = document.querySelector('#outcome-table tbody');
+  outcomes.forEach(r => {
+    const no = r.total - r.yes;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${r.label}</td>
+      <td class="pct ${r.cls}">${r.pct.toFixed(1)}%</td>
+      <td class="n-col n-clickable n-yes" data-row="${r.key}" data-outcome="hit" data-title="${r.label}">${r.yes}</td>
+      <td class="n-col n-clickable n-no" data-row="${r.key}" data-outcome="miss" data-title="${r.label}">${no}</td>
+      <td class="bar-cell"><div class="mini-bar"><div class="mini-bar-fill" data-w="${r.pct}" style="width:0;background:var(--${r.cls === 'gg' ? 'bear' : r.cls === 'call' ? 'bull' : r.cls === 'pdc' ? 'blue' : 'accent'})"></div></div></td>
+    `;
+    tbody.appendChild(tr);
+  });
+})();
+
+(function renderTimeRows(){
+  const tbody = document.querySelector('#time-table tbody');
+  timeRows.forEach(r => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${r.time}</td>
+      <td class="n-col">${r.n}</td>
+      <td class="pct pdc n-clickable" data-row="${r.time}_pdc_return" data-outcome="hit" data-title="PDC recovery after ${r.time} put trigger">${r.pdc.toFixed(1)}%</td>
+      <td class="pct call n-clickable" data-row="${r.time}_call_return" data-outcome="hit" data-title="Call trigger recovery after ${r.time} put trigger">${r.call.toFixed(1)}%</td>
+      <td class="pct gg n-clickable" data-row="${r.time}_down_0382" data-outcome="hit" data-title="Downside GG open after ${r.time} put trigger">${r.gg.toFixed(1)}%</td>
+      <td class="pct gg n-clickable" data-row="${r.time}_down_0618" data-outcome="hit" data-title="Downside GG completion after ${r.time} put trigger">${r.comp.toFixed(1)}%</td>
+      <td class="pct gg n-clickable" data-row="${r.time}_down_100" data-outcome="hit" data-title="-1 ATR after ${r.time} put trigger">${r.atr.toFixed(1)}%</td>
+    `;
+    tbody.appendChild(tr);
+  });
+})();
+
+(function renderH1Rows(){
+  const tbody = document.querySelector('#h1-table tbody');
+  h1Rows.forEach(r => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${r.label}</td>
+      <td class="n-col">${r.n}</td>
+      <td class="pct pdc n-clickable" data-row="${r.key}_pdc_return" data-outcome="hit" data-title="PDC recovery during ${r.label}">${r.pdc.toFixed(1)}%</td>
+      <td class="pct call n-clickable" data-row="${r.key}_call_return" data-outcome="hit" data-title="Call trigger recovery during ${r.label}">${r.call.toFixed(1)}%</td>
+      <td class="pct gg n-clickable" data-row="${r.key}_down_0382" data-outcome="hit" data-title="Downside GG open during ${r.label}">${r.gg.toFixed(1)}%</td>
+      <td class="pct gg n-clickable" data-row="${r.key}_down_0618" data-outcome="hit" data-title="Downside GG completion during ${r.label}">${r.comp.toFixed(1)}%</td>
+      <td class="pct gg n-clickable" data-row="${r.key}_down_100" data-outcome="hit" data-title="-1 ATR during ${r.label}">${r.atr.toFixed(1)}%</td>
+      <td class="pct close n-clickable" data-row="${r.key}_close_below_put" data-outcome="hit" data-title="Close below put trigger during ${r.label}">${r.closePut.toFixed(1)}%</td>
+      <td class="pct gg n-clickable" data-row="${r.key}_bear_first" data-outcome="hit" data-title="Bearish GG first or only during ${r.label}">${r.bearFirst.toFixed(1)}%</td>
+    `;
+    tbody.appendChild(tr);
+  });
+})();
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if(!e.isIntersecting) return;
+    e.target.classList.add('visible');
+    setTimeout(() => {
+      e.target.querySelectorAll('[data-w]').forEach(bar => {
+        bar.style.width = bar.dataset.w + '%';
+      });
+    }, 160);
+    observer.unobserve(e.target);
+  });
+}, {threshold:.1});
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+<script src="/study-drawer.js"></script>
+<script>
+StudyDrawer.loadData('/data/call-to-put-reversal-dates.json');
+</script>
+</body>
+</html>

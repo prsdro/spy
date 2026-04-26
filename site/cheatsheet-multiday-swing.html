@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Multi-Day &amp; Swing Golden Gate | Milkman Trades</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥛</text></svg>">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0c0e12;--card:#11131a;--card2:#161922;--border:#1c1f2a;--border2:#252938;
+  --t:#e4e5e9;--t2:#b0b3c0;--t3:#7a7e90;
+  --bull:#1cd48a;--bullD:#0e5c3c;--bear:#ef6c00;--bearD:#6e3200;
+  --acc:#fbbf24;--accD:#5c4500;--red:#ef4444;--blue:#60a5fa;
+}
+html{font-size:14px}
+body{background:#060709;color:var(--t);font-family:'DM Sans',system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;padding:2rem 1rem 4rem}
+
+.save-bar{width:1200px;display:flex;justify-content:flex-end;margin-bottom:.75rem}
+.save-btn{
+  padding:.5rem 1.2rem;background:var(--acc);color:#000;border:none;border-radius:4px;
+  font-family:'JetBrains Mono',monospace;font-size:.75rem;font-weight:600;cursor:pointer;
+  letter-spacing:.03em;transition:opacity .15s;
+}
+.save-btn:hover{opacity:.85}
+.save-btn:active{transform:scale(.97)}
+
+.poster{
+  width:1200px;background:var(--bg);border:1px solid var(--border);border-radius:8px;
+  overflow:hidden;position:relative;
+}
+
+.hdr{
+  padding:1.8rem 2rem 1.4rem;
+  background:linear-gradient(135deg,#0e1018 0%,#12151f 100%);
+  border-bottom:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:flex-end;
+}
+.hdr-left h1{
+  font-family:'JetBrains Mono',monospace;font-size:1.5rem;font-weight:700;
+  letter-spacing:-.01em;line-height:1;margin-bottom:.35rem;
+}
+.hdr-left h1 span{color:var(--acc)}
+.hdr-left .sub{font-size:.8rem;color:var(--t3);font-weight:300}
+.hdr-right{text-align:right}
+.hdr-right .draft{
+  font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:500;
+  color:#a08000;background:#1a1600;padding:.2em .5em;border-radius:3px;
+  letter-spacing:.06em;text-transform:uppercase;margin-bottom:.3rem;display:inline-block;
+}
+.hdr-right .url{font-size:.75rem;color:var(--t3)}
+.hdr-right .back{font-size:.65rem;color:var(--blue);text-decoration:none;margin-right:.8rem}
+.hdr-right .back:hover{text-decoration:underline}
+
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.sec{border-right:1px solid var(--border);border-bottom:1px solid var(--border);padding:1.4rem 1.6rem}
+.sec:nth-child(even){border-right:none}
+.sec.full{grid-column:1/-1;border-right:none}
+.sec-num{
+  font-family:'JetBrains Mono',monospace;font-size:.6rem;font-weight:600;
+  color:var(--acc);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.6rem;
+}
+.sec-title{font-size:1rem;font-weight:700;margin-bottom:.8rem;line-height:1.2}
+
+.stats{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:.8rem}
+.stat{
+  flex:1;min-width:100px;background:var(--card);border:1px solid var(--border);
+  border-radius:5px;padding:.6rem .7rem;
+}
+.stat-val{font-family:'JetBrains Mono',monospace;font-size:1.4rem;font-weight:700;line-height:1}
+.stat-label{font-size:.75rem;color:var(--t3);margin-top:.2rem;line-height:1.3}
+.bull{color:var(--bull)}.bear{color:var(--bear)}.acc{color:var(--acc)}.red{color:var(--red)}
+
+.mtable{width:100%;border-collapse:collapse;font-size:.7rem;margin:.5rem 0}
+.mtable th{
+  font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:500;
+  color:var(--t3);text-align:right;padding:.3rem .4rem;border-bottom:1px solid var(--border);
+  letter-spacing:.04em;text-transform:uppercase;
+}
+.mtable th:first-child{text-align:left}
+.mtable td{
+  padding:.3rem .4rem;border-bottom:1px solid #13151d;text-align:right;
+  font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--t2);
+}
+.mtable td:first-child{text-align:left;font-family:'DM Sans',sans-serif;color:var(--t);font-weight:400}
+.mtable tr.hi td{font-weight:600}
+.mtable tr.hi .bull{color:var(--bull)}
+.mtable tr.hi .bear{color:var(--bear)}
+.mtable tr.dim td{color:var(--t3)}
+
+.blist{list-style:none;font-size:.85rem;color:var(--t2);line-height:1.7}
+.blist li::before{content:'>';color:var(--acc);font-weight:700;margin-right:.4rem}
+.blist .key{color:var(--t);font-weight:500}
+.blist .val{font-family:'JetBrains Mono',monospace;font-weight:600}
+
+.ftr{
+  padding:.8rem 2rem;border-top:1px solid var(--border);
+  font-size:.6rem;color:var(--t3);display:flex;justify-content:space-between;
+  font-family:'JetBrains Mono',monospace;
+}
+
+.divlbl{
+  font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--t3);
+  letter-spacing:.08em;text-transform:uppercase;margin:.6rem 0 .3rem;
+}
+
+/* ── Mobile ── */
+@media(max-width:767px){
+  body{padding:1rem .5rem 3rem}
+  .save-bar{width:100%;flex-wrap:wrap;gap:.4rem}
+  .poster{width:100%}
+  .hdr{flex-direction:column;align-items:flex-start;gap:.6rem;padding:1.2rem 1rem 1rem}
+  .hdr-left h1{font-size:1.1rem}
+  .hdr-left .sub{font-size:.72rem}
+  .hdr-right{text-align:left}
+  .grid{grid-template-columns:1fr}
+  .sec{border-right:none !important;padding:1.1rem 1rem}
+  .sec-title{font-size:.95rem}
+  .stats{flex-direction:column}
+  .stat{min-width:0}
+  .stat-val{font-size:1.2rem}
+  .mtable{font-size:.68rem}
+  .mtable th,.mtable td{padding:.25rem .35rem}
+  .ftr{flex-direction:column;gap:.4rem;text-align:center;font-size:.55rem;padding:.7rem 1rem}
+}
+</style>
+<script src="/nav.js"></script>
+<script src="/mobile-png.js"></script>
+</head>
+<body>
+
+<div class="save-bar">
+  <button class="save-btn save-mobile-btn" onclick="saveMobilePNG()" style="background:#60a5fa;margin-right:.5rem">Mobile PNG</button>
+  <button class="save-btn" onclick="savePNG()">&#11015; Save as PNG</button>
+</div>
+
+<div class="poster" id="poster">
+
+<div class="hdr">
+  <div class="hdr-left">
+    <h1>Milkman Trades &mdash; <span>Multi-Day &amp; Swing Golden Gate</span></h1>
+    <div class="sub">Weekly ATR (1&ndash;5 days) &amp; Monthly ATR (1&ndash;20 days) &mdash; 25 years of SPY (2000&ndash;2025)</div>
+  </div>
+  <div class="hdr-right">
+    <div class="draft">Draft &mdash; Not Verified</div><br>
+    <a class="back" href="cheatsheet.html">&larr; Master Sheet</a>
+    <span class="url">milkmantrades.com</span>
+  </div>
+</div>
+
+<div class="grid">
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SECTION 1: Multi-Day GG (Weekly ATR)          -->
+<!-- ══════════════════════════════════════════════ -->
+
+<!-- Bullish Multi-Day -->
+<div class="sec">
+  <div class="sec-num">01 &mdash; Multi-Day GG: Bullish (Weekly ATR)</div>
+  <div class="sec-title">Bullish weekly GG, n=901</div>
+
+  <div class="stats">
+    <div class="stat"><div class="stat-val bull">73.9%</div><div class="stat-label">Bilbo day 1<br>High+Rising (n=115)</div></div>
+    <div class="stat"><div class="stat-val" style="color:var(--t2)">65.0%</div><div class="stat-label">Baseline day 1<br>All entries</div></div>
+  </div>
+
+  <div class="divlbl">Baseline</div>
+  <table class="mtable">
+    <thead><tr><th>Metric</th><th>Day 1</th><th>Day 2</th><th>Day 3</th><th>Day 4</th><th>Day 5</th></tr></thead>
+    <tbody>
+      <tr class="dim"><td>Baseline (61.8%)</td><td>65.0%</td><td>74.3%</td><td>79.5%</td><td>82.0%</td><td>84.1%</td></tr>
+      <tr class="dim"><td>Baseline Full ATR</td><td>23.5%</td><td>30.9%</td><td>37.1%</td><td>43.7%</td><td>47.3%</td></tr>
+    </tbody>
+  </table>
+
+  <div class="divlbl">Bilbo (Daily PO)</div>
+  <table class="mtable">
+    <thead><tr><th>Daily PO State</th><th>Day 1</th><th>Day 2</th><th>Day 3</th><th>Day 4</th><th>Day 5</th></tr></thead>
+    <tbody>
+      <tr class="hi"><td>High + Rising</td><td class="bull">73.9%</td><td class="bull">79.1%</td><td class="bull">81.7%</td><td class="bull">83.5%</td><td class="bull">84.3%</td></tr>
+      <tr><td>High + Falling</td><td>58.3%</td><td>70.8%</td><td>81.2%</td><td>85.4%</td><td>89.6%</td></tr>
+      <tr><td>Mid + Rising</td><td>68.2%</td><td>77.0%</td><td>82.1%</td><td>83.5%</td><td>85.9%</td></tr>
+      <tr><td>Mid + Falling</td><td>52.7%</td><td>64.9%</td><td>70.7%</td><td>76.6%</td><td>78.2%</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Bearish Multi-Day -->
+<div class="sec">
+  <div class="sec-num">01 &mdash; Multi-Day GG: Bearish (Weekly ATR)</div>
+  <div class="sec-title">Bearish weekly GG, n=706</div>
+
+  <div class="stats">
+    <div class="stat"><div class="stat-val bear">94.4%</div><div class="stat-label">Bilbo day 1<br>Low+Falling (n=54)</div></div>
+    <div class="stat"><div class="stat-val" style="color:var(--t2)">72.0%</div><div class="stat-label">Baseline day 1<br>All entries</div></div>
+  </div>
+
+  <div class="divlbl">Baseline</div>
+  <table class="mtable">
+    <thead><tr><th>Metric</th><th>Day 1</th><th>Day 2</th><th>Day 3</th><th>Day 4</th><th>Day 5</th></tr></thead>
+    <tbody>
+      <tr class="dim"><td>Baseline (61.8%)</td><td>72.0%</td><td>77.2%</td><td>80.3%</td><td>82.0%</td><td>83.0%</td></tr>
+      <tr class="dim"><td>Baseline Full ATR</td><td>34.7%</td><td>43.3%</td><td>47.7%</td><td>52.5%</td><td>55.8%</td></tr>
+    </tbody>
+  </table>
+
+  <div class="divlbl">Bilbo (Daily PO)</div>
+  <table class="mtable">
+    <thead><tr><th>Daily PO State</th><th>Day 1</th><th>Day 2</th><th>Day 3</th><th>Day 4</th><th>Day 5</th></tr></thead>
+    <tbody>
+      <tr class="hi"><td>Low + Falling</td><td class="bear">94.4%</td><td class="bear">94.4%</td><td class="bear">94.4%</td><td class="bear">94.4%</td><td class="bear">96.3%</td></tr>
+      <tr><td>Mid + Falling</td><td>69.1%</td><td>74.9%</td><td>78.4%</td><td>80.2%</td><td>81.6%</td></tr>
+      <tr><td>Mid + Rising</td><td>70.9%</td><td>77.1%</td><td>80.4%</td><td>82.1%</td><td>82.7%</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SECTION 2: Swing GG (Monthly ATR)             -->
+<!-- ══════════════════════════════════════════════ -->
+
+<!-- Bullish Swing -->
+<div class="sec">
+  <div class="sec-num">02 &mdash; Swing GG: Bullish (Monthly ATR)</div>
+  <div class="sec-title">Bullish monthly GG, n=299</div>
+
+  <div class="stats">
+    <div class="stat"><div class="stat-val bull">10.7%</div><div class="stat-label">Baseline day 1<br>(vs 63% daily)</div></div>
+    <div class="stat"><div class="stat-val bull">73.2%</div><div class="stat-label">Baseline day 20<br>(~1 month)</div></div>
+  </div>
+
+  <table class="mtable">
+    <thead><tr><th>Metric</th><th>Day 1</th><th>Day 3</th><th>Day 5</th><th>Day 10</th><th>Day 15</th><th>Day 20</th></tr></thead>
+    <tbody>
+      <tr class="dim"><td>Baseline (61.8%)</td><td>10.7%</td><td>25.8%</td><td>35.1%</td><td>54.8%</td><td>67.6%</td><td>73.2%</td></tr>
+      <tr class="dim"><td>Full ATR (100%)</td><td>0.0%</td><td>0.3%</td><td>2.3%</td><td>9.4%</td><td>16.4%</td><td>24.4%</td></tr>
+    </tbody>
+  </table>
+
+  <div class="divlbl">By Weekly PO (n&ge;15)</div>
+  <table class="mtable">
+    <thead><tr><th>Weekly PO</th><th>Day 1</th><th>Day 3</th><th>Day 5</th><th>Day 10</th><th>Day 15</th><th>Day 20</th></tr></thead>
+    <tbody>
+      <tr><td>High + Rising (n=42)</td><td>0.0%</td><td>16.7%</td><td>21.4%</td><td>40.5%</td><td>59.5%</td><td>69.0%</td></tr>
+      <tr><td>High + Falling (n=18)</td><td>16.7%</td><td>38.9%</td><td>44.4%</td><td>66.7%</td><td>72.2%</td><td>72.2%</td></tr>
+      <tr><td>Mid + Rising (n=134)</td><td>6.7%</td><td>19.4%</td><td>32.8%</td><td>56.7%</td><td>70.9%</td><td>76.9%</td></tr>
+      <tr><td>Mid + Falling (n=98)</td><td>18.4%</td><td>33.7%</td><td>40.8%</td><td>55.1%</td><td>65.3%</td><td>69.4%</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Bearish Swing -->
+<div class="sec">
+  <div class="sec-num">02 &mdash; Swing GG: Bearish (Monthly ATR)</div>
+  <div class="sec-title">Bearish monthly GG, n=233</div>
+
+  <div class="stats">
+    <div class="stat"><div class="stat-val bear">36.1%</div><div class="stat-label">Baseline day 1<br>(3.4x bull, vs 65% daily)</div></div>
+    <div class="stat"><div class="stat-val bear">77.3%</div><div class="stat-label">Baseline day 20<br>(~1 month)</div></div>
+  </div>
+
+  <table class="mtable">
+    <thead><tr><th>Metric</th><th>Day 1</th><th>Day 3</th><th>Day 5</th><th>Day 10</th><th>Day 15</th><th>Day 20</th></tr></thead>
+    <tbody>
+      <tr class="dim"><td>Baseline (61.8%)</td><td>36.1%</td><td>53.6%</td><td>58.4%</td><td>69.1%</td><td>74.7%</td><td>77.3%</td></tr>
+      <tr class="dim"><td>Full ATR (100%)</td><td>4.3%</td><td>9.0%</td><td>15.8%</td><td>29.5%</td><td>36.8%</td><td>41.9%</td></tr>
+    </tbody>
+  </table>
+
+  <div class="divlbl">By Weekly PO</div>
+  <table class="mtable">
+    <thead><tr><th>Weekly PO</th><th>Day 1</th><th>Day 3</th><th>Day 5</th><th>Day 10</th><th>Day 15</th><th>Day 20</th></tr></thead>
+    <tbody>
+      <tr><td>High + Rising (n=19)</td><td>36.8%</td><td>63.2%</td><td>63.2%</td><td>78.9%</td><td>84.2%</td><td>84.2%</td></tr>
+      <tr><td>Mid + Rising (n=94)</td><td>35.1%</td><td>52.1%</td><td>57.4%</td><td>68.1%</td><td>75.5%</td><td>77.7%</td></tr>
+      <tr><td>Mid + Falling (n=98)</td><td>30.6%</td><td>53.1%</td><td>58.2%</td><td>65.3%</td><td>72.4%</td><td>75.5%</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SECTION 3: Comparison Across Timeframes        -->
+<!-- ══════════════════════════════════════════════ -->
+
+<div class="sec full">
+  <div class="sec-num">03 &mdash; Comparison Across Timeframes</div>
+  <div class="sec-title">GG completion rates by timeframe</div>
+
+  <table class="mtable">
+    <thead>
+      <tr>
+        <th>Timeframe</th>
+        <th>ATR Ref</th>
+        <th>Bull Base 1d</th>
+        <th>Bear Base 1d</th>
+        <th>Bull Bilbo 1d</th>
+        <th>Bear Bilbo 1d</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Day</td>
+        <td>Daily</td>
+        <td>63%</td>
+        <td>65%</td>
+        <td class="bull">78%</td>
+        <td class="bear">90%</td>
+      </tr>
+      <tr>
+        <td>Multi-Day</td>
+        <td>Weekly</td>
+        <td>65%</td>
+        <td>72%</td>
+        <td class="bull">74%</td>
+        <td class="bear">94%</td>
+      </tr>
+      <tr>
+        <td>Swing</td>
+        <td>Monthly</td>
+        <td>11%</td>
+        <td>36%</td>
+        <td style="color:var(--t3)">&mdash;</td>
+        <td style="color:var(--t3)">&mdash;</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div style="margin-top:.6rem;font-size:.72rem;color:var(--t3);line-height:1.5">
+    Bilbo filter: 1h PO for Day mode, Daily PO for Multi-Day, Weekly PO for Swing (minimal edge).
+    Day 1 = same session (Day/Multi-Day) or first trading day (Swing).
+  </div>
+</div>
+
+</div><!-- /grid -->
+
+<div class="sec full" style="background:linear-gradient(135deg,#0f1118,#131620);border-bottom:none">
+  <div class="sec-num" style="color:var(--acc)">&#9733; Bottom Line</div>
+  <div class="sec-title">Key takeaways across timeframes</div>
+  <ul class="blist">
+    <li><span class="key">Multi-day bearish Bilbo (daily PO low+falling) = <span class="val bear">94% completion day 1</span></span> &mdash; strongest signal across all studies (n=54). 72% reach full weekly ATR on day 1.</li>
+    <li><span class="key">Swing GGs take weeks to develop.</span> Day 1 completion is just 11% bull / 36% bear. Be patient or size smaller.</li>
+    <li><span class="key">Bearish moves are faster than bullish at EVERY timeframe.</span> Day: 65% vs 63%. Multi-day: 72% vs 65%. Swing: 36% vs 11%.</li>
+    <li><span class="key">The higher the timeframe PO, the less predictive edge it adds.</span> 1h PO for day mode, daily PO for multi-day, weekly PO adds minimal edge for swing.</li>
+  </ul>
+</div>
+
+<div class="ftr">
+  <span>milkmantrades.com &middot; ATR Levels &amp; Phase Oscillator by Saty Mahajan</span>
+  <span>@tesrak &middot; @todor &middot; Draft &mdash; not independently verified</span>
+</div>
+
+</div><!-- /poster -->
+
+<script>
+function savePNG() {
+  var btn = document.querySelector('.save-btn:not(.save-mobile-btn)');
+  btn.textContent = 'Rendering...';
+  html2canvas(document.getElementById('poster'), {
+    scale: 2,
+    backgroundColor: '#0c0e12',
+    useCORS: true,
+  }).then(function(canvas) {
+    var a = document.createElement('a');
+    a.download = 'multiday-swing-golden-gate.png';
+    a.href = canvas.toDataURL('image/png');
+    a.click();
+    btn.textContent = '\u2713 Saved';
+    setTimeout(function() { btn.textContent = '\u2b07 Save as PNG'; }, 2000);
+  });
+}
+</script>
+</body>
+</html>

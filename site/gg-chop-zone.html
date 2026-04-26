@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The GG Chop Zone | Milkman Trades</title>
+<meta name="description" content="After a Golden Gate completes at 61.8% ATR, 78% of events that can't hold the level for even one bar reverse. But survive 10 minutes and it's a coin flip. Survive an hour and continuation is favored 2:1.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥛</text></svg>">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,300;1,9..40,400&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --bg:#0c0e12;
+  --surface:#13161c;
+  --surface-2:#181c24;
+  --border:#1e2230;
+  --text:#e8eaed;
+  --text-dim:#6b7280;
+  --text-mid:#9ca3af;
+  --bull:#1cd48a;
+  --bull-dim:#0d5738;
+  --bull-bg:#0a1f15;
+  --bear:#ef6c00;
+  --bear-dim:#7c3600;
+  --bear-bg:#1f1208;
+  --accent:#fbbf24;
+  --chop:#f472b6;
+  --chop-dim:#831843;
+  --chop-bg:#1c0a14;
+  --cont:#38bdf8;
+  --cont-dim:#075985;
+}
+
+html{font-size:15px;scroll-behavior:smooth}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:'DM Sans',system-ui,sans-serif;
+  line-height:1.6;-webkit-font-smoothing:antialiased;
+}
+
+.page{max-width:740px;margin:0 auto;padding:3rem 1.5rem 5rem}
+
+/* ── Hero ── */
+.hero{margin-bottom:3.5rem}
+.hero .kicker{
+  font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:500;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--chop);margin-bottom:.75rem;
+}
+.hero h1{font-size:2.2rem;font-weight:700;letter-spacing:-.03em;line-height:1.15;margin-bottom:1rem}
+.hero h1 em{
+  font-style:normal;
+  background:linear-gradient(135deg,var(--chop),var(--accent));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.hero .lede{font-size:1.05rem;color:var(--text-mid);font-weight:300;max-width:600px;line-height:1.65}
+
+/* ── Sections ── */
+.section{margin-bottom:3.5rem}
+.section-label{
+  font-family:'JetBrains Mono',monospace;font-size:.65rem;font-weight:500;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim);
+  padding-bottom:.6rem;border-bottom:1px solid var(--border);margin-bottom:1.5rem;
+}
+
+.prose{font-size:.95rem;color:var(--text-mid);font-weight:300;line-height:1.7;margin-bottom:1.5rem}
+.prose strong{color:var(--text);font-weight:500}
+
+/* ── Big Stat ── */
+.bigstat{display:flex;gap:1.5rem;margin:2rem 0;flex-wrap:wrap}
+.bigstat-item{
+  flex:1;min-width:130px;padding:1.25rem;
+  background:var(--surface);border:1px solid var(--border);border-radius:8px;
+}
+.bigstat-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:2rem;font-weight:700;line-height:1;margin-bottom:.3rem;
+}
+.bigstat-num.bull{color:var(--bull)}
+.bigstat-num.bear{color:var(--bear)}
+.bigstat-num.chop{color:var(--chop)}
+.bigstat-num.accent{color:var(--accent)}
+.bigstat-num.cont{color:var(--cont)}
+.bigstat-num.dim{color:var(--text-mid)}
+.bigstat-label{font-size:.72rem;color:var(--text-dim);line-height:1.4}
+
+/* ── Chart card ── */
+.chart-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:8px;padding:1.5rem;margin:1.5rem 0;overflow:hidden;
+}
+.chart-card .card-title{font-size:.85rem;font-weight:600;margin-bottom:.2rem}
+.chart-card .card-sub{font-size:.7rem;color:var(--text-dim);margin-bottom:1.25rem;font-family:'JetBrains Mono',monospace}
+
+/* ── Stacked bar ── */
+.sbar-row{display:flex;align-items:center;gap:.6rem;margin-bottom:.6rem}
+.sbar-label{
+  flex:0 0 110px;font-family:'JetBrains Mono',monospace;
+  font-size:.7rem;color:var(--text-dim);text-align:right;line-height:1.3;
+}
+.sbar-track{flex:1;height:26px;background:var(--surface-2);border-radius:4px;overflow:hidden;display:flex}
+.sbar-seg{height:100%;position:relative;min-width:1px;transition:width 1s cubic-bezier(.22,1,.36,1)}
+.sbar-seg .tip{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  font-family:'JetBrains Mono',monospace;font-size:.58rem;font-weight:700;
+  color:#fff;white-space:nowrap;text-shadow:0 1px 3px rgba(0,0,0,.6);
+  pointer-events:none;opacity:0;transition:opacity .3s;
+}
+.sbar-row:hover .sbar-seg .tip{opacity:1}
+.sbar-n{
+  flex:0 0 50px;font-family:'JetBrains Mono',monospace;
+  font-size:.65rem;color:var(--text-dim);text-align:right;
+}
+
+/* ── Tables ── */
+.data-table{width:100%;border-collapse:collapse;font-size:.8rem}
+.data-table th{
+  font-family:'JetBrains Mono',monospace;font-size:.65rem;font-weight:500;
+  letter-spacing:.06em;text-transform:uppercase;color:var(--text-dim);
+  text-align:right;padding:.5rem .6rem;border-bottom:1px solid var(--border);
+}
+.data-table th:first-child{text-align:left}
+.data-table td{
+  padding:.55rem .6rem;border-bottom:1px solid #151820;text-align:right;
+  font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--text-mid);
+}
+.data-table td:first-child{text-align:left;font-family:'DM Sans',sans-serif;color:var(--text)}
+.data-table tr.highlight td{font-weight:700;color:var(--text)}
+.data-table .v-bear{color:var(--bear)}
+.data-table .v-bull{color:var(--bull)}
+.data-table .v-cont{color:var(--cont)}
+.data-table .v-chop{color:var(--chop)}
+.data-table .small{font-size:.6rem;color:var(--text-dim);font-weight:400}
+
+/* ── Two-col ── */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin:1.5rem 0}
+@media(max-width:640px){.two-col{grid-template-columns:1fr}}
+
+/* ── Comparison card ── */
+.cmp-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:8px;padding:1.25rem;position:relative;overflow:hidden;
+}
+.cmp-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.cmp-card.bear-card::before{background:linear-gradient(90deg,var(--bear),transparent)}
+.cmp-card.cont-card::before{background:linear-gradient(90deg,var(--cont),transparent)}
+.cmp-card.bull-card::before{background:linear-gradient(90deg,var(--bull),transparent)}
+.cmp-card .cmp-title{font-size:.82rem;font-weight:600;margin-bottom:.15rem}
+.cmp-card .cmp-sub{font-size:.68rem;color:var(--text-dim);margin-bottom:1rem;font-family:'JetBrains Mono',monospace}
+.cmp-card .big-num{font-family:'JetBrains Mono',monospace;font-size:1.8rem;font-weight:700;line-height:1;margin-bottom:.25rem}
+.cmp-card .big-label{font-size:.68rem;color:var(--text-dim);line-height:1.4}
+.cmp-card .divider{height:1px;background:var(--border);margin:.75rem 0}
+.cmp-card .sub-stat{
+  display:flex;justify-content:space-between;
+  font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--text-dim);
+}
+.cmp-card .sub-stat .val{color:var(--text);font-weight:600}
+
+/* ── Callout ── */
+.callout{
+  background:var(--surface);border-left:3px solid var(--accent);
+  padding:1rem 1.25rem;margin:2rem 0;border-radius:0 6px 6px 0;
+}
+.callout.chop{border-left-color:var(--chop)}
+.callout.bear{border-left-color:var(--bear)}
+.callout.cont{border-left-color:var(--cont)}
+.callout p{font-size:.85rem;color:var(--text-mid);font-weight:300;line-height:1.6}
+.callout strong{color:var(--accent);font-weight:500}
+.callout.chop strong{color:var(--chop)}
+.callout.bear strong{color:var(--bear)}
+.callout.cont strong{color:var(--cont)}
+
+/* ── Diagram ── */
+.zone-diagram{
+  background:var(--surface);border:1px solid var(--border);border-radius:8px;
+  padding:1.5rem;margin:1.5rem 0;position:relative;overflow:hidden;
+}
+.zone-stack{display:flex;flex-direction:column;gap:0;margin:1rem 0}
+.zone-level{
+  display:flex;align-items:center;padding:.65rem 1rem;
+  border:1px solid var(--border);position:relative;
+}
+.zone-level:first-child{border-radius:6px 6px 0 0}
+.zone-level:last-child{border-radius:0 0 6px 6px}
+.zone-level + .zone-level{border-top:none}
+.zone-pct{
+  font-family:'JetBrains Mono',monospace;font-size:.72rem;font-weight:700;
+  flex:0 0 60px;
+}
+.zone-name{font-size:.82rem;flex:1}
+.zone-note{font-size:.7rem;color:var(--text-dim);font-family:'JetBrains Mono',monospace}
+
+/* ── Footer ── */
+.footer{
+  text-align:center;padding-top:2.5rem;border-top:1px solid var(--border);
+  color:var(--text-dim);font-size:.72rem;font-weight:300;line-height:1.8;
+}
+.footer a{color:var(--text-dim);text-decoration:underline;text-underline-offset:2px}
+
+/* ── Animations ── */
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease}
+.reveal.visible{opacity:1;transform:none}
+
+/* ── Mobile ── */
+@media(max-width:767px){
+  .hero h1{font-size:1.5rem}
+  .bigstat{flex-direction:column;gap:1rem}
+  .bigstat-item{min-width:0}
+  .bigstat-num{font-size:1.6rem}
+  .data-table{font-size:.72rem;display:block;overflow-x:auto}
+  .data-table th,.data-table td{padding:.4rem .4rem;white-space:nowrap}
+  .sbar-label{flex:0 0 80px;font-size:.6rem}
+  .page{padding:2rem 1rem 4rem}
+}
+</style>
+<script src="/nav.js"></script>
+</head>
+<body>
+<div class="page">
+
+<div style="background:#1a1400;border:1px solid #3d3200;border-radius:6px;padding:.6rem 1rem;margin-bottom:1.5rem;font-size:.75rem;color:#d4a800;font-weight:400;line-height:1.5">
+  <strong style="color:#fbbf24">Draft &mdash;</strong> These backtests have not yet been independently verified. Do not trade based on this data.
+</div>
+
+<a href="/" style="display:inline-flex;align-items:center;gap:.4rem;font-size:.8rem;color:var(--text-dim);text-decoration:none;margin-bottom:.5rem;transition:color .2s" onmouseover="this.style.color='#e8eaed'" onmouseout="this.style.color=''"><svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0h4"/></svg>Home</a>
+<a href="/golden-gate.html" style="display:inline-flex;align-items:center;gap:.4rem;font-size:.8rem;color:var(--text-dim);text-decoration:none;margin-bottom:2.5rem;transition:color .2s" onmouseover="this.style.color='#e8eaed'" onmouseout="this.style.color=''"><svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>Golden Gate Subway Stats</a>
+
+<header class="hero reveal">
+  <div class="kicker">Study &mdash; The GG Chop Zone</div>
+  <h1>After the Golden Gate completes,<br>the first bar is <em>everything.</em></h1>
+  <p class="lede">Price reaches the 61.8% ATR midrange &mdash; the Golden Gate completion line. What happens next? 78% of the time, it can't even hold for one bar. But survive 10 minutes and it's a coin flip. Survive an hour and continuation wins 2:1.</p>
+</header>
+
+<!-- ══ Section 1: The Zone ══ -->
+<div class="section reveal">
+  <div class="section-label">01 &mdash; The Zone</div>
+
+  <p class="prose">
+    After a Golden Gate completes at 61.8% ATR, price enters a decision zone: the <strong>chop zone</strong> between the midrange (61.8%) and the next ATR level (78.6%). Price either pushes through to 78.6% (continuation) or falls back below 61.8% (reversal). We tracked every resolution across 25 years.
+  </p>
+
+  <!-- ATR Zone Diagram -->
+  <div class="zone-diagram">
+    <div style="font-size:.78rem;font-weight:600;margin-bottom:.75rem">Bullish ATR Levels (upside)</div>
+    <div class="zone-stack">
+      <div class="zone-level" style="background:#07598515">
+        <div class="zone-pct" style="color:var(--cont)">78.6%</div>
+        <div class="zone-name">Next ATR Level</div>
+        <div class="zone-note">Continuation target</div>
+      </div>
+      <div class="zone-level" style="background:var(--chop-bg)">
+        <div class="zone-pct" style="color:var(--chop)">CHOP</div>
+        <div class="zone-name" style="color:var(--chop)">The Chop Zone</div>
+        <div class="zone-note">Decision area</div>
+      </div>
+      <div class="zone-level" style="background:#fbbf2408">
+        <div class="zone-pct" style="color:var(--accent)">61.8%</div>
+        <div class="zone-name">Midrange &mdash; GG Completion</div>
+        <div class="zone-note">Price arrived here</div>
+      </div>
+      <div class="zone-level" style="background:var(--surface-2)">
+        <div class="zone-pct" style="color:var(--text-dim)">38.2%</div>
+        <div class="zone-name" style="color:var(--text-dim)">Golden Gate Entry</div>
+        <div class="zone-note"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bigstat">
+    <div class="bigstat-item">
+      <div class="bigstat-num accent">4,313</div>
+      <div class="bigstat-label">GG completions<br>25 years of SPY</div>
+    </div>
+    <div class="bigstat-item">
+      <div class="bigstat-num bear">70%</div>
+      <div class="bigstat-label">Reverse back<br>below 61.8%</div>
+    </div>
+    <div class="bigstat-item">
+      <div class="bigstat-num cont">29%</div>
+      <div class="bigstat-label">Continue through<br>to 78.6%</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ Section 2: Overall Resolution ══ -->
+<div class="section reveal">
+  <div class="section-label">02 &mdash; Overall Resolution</div>
+
+  <p class="prose">
+    Every GG completion falls into one of four outcomes: <strong>instant continuation</strong> (blew right through 61.8% to 78.6% in the same bar), <strong>continuation</strong> (held the zone, then broke through), <strong>reversal</strong> (fell back below 61.8%), or <strong>end-of-day in chop</strong> (still between levels at close).
+  </p>
+
+  <div class="chart-card">
+    <div class="card-title">Resolution Breakdown</div>
+    <div class="card-sub">All 4,313 GG completions &mdash; bullish and bearish</div>
+
+    <!-- Bullish -->
+    <div style="font-size:.78rem;font-weight:600;margin-bottom:.4rem;color:var(--bull)">Bullish <span style="font-weight:400;color:var(--text-dim)">(n=2,192)</span></div>
+    <div class="sbar-row">
+      <div class="sbar-label"></div>
+      <div class="sbar-track">
+        <div class="sbar-seg" style="width:17.7%;background:var(--cont)"><div class="tip">17.7%</div></div>
+        <div class="sbar-seg" style="width:23.0%;background:var(--cont);opacity:.5"><div class="tip">23.0%</div></div>
+        <div class="sbar-seg" style="width:56.2%;background:var(--bear)"><div class="tip">56.2%</div></div>
+        <div class="sbar-seg" style="width:3.0%;background:var(--text-dim)"><div class="tip">3.0%</div></div>
+      </div>
+      <div class="sbar-n"></div>
+    </div>
+
+    <!-- Bearish -->
+    <div style="font-size:.78rem;font-weight:600;margin-bottom:.4rem;margin-top:.75rem;color:var(--bear)">Bearish <span style="font-weight:400;color:var(--text-dim)">(n=2,121)</span></div>
+    <div class="sbar-row">
+      <div class="sbar-label"></div>
+      <div class="sbar-track">
+        <div class="sbar-seg" style="width:23.6%;background:var(--cont)"><div class="tip">23.6%</div></div>
+        <div class="sbar-seg" style="width:23.1%;background:var(--cont);opacity:.5"><div class="tip">23.1%</div></div>
+        <div class="sbar-seg" style="width:51.2%;background:var(--bear)"><div class="tip">51.2%</div></div>
+        <div class="sbar-seg" style="width:2.0%;background:var(--text-dim)"><div class="tip">2.0%</div></div>
+      </div>
+      <div class="sbar-n"></div>
+    </div>
+
+    <!-- Legend -->
+    <div style="display:flex;gap:1.25rem;margin-top:1rem;flex-wrap:wrap">
+      <div style="display:flex;align-items:center;gap:.35rem;font-size:.68rem;color:var(--text-dim)">
+        <div style="width:10px;height:10px;border-radius:2px;background:var(--cont)"></div>Instant Continuation
+      </div>
+      <div style="display:flex;align-items:center;gap:.35rem;font-size:.68rem;color:var(--text-dim)">
+        <div style="width:10px;height:10px;border-radius:2px;background:var(--cont);opacity:.5"></div>Continuation (after chop)
+      </div>
+      <div style="display:flex;align-items:center;gap:.35rem;font-size:.68rem;color:var(--text-dim)">
+        <div style="width:10px;height:10px;border-radius:2px;background:var(--bear)"></div>Reversal
+      </div>
+      <div style="display:flex;align-items:center;gap:.35rem;font-size:.68rem;color:var(--text-dim)">
+        <div style="width:10px;height:10px;border-radius:2px;background:var(--text-dim)"></div>EOD in chop
+      </div>
+    </div>
+  </div>
+
+  <div class="callout bear">
+    <p>Bearish GG completions push through to 78.6% more often than bullish: <strong>46.7% total continuation vs 40.7% bullish</strong>. Selling pressure is more decisive at the midrange.</p>
+  </div>
+</div>
+
+<!-- ══ Section 3: The Core Finding ══ -->
+<div class="section reveal">
+  <div class="section-label">03 &mdash; The First Bar Is Everything</div>
+
+  <p class="prose">
+    71% of all chop events resolve on the <strong>very next 10-minute bar</strong> after the GG completes. Price tags 61.8% and either instantly fails or instantly pushes through. This "tag and decide" pattern dominates everything.
+  </p>
+
+  <div class="two-col">
+    <div class="cmp-card bear-card">
+      <div class="cmp-title" style="color:var(--bear)">Instant Exit (0 bars)</div>
+      <div class="cmp-sub">Resolved on the next bar</div>
+      <div class="big-num" style="color:var(--bear)">78.3%</div>
+      <div class="big-label">Reversal rate</div>
+      <div class="divider"></div>
+      <div class="sub-stat"><span>Events</span><span class="val">2,446</span></div>
+      <div class="sub-stat"><span>Continuation</span><span class="val">21.7%</span></div>
+    </div>
+    <div class="cmp-card cont-card">
+      <div class="cmp-title" style="color:var(--cont)">Survived 1+ Bars</div>
+      <div class="cmp-sub">Held 61.8% for at least 10 min</div>
+      <div class="big-num" style="color:var(--cont)">48.9%</div>
+      <div class="big-label">Reversal rate</div>
+      <div class="divider"></div>
+      <div class="sub-stat"><span>Events</span><span class="val">978</span></div>
+      <div class="sub-stat"><span>Continuation</span><span class="val">51.1%</span></div>
+    </div>
+  </div>
+
+  <div class="callout chop">
+    <p><strong>Holding 61.8% for just one 10-minute bar cuts the reversal rate from 78% to 49%.</strong> That first close above the midrange is the single most important data point for whether the move continues.</p>
+  </div>
+</div>
+
+<!-- ══ Section 4: Survival Curve ══ -->
+<div class="section reveal">
+  <div class="section-label">04 &mdash; The Survival Curve</div>
+
+  <p class="prose">
+    The longer price holds above 61.8%, the more continuation is favored. There is <strong>no "time in chop" threshold that guarantees reversal</strong>. The opposite is true &mdash; extended chop is a consolidation signal, not exhaustion.
+  </p>
+
+  <div class="chart-card">
+    <div class="card-title">Reversal Rate by Chop Duration</div>
+    <div class="card-sub">Among events that chopped for at least N bars &mdash; what % eventually reversed? (Resolved events only)</div>
+
+    <div style="position:relative;height:240px;margin:.5rem 0 .25rem">
+      <canvas id="survivalChart" style="width:100%;height:100%"></canvas>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--text-dim);padding:0 .5rem">
+      <span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>8</span><span>10</span><span>12</span>
+    </div>
+    <div style="text-align:center;font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--text-dim);margin-top:.25rem">Bars in chop zone (each bar = 10 minutes)</div>
+  </div>
+
+  <!-- Detailed table -->
+  <div class="chart-card">
+    <div class="card-title">Chop Duration Detail</div>
+    <div class="card-sub">Per-bar resolution breakdown (combined bull + bear)</div>
+
+    <table class="data-table">
+      <thead>
+        <tr><th>Duration</th><th>n</th><th>Cont</th><th>Rev</th><th>Rev %</th><th>Cont %</th><th>&ge;N Rev %</th></tr>
+      </thead>
+      <tbody>
+        <tr class="highlight"><td>0 bars (instant)</td><td>2,446</td><td>514</td><td class="v-bear">1,859</td><td class="v-bear">78.3%</td><td>21.7%</td><td class="v-bear">70.0%</td></tr>
+        <tr><td>1 bar (10 min)</td><td>523</td><td>249</td><td>254</td><td>50.5%</td><td>49.5%</td><td>48.9%</td></tr>
+        <tr><td>2 bars (20 min)</td><td>206</td><td>109</td><td>91</td><td>45.5%</td><td class="v-cont">54.5%</td><td>47.0%</td></tr>
+        <tr><td>3 bars (30 min)</td><td>88</td><td>43</td><td>42</td><td>49.4%</td><td>50.6%</td><td>48.3%</td></tr>
+        <tr><td>4&ndash;5 bars (40&ndash;50 min)</td><td>91</td><td>40</td><td>47</td><td>54.0%</td><td>46.0%</td><td>46.4%</td></tr>
+        <tr class="highlight"><td>6&ndash;8 bars (1&ndash;1.3 hr)</td><td>45</td><td class="v-cont">29</td><td>16</td><td>35.6%</td><td class="v-cont">64.4%</td><td>42.2%</td></tr>
+        <tr><td>9&ndash;12 bars (1.5&ndash;2 hr)</td><td>16</td><td>8</td><td>7</td><td>46.7%</td><td>53.3%</td><td>50.0%</td></tr>
+        <tr><td>13+ bars (2+ hr)</td><td>9</td><td>4</td><td>4</td><td>50.0%</td><td>50.0%</td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout cont">
+    <p>At <strong>6&ndash;8 bars (60&ndash;80 minutes)</strong> of chop, continuation is favored 64% to 36%. If price has been consolidating above 61.8% for an hour, the probability has flipped &mdash; it's more likely building for the next leg up than exhausting.</p>
+  </div>
+</div>
+
+<!-- ══ Section 5: Bull vs Bear ══ -->
+<div class="section reveal">
+  <div class="section-label">05 &mdash; Bull vs Bear</div>
+
+  <p class="prose">
+    Bullish completions are <strong>more reversal-prone</strong> at every chop duration. The 0-bar reversal rate is 82% bullish vs 75% bearish. Bears push through the midrange with more force.
+  </p>
+
+  <div class="chart-card">
+    <div class="card-title">Reversal Rate by Chop Duration &mdash; Bull vs Bear</div>
+    <div class="card-sub">Resolved events only (excluding EOD)</div>
+
+    <table class="data-table">
+      <thead>
+        <tr><th>Duration</th><th colspan="2">Bullish</th><th colspan="2">Bearish</th></tr>
+        <tr><th></th><th>n</th><th>Rev %</th><th>n</th><th>Rev %</th></tr>
+      </thead>
+      <tbody>
+        <tr class="highlight"><td>0 bars (instant)</td><td>1,201</td><td class="v-bear">82.1%</td><td>1,245</td><td class="v-bear">74.8%</td></tr>
+        <tr><td>1 bar (10 min)</td><td>285</td><td>51.6%</td><td>238</td><td>49.1%</td></tr>
+        <tr><td>2 bars (20 min)</td><td>131</td><td>45.7%</td><td>75</td><td>45.2%</td></tr>
+        <tr><td>3 bars (30 min)</td><td>61</td><td>47.5%</td><td>27</td><td>53.8%</td></tr>
+        <tr><td>4&ndash;5 bars</td><td>69</td><td>50.8%</td><td>22</td><td>63.6%</td></tr>
+        <tr><td>6&ndash;8 bars</td><td>34</td><td class="v-cont">38.2%</td><td>11</td><td class="v-cont">27.3%</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="prose">
+    By the 6&ndash;8 bar mark, both directions favor continuation &mdash; but the sample sizes are smaller for bearish because bear moves resolve faster. The <strong>median bearish chop is 0 bars</strong> (instant exit) vs 0 bars for bullish too, but bearish has a tighter distribution.
+  </p>
+</div>
+
+<!-- ══ Section 6: Time of Day ══ -->
+<div class="section reveal">
+  <div class="section-label">06 &mdash; Time of Day</div>
+
+  <p class="prose">
+    Late-day GG completions reverse more &mdash; there isn't enough time left for a second push through. Bullish completions after noon have <strong>80%+ reversal rates</strong>.
+  </p>
+
+  <div class="chart-card">
+    <div class="card-title">Reversal Rate by GG Completion Hour</div>
+    <div class="card-sub">Among resolved chop events</div>
+
+    <table class="data-table">
+      <thead>
+        <tr><th>Hour</th><th colspan="2">Bullish</th><th colspan="2">Bearish</th></tr>
+        <tr><th></th><th>n</th><th>Rev %</th><th>n</th><th>Rev %</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>09:00</td><td>537</td><td>62.0%</td><td>423</td><td>67.1%</td></tr>
+        <tr><td>10:00</td><td>402</td><td class="v-bear">72.6%</td><td>386</td><td>66.6%</td></tr>
+        <tr><td>11:00</td><td>214</td><td class="v-bear">70.6%</td><td>207</td><td>69.6%</td></tr>
+        <tr class="highlight"><td>12:00</td><td>154</td><td class="v-bear">81.2%</td><td>127</td><td class="v-bear">72.4%</td></tr>
+        <tr class="highlight"><td>13:00</td><td>132</td><td class="v-bear">81.7%</td><td>138</td><td class="v-bear">73.9%</td></tr>
+        <tr><td>14:00</td><td>161</td><td class="v-bear">70.0%</td><td>150</td><td class="v-bear">73.3%</td></tr>
+        <tr><td>15:00</td><td>204</td><td class="v-bear">80.7%</td><td>189</td><td>66.7%</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout bear">
+    <p>Bullish GG completions between <strong>12pm and 1pm are the most reversal-prone</strong>: 81&ndash;82%. If the GG completes during the midday lull, odds strongly favor a pullback. The 9am hour is the best for continuation (62% reversal = 38% continuation).</p>
+  </div>
+</div>
+
+<!-- ══ Section 7: PO Conditioning ══ -->
+<div class="section reveal">
+  <div class="section-label">07 &mdash; Phase Oscillator at Completion</div>
+
+  <p class="prose">
+    The PO at the moment of GG completion tells you how much momentum is left. A <strong>hotter PO means more continuation</strong> &mdash; the move still has gas.
+  </p>
+
+  <div class="chart-card">
+    <div class="card-title">Bullish GG &mdash; PO Zone at Completion vs Outcome</div>
+    <div class="card-sub">Resolved events only</div>
+
+    <div class="sbar-row">
+      <div class="sbar-label">PO &lt; 23.6<br><span style="font-size:.55rem">Neutral</span></div>
+      <div class="sbar-track">
+        <div class="sbar-seg" style="width:26.5%;background:var(--cont)"><div class="tip">26.5%</div></div>
+        <div class="sbar-seg" style="width:73.5%;background:var(--bear)"><div class="tip">73.5%</div></div>
+      </div>
+      <div class="sbar-n">n=156</div>
+    </div>
+    <div class="sbar-row">
+      <div class="sbar-label">PO 23.6&ndash;61.8<br><span style="font-size:.55rem">Neutral Up</span></div>
+      <div class="sbar-track">
+        <div class="sbar-seg" style="width:25.2%;background:var(--cont)"><div class="tip">25.2%</div></div>
+        <div class="sbar-seg" style="width:74.8%;background:var(--bear)"><div class="tip">74.8%</div></div>
+      </div>
+      <div class="sbar-n">n=751</div>
+    </div>
+    <div class="sbar-row">
+      <div class="sbar-label">PO 61.8&ndash;100<br><span style="font-size:.55rem">Distribution</span></div>
+      <div class="sbar-track">
+        <div class="sbar-seg" style="width:30.7%;background:var(--cont)"><div class="tip">30.7%</div></div>
+        <div class="sbar-seg" style="width:69.3%;background:var(--bear)"><div class="tip">69.3%</div></div>
+      </div>
+      <div class="sbar-n">n=699</div>
+    </div>
+    <div class="sbar-row">
+      <div class="sbar-label">PO &gt; 100<br><span style="font-size:.55rem">Extended Up</span></div>
+      <div class="sbar-track">
+        <div class="sbar-seg" style="width:40%;background:var(--cont)"><div class="tip">40.0%</div></div>
+        <div class="sbar-seg" style="width:60%;background:var(--bear)"><div class="tip">60.0%</div></div>
+      </div>
+      <div class="sbar-n">n=187</div>
+    </div>
+
+    <div style="display:flex;gap:1rem;margin-top:.75rem">
+      <div style="display:flex;align-items:center;gap:.3rem;font-size:.65rem;color:var(--text-dim)"><div style="width:8px;height:8px;border-radius:2px;background:var(--cont)"></div>Continuation</div>
+      <div style="display:flex;align-items:center;gap:.3rem;font-size:.65rem;color:var(--text-dim)"><div style="width:8px;height:8px;border-radius:2px;background:var(--bear)"></div>Reversal</div>
+    </div>
+  </div>
+
+  <p class="prose">
+    When PO is extended (>100) at GG completion, continuation rises to <strong>40%</strong> &mdash; the best rate. When PO is in neutral territory (&lt;23.6), reversal is 73&ndash;75%. Momentum matters: if the PO has conviction, the move is more likely to follow through.
+  </p>
+</div>
+
+<!-- ══ Section 8: The Bounce-Back ══ -->
+<div class="section reveal">
+  <div class="section-label">08 &mdash; The Bounce-Back</div>
+
+  <p class="prose">
+    Here's the good news for bulls: most reversals are <strong>temporary</strong>.
+  </p>
+
+  <div class="bigstat">
+    <div class="bigstat-item">
+      <div class="bigstat-num bull">81.8%</div>
+      <div class="bigstat-label">Of reversals recover<br>back to 61.8% same day</div>
+    </div>
+  </div>
+
+  <p class="prose">
+    After falling back below 61.8%, price recovers back to the midrange 82% of the time before close. The "tag and fail" is often just a brief shakeout before a second attempt. The implications: a reversal from the chop zone isn't necessarily the end &mdash; it may be a re-entry opportunity.
+  </p>
+</div>
+
+<!-- ══ Section 9: The Playbook ══ -->
+<div class="section reveal">
+  <div class="section-label">09 &mdash; The Playbook</div>
+
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:1rem 0">
+    <div style="display:flex;gap:1rem;margin-bottom:1.25rem;align-items:flex-start">
+      <div style="flex:0 0 28px;height:28px;border-radius:50%;background:var(--chop-bg);border:1px solid var(--chop-dim);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:700;color:var(--chop)">1</div>
+      <div style="flex:1">
+        <div style="font-size:.88rem;font-weight:600;margin-bottom:.2rem">Watch the first bar after GG completion</div>
+        <div style="font-size:.78rem;color:var(--text-dim);font-weight:300">If the close on the next 10m bar is below 61.8%, that's a <span style="color:var(--bear);font-weight:500">78% reversal</span>. Don't fight it &mdash; the tag failed.</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:1rem;margin-bottom:1.25rem;align-items:flex-start">
+      <div style="flex:0 0 28px;height:28px;border-radius:50%;background:#07598515;border:1px solid var(--cont-dim);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:700;color:var(--cont)">2</div>
+      <div style="flex:1">
+        <div style="font-size:.88rem;font-weight:600;margin-bottom:.2rem">If price holds 61.8% for one bar, it's a coin flip</div>
+        <div style="font-size:.78rem;color:var(--text-dim);font-weight:300">Reversal rate drops to <span style="color:var(--cont);font-weight:500">49%</span>. The hold itself is the signal. Be patient and let the next bars tell you.</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:1rem;margin-bottom:1.25rem;align-items:flex-start">
+      <div style="flex:0 0 28px;height:28px;border-radius:50%;background:var(--bull-bg);border:1px solid var(--bull-dim);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:700;color:var(--bull)">3</div>
+      <div style="flex:1">
+        <div style="font-size:.88rem;font-weight:600;margin-bottom:.2rem">60+ minutes in chop = continuation favored</div>
+        <div style="font-size:.78rem;color:var(--text-dim);font-weight:300">At 6&ndash;8 bars of consolidation, <span style="color:var(--bull);font-weight:500">64% continue to 78.6%</span>. Extended chop is building energy, not exhausting it.</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:1rem;margin-bottom:1.25rem;align-items:flex-start">
+      <div style="flex:0 0 28px;height:28px;border-radius:50%;background:#1a1400;border:1px solid #3d3200;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:700;color:var(--accent)">4</div>
+      <div style="flex:1">
+        <div style="font-size:.88rem;font-weight:600;margin-bottom:.2rem">Midday completions reverse the most</div>
+        <div style="font-size:.78rem;color:var(--text-dim);font-weight:300">Bullish GG completions at 12pm&ndash;1pm reverse <span style="color:var(--bear);font-weight:500">81&ndash;82%</span> of the time. Morning completions (9am) are the strongest for continuation.</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:1rem;align-items:flex-start">
+      <div style="flex:0 0 28px;height:28px;border-radius:50%;background:var(--surface-2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:700;color:var(--text-mid)">5</div>
+      <div style="flex:1">
+        <div style="font-size:.88rem;font-weight:600;margin-bottom:.2rem">Reversals are usually temporary</div>
+        <div style="font-size:.78rem;color:var(--text-dim);font-weight:300">82% of reversals see price come back to 61.8% before close. The "tag and fail" is often a shakeout before a second attempt.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Related Studies ── -->
+<div class="section reveal">
+  <a href="/golden-gate.html" style="display:block;text-align:center;padding:1.25rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:8px;text-decoration:none;transition:border-color .2s,background .2s;margin-bottom:.75rem" onmouseover="this.style.borderColor='#fbbf24';this.style.background='var(--surface-2)'" onmouseout="this.style.borderColor='';this.style.background=''">
+    <span style="font-size:.9rem;color:var(--text);font-weight:500">Golden Gate Subway Stats &rarr;</span><br>
+    <span style="font-size:.72rem;color:var(--text-dim)">When do Golden Gates fire and complete? Timing is everything.</span>
+  </a>
+  <a href="/bilbo-golden-gate.html" style="display:block;text-align:center;padding:1.25rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:8px;text-decoration:none;transition:border-color .2s,background .2s" onmouseover="this.style.borderColor='#fbbf24';this.style.background='var(--surface-2)'" onmouseout="this.style.borderColor='';this.style.background=''">
+    <span style="font-size:.9rem;color:var(--text);font-weight:500">The Bilbo Golden Gate &rarr;</span><br>
+    <span style="font-size:.72rem;color:var(--text-dim)">PO-confirmed triggers complete faster and more often.</span>
+  </a>
+</div>
+
+<!-- ── Footer ── -->
+<footer class="footer reveal">
+  Indicators by <a href="https://x.com/sataborsa">Saty Mahajan</a>.<br>
+  Data engineering by <a href="https://x.com/todor">@todor</a>.
+  Analysis inspired by <a href="https://x.com/tesrak">@tesrak</a>.<br>
+  Built by <a href="https://x.com/milkmantrades">Milkman Trades</a>. 25 years of SPY. 6,582 trading days. 4,313 Golden Gate completions.
+</footer>
+
+</div><!-- .page -->
+
+<script>
+// ── Survival Curve Chart ──
+(function(){
+  const data = [
+    {bars:0, revPct:70.0, n:3424},
+    {bars:1, revPct:48.9, n:978},
+    {bars:2, revPct:47.0, n:455},
+    {bars:3, revPct:48.3, n:249},
+    {bars:4, revPct:47.7, n:161},
+    {bars:5, revPct:45.0, n:104},
+    {bars:6, revPct:39.7, n:70},
+    {bars:8, revPct:45.7, n:37},
+    {bars:10,revPct:50.0, n:21},
+    {bars:12,revPct:53.8, n:14},
+  ];
+
+  const canvas = document.getElementById('survivalChart');
+  if(!canvas) return;
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  canvas.style.width = rect.width + 'px';
+  canvas.style.height = rect.height + 'px';
+
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  const W = rect.width, H = rect.height;
+  const pad = {t:25,r:15,b:10,l:15};
+  const cw = W - pad.l - pad.r;
+  const ch = H - pad.t - pad.b;
+
+  const minY = 20, maxY = 85;
+  const yScale = v => pad.t + ch * (1 - (v - minY) / (maxY - minY));
+  const xScale = i => pad.l + (i / (data.length - 1)) * cw;
+
+  // 50% line
+  const y50 = yScale(50);
+  ctx.strokeStyle = '#fbbf2430';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([4,4]);
+  ctx.beginPath();
+  ctx.moveTo(pad.l, y50);
+  ctx.lineTo(W - pad.r, y50);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.font = '10px JetBrains Mono, monospace';
+  ctx.fillStyle = '#fbbf2460';
+  ctx.textAlign = 'right';
+  ctx.fillText('50% — coin flip', W - pad.r - 4, y50 - 5);
+
+  // Area fill
+  ctx.beginPath();
+  data.forEach((d,i) => {
+    const x = xScale(i), y = yScale(d.revPct);
+    if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+  });
+  ctx.lineTo(xScale(data.length-1), yScale(minY));
+  ctx.lineTo(xScale(0), yScale(minY));
+  ctx.closePath();
+  const grad = ctx.createLinearGradient(0, yScale(maxY), 0, yScale(minY));
+  grad.addColorStop(0, '#ef6c0020');
+  grad.addColorStop(1, '#ef6c0005');
+  ctx.fillStyle = grad;
+  ctx.fill();
+
+  // Line
+  ctx.beginPath();
+  data.forEach((d,i) => {
+    const x = xScale(i), y = yScale(d.revPct);
+    if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+  });
+  ctx.strokeStyle = '#ef6c00';
+  ctx.lineWidth = 2.5;
+  ctx.lineJoin = 'round';
+  ctx.stroke();
+
+  // Points + labels
+  data.forEach((d,i) => {
+    const x = xScale(i), y = yScale(d.revPct);
+    ctx.beginPath();
+    ctx.arc(x, y, d.bars === 0 ? 5 : 3.5, 0, Math.PI*2);
+    ctx.fillStyle = d.revPct >= 50 ? '#ef6c00' : '#38bdf8';
+    ctx.fill();
+
+    ctx.font = 'bold 10px JetBrains Mono, monospace';
+    ctx.fillStyle = d.revPct >= 50 ? '#ef6c00' : '#38bdf8';
+    ctx.textAlign = 'center';
+    const labelY = d.bars === 0 ? y - 10 : (d.revPct > 50 ? y - 8 : y + 14);
+    ctx.fillText(d.revPct.toFixed(1) + '%', x, labelY);
+
+    // n label
+    if(i <= 6 || i === data.length-1){
+      ctx.font = '8px JetBrains Mono, monospace';
+      ctx.fillStyle = '#6b728080';
+      ctx.fillText('n=' + d.n, x, H - pad.b + 2);
+    }
+  });
+
+  // Labels for the dramatic drop
+  ctx.strokeStyle = '#fbbf2440';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([2,2]);
+  ctx.beginPath();
+  ctx.moveTo(xScale(0), yScale(data[0].revPct));
+  ctx.lineTo(xScale(1), yScale(data[0].revPct));
+  ctx.lineTo(xScale(1), yScale(data[1].revPct));
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  ctx.font = 'bold 9px JetBrains Mono, monospace';
+  ctx.fillStyle = '#fbbf24';
+  ctx.textAlign = 'left';
+  ctx.fillText('-21pts', xScale(1) + 4, yScale((data[0].revPct + data[1].revPct)/2) + 3);
+})();
+
+// ── Scroll Reveal ──
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible') });
+}, {threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>

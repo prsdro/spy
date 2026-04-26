@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cumulative Gap Fill Study | Milkman Trades</title>
+<meta name="description" content="How quickly do gaps reach their midpoint over 1-7 trading days? Split by gap size, trend direction, and compression state.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥛</text></svg>">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,300&family=JetBrains+Mono:wght@400;500;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0c0e12;--surface:#13161c;--surface-2:#181c24;--border:#1e2230;--text:#eaebef;--text-dim:#7a7e90;--text-mid:#b0b3c0;--bull:#1cd48a;--bear:#ef6c00;--accent:#fbbf24;--red:#ef4444;--blue:#60a5fa}
+html{font-size:15px;scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
+.page{max-width:800px;margin:0 auto;padding:3rem 1.5rem 5rem}
+.draft{background:#1a1400;border:1px solid #3d3200;border-radius:6px;padding:.6rem 1rem;margin-bottom:1.5rem;font-size:.75rem;color:#d4a800;line-height:1.5}
+.draft strong{color:#fbbf24}
+.back{display:inline-flex;align-items:center;gap:.4rem;font-size:.8rem;color:var(--text-dim);text-decoration:none;margin-bottom:.5rem;transition:color .2s}
+.back:hover{color:var(--text)}
+.back svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2}
+.hero{margin-bottom:3.5rem}
+.hero .kicker{font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:.75rem}
+.hero h1{font-size:2.2rem;font-weight:700;letter-spacing:-.03em;line-height:1.15;margin-bottom:1rem}
+.hero h1 em{font-style:normal;color:var(--blue)}
+.hero .lede{font-size:1.05rem;color:var(--text-mid);font-weight:300;max-width:640px;line-height:1.65}
+.section{margin-bottom:3.5rem}
+.section-label{font-family:'JetBrains Mono',monospace;font-size:.65rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim);padding-bottom:.6rem;border-bottom:1px solid var(--border);margin-bottom:1.5rem}
+.prose{font-size:.95rem;color:var(--text-mid);font-weight:300;line-height:1.7;margin-bottom:1.5rem}
+.prose strong{color:var(--text);font-weight:500}
+
+/* Curve table */
+.curve-section{margin-bottom:2rem}
+.curve-title{font-size:.9rem;font-weight:600;margin-bottom:.5rem;display:flex;align-items:center;gap:.5rem}
+.curve-title .dot{width:8px;height:8px;border-radius:50%}
+
+.ctable{width:100%;border-collapse:collapse;font-size:.82rem;margin-bottom:.75rem}
+.ctable th{font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:500;color:var(--text-dim);text-align:right;padding:.4rem .5rem;border-bottom:1px solid var(--border);letter-spacing:.03em}
+.ctable th:first-child{text-align:left}
+.ctable td{padding:.4rem .5rem;border-bottom:1px solid #151820;text-align:right;font-family:'JetBrains Mono',monospace;font-size:.82rem;color:var(--text-mid)}
+.ctable td:first-child{text-align:left;font-family:'DM Sans',sans-serif;color:var(--text);font-weight:400}
+.ctable td:nth-child(2){color:var(--text-dim);font-size:.75rem}
+.ctable .hi{color:var(--bull);font-weight:600}
+.ctable .lo{color:var(--text-dim)}
+.ctable .hot{background:rgba(28,212,138,.06)}
+
+/* Selector tabs */
+.tabs{display:flex;gap:.4rem;margin-bottom:1.5rem;flex-wrap:wrap}
+.tab{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:4px;font-size:.78rem;color:var(--text-mid);cursor:pointer;transition:all .15s;font-family:'JetBrains Mono',monospace}
+.tab:hover{border-color:var(--accent);color:var(--text)}
+.tab.active{background:#1a1800;border-color:var(--accent);color:var(--accent);font-weight:600}
+
+.callout{background:var(--surface);border-left:3px solid var(--accent);padding:1rem 1.25rem;margin:2rem 0;border-radius:0 6px 6px 0}
+.callout p{font-size:.9rem;color:var(--text-mid);font-weight:300;line-height:1.6}
+.callout strong{color:var(--accent);font-weight:500}
+
+.bigstat{display:flex;gap:1.5rem;margin:2rem 0;flex-wrap:wrap}
+.bigstat-item{flex:1;min-width:160px;padding:1.25rem;background:var(--surface);border:1px solid var(--border);border-radius:8px}
+.bigstat-num{font-family:'JetBrains Mono',monospace;font-size:1.8rem;font-weight:700;line-height:1;margin-bottom:.3rem}
+.bigstat-label{font-size:.78rem;color:var(--text-mid);line-height:1.4}
+
+.footer{text-align:center;padding-top:2.5rem;border-top:1px solid var(--border);color:var(--text-dim);font-size:.72rem;font-weight:300;line-height:1.8}
+.footer a{color:var(--text-dim);text-decoration:underline;text-underline-offset:2px}
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease}
+.reveal.visible{opacity:1;transform:none}
+
+/* ── Mobile ── */
+@media(max-width:767px){
+  .hero h1{font-size:1.6rem}
+  .bigstat{flex-direction:column;gap:1rem}
+  .bigstat-item{min-width:0}
+  .bigstat-num{font-size:1.5rem}
+  .ctable{font-size:.72rem;display:block;overflow-x:auto}
+  .ctable th,.ctable td{padding:.3rem .4rem;white-space:nowrap}
+  .tabs{gap:.3rem}
+  .tab{padding:.35rem .6rem;font-size:.7rem}
+  div[style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr !important}
+}
+.cheatsheet-banner{display:block;text-align:center;padding:1.5rem 1rem;margin:2rem 0 0;background:var(--surface);border:1px solid var(--border);border-radius:8px;text-decoration:none;transition:border-color .2s,background .2s}
+.cheatsheet-banner:hover{border-color:#fbbf24;background:var(--surface-2)}
+.cheatsheet-banner span{font-size:.95rem;color:var(--text);font-weight:500}
+</style>
+<script src="/nav.js"></script>
+</head>
+<body>
+<div class="page">
+
+<div class="draft"><strong>Draft &mdash;</strong> These backtests have not yet been independently verified. Do not trade based on this data.</div>
+
+<a href="/" style="display:inline-flex;align-items:center;gap:.4rem;font-size:.8rem;color:var(--text-dim);text-decoration:none;margin-bottom:.5rem;transition:color .2s" onmouseover="this.style.color='#eaebef'" onmouseout="this.style.color=''"><svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0h4"/></svg>Home</a>
+
+<header class="hero reveal">
+  <div class="kicker">Study &mdash; Cumulative Gap Midpoint Fills</div>
+  <h1>Most gaps reach their midpoint.<br>The question is <em>how fast</em><br>and <em>under what conditions.</em></h1>
+  <p class="lede">A midpoint fill means price retraces halfway through the gap. We tracked every SPY gap over 25 years and built cumulative probability curves out to 7 trading days &mdash; then split them by daily trend direction and hourly compression state.</p>
+  <div style="margin-top:.75rem;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:1rem 1.25rem;font-size:.85rem;color:var(--text-mid);line-height:1.7">
+    <strong style="color:var(--text);font-size:.9rem">Methodology</strong>
+    <ul style="list-style:none;margin-top:.4rem">
+      <li style="margin-bottom:.3rem"><span style="color:var(--accent);font-weight:700;margin-right:.4rem">&rsaquo;</span> <strong style="color:var(--text)">Gap calculation:</strong> RTH only. Gap = 9:30 AM open minus previous day's 4:00 PM close. Pre-market moves are baked into the gap size.</li>
+      <li style="margin-bottom:.3rem"><span style="color:var(--accent);font-weight:700;margin-right:.4rem">&rsaquo;</span> <strong style="color:var(--text)">Midpoint fill:</strong> Price reaches (previous close + open) / 2. For a 1% gap up from $500, the midpoint is $502.50 (halfway back).</li>
+      <li style="margin-bottom:.3rem"><span style="color:var(--accent);font-weight:700;margin-right:.4rem">&rsaquo;</span> <strong style="color:var(--text)">Fill tracking:</strong> Uses RTH daily highs/lows (9:30&ndash;16:00) over the next 1&ndash;7 trading days.</li>
+      <li style="margin-bottom:.3rem"><span style="color:var(--accent);font-weight:700;margin-right:.4rem">&rsaquo;</span> <strong style="color:var(--text)">Daily EMA 21 slope:</strong> Computed on RTH daily candles. &ldquo;Bullish&rdquo; = today's daily EMA 21 &gt; yesterday's. Captures the prevailing multi-week trend.</li>
+      <li style="margin-bottom:.3rem"><span style="color:var(--accent);font-weight:700;margin-right:.4rem">&rsaquo;</span> <strong style="color:var(--text)">1h compression:</strong> Bollinger Band squeeze on the <strong>60-minute chart at 9:00 AM</strong> (the bar covering 9:00&ndash;9:59, which includes market open). The 1-hour bars include extended hours (4am&ndash;7pm), so the BB/ATR squeeze calculation reflects overnight and pre-market volatility, not just RTH.</li>
+      <li><span style="color:var(--accent);font-weight:700;margin-right:.4rem">&rsaquo;</span> <strong style="color:var(--text)">Weekly EMA 21:</strong> From RTH weekly candles. &ldquo;Above Weekly 21&rdquo; = the day's 9:30 AM open is above the most recent weekly EMA 21. This captures whether price is in a weekly uptrend or downtrend relative to the pivot.</li>
+    </ul>
+  </div>
+</header>
+
+<div class="section reveal">
+  <div class="section-label">Dataset &amp; Conditions</div>
+
+  <p class="prose">
+    <strong>6,536 gaps</strong> across 25 years of SPY (Jan 2000 &ndash; Oct 2025). Every trading day produces either a gap up or gap down from the prior RTH close. We split these by size bucket and by two filters measured at the time of the gap:
+  </p>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem">
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:1rem">
+      <div style="font-size:.8rem;font-weight:600;margin-bottom:.5rem">Gap Up (n=3,589)</div>
+      <table class="ctable" style="margin:0">
+        <thead><tr><th>Bucket</th><th>All</th><th>EMA21&uarr;</th><th>EMA21&darr;</th></tr></thead>
+        <tbody>
+          <tr><td>&lt;0.25%</td><td>1,562</td><td>1,172</td><td>390</td></tr>
+          <tr><td>0.25&ndash;0.5%</td><td>1,012</td><td>687</td><td>325</td></tr>
+          <tr><td>0.5&ndash;1%</td><td>713</td><td>451</td><td>262</td></tr>
+          <tr><td>1&ndash;2%</td><td>245</td><td>138</td><td>107</td></tr>
+          <tr><td>2%+</td><td>57</td><td>29</td><td>28</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:1rem">
+      <div style="font-size:.8rem;font-weight:600;margin-bottom:.5rem">Gap Down (n=2,947)</div>
+      <table class="ctable" style="margin:0">
+        <thead><tr><th>Bucket</th><th>All</th><th>EMA21&uarr;</th><th>EMA21&darr;</th></tr></thead>
+        <tbody>
+          <tr><td>&lt;0.25%</td><td>1,306</td><td>927</td><td>379</td></tr>
+          <tr><td>0.25&ndash;0.5%</td><td>739</td><td>445</td><td>294</td></tr>
+          <tr><td>0.5&ndash;1%</td><td>563</td><td>242</td><td>321</td></tr>
+          <tr><td>1&ndash;2%</td><td>266</td><td>66</td><td>200</td></tr>
+          <tr><td>2%+</td><td>73</td><td>10</td><td>63</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <p class="prose">
+    <strong>Condition filters:</strong>
+  </p>
+  <ul style="list-style:none;font-size:.9rem;color:var(--text-mid);line-height:1.8;margin-bottom:1.5rem">
+    <li style="margin-bottom:.3rem"><span style="color:var(--accent);font-weight:700;margin-right:.4rem">&rsaquo;</span> <strong style="color:var(--text)">Daily EMA 21 slope</strong> &mdash; computed on RTH daily candles. &ldquo;Bullish&rdquo; = today's EMA 21 &gt; yesterday's EMA 21. This captures the prevailing multi-week trend direction.</li>
+    <li style="margin-bottom:.3rem"><span style="color:var(--accent);font-weight:700;margin-right:.4rem">&rsaquo;</span> <strong style="color:var(--text)">1-hour compression</strong> &mdash; BB squeeze on the 60-minute chart, sampled at the 9:00 AM bar (covers 9:00&ndash;9:59). Hourly bars include extended hours (4am&ndash;7pm), so this reflects overnight volatility. When active: BB width &lt; 2&times;ATR.</li>
+    <li style="margin-bottom:.3rem"><span style="color:var(--accent);font-weight:700;margin-right:.4rem">&rsaquo;</span> <strong style="color:var(--text)">Weekly EMA 21 position</strong> &mdash; from RTH weekly candles. &ldquo;Above&rdquo; = day's open is above the weekly 21 EMA. Captures the weekly trend regime.</li>
+    <li><span style="color:var(--accent);font-weight:700;margin-right:.4rem">&rsaquo;</span> <strong style="color:var(--text)">Combined filters</strong> &mdash; e.g., compression + EMA21 direction, or weekly 21 position + daily EMA21 direction. Note: some combined buckets have small samples (n&lt;30). Treat those with caution.</li>
+  </ul>
+</div>
+
+<div class="section reveal">
+  <div class="section-label">Key Finding</div>
+
+  <div class="bigstat">
+    <div class="bigstat-item">
+      <div class="bigstat-num" style="color:var(--blue)">99%</div>
+      <div class="bigstat-label">Gap ups &lt;0.25% during bearish EMA21<br>reach midpoint within 1 day</div>
+    </div>
+    <div class="bigstat-item">
+      <div class="bigstat-num" style="color:var(--bull)">96%</div>
+      <div class="bigstat-label">Gap downs &lt;0.25% during bullish EMA21<br>reach midpoint within 1 day</div>
+    </div>
+    <div class="bigstat-item">
+      <div class="bigstat-num" style="color:var(--red)">33%</div>
+      <div class="bigstat-label">Large gap ups (2%+) in compression<br>+ bull trend: midpoint at 7 days<br><span style="color:var(--text-dim);font-size:.7rem">n=3, small sample</span></div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <p><strong>Trend alignment is everything for gap fills.</strong> Counter-trend gaps reach midpoint dramatically faster. A 0.5&ndash;1% gap up during bearish EMA21 reaches midpoint 85% in one day vs only 66% during bullish. The market snaps back to the mean when it gaps against the prevailing trend. With-trend gaps, especially large ones during compression, are often breakout gaps that resist filling.</p>
+  </div>
+</div>
+
+<div class="section reveal">
+  <div class="section-label">Cumulative Fill Curves</div>
+
+  <p class="prose">Select a condition to see how fill rates change. Each cell shows the probability that the gap has reached its midpoint by that many trading days. Read left to right to see the fill curve build.</p>
+
+  <div class="tabs" id="tabs"></div>
+  <div id="cond-desc" style="font-size:.8rem;color:var(--text-mid);margin-bottom:1rem;min-height:1.4em;line-height:1.5"></div>
+
+  <div id="tables"></div>
+</div>
+
+<div class="section reveal">
+  <div class="section-label">Practical Takeaways</div>
+
+  <div class="callout">
+    <p><strong>Small counter-trend gaps reach midpoint almost immediately.</strong> Gap ups under 0.25% during bearish EMA21 reach their midpoint 99% of the time on day 1. Gap downs in a bull trend: 96%. These are near-certainty mean reversion trades.</p>
+  </div>
+
+  <div class="callout" style="border-left-color:var(--bear)">
+    <p><strong>Large gaps during compression + bull trend resist midpoint fills.</strong> Only 33% of 2%+ gap ups reach their midpoint within 7 days when compression is active and EMA21 is rising (small sample, n=3). These are breakout gaps &mdash; the squeeze resolved upward. Fading these carries significant risk.</p>
+  </div>
+
+  <div class="callout" style="border-left-color:var(--bull)">
+    <p><strong>Gap downs in a bull trend are buyable.</strong> 0.5&ndash;1% gap downs during bullish EMA21 reach midpoint 86% on day 1 and 93% by day 7. The trend is your friend &mdash; the gap is a dip to buy.</p>
+  </div>
+
+  <div class="callout" style="border-left-color:var(--red)">
+    <p><strong>Gap downs in a bear trend take longer.</strong> Same 0.5&ndash;1% gap down during bearish EMA21 reaches midpoint 71% on day 1 and 88% by day 7. The gap is with the trend, so there's less reason for price to bounce back.</p>
+  </div>
+</div>
+
+<a href="/cheatsheet.html" class="cheatsheet-banner"><span>&#x1F4CB; View the complete Golden Gate Cheat Sheet &rarr;</span></a>
+
+<footer class="footer">
+  ATR Levels &amp; Phase Oscillator by <a href="https://satyland.com" target="_blank" rel="noopener">Saty Mahajan</a><br>
+  Analysis inspired by <a href="https://x.com/tesrak" target="_blank" rel="noopener">@tesrak</a> &middot; With thanks to <a href="https://x.com/todaborrego" target="_blank" rel="noopener">@todor</a> for the data<br>
+  25 years of SPY data (2000&ndash;2025) &middot; <a href="https://milkmantrades.com">Milkman Trades</a>
+</footer>
+
+</div>
+
+<script>
+const DATA = {"All": {"gap_up": {"<0.25%": {"total": 1562, "fills": {"1": 1474, "2": 1491, "3": 1502, "4": 1509, "5": 1514, "6": 1518, "7": 1521}, "pcts": {"1": 94.4, "2": 95.5, "3": 96.2, "4": 96.6, "5": 96.9, "6": 97.2, "7": 97.4}}, "0.25-0.5%": {"total": 1012, "fills": {"1": 840, "2": 874, "3": 893, "4": 901, "5": 907, "6": 914, "7": 919}, "pcts": {"1": 83.0, "2": 86.4, "3": 88.2, "4": 89.0, "5": 89.6, "6": 90.3, "7": 90.8}}, "0.5-1%": {"total": 713, "fills": {"1": 516, "2": 556, "3": 574, "4": 592, "5": 608, "6": 613, "7": 620}, "pcts": {"1": 72.4, "2": 78.0, "3": 80.5, "4": 83.0, "5": 85.3, "6": 86.0, "7": 87.0}}, "1-2%": {"total": 245, "fills": {"1": 140, "2": 159, "3": 167, "4": 174, "5": 180, "6": 183, "7": 184}, "pcts": {"1": 57.1, "2": 64.9, "3": 68.2, "4": 71.0, "5": 73.5, "6": 74.7, "7": 75.1}}, "2%+": {"total": 57, "fills": {"1": 35, "2": 37, "3": 39, "4": 41, "5": 41, "6": 41, "7": 41}, "pcts": {"1": 61.4, "2": 64.9, "3": 68.4, "4": 71.9, "5": 71.9, "6": 71.9, "7": 71.9}}}, "gap_down": {"<0.25%": {"total": 1306, "fills": {"1": 1237, "2": 1252, "3": 1262, "4": 1264, "5": 1267, "6": 1268, "7": 1270}, "pcts": {"1": 94.7, "2": 95.9, "3": 96.6, "4": 96.8, "5": 97.0, "6": 97.1, "7": 97.2}}, "0.25-0.5%": {"total": 739, "fills": {"1": 650, "2": 677, "3": 681, "4": 690, "5": 694, "6": 695, "7": 698}, "pcts": {"1": 88.0, "2": 91.6, "3": 92.2, "4": 93.4, "5": 93.9, "6": 94.0, "7": 94.5}}, "0.5-1%": {"total": 563, "fills": {"1": 436, "2": 459, "3": 475, "4": 491, "5": 500, "6": 507, "7": 511}, "pcts": {"1": 77.4, "2": 81.5, "3": 84.4, "4": 87.2, "5": 88.8, "6": 90.1, "7": 90.8}}, "1-2%": {"total": 266, "fills": {"1": 187, "2": 202, "3": 213, "4": 219, "5": 222, "6": 230, "7": 236}, "pcts": {"1": 70.3, "2": 75.9, "3": 80.1, "4": 82.3, "5": 83.5, "6": 86.5, "7": 88.7}}, "2%+": {"total": 73, "fills": {"1": 46, "2": 53, "3": 57, "4": 59, "5": 62, "6": 63, "7": 63}, "pcts": {"1": 63.0, "2": 72.6, "3": 78.1, "4": 80.8, "5": 84.9, "6": 86.3, "7": 86.3}}}}, "Compression": {"gap_up": {"<0.25%": {"total": 705, "fills": {"1": 664, "2": 674, "3": 681, "4": 683, "5": 685, "6": 685, "7": 687}, "pcts": {"1": 94.2, "2": 95.6, "3": 96.6, "4": 96.9, "5": 97.2, "6": 97.2, "7": 97.4}}, "0.25-0.5%": {"total": 396, "fills": {"1": 334, "2": 347, "3": 352, "4": 354, "5": 357, "6": 362, "7": 364}, "pcts": {"1": 84.3, "2": 87.6, "3": 88.9, "4": 89.4, "5": 90.2, "6": 91.4, "7": 91.9}}, "0.5-1%": {"total": 245, "fills": {"1": 188, "2": 197, "3": 203, "4": 208, "5": 215, "6": 216, "7": 218}, "pcts": {"1": 76.7, "2": 80.4, "3": 82.9, "4": 84.9, "5": 87.8, "6": 88.2, "7": 89.0}}, "1-2%": {"total": 71, "fills": {"1": 52, "2": 56, "3": 58, "4": 59, "5": 59, "6": 59, "7": 59}, "pcts": {"1": 73.2, "2": 78.9, "3": 81.7, "4": 83.1, "5": 83.1, "6": 83.1, "7": 83.1}}, "2%+": {"total": 14, "fills": {"1": 10, "2": 11, "3": 11, "4": 11, "5": 11, "6": 11, "7": 11}, "pcts": {"1": 71.4, "2": 78.6, "3": 78.6, "4": 78.6, "5": 78.6, "6": 78.6, "7": 78.6}}}, "gap_down": {"<0.25%": {"total": 584, "fills": {"1": 550, "2": 555, "3": 561, "4": 563, "5": 566, "6": 567, "7": 568}, "pcts": {"1": 94.2, "2": 95.0, "3": 96.1, "4": 96.4, "5": 96.9, "6": 97.1, "7": 97.3}}, "0.25-0.5%": {"total": 325, "fills": {"1": 283, "2": 296, "3": 299, "4": 304, "5": 306, "6": 307, "7": 308}, "pcts": {"1": 87.1, "2": 91.1, "3": 92.0, "4": 93.5, "5": 94.2, "6": 94.5, "7": 94.8}}, "0.5-1%": {"total": 187, "fills": {"1": 149, "2": 154, "3": 159, "4": 162, "5": 167, "6": 169, "7": 170}, "pcts": {"1": 79.7, "2": 82.4, "3": 85.0, "4": 86.6, "5": 89.3, "6": 90.4, "7": 90.9}}, "1-2%": {"total": 83, "fills": {"1": 62, "2": 64, "3": 64, "4": 66, "5": 68, "6": 71, "7": 72}, "pcts": {"1": 74.7, "2": 77.1, "3": 77.1, "4": 79.5, "5": 81.9, "6": 85.5, "7": 86.7}}, "2%+": {"total": 18, "fills": {"1": 9, "2": 9, "3": 11, "4": 11, "5": 14, "6": 14, "7": 14}, "pcts": {"1": 50.0, "2": 50.0, "3": 61.1, "4": 61.1, "5": 77.8, "6": 77.8, "7": 77.8}}}}, "No Compression": {"gap_up": {"<0.25%": {"total": 857, "fills": {"1": 810, "2": 817, "3": 821, "4": 826, "5": 829, "6": 833, "7": 834}, "pcts": {"1": 94.5, "2": 95.3, "3": 95.8, "4": 96.4, "5": 96.7, "6": 97.2, "7": 97.3}}, "0.25-0.5%": {"total": 616, "fills": {"1": 506, "2": 527, "3": 541, "4": 547, "5": 550, "6": 552, "7": 555}, "pcts": {"1": 82.1, "2": 85.6, "3": 87.8, "4": 88.8, "5": 89.3, "6": 89.6, "7": 90.1}}, "0.5-1%": {"total": 468, "fills": {"1": 328, "2": 359, "3": 371, "4": 384, "5": 393, "6": 397, "7": 402}, "pcts": {"1": 70.1, "2": 76.7, "3": 79.3, "4": 82.1, "5": 84.0, "6": 84.8, "7": 85.9}}, "1-2%": {"total": 174, "fills": {"1": 88, "2": 103, "3": 109, "4": 115, "5": 121, "6": 124, "7": 125}, "pcts": {"1": 50.6, "2": 59.2, "3": 62.6, "4": 66.1, "5": 69.5, "6": 71.3, "7": 71.8}}, "2%+": {"total": 43, "fills": {"1": 25, "2": 26, "3": 28, "4": 30, "5": 30, "6": 30, "7": 30}, "pcts": {"1": 58.1, "2": 60.5, "3": 65.1, "4": 69.8, "5": 69.8, "6": 69.8, "7": 69.8}}}, "gap_down": {"<0.25%": {"total": 722, "fills": {"1": 687, "2": 697, "3": 701, "4": 701, "5": 701, "6": 701, "7": 702}, "pcts": {"1": 95.2, "2": 96.5, "3": 97.1, "4": 97.1, "5": 97.1, "6": 97.1, "7": 97.2}}, "0.25-0.5%": {"total": 414, "fills": {"1": 367, "2": 381, "3": 382, "4": 386, "5": 388, "6": 388, "7": 390}, "pcts": {"1": 88.6, "2": 92.0, "3": 92.3, "4": 93.2, "5": 93.7, "6": 93.7, "7": 94.2}}, "0.5-1%": {"total": 376, "fills": {"1": 287, "2": 305, "3": 316, "4": 329, "5": 333, "6": 338, "7": 341}, "pcts": {"1": 76.3, "2": 81.1, "3": 84.0, "4": 87.5, "5": 88.6, "6": 89.9, "7": 90.7}}, "1-2%": {"total": 183, "fills": {"1": 125, "2": 138, "3": 149, "4": 153, "5": 154, "6": 159, "7": 164}, "pcts": {"1": 68.3, "2": 75.4, "3": 81.4, "4": 83.6, "5": 84.2, "6": 86.9, "7": 89.6}}, "2%+": {"total": 55, "fills": {"1": 37, "2": 44, "3": 46, "4": 48, "5": 48, "6": 49, "7": 49}, "pcts": {"1": 67.3, "2": 80.0, "3": 83.6, "4": 87.3, "5": 87.3, "6": 89.1, "7": 89.1}}}}, "Daily EMA21 Bullish": {"gap_up": {"<0.25%": {"total": 1172, "fills": {"1": 1088, "2": 1105, "3": 1114, "4": 1120, "5": 1125, "6": 1129, "7": 1132}, "pcts": {"1": 92.8, "2": 94.3, "3": 95.1, "4": 95.6, "5": 96.0, "6": 96.3, "7": 96.6}}, "0.25-0.5%": {"total": 687, "fills": {"1": 528, "2": 558, "3": 575, "4": 582, "5": 588, "6": 594, "7": 599}, "pcts": {"1": 76.9, "2": 81.2, "3": 83.7, "4": 84.7, "5": 85.6, "6": 86.5, "7": 87.2}}, "0.5-1%": {"total": 451, "fills": {"1": 295, "2": 320, "3": 334, "4": 349, "5": 361, "6": 365, "7": 372}, "pcts": {"1": 65.4, "2": 71.0, "3": 74.1, "4": 77.4, "5": 80.0, "6": 80.9, "7": 82.5}}, "1-2%": {"total": 138, "fills": {"1": 68, "2": 80, "3": 83, "4": 88, "5": 91, "6": 94, "7": 94}, "pcts": {"1": 49.3, "2": 58.0, "3": 60.1, "4": 63.8, "5": 65.9, "6": 68.1, "7": 68.1}}, "2%+": {"total": 29, "fills": {"1": 16, "2": 17, "3": 19, "4": 19, "5": 19, "6": 19, "7": 19}, "pcts": {"1": 55.2, "2": 58.6, "3": 65.5, "4": 65.5, "5": 65.5, "6": 65.5, "7": 65.5}}}, "gap_down": {"<0.25%": {"total": 927, "fills": {"1": 888, "2": 896, "3": 899, "4": 901, "5": 903, "6": 904, "7": 904}, "pcts": {"1": 95.8, "2": 96.7, "3": 97.0, "4": 97.2, "5": 97.4, "6": 97.5, "7": 97.5}}, "0.25-0.5%": {"total": 445, "fills": {"1": 405, "2": 418, "3": 420, "4": 426, "5": 429, "6": 429, "7": 430}, "pcts": {"1": 91.0, "2": 93.9, "3": 94.4, "4": 95.7, "5": 96.4, "6": 96.4, "7": 96.6}}, "0.5-1%": {"total": 242, "fills": {"1": 207, "2": 212, "3": 216, "4": 220, "5": 222, "6": 226, "7": 226}, "pcts": {"1": 85.5, "2": 87.6, "3": 89.3, "4": 90.9, "5": 91.7, "6": 93.4, "7": 93.4}}, "1-2%": {"total": 66, "fills": {"1": 53, "2": 56, "3": 57, "4": 58, "5": 58, "6": 59, "7": 60}, "pcts": {"1": 80.3, "2": 84.8, "3": 86.4, "4": 87.9, "5": 87.9, "6": 89.4, "7": 90.9}}, "2%+": {"total": 10, "fills": {"1": 8, "2": 9, "3": 9, "4": 9, "5": 9, "6": 10, "7": 10}, "pcts": {"1": 80.0, "2": 90.0, "3": 90.0, "4": 90.0, "5": 90.0, "6": 100.0, "7": 100.0}}}}, "Daily EMA21 Bearish": {"gap_up": {"<0.25%": {"total": 390, "fills": {"1": 386, "2": 386, "3": 388, "4": 389, "5": 389, "6": 389, "7": 389}, "pcts": {"1": 99.0, "2": 99.0, "3": 99.5, "4": 99.7, "5": 99.7, "6": 99.7, "7": 99.7}}, "0.25-0.5%": {"total": 325, "fills": {"1": 312, "2": 316, "3": 318, "4": 319, "5": 319, "6": 320, "7": 320}, "pcts": {"1": 96.0, "2": 97.2, "3": 97.8, "4": 98.2, "5": 98.2, "6": 98.5, "7": 98.5}}, "0.5-1%": {"total": 262, "fills": {"1": 221, "2": 236, "3": 240, "4": 243, "5": 247, "6": 248, "7": 248}, "pcts": {"1": 84.4, "2": 90.1, "3": 91.6, "4": 92.7, "5": 94.3, "6": 94.7, "7": 94.7}}, "1-2%": {"total": 107, "fills": {"1": 72, "2": 79, "3": 84, "4": 86, "5": 89, "6": 89, "7": 90}, "pcts": {"1": 67.3, "2": 73.8, "3": 78.5, "4": 80.4, "5": 83.2, "6": 83.2, "7": 84.1}}, "2%+": {"total": 28, "fills": {"1": 19, "2": 20, "3": 20, "4": 22, "5": 22, "6": 22, "7": 22}, "pcts": {"1": 67.9, "2": 71.4, "3": 71.4, "4": 78.6, "5": 78.6, "6": 78.6, "7": 78.6}}}, "gap_down": {"<0.25%": {"total": 379, "fills": {"1": 349, "2": 356, "3": 363, "4": 363, "5": 364, "6": 364, "7": 366}, "pcts": {"1": 92.1, "2": 93.9, "3": 95.8, "4": 95.8, "5": 96.0, "6": 96.0, "7": 96.6}}, "0.25-0.5%": {"total": 294, "fills": {"1": 245, "2": 259, "3": 261, "4": 264, "5": 265, "6": 266, "7": 268}, "pcts": {"1": 83.3, "2": 88.1, "3": 88.8, "4": 89.8, "5": 90.1, "6": 90.5, "7": 91.2}}, "0.5-1%": {"total": 321, "fills": {"1": 229, "2": 247, "3": 259, "4": 271, "5": 278, "6": 281, "7": 285}, "pcts": {"1": 71.3, "2": 76.9, "3": 80.7, "4": 84.4, "5": 86.6, "6": 87.5, "7": 88.8}}, "1-2%": {"total": 200, "fills": {"1": 134, "2": 146, "3": 156, "4": 161, "5": 164, "6": 171, "7": 176}, "pcts": {"1": 67.0, "2": 73.0, "3": 78.0, "4": 80.5, "5": 82.0, "6": 85.5, "7": 88.0}}, "2%+": {"total": 63, "fills": {"1": 38, "2": 44, "3": 48, "4": 50, "5": 53, "6": 53, "7": 53}, "pcts": {"1": 60.3, "2": 69.8, "3": 76.2, "4": 79.4, "5": 84.1, "6": 84.1, "7": 84.1}}}}, "Compression + EMA21 Bull": {"gap_up": {"<0.25%": {"total": 566, "fills": {"1": 528, "2": 538, "3": 544, "4": 545, "5": 547, "6": 547, "7": 549}, "pcts": {"1": 93.3, "2": 95.1, "3": 96.1, "4": 96.3, "5": 96.6, "6": 96.6, "7": 97.0}}, "0.25-0.5%": {"total": 276, "fills": {"1": 217, "2": 230, "3": 234, "4": 236, "5": 239, "6": 243, "7": 245}, "pcts": {"1": 78.6, "2": 83.3, "3": 84.8, "4": 85.5, "5": 86.6, "6": 88.0, "7": 88.8}}, "0.5-1%": {"total": 153, "fills": {"1": 109, "2": 113, "3": 117, "4": 122, "5": 128, "6": 129, "7": 131}, "pcts": {"1": 71.2, "2": 73.9, "3": 76.5, "4": 79.7, "5": 83.7, "6": 84.3, "7": 85.6}}, "1-2%": {"total": 30, "fills": {"1": 18, "2": 21, "3": 23, "4": 23, "5": 23, "6": 23, "7": 23}, "pcts": {"1": 60.0, "2": 70.0, "3": 76.7, "4": 76.7, "5": 76.7, "6": 76.7, "7": 76.7}}, "2%+": {"total": 3, "fills": {"1": 1, "2": 1, "3": 1, "4": 1, "5": 1, "6": 1, "7": 1}, "pcts": {"1": 33.3, "2": 33.3, "3": 33.3, "4": 33.3, "5": 33.3, "6": 33.3, "7": 33.3}}}, "gap_down": {"<0.25%": {"total": 450, "fills": {"1": 428, "2": 433, "3": 435, "4": 437, "5": 439, "6": 440, "7": 440}, "pcts": {"1": 95.1, "2": 96.2, "3": 96.7, "4": 97.1, "5": 97.6, "6": 97.8, "7": 97.8}}, "0.25-0.5%": {"total": 210, "fills": {"1": 191, "2": 198, "3": 200, "4": 205, "5": 206, "6": 206, "7": 206}, "pcts": {"1": 91.0, "2": 94.3, "3": 95.2, "4": 97.6, "5": 98.1, "6": 98.1, "7": 98.1}}, "0.5-1%": {"total": 85, "fills": {"1": 76, "2": 77, "3": 78, "4": 79, "5": 80, "6": 81, "7": 81}, "pcts": {"1": 89.4, "2": 90.6, "3": 91.8, "4": 92.9, "5": 94.1, "6": 95.3, "7": 95.3}}, "1-2%": {"total": 24, "fills": {"1": 18, "2": 19, "3": 19, "4": 20, "5": 20, "6": 21, "7": 21}, "pcts": {"1": 75.0, "2": 79.2, "3": 79.2, "4": 83.3, "5": 83.3, "6": 87.5, "7": 87.5}}, "2%+": {"total": 1, "fills": {"1": 1, "2": 1, "3": 1, "4": 1, "5": 1, "6": 1, "7": 1}, "pcts": {"1": 100.0, "2": 100.0, "3": 100.0, "4": 100.0, "5": 100.0, "6": 100.0, "7": 100.0}}}}, "Compression + EMA21 Bear": {"gap_up": {"<0.25%": {"total": 139, "fills": {"1": 136, "2": 136, "3": 137, "4": 138, "5": 138, "6": 138, "7": 138}, "pcts": {"1": 97.8, "2": 97.8, "3": 98.6, "4": 99.3, "5": 99.3, "6": 99.3, "7": 99.3}}, "0.25-0.5%": {"total": 120, "fills": {"1": 117, "2": 117, "3": 118, "4": 118, "5": 118, "6": 119, "7": 119}, "pcts": {"1": 97.5, "2": 97.5, "3": 98.3, "4": 98.3, "5": 98.3, "6": 99.2, "7": 99.2}}, "0.5-1%": {"total": 92, "fills": {"1": 79, "2": 84, "3": 86, "4": 86, "5": 87, "6": 87, "7": 87}, "pcts": {"1": 85.9, "2": 91.3, "3": 93.5, "4": 93.5, "5": 94.6, "6": 94.6, "7": 94.6}}, "1-2%": {"total": 41, "fills": {"1": 34, "2": 35, "3": 35, "4": 36, "5": 36, "6": 36, "7": 36}, "pcts": {"1": 82.9, "2": 85.4, "3": 85.4, "4": 87.8, "5": 87.8, "6": 87.8, "7": 87.8}}, "2%+": {"total": 11, "fills": {"1": 9, "2": 10, "3": 10, "4": 10, "5": 10, "6": 10, "7": 10}, "pcts": {"1": 81.8, "2": 90.9, "3": 90.9, "4": 90.9, "5": 90.9, "6": 90.9, "7": 90.9}}}, "gap_down": {"<0.25%": {"total": 134, "fills": {"1": 122, "2": 122, "3": 126, "4": 126, "5": 127, "6": 127, "7": 128}, "pcts": {"1": 91.0, "2": 91.0, "3": 94.0, "4": 94.0, "5": 94.8, "6": 94.8, "7": 95.5}}, "0.25-0.5%": {"total": 115, "fills": {"1": 92, "2": 98, "3": 99, "4": 99, "5": 100, "6": 101, "7": 102}, "pcts": {"1": 80.0, "2": 85.2, "3": 86.1, "4": 86.1, "5": 87.0, "6": 87.8, "7": 88.7}}, "0.5-1%": {"total": 102, "fills": {"1": 73, "2": 77, "3": 81, "4": 83, "5": 87, "6": 88, "7": 89}, "pcts": {"1": 71.6, "2": 75.5, "3": 79.4, "4": 81.4, "5": 85.3, "6": 86.3, "7": 87.3}}, "1-2%": {"total": 59, "fills": {"1": 44, "2": 45, "3": 45, "4": 46, "5": 48, "6": 50, "7": 51}, "pcts": {"1": 74.6, "2": 76.3, "3": 76.3, "4": 78.0, "5": 81.4, "6": 84.7, "7": 86.4}}, "2%+": {"total": 17, "fills": {"1": 8, "2": 8, "3": 10, "4": 10, "5": 13, "6": 13, "7": 13}, "pcts": {"1": 47.1, "2": 47.1, "3": 58.8, "4": 58.8, "5": 76.5, "6": 76.5, "7": 76.5}}}}, "Above Weekly 21": {"gap_up": {"<0.25%": {"total": 1296, "fills": {"1": 1213, "2": 1230, "3": 1240, "4": 1246, "5": 1251, "6": 1255, "7": 1257}, "pcts": {"1": 93.6, "2": 94.9, "3": 95.7, "4": 96.1, "5": 96.5, "6": 96.8, "7": 97.0}}, "0.25-0.5%": {"total": 764, "fills": {"1": 615, "2": 642, "3": 658, "4": 666, "5": 672, "6": 678, "7": 683}, "pcts": {"1": 80.5, "2": 84.0, "3": 86.1, "4": 87.2, "5": 88.0, "6": 88.7, "7": 89.4}}, "0.5-1%": {"total": 465, "fills": {"1": 314, "2": 341, "3": 357, "4": 371, "5": 381, "6": 385, "7": 391}, "pcts": {"1": 67.5, "2": 73.3, "3": 76.8, "4": 79.8, "5": 81.9, "6": 82.8, "7": 84.1}}, "1-2%": {"total": 101, "fills": {"1": 51, "2": 60, "3": 63, "4": 66, "5": 67, "6": 70, "7": 70}, "pcts": {"1": 50.5, "2": 59.4, "3": 62.4, "4": 65.3, "5": 66.3, "6": 69.3, "7": 69.3}}, "2%+": {"total": 15, "fills": {"1": 8, "2": 9, "3": 9, "4": 10, "5": 10, "6": 10, "7": 10}, "pcts": {"1": 53.3, "2": 60.0, "3": 60.0, "4": 66.7, "5": 66.7, "6": 66.7, "7": 66.7}}}, "gap_down": {"<0.25%": {"total": 1041, "fills": {"1": 980, "2": 995, "3": 1004, "4": 1006, "5": 1009, "6": 1010, "7": 1011}, "pcts": {"1": 94.1, "2": 95.6, "3": 96.4, "4": 96.6, "5": 96.9, "6": 97.0, "7": 97.1}}, "0.25-0.5%": {"total": 513, "fills": {"1": 446, "2": 466, "3": 469, "4": 474, "5": 477, "6": 478, "7": 479}, "pcts": {"1": 86.9, "2": 90.8, "3": 91.4, "4": 92.4, "5": 93.0, "6": 93.2, "7": 93.4}}, "0.5-1%": {"total": 294, "fills": {"1": 219, "2": 230, "3": 236, "4": 248, "5": 254, "6": 258, "7": 261}, "pcts": {"1": 74.5, "2": 78.2, "3": 80.3, "4": 84.4, "5": 86.4, "6": 87.8, "7": 88.8}}, "1-2%": {"total": 83, "fills": {"1": 52, "2": 58, "3": 61, "4": 63, "5": 64, "6": 66, "7": 69}, "pcts": {"1": 62.7, "2": 69.9, "3": 73.5, "4": 75.9, "5": 77.1, "6": 79.5, "7": 83.1}}, "2%+": {"total": 8, "fills": {"1": 4, "2": 5, "3": 6, "4": 6, "5": 6, "6": 7, "7": 7}, "pcts": {"1": 50.0, "2": 62.5, "3": 75.0, "4": 75.0, "5": 75.0, "6": 87.5, "7": 87.5}}}}, "Below Weekly 21": {"gap_up": {"<0.25%": {"total": 266, "fills": {"1": 261, "2": 261, "3": 262, "4": 263, "5": 263, "6": 263, "7": 264}, "pcts": {"1": 98.1, "2": 98.1, "3": 98.5, "4": 98.9, "5": 98.9, "6": 98.9, "7": 99.2}}, "0.25-0.5%": {"total": 248, "fills": {"1": 225, "2": 232, "3": 235, "4": 235, "5": 235, "6": 236, "7": 236}, "pcts": {"1": 90.7, "2": 93.5, "3": 94.8, "4": 94.8, "5": 94.8, "6": 95.2, "7": 95.2}}, "0.5-1%": {"total": 248, "fills": {"1": 202, "2": 215, "3": 217, "4": 221, "5": 227, "6": 228, "7": 229}, "pcts": {"1": 81.5, "2": 86.7, "3": 87.5, "4": 89.1, "5": 91.5, "6": 91.9, "7": 92.3}}, "1-2%": {"total": 144, "fills": {"1": 89, "2": 99, "3": 104, "4": 108, "5": 113, "6": 113, "7": 114}, "pcts": {"1": 61.8, "2": 68.8, "3": 72.2, "4": 75.0, "5": 78.5, "6": 78.5, "7": 79.2}}, "2%+": {"total": 42, "fills": {"1": 27, "2": 28, "3": 30, "4": 31, "5": 31, "6": 31, "7": 31}, "pcts": {"1": 64.3, "2": 66.7, "3": 71.4, "4": 73.8, "5": 73.8, "6": 73.8, "7": 73.8}}}, "gap_down": {"<0.25%": {"total": 265, "fills": {"1": 257, "2": 257, "3": 258, "4": 258, "5": 258, "6": 258, "7": 259}, "pcts": {"1": 97.0, "2": 97.0, "3": 97.4, "4": 97.4, "5": 97.4, "6": 97.4, "7": 97.7}}, "0.25-0.5%": {"total": 226, "fills": {"1": 204, "2": 211, "3": 212, "4": 216, "5": 217, "6": 217, "7": 219}, "pcts": {"1": 90.3, "2": 93.4, "3": 93.8, "4": 95.6, "5": 96.0, "6": 96.0, "7": 96.9}}, "0.5-1%": {"total": 269, "fills": {"1": 217, "2": 229, "3": 239, "4": 243, "5": 246, "6": 249, "7": 250}, "pcts": {"1": 80.7, "2": 85.1, "3": 88.8, "4": 90.3, "5": 91.4, "6": 92.6, "7": 92.9}}, "1-2%": {"total": 183, "fills": {"1": 135, "2": 144, "3": 152, "4": 156, "5": 158, "6": 164, "7": 167}, "pcts": {"1": 73.8, "2": 78.7, "3": 83.1, "4": 85.2, "5": 86.3, "6": 89.6, "7": 91.3}}, "2%+": {"total": 65, "fills": {"1": 42, "2": 48, "3": 51, "4": 53, "5": 56, "6": 56, "7": 56}, "pcts": {"1": 64.6, "2": 73.8, "3": 78.5, "4": 81.5, "5": 86.2, "6": 86.2, "7": 86.2}}}}, "Gap Up Over W21": {"gap_up": {"<0.25%": {"total": 4, "fills": {"1": 3, "2": 3, "3": 3, "4": 3, "5": 3, "6": 3, "7": 3}, "pcts": {"1": 75.0, "2": 75.0, "3": 75.0, "4": 75.0, "5": 75.0, "6": 75.0, "7": 75.0}}, "0.25-0.5%": {"total": 23, "fills": {"1": 21, "2": 21, "3": 23, "4": 23, "5": 23, "6": 23, "7": 23}, "pcts": {"1": 91.3, "2": 91.3, "3": 100.0, "4": 100.0, "5": 100.0, "6": 100.0, "7": 100.0}}, "0.5-1%": {"total": 42, "fills": {"1": 31, "2": 34, "3": 36, "4": 37, "5": 37, "6": 38, "7": 38}, "pcts": {"1": 73.8, "2": 81.0, "3": 85.7, "4": 88.1, "5": 88.1, "6": 90.5, "7": 90.5}}, "1-2%": {"total": 21, "fills": {"1": 10, "2": 14, "3": 15, "4": 15, "5": 15, "6": 16, "7": 16}, "pcts": {"1": 47.6, "2": 66.7, "3": 71.4, "4": 71.4, "5": 71.4, "6": 76.2, "7": 76.2}}, "2%+": {"total": 6, "fills": {"1": 1, "2": 1, "3": 1, "4": 2, "5": 2, "6": 2, "7": 2}, "pcts": {"1": 16.7, "2": 16.7, "3": 16.7, "4": 33.3, "5": 33.3, "6": 33.3, "7": 33.3}}}, "gap_down": {"<0.25%": {"total": 0, "fills": {"1": 0, "2": 0, "3": 0, "4": 0, "5": 0, "6": 0, "7": 0}, "pcts": {"1": 0, "2": 0, "3": 0, "4": 0, "5": 0, "6": 0, "7": 0}}, "0.25-0.5%": {"total": 0, "fills": {"1": 0, "2": 0, "3": 0, "4": 0, "5": 0, "6": 0, "7": 0}, "pcts": {"1": 0, "2": 0, "3": 0, "4": 0, "5": 0, "6": 0, "7": 0}}, "0.5-1%": {"total": 0, "fills": {"1": 0, "2": 0, "3": 0, "4": 0, "5": 0, "6": 0, "7": 0}, "pcts": {"1": 0, "2": 0, "3": 0, "4": 0, "5": 0, "6": 0, "7": 0}}, "1-2%": {"total": 0, "fills": {"1": 0, "2": 0, "3": 0, "4": 0, "5": 0, "6": 0, "7": 0}, "pcts": {"1": 0, "2": 0, "3": 0, "4": 0, "5": 0, "6": 0, "7": 0}}, "2%+": {"total": 0, "fills": {"1": 0, "2": 0, "3": 0, "4": 0, "5": 0, "6": 0, "7": 0}, "pcts": {"1": 0, "2": 0, "3": 0, "4": 0, "5": 0, "6": 0, "7": 0}}}}, "Gap Down Under W21": {"gap_up": {"<0.25%": {"total": 0, "fills": {"1": 0, "2": 0, "3": 0, "4": 0, "5": 0, "6": 0, "7": 0}, "pcts": {"1": 0, "2": 0, "3": 0, "4": 0, "5": 0, "6": 0, "7": 0}}, "0.25-0.5%": {"total": 0, "fills": {"1": 0, "2": 0, "3": 0, "4": 0, "5": 0, "6": 0, "7": 0}, "pcts": {"1": 0, "2": 0, "3": 0, "4": 0, "5": 0, "6": 0, "7": 0}}, "0.5-1%": {"total": 0, "fills": {"1": 0, "2": 0, "3": 0, "4": 0, "5": 0, "6": 0, "7": 0}, "pcts": {"1": 0, "2": 0, "3": 0, "4": 0, "5": 0, "6": 0, "7": 0}}, "1-2%": {"total": 0, "fills": {"1": 0, "2": 0, "3": 0, "4": 0, "5": 0, "6": 0, "7": 0}, "pcts": {"1": 0, "2": 0, "3": 0, "4": 0, "5": 0, "6": 0, "7": 0}}, "2%+": {"total": 0, "fills": {"1": 0, "2": 0, "3": 0, "4": 0, "5": 0, "6": 0, "7": 0}, "pcts": {"1": 0, "2": 0, "3": 0, "4": 0, "5": 0, "6": 0, "7": 0}}}, "gap_down": {"<0.25%": {"total": 6, "fills": {"1": 6, "2": 6, "3": 6, "4": 6, "5": 6, "6": 6, "7": 6}, "pcts": {"1": 100.0, "2": 100.0, "3": 100.0, "4": 100.0, "5": 100.0, "6": 100.0, "7": 100.0}}, "0.25-0.5%": {"total": 17, "fills": {"1": 17, "2": 17, "3": 17, "4": 17, "5": 17, "6": 17, "7": 17}, "pcts": {"1": 100.0, "2": 100.0, "3": 100.0, "4": 100.0, "5": 100.0, "6": 100.0, "7": 100.0}}, "0.5-1%": {"total": 42, "fills": {"1": 30, "2": 32, "3": 33, "4": 33, "5": 34, "6": 35, "7": 35}, "pcts": {"1": 71.4, "2": 76.2, "3": 78.6, "4": 78.6, "5": 81.0, "6": 83.3, "7": 83.3}}, "1-2%": {"total": 20, "fills": {"1": 14, "2": 16, "3": 18, "4": 19, "5": 19, "6": 19, "7": 20}, "pcts": {"1": 70.0, "2": 80.0, "3": 90.0, "4": 95.0, "5": 95.0, "6": 95.0, "7": 100.0}}, "2%+": {"total": 5, "fills": {"1": 3, "2": 3, "3": 3, "4": 4, "5": 4, "6": 4, "7": 4}, "pcts": {"1": 60.0, "2": 60.0, "3": 60.0, "4": 80.0, "5": 80.0, "6": 80.0, "7": 80.0}}}}, "Above Wkly 21 + EMA21 Bull": {"gap_up": {"<0.25%": {"total": 1097, "fills": {"1": 1016, "2": 1033, "3": 1042, "4": 1048, "5": 1053, "6": 1057, "7": 1059}, "pcts": {"1": 92.6, "2": 94.2, "3": 95.0, "4": 95.5, "5": 96.0, "6": 96.4, "7": 96.5}}, "0.25-0.5%": {"total": 619, "fills": {"1": 477, "2": 502, "3": 516, "4": 523, "5": 529, "6": 534, "7": 539}, "pcts": {"1": 77.1, "2": 81.1, "3": 83.4, "4": 84.5, "5": 85.5, "6": 86.3, "7": 87.1}}, "0.5-1%": {"total": 383, "fills": {"1": 248, "2": 270, "3": 283, "4": 295, "5": 305, "6": 309, "7": 315}, "pcts": {"1": 64.8, "2": 70.5, "3": 73.9, "4": 77.0, "5": 79.6, "6": 80.7, "7": 82.2}}, "1-2%": {"total": 89, "fills": {"1": 44, "2": 52, "3": 54, "4": 56, "5": 57, "6": 60, "7": 60}, "pcts": {"1": 49.4, "2": 58.4, "3": 60.7, "4": 62.9, "5": 64.0, "6": 67.4, "7": 67.4}}, "2%+": {"total": 13, "fills": {"1": 7, "2": 8, "3": 8, "4": 8, "5": 8, "6": 8, "7": 8}, "pcts": {"1": 53.8, "2": 61.5, "3": 61.5, "4": 61.5, "5": 61.5, "6": 61.5, "7": 61.5}}}, "gap_down": {"<0.25%": {"total": 854, "fills": {"1": 817, "2": 825, "3": 828, "4": 830, "5": 832, "6": 833, "7": 833}, "pcts": {"1": 95.7, "2": 96.6, "3": 97.0, "4": 97.2, "5": 97.4, "6": 97.5, "7": 97.5}}, "0.25-0.5%": {"total": 385, "fills": {"1": 348, "2": 360, "3": 362, "4": 367, "5": 370, "6": 370, "7": 371}, "pcts": {"1": 90.4, "2": 93.5, "3": 94.0, "4": 95.3, "5": 96.1, "6": 96.1, "7": 96.4}}, "0.5-1%": {"total": 178, "fills": {"1": 149, "2": 153, "3": 155, "4": 159, "5": 160, "6": 164, "7": 164}, "pcts": {"1": 83.7, "2": 86.0, "3": 87.1, "4": 89.3, "5": 89.9, "6": 92.1, "7": 92.1}}, "1-2%": {"total": 36, "fills": {"1": 27, "2": 28, "3": 29, "4": 29, "5": 29, "6": 30, "7": 31}, "pcts": {"1": 75.0, "2": 77.8, "3": 80.6, "4": 80.6, "5": 80.6, "6": 83.3, "7": 86.1}}, "2%+": {"total": 4, "fills": {"1": 3, "2": 3, "3": 3, "4": 3, "5": 3, "6": 4, "7": 4}, "pcts": {"1": 75.0, "2": 75.0, "3": 75.0, "4": 75.0, "5": 75.0, "6": 100.0, "7": 100.0}}}}, "Below Wkly 21 + EMA21 Bear": {"gap_up": {"<0.25%": {"total": 191, "fills": {"1": 189, "2": 189, "3": 190, "4": 191, "5": 191, "6": 191, "7": 191}, "pcts": {"1": 99.0, "2": 99.0, "3": 99.5, "4": 100.0, "5": 100.0, "6": 100.0, "7": 100.0}}, "0.25-0.5%": {"total": 180, "fills": {"1": 174, "2": 176, "3": 176, "4": 176, "5": 176, "6": 176, "7": 176}, "pcts": {"1": 96.7, "2": 97.8, "3": 97.8, "4": 97.8, "5": 97.8, "6": 97.8, "7": 97.8}}, "0.5-1%": {"total": 180, "fills": {"1": 155, "2": 165, "3": 166, "4": 167, "5": 171, "6": 172, "7": 172}, "pcts": {"1": 86.1, "2": 91.7, "3": 92.2, "4": 92.8, "5": 95.0, "6": 95.6, "7": 95.6}}, "1-2%": {"total": 95, "fills": {"1": 65, "2": 71, "3": 75, "4": 76, "5": 79, "6": 79, "7": 80}, "pcts": {"1": 68.4, "2": 74.7, "3": 78.9, "4": 80.0, "5": 83.2, "6": 83.2, "7": 84.2}}, "2%+": {"total": 26, "fills": {"1": 18, "2": 19, "3": 19, "4": 20, "5": 20, "6": 20, "7": 20}, "pcts": {"1": 69.2, "2": 73.1, "3": 73.1, "4": 76.9, "5": 76.9, "6": 76.9, "7": 76.9}}}, "gap_down": {"<0.25%": {"total": 192, "fills": {"1": 186, "2": 186, "3": 187, "4": 187, "5": 187, "6": 187, "7": 188}, "pcts": {"1": 96.9, "2": 96.9, "3": 97.4, "4": 97.4, "5": 97.4, "6": 97.4, "7": 97.9}}, "0.25-0.5%": {"total": 166, "fills": {"1": 147, "2": 153, "3": 154, "4": 157, "5": 158, "6": 158, "7": 160}, "pcts": {"1": 88.6, "2": 92.2, "3": 92.8, "4": 94.6, "5": 95.2, "6": 95.2, "7": 96.4}}, "0.5-1%": {"total": 205, "fills": {"1": 159, "2": 170, "3": 178, "4": 182, "5": 184, "6": 187, "7": 188}, "pcts": {"1": 77.6, "2": 82.9, "3": 86.8, "4": 88.8, "5": 89.8, "6": 91.2, "7": 91.7}}, "1-2%": {"total": 153, "fills": {"1": 109, "2": 116, "3": 124, "4": 127, "5": 129, "6": 135, "7": 138}, "pcts": {"1": 71.2, "2": 75.8, "3": 81.0, "4": 83.0, "5": 84.3, "6": 88.2, "7": 90.2}}, "2%+": {"total": 59, "fills": {"1": 37, "2": 42, "3": 45, "4": 47, "5": 50, "6": 50, "7": 50}, "pcts": {"1": 62.7, "2": 71.2, "3": 76.3, "4": 79.7, "5": 84.7, "6": 84.7, "7": 84.7}}}}};
+
+const CONDITIONS = [
+  {key:'All', label:'All Gaps', desc:'No filter — all 6,536 gaps across 25 years.'},
+  {key:'Daily EMA21 Bullish', label:'Daily EMA21 Bull', desc:'Daily EMA 21 is rising (today > yesterday). The short-term daily trend is up.'},
+  {key:'Daily EMA21 Bearish', label:'Daily EMA21 Bear', desc:'Daily EMA 21 is falling. The short-term daily trend is down.'},
+  {key:'Above Weekly 21', label:'Above Wkly 21', desc:'The 9:30 AM open price is above the weekly EMA 21. Price is in a weekly uptrend — trading above the multi-week pivot.'},
+  {key:'Below Weekly 21', label:'Below Wkly 21', desc:'The 9:30 AM open is below the weekly EMA 21. Price is trading below the multi-week pivot.'},
+  {key:'Compression', label:'1h Compression', desc:'The 1-hour Bollinger Band squeeze is active at 9:00 AM (BB width < 2×ATR). Volatility is coiled — a breakout may be imminent.'},
+  {key:'No Compression', label:'No Compression', desc:'The 1-hour BB squeeze is NOT active. Market is in normal or expanded volatility.'},
+  {key:'Compression + EMA21 Bull', label:'Compress + Bull', desc:'1h compression active AND daily EMA 21 rising. Squeeze in an uptrend.'},
+  {key:'Compression + EMA21 Bear', label:'Compress + Bear', desc:'1h compression active AND daily EMA 21 falling. Squeeze in a downtrend.'},
+  {key:'Above Wkly 21 + EMA21 Bull', label:'Above Wkly 21 + Bull', desc:'Open above weekly EMA 21 AND daily EMA 21 rising. Both weekly and daily trends are bullish.'},
+  {key:'Below Wkly 21 + EMA21 Bear', label:'Below Wkly 21 + Bear', desc:'Open below weekly EMA 21 AND daily EMA 21 falling. Both weekly and daily trends are bearish.'},
+];
+
+const BUCKETS = ['<0.25%','0.25-0.5%','0.5-1%','1-2%','2%+'];
+const BUCKET_KEYS = {'<0.25%':'lt025','0.25-0.5%':'025_05','0.5-1%':'05_1','1-2%':'1_2','2%+':'2plus'};
+const HORIZONS = ['1','2','3','4','5','6','7'];
+
+let activeCond = 'All';
+
+function render() {
+  const container = document.getElementById('tables');
+  const d = DATA[activeCond];
+  let html = '';
+
+  for (const dir of ['gap_up','gap_down']) {
+    const dirLabel = dir === 'gap_up' ? 'Gap Up' : 'Gap Down';
+    const dotColor = dir === 'gap_up' ? 'var(--bull)' : 'var(--bear)';
+
+    html += `<div class="curve-section">
+      <div class="curve-title"><div class="dot" style="background:${dotColor}"></div> ${dirLabel} Fill Probability</div>
+      <table class="ctable"><thead><tr><th>Gap Size</th><th>N</th>`;
+    for (const h of HORIZONS) html += `<th>${h}d</th>`;
+    html += '</tr></thead><tbody>';
+
+    for (const bucket of BUCKETS) {
+      const bd = d[dir][bucket];
+      if (!bd || bd.total === 0) continue;
+      const dirPrefix = dir === 'gap_up' ? 'up' : 'down';
+      const dateKey = dirPrefix + '_' + BUCKET_KEYS[bucket];
+      const rowTitle = dirLabel + ' ' + bucket;
+      html += `<tr><td>${bucket}</td><td><span class="n-clickable n-yes" data-row="${dateKey}" data-outcome="hit" data-title="${rowTitle} — Yes" style="cursor:pointer">Yes</span> · <span class="n-clickable n-no" data-row="${dateKey}" data-outcome="miss" data-title="${rowTitle} — No" style="cursor:pointer">No</span> <span style="color:var(--text-dim);font-size:.75rem">(${bd.total})</span></td>`;
+      for (const h of HORIZONS) {
+        const pct = bd.pcts[h];
+        const cls = pct >= 85 ? 'hi' : (pct < 40 ? 'lo' : '');
+        const hot = pct >= 80 ? ' hot' : '';
+        html += `<td class="${cls}${hot}">${pct}%</td>`;
+      }
+      html += '</tr>';
+    }
+
+    html += '</tbody></table></div>';
+  }
+
+  container.innerHTML = html;
+}
+
+function initTabs() {
+  const tabsEl = document.getElementById('tabs');
+  CONDITIONS.forEach(c => {
+    const tab = document.createElement('div');
+    tab.className = 'tab' + (c.key === activeCond ? ' active' : '');
+    tab.textContent = c.label;
+    tab.onclick = () => {
+      activeCond = c.key;
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('cond-desc').textContent = c.desc;
+      render();
+    };
+    tabsEl.appendChild(tab);
+  });
+  // Show initial description
+  document.getElementById('cond-desc').textContent = CONDITIONS[0].desc;
+}
+
+initTabs();
+render();
+
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('visible'); obs.unobserve(e.target); }});
+},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+document.querySelector('.hero').classList.add('visible');
+</script>
+<script src="/study-drawer.js"></script>
+<script>StudyDrawer.loadData('/data/gap-fills-dates.json');</script>
+</body>
+</html>

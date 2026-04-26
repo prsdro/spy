@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Trigger Box | Milkman Trades</title>
+<meta name="description" content="The Trigger Box Study: when price opens between PDC and the trigger, the first hour tells you everything. 70%+ GG rates when the box holds.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥛</text></svg>">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,300;1,9..40,400&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --bg:#0c0e12;
+  --surface:#13161c;
+  --surface-2:#181c24;
+  --border:#1e2230;
+  --text:#e8eaed;
+  --text-dim:#6b7280;
+  --text-mid:#9ca3af;
+  --bull:#1cd48a;
+  --bull-dim:#0d5738;
+  --bull-bg:#0a1f15;
+  --bear:#ef6c00;
+  --bear-dim:#7c3600;
+  --bear-bg:#1f1208;
+  --accent:#fbbf24;
+}
+
+html{font-size:15px;scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'DM Sans',system-ui,sans-serif;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ── Layout ── */
+.page{max-width:720px;margin:0 auto;padding:3rem 1.5rem 5rem}
+
+/* ── Navigation ── */
+.back{
+  display:inline-flex;
+  align-items:center;
+  gap:.4rem;
+  font-size:.8rem;
+  color:var(--text-dim);
+  text-decoration:none;
+  margin-bottom:2.5rem;
+  transition:color .2s;
+}
+.back:hover{color:var(--text)}
+.back svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2}
+
+/* ── Hero ── */
+.hero{margin-bottom:3.5rem}
+.hero .kicker{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.7rem;
+  font-weight:500;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--accent);
+  margin-bottom:.75rem;
+}
+.hero h1{
+  font-size:2.4rem;
+  font-weight:700;
+  letter-spacing:-.03em;
+  line-height:1.15;
+  margin-bottom:1rem;
+}
+.hero h1 em{
+  font-style:normal;
+  background:linear-gradient(135deg,var(--bull),var(--accent));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.hero .lede{
+  font-size:1.05rem;
+  color:var(--text-mid);
+  font-weight:300;
+  max-width:580px;
+  line-height:1.65;
+}
+
+/* ── Sections ── */
+.section{margin-bottom:3.5rem}
+.section-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.65rem;
+  font-weight:500;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--text-dim);
+  padding-bottom:.6rem;
+  border-bottom:1px solid var(--border);
+  margin-bottom:1.5rem;
+}
+
+.prose{
+  font-size:.95rem;
+  color:var(--text-mid);
+  font-weight:300;
+  line-height:1.7;
+  margin-bottom:1.5rem;
+}
+.prose strong{color:var(--text);font-weight:500}
+
+/* ── Big Stat ── */
+.bigstat{
+  display:flex;
+  gap:2rem;
+  margin:2rem 0;
+  flex-wrap:wrap;
+}
+.bigstat-item{
+  flex:1;
+  min-width:140px;
+  padding:1.25rem;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:8px;
+}
+.bigstat-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:2.2rem;
+  font-weight:700;
+  line-height:1;
+  margin-bottom:.3rem;
+}
+.bigstat-num.bull{color:var(--bull)}
+.bigstat-num.bear{color:var(--bear)}
+.bigstat-label{
+  font-size:.75rem;
+  color:var(--text-dim);
+  line-height:1.4;
+}
+
+/* ── Trigger Box Visual ── */
+.trigger-visual{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:1.5rem;
+  margin:1.5rem 0 2rem;
+  position:relative;
+  overflow:hidden;
+}
+.trigger-visual::before{
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;
+  height:2px;
+  background:linear-gradient(90deg,var(--accent),transparent);
+}
+.tv-title{
+  font-size:.8rem;
+  font-weight:600;
+  margin-bottom:1.25rem;
+  color:var(--text);
+}
+.tv-diagram{
+  display:flex;
+  flex-direction:column;
+  gap:0;
+  position:relative;
+}
+.tv-level{
+  display:flex;
+  align-items:center;
+  gap:.75rem;
+  padding:.65rem 0;
+  border-bottom:1px dashed var(--border);
+  position:relative;
+}
+.tv-level:last-child{border-bottom:none}
+.tv-level-label{
+  flex:0 0 120px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:.7rem;
+  font-weight:500;
+  text-align:right;
+}
+.tv-level-line{
+  flex:1;
+  height:2px;
+  border-radius:1px;
+}
+.tv-level-desc{
+  flex:0 0 180px;
+  font-size:.72rem;
+  color:var(--text-dim);
+}
+.tv-zone{
+  margin-left:120px;
+  padding:.5rem .75rem;
+  border-radius:4px;
+  font-size:.72rem;
+  font-weight:500;
+  text-align:center;
+  position:relative;
+}
+.tv-zone.bear-zone{
+  background:rgba(239,108,0,.08);
+  border:1px dashed var(--bear-dim);
+  color:var(--bear);
+}
+.tv-zone.bull-zone{
+  background:rgba(28,212,138,.08);
+  border:1px dashed var(--bull-dim);
+  color:var(--bull);
+}
+
+/* ── Completion Table ── */
+.comp-grid{
+  margin:1.5rem 0;
+}
+.comp-direction{
+  margin-bottom:2rem;
+}
+.comp-title{
+  font-size:.85rem;
+  font-weight:600;
+  margin-bottom:.75rem;
+  display:flex;
+  align-items:center;
+  gap:.5rem;
+}
+.comp-title .dot{
+  width:8px;height:8px;border-radius:50%;
+}
+
+.comp-table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:.8rem;
+}
+.comp-table th{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.65rem;
+  font-weight:500;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:var(--text-dim);
+  text-align:right;
+  padding:.5rem .6rem;
+  border-bottom:1px solid var(--border);
+}
+.comp-table th:first-child{text-align:left}
+.comp-table td{
+  padding:.55rem .6rem;
+  border-bottom:1px solid #151820;
+  text-align:right;
+  font-family:'JetBrains Mono',monospace;
+  font-size:.8rem;
+  font-weight:400;
+  color:var(--text-mid);
+}
+.comp-table td:first-child{
+  text-align:left;
+  font-family:'DM Sans',sans-serif;
+  font-weight:400;
+  color:var(--text);
+}
+.comp-table tr.baseline td{
+  color:var(--text-dim);
+  font-weight:400;
+}
+.comp-table tr.best td{
+  font-weight:700;
+}
+.comp-table tr.best.bull-row td:nth-child(2),
+.comp-table tr.best.bull-row td:nth-child(3){color:var(--bull)}
+.comp-table tr.best.bear-row td:nth-child(2),
+.comp-table tr.best.bear-row td:nth-child(3){color:var(--bear)}
+
+.comp-table .n{
+  font-size:.65rem;
+  color:var(--text-dim);
+  font-weight:400;
+}
+.comp-table .bar-cell{
+  width:120px;
+  padding-right:1rem;
+}
+.mini-bar{
+  height:6px;
+  border-radius:3px;
+  background:var(--surface-2);
+  overflow:hidden;
+}
+.mini-bar-fill{
+  height:100%;
+  border-radius:3px;
+  transition:width .8s cubic-bezier(.22,1,.36,1);
+}
+
+/* ── Reversal Cards ── */
+.reversal-pair{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:1.5rem;
+  margin:1.5rem 0;
+}
+@media(max-width:640px){.reversal-pair{grid-template-columns:1fr}}
+
+.reversal-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:1.25rem;
+  position:relative;
+  overflow:hidden;
+}
+.reversal-card::before{
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;
+  height:2px;
+}
+.reversal-card.bull::before{background:linear-gradient(90deg,var(--bull),transparent)}
+.reversal-card.bear::before{background:linear-gradient(90deg,var(--bear),transparent)}
+
+.reversal-card .card-label{
+  font-size:.75rem;
+  font-weight:500;
+  margin-bottom:.15rem;
+}
+.reversal-card .card-sub{
+  font-size:.7rem;
+  color:var(--text-dim);
+  margin-bottom:1rem;
+  font-family:'JetBrains Mono',monospace;
+}
+.reversal-card .rev-stat{
+  display:flex;
+  justify-content:space-between;
+  align-items:baseline;
+  padding:.45rem 0;
+  border-bottom:1px solid #151820;
+}
+.reversal-card .rev-stat:last-child{border-bottom:none}
+.rev-stat-label{
+  font-size:.78rem;
+  color:var(--text-mid);
+}
+.rev-stat-val{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.85rem;
+  font-weight:700;
+}
+
+/* ── Patience Section ── */
+.patience-pair{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:1.5rem;
+  margin:1.5rem 0;
+}
+@media(max-width:640px){.patience-pair{grid-template-columns:1fr}}
+
+.patience-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:1.25rem;
+  position:relative;
+  overflow:hidden;
+}
+.patience-card::before{
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;
+  height:2px;
+}
+.patience-card.bear::before{background:linear-gradient(90deg,var(--bear),transparent)}
+.patience-card.bull::before{background:linear-gradient(90deg,var(--bull),transparent)}
+
+.patience-card .card-label{
+  font-size:.75rem;
+  font-weight:500;
+  margin-bottom:.15rem;
+}
+.patience-card .card-sub{
+  font-size:.7rem;
+  color:var(--text-dim);
+  margin-bottom:1rem;
+  font-family:'JetBrains Mono',monospace;
+}
+.patience-card .pat-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:baseline;
+  padding:.45rem 0;
+  border-bottom:1px solid #151820;
+}
+.patience-card .pat-row:last-child{border-bottom:none}
+.pat-label{
+  font-size:.78rem;
+  color:var(--text-mid);
+}
+.pat-val{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.85rem;
+  font-weight:700;
+}
+
+/* ── Callout ── */
+.callout{
+  background:var(--surface);
+  border-left:3px solid var(--accent);
+  padding:1rem 1.25rem;
+  margin:2rem 0;
+  border-radius:0 6px 6px 0;
+}
+.callout p{
+  font-size:.85rem;
+  color:var(--text-mid);
+  font-weight:300;
+  line-height:1.6;
+}
+.callout strong{color:var(--accent);font-weight:500}
+
+.callout.bull-callout{border-left-color:var(--bull)}
+.callout.bull-callout strong{color:var(--bull)}
+.callout.bear-callout{border-left-color:var(--bear)}
+.callout.bear-callout strong{color:var(--bear)}
+
+/* ── Takeaway List ── */
+.takeaway-list{
+  list-style:none;
+  padding:0;
+  margin:1rem 0;
+}
+.takeaway-list li{
+  position:relative;
+  padding:.6rem 0 .6rem 1.5rem;
+  font-size:.88rem;
+  color:var(--text-mid);
+  font-weight:300;
+  line-height:1.6;
+  border-bottom:1px solid #151820;
+}
+.takeaway-list li:last-child{border-bottom:none}
+.takeaway-list li::before{
+  content:'';
+  position:absolute;
+  left:0;
+  top:.95rem;
+  width:8px;
+  height:8px;
+  border-radius:2px;
+  background:var(--accent);
+}
+.takeaway-list li strong{color:var(--text);font-weight:500}
+
+/* ── Footer ── */
+.footer{
+  text-align:center;
+  padding-top:2.5rem;
+  border-top:1px solid var(--border);
+  color:var(--text-dim);
+  font-size:.72rem;
+  font-weight:300;
+  line-height:1.8;
+}
+.footer a{color:var(--text-dim);text-decoration:underline;text-underline-offset:2px}
+
+/* ── Animations ── */
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease}
+.reveal.visible{opacity:1;transform:none}
+
+/* ── Mobile ── */
+@media(max-width:767px){
+  .hero h1{font-size:1.6rem}
+  .bigstat{flex-direction:column;gap:1rem}
+  .bigstat-item{min-width:0}
+  .bigstat-num{font-size:1.6rem}
+  .comp-table{font-size:.72rem;display:block;overflow-x:auto}
+  .comp-table th,.comp-table td{padding:.4rem .4rem;white-space:nowrap}
+  .reversal-pair{grid-template-columns:1fr}
+  .patience-pair{grid-template-columns:1fr}
+  .tv-level-label{flex:0 0 80px;font-size:.62rem}
+  .tv-level-desc{flex:0 0 120px;font-size:.65rem}
+  .tv-zone{margin-left:80px}
+}
+.cheatsheet-banner{display:block;text-align:center;padding:1.5rem 1rem;margin:2rem 0 0;background:var(--surface);border:1px solid var(--border);border-radius:8px;text-decoration:none;transition:border-color .2s,background .2s}
+.cheatsheet-banner:hover{border-color:#fbbf24;background:var(--surface-2)}
+.cheatsheet-banner span{font-size:.95rem;color:var(--text);font-weight:500}
+</style>
+<script src="/nav.js"></script>
+</head>
+<body>
+<div class="page">
+
+<div style="background:#1a1400;border:1px solid #3d3200;border-radius:6px;padding:.6rem 1rem;margin-bottom:1.5rem;font-size:.75rem;color:#d4a800;font-weight:400;line-height:1.5">
+  <strong style="color:#fbbf24">Draft &mdash;</strong> These backtests have not yet been independently verified. Do not trade based on this data.
+</div>
+
+<a href="/" style="display:inline-flex;align-items:center;gap:.4rem;font-size:.8rem;color:var(--text-dim);text-decoration:none;margin-bottom:.5rem;transition:color .2s" onmouseover="this.style.color='#e8eaed'" onmouseout="this.style.color=''"><svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0h4"/></svg>Home</a>
+<a href="/golden-gate.html" class="back">
+  <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+  Golden Gate Subway Stats
+</a>
+
+<header class="hero reveal">
+  <div class="kicker">Study &mdash; The Trigger Box</div>
+  <h1>The Trigger Box:<br>the first hour tells you <em>everything.</em></h1>
+  <p class="lede">When price opens between the previous day&rsquo;s close and the trigger level, it creates a &ldquo;trigger box&rdquo; &mdash; a zone of indecision. How long price stays inside that box in the first hour is the strongest predictor of whether the Golden Gate fires and completes.</p>
+</header>
+
+<!-- ── Section 1: What Is the Trigger Box ── -->
+<div class="section reveal">
+  <div class="section-label">01 &mdash; What Is the Trigger Box</div>
+
+  <p class="prose">
+    The <strong>trigger box</strong> is a specific opening condition: price opens between the <strong>previous day&rsquo;s close (PDC)</strong> and the <strong>ATR trigger level</strong> (the 23.6% level). About half of all trading days (48.9%) open inside one of these boxes &mdash; either bullish or bearish. The question is simple: does price hold the box, or does it reclaim PDC?
+  </p>
+
+  <div class="trigger-visual">
+    <div class="tv-title">Bearish Trigger Box (n=1,483 days, 22.5%)</div>
+    <div class="tv-diagram">
+      <div class="tv-level">
+        <div class="tv-level-label" style="color:var(--text-mid)">PDC</div>
+        <div class="tv-level-line" style="background:var(--text-mid)"></div>
+        <div class="tv-level-desc">Previous Day&rsquo;s Close</div>
+      </div>
+      <div class="tv-zone bear-zone">Open is here &mdash; below PDC, above put trigger</div>
+      <div class="tv-level">
+        <div class="tv-level-label" style="color:var(--bear)">Put Trigger</div>
+        <div class="tv-level-line" style="background:var(--bear)"></div>
+        <div class="tv-level-desc">23.6% ATR (bearish)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="trigger-visual">
+    <div class="tv-title">Bullish Trigger Box (n=1,725 days, 26.2%)</div>
+    <div class="tv-diagram">
+      <div class="tv-level">
+        <div class="tv-level-label" style="color:var(--bull)">Call Trigger</div>
+        <div class="tv-level-line" style="background:var(--bull)"></div>
+        <div class="tv-level-desc">23.6% ATR (bullish)</div>
+      </div>
+      <div class="tv-zone bull-zone">Open is here &mdash; above PDC, below call trigger</div>
+      <div class="tv-level">
+        <div class="tv-level-label" style="color:var(--text-mid)">PDC</div>
+        <div class="tv-level-line" style="background:var(--text-mid)"></div>
+        <div class="tv-level-desc">Previous Day&rsquo;s Close</div>
+      </div>
+    </div>
+  </div>
+
+  <p class="prose">
+    These 3,208 days (48.7% of all days) are the focus of this study. They represent the &ldquo;undecided open&rdquo; &mdash; close enough to yesterday&rsquo;s close that direction hasn&rsquo;t been declared yet. The first hour resolves that ambiguity.
+  </p>
+</div>
+
+<!-- ── Section 2: Key Finding ── -->
+<div class="section reveal">
+  <div class="section-label">02 &mdash; The Key Finding</div>
+
+  <p class="prose">
+    When the trigger box <strong>holds for the first hour</strong> &mdash; meaning price never prints a 10-minute close back through PDC &mdash; the Golden Gate trigger rate jumps dramatically. This is the single strongest filter in the trigger box dataset.
+  </p>
+
+  <div class="bigstat">
+    <div class="bigstat-item">
+      <div class="bigstat-num bear">71.6%</div>
+      <div class="bigstat-label">Bearish GG opens on days<br>that held box for 1 hour</div>
+    </div>
+    <div class="bigstat-item">
+      <div class="bigstat-num bull">75.3%</div>
+      <div class="bigstat-label">Bullish GG opens on days<br>that held box for 1 hour</div>
+    </div>
+  </div>
+
+  <div class="bigstat">
+    <div class="bigstat-item">
+      <div class="bigstat-num bear">46.1%</div>
+      <div class="bigstat-label">Bearish GG completion when<br>box held 1 hour (vs 32% baseline)</div>
+    </div>
+    <div class="bigstat-item">
+      <div class="bigstat-num bull">44.5%</div>
+      <div class="bigstat-label">Bullish GG completion when<br>box held 1 hour (vs 29% baseline)</div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <p><strong>Reading these numbers:</strong> &ldquo;GG triggered&rdquo; means price reached the 38.2% ATR level. &ldquo;GG completed&rdquo; means price went on to reach the 61.8% level. Baseline is all days that opened inside the trigger box, regardless of first-hour action.</p>
+  </div>
+</div>
+
+<!-- ── Section 3: Progressive Conviction ── -->
+<div class="section reveal">
+  <div class="section-label">03 &mdash; Progressive Conviction</div>
+
+  <p class="prose">
+    The longer price holds in the trigger box, the more likely the day ends with a Golden Gate. These numbers show <strong>full-day outcomes filtered by hold time</strong> &mdash; not &ldquo;what happens after the hold period.&rdquo; Most GGs that trigger on &ldquo;held 1 hour&rdquo; days actually trigger <em>during</em> that first hour (70% of them). The hold time is a quality filter on the day, not a prediction of what comes next.
+  </p>
+
+  <!-- Bearish Progressive Table -->
+  <div class="comp-direction">
+    <div class="comp-title"><div class="dot" style="background:var(--bear)"></div> Bearish Trigger Box</div>
+    <table class="comp-table" id="bear-prog-table">
+      <thead><tr><th>Filter</th><th>GG Opens (full day)</th><th>GG Completes (full day)</th><th>Days</th><th class="bar-cell"></th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <!-- Bullish Progressive Table -->
+  <div class="comp-direction">
+    <div class="comp-title"><div class="dot" style="background:var(--bull)"></div> Bullish Trigger Box</div>
+    <table class="comp-table" id="bull-prog-table">
+      <thead><tr><th>Filter</th><th>GG Opens (full day)</th><th>GG Completes (full day)</th><th>Days</th><th class="bar-cell"></th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <div class="callout">
+    <p><strong>The pattern is clear:</strong> each 30-minute increment of holding adds roughly 5&ndash;10 percentage points to the GG trigger rate. By the one-hour mark, you have 70&ndash;75% conviction that the Golden Gate fires.</p>
+  </div>
+</div>
+
+<!-- ── Section 4: Reversals ── -->
+<div class="section reveal">
+  <div class="section-label">04 &mdash; The Reversal Signal</div>
+
+  <p class="prose">
+    What happens when the trigger box <strong>fails</strong>? When price reclaims PDC in the first hour, it&rsquo;s not just a failed setup &mdash; it&rsquo;s a signal in the opposite direction. Roughly <strong>73% of the time</strong>, price reaches the opposite trigger level.
+  </p>
+
+  <div class="reversal-pair">
+    <div class="reversal-card bear">
+      <div class="card-label">Bearish box fails &rarr; bullish reversal</div>
+      <div class="card-sub">n=810 days (54.6% of bearish boxes)</div>
+      <div class="rev-stat">
+        <span class="rev-stat-label">Reached call trigger</span>
+        <span class="rev-stat-val" style="color:var(--bull)">73.0%</span>
+      </div>
+      <div class="rev-stat">
+        <span class="rev-stat-label">Reached bull GG (61.8%)</span>
+        <span class="rev-stat-val" style="color:var(--bull)">49.4%</span>
+      </div>
+    </div>
+    <div class="reversal-card bull">
+      <div class="card-label">Bullish box fails &rarr; bearish reversal</div>
+      <div class="card-sub">n=949 days (55.0% of bullish boxes)</div>
+      <div class="rev-stat">
+        <span class="rev-stat-label">Reached put trigger</span>
+        <span class="rev-stat-val" style="color:var(--bear)">72.9%</span>
+      </div>
+      <div class="rev-stat">
+        <span class="rev-stat-label">Reached bear GG (61.8%)</span>
+        <span class="rev-stat-val" style="color:var(--bear)">50.2%</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <p><strong>The trigger box is a two-way signal.</strong> If price holds the box, trade the direction. If price reclaims PDC, trade the reversal. Either way, the first hour gives you an edge.</p>
+  </div>
+</div>
+
+<!-- ── Section 5: Patience ── -->
+<div class="section reveal">
+  <div class="section-label">05 &mdash; The Patience Play</div>
+
+  <p class="prose">
+    Sometimes the box holds for an hour but the Golden Gate hasn&rsquo;t triggered yet. Should you give up? The data says no. Even when the GG hasn&rsquo;t fired after a one-hour hold, there&rsquo;s still a <strong>55&ndash;60% chance</strong> it triggers later in the day.
+  </p>
+
+  <div class="patience-pair">
+    <div class="patience-card bear">
+      <div class="card-label">Bearish: held 1h, GG not yet triggered</div>
+      <div class="card-sub">n=293 days</div>
+      <div class="pat-row">
+        <span class="pat-label">GG triggers later</span>
+        <span class="pat-val" style="color:var(--bear)">54.9%</span>
+      </div>
+      <div class="pat-row">
+        <span class="pat-label">GG completes (61.8%)</span>
+        <span class="pat-val" style="color:var(--bear)">25.6%</span>
+      </div>
+    </div>
+    <div class="patience-card bull">
+      <div class="card-label">Bullish: held 1h, GG not yet triggered</div>
+      <div class="card-sub">n=343 days</div>
+      <div class="pat-row">
+        <span class="pat-label">GG triggers later</span>
+        <span class="pat-val" style="color:var(--bull)">60.3%</span>
+      </div>
+      <div class="pat-row">
+        <span class="pat-label">GG completes (61.8%)</span>
+        <span class="pat-val" style="color:var(--bull)">24.8%</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <p><strong>The box holding is the signal, not the trigger itself.</strong> If price respects PDC for an hour, the directional bias remains valid &mdash; even if the 38.2% level hasn&rsquo;t been hit yet. Patience is rewarded more often than not.</p>
+  </div>
+</div>
+
+<!-- ── Section 6: Practical Takeaways ── -->
+<div class="section reveal">
+  <div class="section-label">06 &mdash; Practical Takeaways</div>
+
+  <ul class="takeaway-list">
+    <li><strong>Identify the trigger box at the open.</strong> If price opens between PDC and the trigger (about half of all days), you have a trigger box setup. Wait.</li>
+    <li><strong>Watch the 30-minute mark.</strong> If no 10-minute candle has closed back through PDC, GG trigger probability has already jumped from ~58% to ~72%.</li>
+    <li><strong>The one-hour hold is the strongest filter.</strong> At 70&ndash;75% GG trigger rate and ~45% completion, the first hour of patience pays off dramatically.</li>
+    <li><strong>PDC reclaim is an opposite-direction signal.</strong> If the box breaks in the first hour, flip your bias &mdash; 73% of the time price reaches the other trigger.</li>
+    <li><strong>If the box held an hour but GG hasn&rsquo;t triggered, stay patient.</strong> There&rsquo;s still a 55&ndash;60% chance the trigger fires later in the session.</li>
+    <li><strong>This works in both directions.</strong> The bearish and bullish trigger boxes show remarkably symmetric behavior across all filters.</li>
+  </ul>
+</div>
+
+<a href="/trigger-box-spreads.html" class="cheatsheet-banner" style="margin-bottom:.5rem"><span>&#x1F4B0; Trigger Box Credit Spread Win Rates &rarr;</span></a>
+<a href="/cheatsheet.html" class="cheatsheet-banner"><span>&#x1F4CB; View the complete Golden Gate Cheat Sheet &rarr;</span></a>
+
+<footer class="footer">
+  ATR Levels &amp; Phase Oscillator by <a href="https://satyland.com" target="_blank" rel="noopener">Saty Mahajan</a><br>
+  Analysis inspired by <a href="https://x.com/tesrak" target="_blank" rel="noopener">@tesrak</a> &middot; With thanks to <a href="https://x.com/todaborrego" target="_blank" rel="noopener">@todor</a> for the data<br>
+  25 years of SPY data (2000&ndash;2025) &middot; <a href="https://milkmantrades.com">Milkman Trades</a>
+</footer>
+
+</div>
+
+<script>
+// ── Progressive Conviction Tables ──
+const bearProgRows = [
+  {label:'Baseline (all box days)', triggered:58.7, completed:32.4, n:1483, baseline:true, key:'bear_all'},
+  {label:'Held 30 min', triggered:67.5, completed:40.2, n:875, key:'bear_held_30min'},
+  {label:'Held 1 hour', triggered:71.6, completed:46.1, n:673, best:true, key:'bear_held_1hr'},
+];
+const bullProgRows = [
+  {label:'Baseline (all box days)', triggered:57.2, completed:29.4, n:1725, baseline:true, key:'bull_all'},
+  {label:'Held 30 min', triggered:69.7, completed:39.1, n:1004, key:'bull_held_30min'},
+  {label:'Held 1 hour', triggered:75.3, completed:44.5, n:776, best:true, key:'bull_held_1hr'},
+];
+
+function buildProgTable(id, rows, color){
+  const tbody = document.querySelector(`#${id} tbody`);
+  rows.forEach(r => {
+    const tr = document.createElement('tr');
+    if(r.baseline) tr.className = 'baseline';
+    if(r.best) tr.className = `best ${color}-row`;
+    tr.innerHTML = `
+      <td>${r.label}</td>
+      <td>${r.triggered.toFixed(1)}%</td>
+      <td>${r.completed.toFixed(1)}%</td>
+      <td><span class="n n-clickable n-yes" data-row="${r.key}" data-outcome="hit" data-title="${r.label} — Yes" style="cursor:pointer">Yes</span> · <span class="n n-clickable n-no" data-row="${r.key}" data-outcome="miss" data-title="${r.label} — No" style="cursor:pointer">No</span> <span class="n">(n=${r.n.toLocaleString()})</span></td>
+      <td class="bar-cell"><div class="mini-bar"><div class="mini-bar-fill" style="width:0%;background:${r.baseline?'#3a3f4a':color==='bull'?'var(--bull)':'var(--bear)'};opacity:${r.baseline?.4:r.best?1:.5}" data-w="${r.triggered}"></div></div></td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+buildProgTable('bear-prog-table', bearProgRows, 'bear');
+buildProgTable('bull-prog-table', bullProgRows, 'bull');
+
+// ── Scroll reveal + animate bars ──
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if(e.isIntersecting){
+      e.target.classList.add('visible');
+      setTimeout(() => {
+        e.target.querySelectorAll('[data-w]').forEach(bar => {
+          bar.style.width = bar.dataset.w + '%';
+        });
+      }, 200);
+      observer.unobserve(e.target);
+    }
+  });
+}, {threshold:0.15});
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Trigger hero immediately
+document.querySelector('.hero').classList.add('visible');
+</script>
+<script src="/study-drawer.js"></script>
+<script>StudyDrawer.loadData('/data/trigger-box-dates.json');</script>
+</body>
+</html>

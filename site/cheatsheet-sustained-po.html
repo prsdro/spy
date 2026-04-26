@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sustained Morning PO Cheat Sheet | Milkman Trades</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥛</text></svg>">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0c0e12;--card:#11131a;--border:#1c1f2a;--t:#e4e5e9;--t2:#b0b3c0;--t3:#7a7e90;--bull:#1cd48a;--bear:#ef6c00;--acc:#fbbf24;--red:#ef4444;--blue:#60a5fa}
+html{font-size:14px}
+body{background:#060709;color:var(--t);font-family:'DM Sans',system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;padding:2rem 1rem 4rem}
+.save-bar{width:1200px;display:flex;justify-content:flex-end;margin-bottom:.75rem}
+.save-btn{padding:.5rem 1.2rem;background:var(--acc);color:#000;border:none;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:.75rem;font-weight:600;cursor:pointer}
+.poster{width:1200px;background:var(--bg);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.hdr{padding:1.8rem 2rem 1.4rem;background:linear-gradient(135deg,#0e1018,#12151f);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-end}
+.hdr-left h1{font-family:'JetBrains Mono',monospace;font-size:1.5rem;font-weight:700;line-height:1;margin-bottom:.35rem}
+.hdr-left h1 span{color:var(--acc)}
+.hdr-left .sub{font-size:.8rem;color:var(--t3)}
+.hdr-right{text-align:right}.hdr-right .url{font-size:.75rem;color:var(--t3)}
+.hdr-right .back{font-size:.65rem;color:var(--blue);text-decoration:none;margin-right:.8rem}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.sec{border-right:1px solid var(--border);border-bottom:1px solid var(--border);padding:1.4rem 1.6rem}
+.sec:nth-child(even){border-right:none}.sec.full{grid-column:1/-1;border-right:none}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:.6rem;font-weight:600;color:var(--acc);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.6rem}
+.sec-title{font-size:1rem;font-weight:700;margin-bottom:.8rem}
+.desc{font-size:.85rem;color:var(--t2);line-height:1.6;margin-bottom:.8rem}
+.stats{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:.8rem}
+.stat{flex:1;min-width:100px;background:var(--card);border:1px solid var(--border);border-radius:5px;padding:.6rem .7rem}
+.stat-val{font-family:'JetBrains Mono',monospace;font-size:1.4rem;font-weight:700;line-height:1}
+.stat-label{font-size:.75rem;color:var(--t3);margin-top:.2rem;line-height:1.3}
+.bull{color:var(--bull)}.bear{color:var(--bear)}.acc{color:var(--acc)}.red{color:var(--red)}
+.mtable{width:100%;border-collapse:collapse;font-size:.75rem;margin:.5rem 0}
+.mtable th{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--t3);text-align:right;padding:.3rem .4rem;border-bottom:1px solid var(--border);text-transform:uppercase}
+.mtable th:first-child{text-align:left}
+.mtable td{padding:.35rem .4rem;border-bottom:1px solid #13151d;text-align:right;font-family:'JetBrains Mono',monospace;color:var(--t2)}
+.mtable td:first-child{text-align:left;font-family:'DM Sans',sans-serif;color:var(--t)}
+.mtable tr.hi td{font-weight:600;color:var(--t)}
+.blist{list-style:none;font-size:.85rem;color:var(--t2);line-height:1.7}
+.blist li::before{content:'›';color:var(--acc);font-weight:700;margin-right:.4rem}
+.blist .key{color:var(--t);font-weight:500}.blist .val{font-family:'JetBrains Mono',monospace;font-weight:600}
+.ftr{padding:.8rem 2rem;border-top:1px solid var(--border);font-size:.6rem;color:var(--t3);display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace}
+@media(max-width:767px){body{padding:1rem .5rem 3rem}.save-bar{width:100%}.poster{width:100%}.hdr{flex-direction:column;align-items:flex-start;gap:.6rem;padding:1.2rem 1rem 1rem}.hdr-left h1{font-size:1.1rem}.hdr-right{text-align:left}.grid{grid-template-columns:1fr}.sec{border-right:none !important;padding:1.1rem 1rem}.stats{flex-direction:column}.stat{min-width:0}.mtable{font-size:.65rem}.mtable th,.mtable td{padding:.25rem .3rem}.ftr{flex-direction:column;gap:.4rem;font-size:.55rem;padding:.7rem 1rem}}
+</style>
+<script src="/nav.js"></script>
+<script src="/mobile-png.js"></script>
+</head>
+<body>
+
+<div class="save-bar">
+  <button class="save-btn save-mobile-btn" onclick="saveMobilePNG()" style="background:#60a5fa;margin-right:.5rem">📱 Mobile PNG</button>
+  <button class="save-btn" onclick="savePNG()">&#11015; Save as PNG</button>
+</div>
+
+<div class="poster" id="poster">
+<div class="hdr">
+  <div class="hdr-left">
+    <h1>Milkman Trades &mdash; <span>Sustained Morning PO</span></h1>
+    <div class="sub">10m PO above 61.8 from open through 11am &mdash; the regime is set; the fast cloud picks the runners (n=274)</div>
+  </div>
+  <div class="hdr-right">
+    <a class="back" href="cheatsheet.html">&larr; Master Sheet</a>
+    <span class="url">milkmantrades.com</span>
+  </div>
+</div>
+
+<div class="grid">
+
+<div class="sec full">
+  <div class="sec-num">01 &mdash; The Setup</div>
+  <div class="sec-title">A pre-11am regime, not an entry signal</div>
+  <div class="desc">
+    The 10-minute Phase Oscillator crosses above <strong>61.8 in the first 30 min</strong> of RTH and stays above 61.8 on every bar through <strong>11:00 AM</strong>. These are strong trend days &mdash; but the median high is already at 110% of ATR, so the bulk of the move is priced in. The afternoon decision is whether to ride or fade.
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="stat-val bull">89.1%</div><div class="stat-label">Reach 61.8% ATR<br>day high</div></div>
+    <div class="stat"><div class="stat-val bull">77.7%</div><div class="stat-label">Reach 78.6% ATR</div></div>
+    <div class="stat"><div class="stat-val acc">63.9%</div><div class="stat-label">Reach 100% ATR<br>(full daily move)</div></div>
+    <div class="stat"><div class="stat-val red">1/274</div><div class="stat-label">Days that hold PO &gt; 61.8<br>all the way to close</div></div>
+  </div>
+</div>
+
+<div class="sec">
+  <div class="sec-num">02 &mdash; PO Mean-Reverts</div>
+  <div class="sec-title">The afternoon collapse is the default</div>
+  <ul class="blist">
+    <li><span class="key">PO peaks 10:00&ndash;10:10</span>, then falls continuously through close.</li>
+    <li><span class="key">Average closing PO:</span> <span class="val">8.5</span> &mdash; barely above neutral, despite the strong morning.</li>
+    <li><span class="key">PO downtick is NOT the reversal signal.</span> 59% of days print a new high <em>after</em> PO leaves distribution.</li>
+  </ul>
+</div>
+
+<div class="sec">
+  <div class="sec-num">03 &mdash; Day High Distribution</div>
+  <div class="sec-title">Where the day actually tops out</div>
+  <ul class="blist">
+    <li><span class="key">100&ndash;161.8% ATR:</span> the most common bucket &mdash; 57.6% of days top beyond the full ATR move</li>
+    <li><span class="key">123.6&ndash;161.8%:</span> <span class="val acc">31.0%</span> of days (n=85) &mdash; modal cluster</li>
+    <li><span class="key">Final 30 minutes:</span> <span class="val">30.7%</span> of day highs print here &mdash; close-on-high is common</li>
+  </ul>
+</div>
+
+<div class="sec full">
+  <div class="sec-num">04 &mdash; Fast-Cloud Filter (the actual edge)</div>
+  <div class="sec-title">10m EMA8/21 cross is the real continuation tell from 11am</div>
+  <table class="mtable">
+    <thead><tr><th>From 11am close to RTH close</th><th>Cloud stays bullish</th><th>Cloud flips bearish</th><th>Edge</th></tr></thead>
+    <tbody>
+      <tr class="hi"><td>Avg return from 11am</td><td class="bull">+0.39%</td><td class="bear">&minus;0.43%</td><td class="acc">+0.82%</td></tr>
+      <tr><td>% closing higher than 11am</td><td class="bull">~88%</td><td>~45%</td><td>+43pp</td></tr>
+    </tbody>
+  </table>
+  <div style="font-size:.7rem;color:var(--t3);margin-top:.3rem;font-style:italic">10m fast cloud = EMA8 vs EMA21 on 10-minute candles. Sample: ~n=289 prior run; current qualifying-day count is 274. Directional conclusion holds; exact magnitudes shift slightly on rerun.</div>
+</div>
+
+</div><!-- /grid -->
+
+<div class="sec full" style="background:linear-gradient(135deg,#0f1118,#131620);border-bottom:none">
+  <div class="sec-num" style="color:var(--acc)">&#9733; Bottom Line</div>
+  <div class="sec-title">How to trade sustained-PO mornings</div>
+  <ul class="blist">
+    <li><span class="key">By 11am the regime is set, not the entry.</span> 89% reach 61.8% and 78% reach 78.6% &mdash; most of the obvious upside is already in the tape. Don't chase here.</li>
+    <li><span class="key">Don't fade the PO downtick.</span> 59% of days make a new high after PO leaves distribution. The mean-reversion of PO is normal, not a reversal signal.</li>
+    <li><span class="key">Use the 10m fast cloud after 11am as your runner filter.</span> Cloud stays bullish &rarr; bias close-on-high (88% close higher). Cloud flips &rarr; that flip itself runs another &minus;0.11% to close on average. <span class="val acc">+0.82%</span> total edge between the two regimes.</li>
+    <li><span class="key">30%+ of day highs print in the final 30 minutes.</span> If the cloud is still bullish into the 3pm hour, hold for the close.</li>
+  </ul>
+</div>
+
+<div class="ftr">
+  <span>milkmantrades.com &middot; ATR Levels &amp; Phase Oscillator by Saty Mahajan</span>
+  <span>Source: /sustained-po.html &middot; 25 years of SPY (2000&ndash;2025)</span>
+</div>
+
+</div>
+
+<script>
+function savePNG(){const btn=document.querySelector('.save-btn:not(.save-mobile-btn)');btn.textContent='Rendering...';html2canvas(document.getElementById('poster'),{scale:2,backgroundColor:'#0c0e12',useCORS:true}).then(c=>{const a=document.createElement('a');a.download='sustained-po-cheatsheet.png';a.href=c.toDataURL('image/png');a.click();btn.textContent='✓ Saved';setTimeout(()=>btn.textContent='⬇ Save as PNG',2000);});}
+</script>
+</body>
+</html>

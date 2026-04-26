@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Multiday Put Trigger Reversion | Milkman Trades</title>
+<meta name="description" content="SPY first-tap of the weekly put trigger: can it reclaim pivot before the downside Golden Gate opens? 26 years of SPY weeks measured with 1-minute bars.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥛</text></svg>">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --bg:#0c0e12;
+  --surface:#13161c;
+  --surface-2:#181c24;
+  --border:#1e2230;
+  --text:#e8eaed;
+  --text-dim:#6b7280;
+  --text-mid:#9ca3af;
+  --accent:#fbbf24;
+  --bull:#1cd48a;
+  --bull-bg:#0a1f15;
+  --bear:#ef6c00;
+  --bear-bg:#1f1208;
+  --blue:#38bdf8;
+  --blue-bg:#082331;
+  --violet:#a78bfa;
+  --violet-bg:#171126;
+}
+
+html{font-size:15px;scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'DM Sans',system-ui,sans-serif;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  z-index:-1;
+  background:linear-gradient(180deg, rgba(255,255,255,.018), transparent 46%);
+  pointer-events:none;
+}
+
+.page{max-width:820px;margin:0 auto;padding:3rem 1.5rem 5rem}
+
+.draft{
+  background:#1a1400;
+  border:1px solid #3d3200;
+  border-radius:6px;
+  padding:.6rem 1rem;
+  margin-bottom:1.5rem;
+  font-size:.75rem;
+  color:#d4a800;
+  line-height:1.5;
+}
+.draft strong{color:var(--accent)}
+
+.hero{margin-bottom:3.5rem}
+.kicker{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.7rem;
+  font-weight:500;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--accent);
+  margin-bottom:.75rem;
+}
+h1{
+  font-size:2.35rem;
+  font-weight:700;
+  letter-spacing:0;
+  line-height:1.12;
+  text-wrap:balance;
+  margin-bottom:1rem;
+}
+h1 em{
+  font-style:normal;
+  background:linear-gradient(135deg,var(--accent),var(--bear));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.lede{
+  max-width:650px;
+  font-size:1rem;
+  color:var(--text-mid);
+  font-weight:300;
+  line-height:1.7;
+  text-wrap:pretty;
+}
+
+.section{margin-bottom:3.5rem}
+.section-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.65rem;
+  font-weight:500;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--text-dim);
+  padding-bottom:.6rem;
+  border-bottom:1px solid var(--border);
+  margin-bottom:1.5rem;
+}
+.prose{
+  font-size:.92rem;
+  color:var(--text-mid);
+  font-weight:300;
+  line-height:1.75;
+  margin-bottom:1.5rem;
+  text-wrap:pretty;
+}
+.prose strong{color:var(--text);font-weight:500}
+
+.setup-strip{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:.5rem;
+  margin:1.75rem 0;
+}
+.setup-step{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:1rem;
+  min-height:118px;
+  position:relative;
+  overflow:hidden;
+}
+.setup-step::before{
+  content:'';
+  position:absolute;
+  left:0;top:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--accent),transparent);
+}
+.setup-step.bear::before{background:linear-gradient(90deg,var(--bear),transparent)}
+.setup-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.68rem;
+  color:var(--text-dim);
+  margin-bottom:.55rem;
+}
+.setup-title{
+  font-size:.88rem;font-weight:600;color:var(--text);
+  line-height:1.25;margin-bottom:.45rem;
+}
+.setup-desc{
+  font-size:.72rem;color:var(--text-dim);line-height:1.45;
+}
+
+.bigstat{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:.65rem;
+  margin:2rem 0;
+}
+.bigstat-item{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:1.15rem;
+  position:relative;
+  overflow:hidden;
+}
+.bigstat-item::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+}
+.bigstat-item.bear::before{background:linear-gradient(90deg,var(--bear),transparent)}
+.bigstat-item.bull::before{background:linear-gradient(90deg,var(--bull),transparent)}
+.bigstat-item.blue::before{background:linear-gradient(90deg,var(--blue),transparent)}
+.bigstat-item.accent::before{background:linear-gradient(90deg,var(--accent),transparent)}
+.bigstat-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:1.8rem;
+  font-weight:700;
+  line-height:1;
+  margin-bottom:.4rem;
+  font-variant-numeric:tabular-nums;
+}
+.bigstat-num.bear{color:var(--bear)}
+.bigstat-num.bull{color:var(--bull)}
+.bigstat-num.blue{color:var(--blue)}
+.bigstat-num.accent{color:var(--accent)}
+.bigstat-label{font-size:.72rem;color:var(--text-dim);line-height:1.35}
+
+.data-table{
+  width:100%;
+  border-collapse:collapse;
+  margin:1.5rem 0;
+  font-size:.8rem;
+}
+.data-table th{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.62rem;font-weight:500;
+  letter-spacing:.06em;text-transform:uppercase;
+  color:var(--text-dim);text-align:right;
+  padding:.62rem .5rem;border-bottom:1px solid var(--border);
+  white-space:nowrap;
+}
+.data-table th:first-child{text-align:left}
+.data-table td{
+  padding:.58rem .5rem;border-bottom:1px solid #151820;
+  text-align:right;font-variant-numeric:tabular-nums;
+}
+.data-table td:first-child{text-align:left;color:var(--text);font-weight:500}
+.pct{font-family:'JetBrains Mono',monospace;font-weight:700}
+.pct.bear{color:var(--bear)}
+.pct.bull{color:var(--bull)}
+.pct.blue{color:var(--blue)}
+.pct.accent{color:var(--accent)}
+.n-col{font-family:'JetBrains Mono',monospace;color:var(--text-mid)}
+
+.funnel{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:.5rem;
+  margin:1.75rem 0;
+}
+.funnel-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:1rem;
+}
+.funnel-card.bull{border-left:2px solid var(--bull)}
+.funnel-card.blue{border-left:2px solid var(--blue)}
+.funnel-card.accent{border-left:2px solid var(--accent)}
+.funnel-card.bear{border-left:2px solid var(--bear)}
+.funnel-pct{
+  font-family:'JetBrains Mono',monospace;
+  font-size:1.5rem;font-weight:700;line-height:1;
+  margin-bottom:.4rem;color:var(--text);
+}
+.funnel-card.bull .funnel-pct{color:var(--bull)}
+.funnel-card.blue .funnel-pct{color:var(--blue)}
+.funnel-card.accent .funnel-pct{color:var(--accent)}
+.funnel-card.bear .funnel-pct{color:var(--bear)}
+.funnel-title{font-size:.78rem;font-weight:600;color:var(--text);line-height:1.25}
+.funnel-sub{font-size:.66rem;color:var(--text-dim);margin-top:.3rem;line-height:1.35}
+
+.callout{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:1rem 1.1rem;
+  margin:1.5rem 0;
+}
+.callout p{font-size:.84rem;color:var(--text-mid);line-height:1.65}
+.callout strong{color:var(--text);font-weight:500}
+.callout.warn{background:var(--bear-bg);border-color:#3d2108}
+.callout.warn strong{color:var(--bear)}
+
+.trade-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:.5rem;
+  margin:1.5rem 0;
+}
+.trade-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:1rem;
+}
+.trade-card.best{border-color:#3d3200;background:#1a1400}
+.trade-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.65rem;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:var(--text-dim);
+  margin-bottom:.5rem;
+}
+.trade-R{
+  font-family:'JetBrains Mono',monospace;
+  font-size:1.6rem;font-weight:700;
+  font-variant-numeric:tabular-nums;line-height:1;
+  margin-bottom:.35rem;
+}
+.trade-R.pos{color:var(--bull)}
+.trade-R.neg{color:var(--bear)}
+.trade-R.flat{color:var(--text-mid)}
+.trade-sub{font-size:.7rem;color:var(--text-dim);line-height:1.4}
+
+.study-links{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:.6rem;
+  margin:3rem 0 2rem;
+}
+.study-link{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:.5rem;padding:.8rem 1rem;
+  background:var(--surface);border:1px solid var(--border);border-radius:6px;
+  color:var(--text);text-decoration:none;font-size:.82rem;font-weight:500;
+  transition:border-color .15s,background .15s,transform .15s;
+}
+.study-link:hover{border-color:var(--accent);background:var(--surface-2);transform:translateY(-1px)}
+.study-link:active{transform:scale(.96)}
+.study-link svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;flex-shrink:0}
+
+.footer{
+  text-align:center;font-size:.72rem;color:var(--text-dim);
+  line-height:1.7;margin-top:2rem;padding-top:1.5rem;
+  border-top:1px solid var(--border);
+}
+.footer a{color:var(--text-dim);text-decoration:underline;text-underline-offset:2px}
+
+.reveal{opacity:0;transform:translateY(12px);transition:opacity .55s ease,transform .55s ease}
+.reveal.visible{opacity:1;transform:none}
+
+@media(max-width:760px){
+  .page{padding:2rem 1rem 4rem}
+  h1{font-size:1.9rem}
+  .setup-strip,.bigstat,.funnel,.trade-grid,.study-links{grid-template-columns:1fr}
+  .setup-step{min-height:auto}
+  .data-table{font-size:.74rem}
+  .data-table th,.data-table td{padding:.5rem .35rem}
+}
+</style>
+<script src="/nav.js"></script>
+</head>
+<body>
+<div class="page">
+
+<div class="draft">
+  <strong>Draft &mdash;</strong> Fresh publication. Methodology was codex-reviewed and corrected for ATR lookahead, Wilder seeding, wick clipping, gap-through entries, and target-race stop logic. Do not trade without your own validation.
+</div>
+
+<header class="hero reveal">
+  <div class="kicker">Study &mdash; Multiday Put Trigger Reversion</div>
+  <h1>First tap of the weekly put trigger<br>is a <em>coin flip at best</em> &mdash;<br>and the downside GG wins more often.</h1>
+  <p class="lede">When SPY first crosses down into the multiday put trigger (-23.6% of weekly ATR off the prior Friday close), the question is whether it reclaims pivot before the downside Golden Gate opens. Across 694 clean events from 2000-2026, pivot reclaim happens 38.0% of the time. The downside GG opens first 58.5% of the time. Shorting the break is the base-rate play; the long reversion only earns its keep inside specific regimes.</p>
+</header>
+
+<div class="section reveal">
+  <div class="section-label">01 &mdash; The Setup</div>
+
+  <p class="prose">
+    Weekly ATR levels are computed from the prior completed weekly bar using Wilder's 14-period ATR &mdash; the Saty <code>period_index = 1</code> convention. Every ISO week since 2000 is classified into one of five cohorts based on whether and how price interacted with the multiday put trigger. The race runs with 1-minute RTH bars, wick-clipped against phantom prints.
+  </p>
+
+  <div class="setup-strip">
+    <div class="setup-step">
+      <div class="setup-num">Step 01</div>
+      <div class="setup-title">Levels anchored</div>
+      <div class="setup-desc">Prior Friday close and prior-week ATR14 fix the put trigger, pivot, downside GG, call trigger, and upside GG for the week.</div>
+    </div>
+    <div class="setup-step bear">
+      <div class="setup-num">Step 02</div>
+      <div class="setup-title">Tap detected</div>
+      <div class="setup-desc">First 1m bar where low touches -23.6% ATR. Bars that open cleanly below the trigger get their own cohort.</div>
+    </div>
+    <div class="setup-step">
+      <div class="setup-num">Step 03</div>
+      <div class="setup-title">Race measured</div>
+      <div class="setup-desc">Does pivot print before -38.2%? If so, can runners reach +23.6% and then +38.2% without tripping the downside stop?</div>
+    </div>
+    <div class="setup-step bear">
+      <div class="setup-num">Sample</div>
+      <div class="setup-title">694 clean taps</div>
+      <div class="setup-desc">Across 1,352 trading weeks. Gap-through and open-below cohorts are reported separately.</div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <p><strong>Path rules:</strong> the downside stop is counted from the tap bar itself (the bar that prints the trigger). Upside targets only count from bars <em>after</em> the tap bar, to avoid same-minute ambiguity. All outcomes must resolve within the same trading week.</p>
+  </div>
+</div>
+
+<div class="section reveal">
+  <div class="section-label">02 &mdash; Headline Probabilities (Clean Intraweek Cross)</div>
+
+  <div class="bigstat">
+    <div class="bigstat-item blue">
+      <div class="bigstat-num blue">38.0%</div>
+      <div class="bigstat-label">P(pivot before dgg)<br>264 / 694 taps</div>
+    </div>
+    <div class="bigstat-item bear">
+      <div class="bigstat-num bear">58.5%</div>
+      <div class="bigstat-label">P(breakdown)<br>406 / 694 taps</div>
+    </div>
+    <div class="bigstat-item bull">
+      <div class="bigstat-num bull">14.8%</div>
+      <div class="bigstat-label">Joint P(full rotation)<br>103 / 694 taps</div>
+    </div>
+    <div class="bigstat-item accent">
+      <div class="bigstat-num accent">3.5%</div>
+      <div class="bigstat-label">No-resolution by Fri close<br>24 / 694 taps</div>
+    </div>
+  </div>
+
+  <p class="prose">
+    The base case is that the trigger tap fails. The downside Golden Gate opens first in 58.5% of events, and only ~38% of taps reclaim pivot before losing -38.2%. Stacking the runner legs on top &mdash; pivot, then call trigger, then upside GG &mdash; collapses the cumulative odds to 14.8% for a full weekly rotation.
+  </p>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Outcome in-week (after clean tap)</th>
+        <th>Rate</th>
+        <th>N</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Breakdown (-38.2% dgg opens before pivot)</td><td class="pct bear">58.5%</td><td class="n-col">406</td></tr>
+      <tr><td>Reversion only (pivot reclaimed, no call trig)</td><td class="pct blue">16.6%</td><td class="n-col">115</td></tr>
+      <tr><td>Continuation (pivot + call trig, no ugg)</td><td class="pct bull">6.6%</td><td class="n-col">46</td></tr>
+      <tr><td>Full rotation (pivot + call trig + ugg open)</td><td class="pct bull">14.8%</td><td class="n-col">103</td></tr>
+      <tr><td>No resolution by Friday close</td><td class="pct accent">3.5%</td><td class="n-col">24</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section reveal">
+  <div class="section-label">03 &mdash; Funnel: Conditional Probabilities</div>
+
+  <p class="prose">
+    Runners compound, but they also shed events fast. After pivot reclaims, just over half continue to the call trigger. Of those, two-thirds make it to the upside GG.
+  </p>
+
+  <div class="funnel">
+    <div class="funnel-card blue">
+      <div class="funnel-pct">38.0%</div>
+      <div class="funnel-title">P(pivot &vert; tap)</div>
+      <div class="funnel-sub">264 of 694</div>
+    </div>
+    <div class="funnel-card bull">
+      <div class="funnel-pct">56.4%</div>
+      <div class="funnel-title">P(call trig &vert; pivot)</div>
+      <div class="funnel-sub">149 of 264</div>
+    </div>
+    <div class="funnel-card bull">
+      <div class="funnel-pct">69.1%</div>
+      <div class="funnel-title">P(ugg &vert; call trig)</div>
+      <div class="funnel-sub">103 of 149</div>
+    </div>
+    <div class="funnel-card accent">
+      <div class="funnel-pct">14.8%</div>
+      <div class="funnel-title">Joint: full rotation</div>
+      <div class="funnel-sub">103 of 694</div>
+    </div>
+  </div>
+</div>
+
+<div class="section reveal">
+  <div class="section-label">04 &mdash; Regime Filter: Quarterly Position Band</div>
+
+  <p class="prose">
+    Where does the weekly put trigger sit relative to the quarterly Saty levels? This context matters. When the weekly put trigger falls inside the <strong>q_pivot_to_call</strong> band (between prior-quarter close and quarterly call trigger), pivot reclaim jumps to <strong>45.3%</strong> and breakdown drops to 50.9% &mdash; the best edge in the table. When it sits above the quarterly upside GG (an extended market), reversion is weaker.
+  </p>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Quarterly band at tap</th>
+        <th>N</th>
+        <th>P(pivot)</th>
+        <th>P(call)</th>
+        <th>P(ugg)</th>
+        <th>P(breakdown)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Above quarterly ugg</td><td class="n-col">160</td><td class="pct blue">35.0%</td><td class="pct bull">21.2%</td><td class="pct bull">13.1%</td><td class="pct bear">61.9%</td></tr>
+      <tr><td>q_call to q_ugg</td><td class="n-col">79</td><td class="pct blue">40.5%</td><td class="pct bull">24.1%</td><td class="pct bull">15.2%</td><td class="pct bear">58.2%</td></tr>
+      <tr><td><strong>q_pivot to q_call</strong></td><td class="n-col">159</td><td class="pct blue">45.3%</td><td class="pct bull">22.0%</td><td class="pct bull">15.1%</td><td class="pct bear">50.9%</td></tr>
+      <tr><td>q_pivot to q_put</td><td class="n-col">129</td><td class="pct blue">36.4%</td><td class="pct bull">24.8%</td><td class="pct bull">14.7%</td><td class="pct bear">58.9%</td></tr>
+      <tr><td>q_put to q_dgg</td><td class="n-col">36</td><td class="pct blue">36.1%</td><td class="pct bull">25.0%</td><td class="pct bull">22.2%</td><td class="pct bear">63.9%</td></tr>
+      <tr><td>Below quarterly dgg</td><td class="n-col">83</td><td class="pct blue">37.3%</td><td class="pct bull">21.7%</td><td class="pct bull">20.5%</td><td class="pct bear">57.8%</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section reveal">
+  <div class="section-label">05 &mdash; Weekly PO Bilbo State</div>
+
+  <p class="prose">
+    Classic Bilbo states &mdash; weekly PO above +61.8 rising, or below -61.8 falling &mdash; are rare at the moment the trigger taps. The bulk of events happen with weekly PO mid-zone. <strong>mid_rising</strong> is the largest and best single cell: n=321, 40.2% pivot reclaim, 55.1% breakdown.
+  </p>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Weekly PO at start of week</th>
+        <th>N</th>
+        <th>P(pivot)</th>
+        <th>P(call)</th>
+        <th>P(ugg)</th>
+        <th>P(breakdown)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Bull bilbo (PO high &amp; rising)</td><td class="n-col">97</td><td class="pct blue">35.1%</td><td class="pct bull">17.5%</td><td class="pct bull">11.3%</td><td class="pct bear">62.9%</td></tr>
+      <tr><td>Bear bilbo (PO low &amp; falling)</td><td class="n-col">14*</td><td class="pct blue">28.6%</td><td class="pct bull">7.1%</td><td class="pct bull">7.1%</td><td class="pct bear">71.4%</td></tr>
+      <tr><td><strong>Mid &amp; rising</strong></td><td class="n-col">321</td><td class="pct blue">40.2%</td><td class="pct bull">23.1%</td><td class="pct bull">14.3%</td><td class="pct bear">55.1%</td></tr>
+      <tr><td>Mid &amp; falling</td><td class="n-col">267</td><td class="pct blue">34.1%</td><td class="pct bull">19.9%</td><td class="pct bull">15.4%</td><td class="pct bear">64.0%</td></tr>
+      <tr><td>High &amp; falling</td><td class="n-col">41</td><td class="pct blue">39.0%</td><td class="pct bull">26.8%</td><td class="pct bull">19.5%</td><td class="pct bear">58.5%</td></tr>
+      <tr><td>Low &amp; rising</td><td class="n-col">9*</td><td class="pct blue">44.4%</td><td class="pct bull">22.2%</td><td class="pct bull">22.2%</td><td class="pct bear">55.6%</td></tr>
+    </tbody>
+  </table>
+  <p class="prose" style="font-size:.78rem">*&nbsp;n &lt; 20. Sample too small for a confident read.</p>
+</div>
+
+<div class="section reveal">
+  <div class="section-label">06 &mdash; Cohort Decomposition</div>
+
+  <p class="prose">
+    Not every tap is tradable. Of 1,352 weeks, only 694 produce a clean intraweek cross where the 1m bar actually prints at the trigger price. The other tap-type cohorts &mdash; gap-throughs, Monday open-belows &mdash; are materially worse and must be treated separately.
+  </p>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Cohort</th>
+        <th>N</th>
+        <th>P(pivot)</th>
+        <th>P(breakdown)</th>
+        <th>P(full rotation)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Intraweek clean cross</strong></td><td class="n-col">694</td><td class="pct blue">38.0%</td><td class="pct bear">58.5%</td><td class="pct bull">14.8%</td></tr>
+      <tr><td>Gap-through cross (bar opened below trigger)</td><td class="n-col">63</td><td class="pct blue">14.3%</td><td class="pct bear">85.7%</td><td class="pct bull">3.2%</td></tr>
+      <tr><td>Opened below put trigger (Monday gap)</td><td class="n-col">60</td><td class="pct blue">25.0%</td><td class="pct bear">75.0%</td><td class="pct bull">11.7%</td></tr>
+      <tr><td>Opened below dgg (gap-through-stop)</td><td class="n-col">50</td><td class="pct blue">&mdash;</td><td class="pct bear">&mdash;</td><td class="pct bull">&mdash;</td></tr>
+      <tr><td>Non-tap weeks</td><td class="n-col">485</td><td class="pct blue">&mdash;</td><td class="pct bear">&mdash;</td><td class="pct bull">&mdash;</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout warn">
+    <p><strong>Gap-through warning:</strong> when the tap bar itself opens below the trigger (not a clean cross), breakdown rate is 85.7%. Entering long on a gap-through is structurally different from entering on a clean trigger print. Don't conflate.</p>
+  </div>
+</div>
+
+<div class="section reveal">
+  <div class="section-label">07 &mdash; Decade Splits</div>
+
+  <p class="prose">
+    The reversion rate is remarkably stable across the 2000s, 2010s, and 2020s &mdash; all 36-38%. The edge (or lack of it) is not an artifact of a single market regime.
+  </p>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Decade</th>
+        <th>N</th>
+        <th>P(pivot)</th>
+        <th>P(call)</th>
+        <th>P(ugg)</th>
+        <th>P(breakdown)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>2000s</td><td class="n-col">313</td><td class="pct blue">36.1%</td><td class="pct bull">21.1%</td><td class="pct bull">13.7%</td><td class="pct bear">60.7%</td></tr>
+      <tr><td>2010s</td><td class="n-col">279</td><td class="pct blue">37.6%</td><td class="pct bull">21.5%</td><td class="pct bull">16.5%</td><td class="pct bear">58.4%</td></tr>
+      <tr><td>2020s (through 2026-Q1)</td><td class="n-col">162</td><td class="pct blue">37.7%</td><td class="pct bull">20.4%</td><td class="pct bull">13.0%</td><td class="pct bear">60.5%</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section reveal">
+  <div class="section-label">08 &mdash; Trade Simulation</div>
+
+  <p class="prose">
+    Long at the tap, stop at downside GG open (-38.2%). That's a 0.146-ATR risk unit. Each upside target produces a different R:R and a different win rate. Unresolved events exit at Friday close &mdash; two views shown: <em>conservative</em> (unresolved = -1R) and <em>time-stop</em> (unresolved = 0R).
+  </p>
+
+  <div class="trade-grid">
+    <div class="trade-card best">
+      <div class="trade-label">Target pivot only &mdash; 1.62R</div>
+      <div class="trade-R flat">+0.030R</div>
+      <div class="trade-sub">win 38.0% (264/694) &middot; stop 58.5% &middot; unresolved 3.5%<br>time-stop view; conservative view: &minus;0.005R</div>
+    </div>
+    <div class="trade-card">
+      <div class="trade-label">Target call trigger &mdash; 3.23R</div>
+      <div class="trade-R neg">&minus;0.057R</div>
+      <div class="trade-sub">win 21.5% (149/694) &middot; stop 75.1%<br>time-stop view; conservative: &minus;0.091R</div>
+    </div>
+    <div class="trade-card">
+      <div class="trade-label">Target ugg open &mdash; 4.23R</div>
+      <div class="trade-R neg">&minus;0.189R</div>
+      <div class="trade-sub">win 14.8% (103/694) &middot; stop 81.7%<br>time-stop view; conservative: &minus;0.223R</div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <p><strong>Read:</strong> the "first tap of multiday put trigger is a good long" thesis earns barely positive expectancy on the pivot-only target, and goes negative if you hold for runners. The edge you really want is regime-filtered &mdash; the <em>q_pivot_to_call</em> quarterly band at 45.3% pivot reclaim is where this trade earns its keep.</p>
+  </div>
+</div>
+
+<div class="section reveal">
+  <div class="section-label">09 &mdash; Methodology Notes</div>
+
+  <p class="prose">
+    <strong>Levels:</strong> weekly ATR anchored to the prior Friday close, Wilder 14-period RMA (SMA-seeded). Quarterly context built from calendar-quarter daily OHLC. No look-ahead: week W's levels come strictly from week W&minus;1.<br>
+    <strong>Data:</strong> 2.56M 1-minute RTH SPY bars, 1,367 weekly bars, 6,588 daily bars. 2000-01-03 through 2026-04-09. Wick-clipped at 2% of body to filter phantom prints.<br>
+    <strong>Path resolution:</strong> downside stop counted from the tap bar; upside targets only counted from bars after the tap bar. All outcomes must resolve in-week. Unresolved events are labeled explicitly and reported under both conservative and time-stop expectancy views.<br>
+    <strong>Cohort hygiene:</strong> intraweek cross requires the tap bar's range to contain the trigger price. Gap-through taps, Monday opens below trigger, and gap-through-stop weeks are separated.<br>
+    <strong>Control:</strong> non-tap week base rates are reported but labeled &mdash; they are a bullish-regime cohort, not a clean counterfactual. Near-tap weeks (within 0.10 ATR of trigger) sit in between.
+  </p>
+</div>
+
+<div class="study-links">
+  <a href="/multiday-gg.html" class="study-link">
+    Multi-Day GG
+    <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+  </a>
+  <a href="/swing-gg.html" class="study-link">
+    Swing GG (Monthly)
+    <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+  </a>
+  <a href="/call-to-put-reversal.html" class="study-link">
+    Daily Reversal Anatomy
+    <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+  </a>
+</div>
+
+<footer class="footer">
+  ATR Levels indicator by <a href="https://satyland.com" target="_blank" rel="noopener">Saty Mahajan</a><br>
+  Data: 1-minute SPY RTH, 2000-04 through 2026-04 &middot; 1,352 trading weeks &middot; 694 clean tap events<br>
+  Methodology peer-reviewed by Codex &middot; <a href="https://milkmantrades.com">Milkman Trades</a>
+</footer>
+
+</div>
+
+<script>
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if(!e.isIntersecting) return;
+    e.target.classList.add('visible');
+    observer.unobserve(e.target);
+  });
+}, {threshold:.1});
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

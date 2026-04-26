@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Bilbo Golden Gate | Milkman Trades</title>
+<meta name="description" content="The Bilbo Golden Gate: when the Phase Oscillator confirms a trigger, completion rates jump from 63% to 78-90% and time-to-completion is cut in half.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥛</text></svg>">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,300;1,9..40,400&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --bg:#0c0e12;
+  --surface:#13161c;
+  --surface-2:#181c24;
+  --border:#1e2230;
+  --text:#e8eaed;
+  --text-dim:#6b7280;
+  --text-mid:#9ca3af;
+  --bull:#1cd48a;
+  --bull-dim:#0d5738;
+  --bull-bg:#0a1f15;
+  --bear:#ef6c00;
+  --bear-dim:#7c3600;
+  --bear-bg:#1f1208;
+  --accent:#fbbf24;
+}
+
+html{font-size:15px;scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'DM Sans',system-ui,sans-serif;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ── Layout ── */
+.page{max-width:720px;margin:0 auto;padding:3rem 1.5rem 5rem}
+
+/* ── Navigation ── */
+.back{
+  display:inline-flex;
+  align-items:center;
+  gap:.4rem;
+  font-size:.8rem;
+  color:var(--text-dim);
+  text-decoration:none;
+  margin-bottom:2.5rem;
+  transition:color .2s;
+}
+.back:hover{color:var(--text)}
+.back svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2}
+
+/* ── Hero ── */
+.hero{margin-bottom:3.5rem}
+.hero .kicker{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.7rem;
+  font-weight:500;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--accent);
+  margin-bottom:.75rem;
+}
+.hero h1{
+  font-size:2.4rem;
+  font-weight:700;
+  letter-spacing:-.03em;
+  line-height:1.15;
+  margin-bottom:1rem;
+}
+.hero h1 em{
+  font-style:normal;
+  background:linear-gradient(135deg,var(--bull),var(--accent));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.hero .lede{
+  font-size:1.05rem;
+  color:var(--text-mid);
+  font-weight:300;
+  max-width:580px;
+  line-height:1.65;
+}
+
+/* ── Sections ── */
+.section{margin-bottom:3.5rem}
+.section-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.65rem;
+  font-weight:500;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--text-dim);
+  padding-bottom:.6rem;
+  border-bottom:1px solid var(--border);
+  margin-bottom:1.5rem;
+}
+
+.prose{
+  font-size:.95rem;
+  color:var(--text-mid);
+  font-weight:300;
+  line-height:1.7;
+  margin-bottom:1.5rem;
+}
+.prose strong{color:var(--text);font-weight:500}
+
+/* ── Big Stat ── */
+.bigstat{
+  display:flex;
+  gap:2rem;
+  margin:2rem 0;
+  flex-wrap:wrap;
+}
+.bigstat-item{
+  flex:1;
+  min-width:140px;
+  padding:1.25rem;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:8px;
+}
+.bigstat-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:2.2rem;
+  font-weight:700;
+  line-height:1;
+  margin-bottom:.3rem;
+}
+.bigstat-num.bull{color:var(--bull)}
+.bigstat-num.bear{color:var(--bear)}
+.bigstat-label{
+  font-size:.75rem;
+  color:var(--text-dim);
+  line-height:1.4;
+}
+
+/* ── Completion Table ── */
+.comp-grid{
+  margin:1.5rem 0;
+}
+.comp-direction{
+  margin-bottom:2rem;
+}
+.comp-title{
+  font-size:.85rem;
+  font-weight:600;
+  margin-bottom:.75rem;
+  display:flex;
+  align-items:center;
+  gap:.5rem;
+}
+.comp-title .dot{
+  width:8px;height:8px;border-radius:50%;
+}
+
+.comp-table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:.8rem;
+}
+.comp-table th{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.65rem;
+  font-weight:500;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:var(--text-dim);
+  text-align:right;
+  padding:.5rem .6rem;
+  border-bottom:1px solid var(--border);
+}
+.comp-table th:first-child{text-align:left}
+.comp-table td{
+  padding:.55rem .6rem;
+  border-bottom:1px solid #151820;
+  text-align:right;
+  font-family:'JetBrains Mono',monospace;
+  font-size:.8rem;
+  font-weight:400;
+  color:var(--text-mid);
+}
+.comp-table td:first-child{
+  text-align:left;
+  font-family:'DM Sans',sans-serif;
+  font-weight:400;
+  color:var(--text);
+}
+.comp-table tr.baseline td{
+  color:var(--text-dim);
+  font-weight:400;
+}
+.comp-table tr.best td{
+  font-weight:700;
+}
+.comp-table tr.best.bull-row td:nth-child(2),
+.comp-table tr.best.bull-row td:nth-child(3){color:var(--bull)}
+.comp-table tr.best.bear-row td:nth-child(2),
+.comp-table tr.best.bear-row td:nth-child(3){color:var(--bear)}
+
+.comp-table .n{
+  font-size:.65rem;
+  color:var(--text-dim);
+  font-weight:400;
+}
+.comp-table .bar-cell{
+  width:120px;
+  padding-right:1rem;
+}
+.mini-bar{
+  height:6px;
+  border-radius:3px;
+  background:var(--surface-2);
+  overflow:hidden;
+}
+.mini-bar-fill{
+  height:100%;
+  border-radius:3px;
+  transition:width .8s cubic-bezier(.22,1,.36,1);
+}
+
+/* ── Speed Section: Timeline bars ── */
+.speed-pair{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:1.5rem;
+  margin:1.5rem 0;
+}
+@media(max-width:640px){.speed-pair{grid-template-columns:1fr}}
+
+.speed-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:1.25rem;
+  position:relative;
+  overflow:hidden;
+}
+.speed-card::before{
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;
+  height:2px;
+}
+.speed-card.bull::before{background:linear-gradient(90deg,var(--bull),transparent)}
+.speed-card.bear::before{background:linear-gradient(90deg,var(--bear),transparent)}
+.speed-card.dim::before{background:linear-gradient(90deg,var(--text-dim),transparent);opacity:.3}
+
+.speed-card .card-label{
+  font-size:.75rem;
+  font-weight:500;
+  margin-bottom:.15rem;
+}
+.speed-card .card-sub{
+  font-size:.7rem;
+  color:var(--text-dim);
+  margin-bottom:1rem;
+  font-family:'JetBrains Mono',monospace;
+}
+
+.timeline-row{
+  display:flex;
+  align-items:center;
+  gap:.5rem;
+  margin-bottom:.4rem;
+}
+.timeline-label{
+  flex:0 0 60px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:.65rem;
+  color:var(--text-dim);
+  text-align:right;
+}
+.timeline-bar-bg{
+  flex:1;
+  height:14px;
+  background:var(--surface-2);
+  border-radius:3px;
+  overflow:hidden;
+  position:relative;
+}
+.timeline-bar-fill{
+  height:100%;
+  border-radius:3px;
+  position:relative;
+  transition:width 1s cubic-bezier(.22,1,.36,1);
+}
+.timeline-pct{
+  flex:0 0 42px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:.7rem;
+  font-weight:500;
+  text-align:right;
+}
+
+.speed-card .mean-stat{
+  margin-top:.75rem;
+  padding-top:.6rem;
+  border-top:1px solid var(--border);
+  font-family:'JetBrains Mono',monospace;
+  font-size:.7rem;
+  color:var(--text-dim);
+  display:flex;
+  justify-content:space-between;
+}
+.mean-stat .val{color:var(--text);font-weight:700}
+
+/* ── Callout ── */
+.callout{
+  background:var(--surface);
+  border-left:3px solid var(--accent);
+  padding:1rem 1.25rem;
+  margin:2rem 0;
+  border-radius:0 6px 6px 0;
+}
+.callout p{
+  font-size:.85rem;
+  color:var(--text-mid);
+  font-weight:300;
+  line-height:1.6;
+}
+.callout strong{color:var(--accent);font-weight:500}
+
+/* ── Footer ── */
+.footer{
+  text-align:center;
+  padding-top:2.5rem;
+  border-top:1px solid var(--border);
+  color:var(--text-dim);
+  font-size:.72rem;
+  font-weight:300;
+  line-height:1.8;
+}
+.footer a{color:var(--text-dim);text-decoration:underline;text-underline-offset:2px}
+
+/* ── Animations ── */
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease}
+.reveal.visible{opacity:1;transform:none}
+
+/* ── Mobile ── */
+@media(max-width:767px){
+  .hero h1{font-size:1.6rem}
+  .bigstat{flex-direction:column;gap:1rem}
+  .bigstat-item{min-width:0}
+  .bigstat-num{font-size:1.6rem}
+  .comp-table{font-size:.72rem;display:block;overflow-x:auto}
+  .comp-table th,.comp-table td{padding:.4rem .4rem;white-space:nowrap}
+  .speed-pair{grid-template-columns:1fr}
+}
+.cheatsheet-banner{display:block;text-align:center;padding:1.5rem 1rem;margin:2rem 0 0;background:var(--surface);border:1px solid var(--border);border-radius:8px;text-decoration:none;transition:border-color .2s,background .2s}
+.cheatsheet-banner:hover{border-color:#fbbf24;background:var(--surface-2)}
+.cheatsheet-banner span{font-size:.95rem;color:var(--text);font-weight:500}
+</style>
+<script src="/nav.js"></script>
+</head>
+<body>
+<div class="page">
+
+<div style="background:#1a1400;border:1px solid #3d3200;border-radius:6px;padding:.6rem 1rem;margin-bottom:1.5rem;font-size:.75rem;color:#d4a800;font-weight:400;line-height:1.5">
+  <strong style="color:#fbbf24">Draft &mdash;</strong> These backtests have not yet been independently verified. Do not trade based on this data.
+</div>
+
+<a href="/" style="display:inline-flex;align-items:center;gap:.4rem;font-size:.8rem;color:var(--text-dim);text-decoration:none;margin-bottom:.5rem;transition:color .2s" onmouseover="this.style.color='#e8eaed'" onmouseout="this.style.color=''"><svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0h4"/></svg>Home</a>
+<a href="/golden-gate.html" class="back">
+  <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+  Golden Gate Subway Stats
+</a>
+
+<header class="hero reveal">
+  <div class="kicker">Study &mdash; The Bilbo Golden Gate</div>
+  <h1>The Bilbo Golden Gate:<br>momentum-confirmed triggers<br>complete <em>almost instantly.</em></h1>
+  <p class="lede">The Saty Phase Oscillator on the 60-minute timeframe tells you whether a Golden Gate entry (at 38.2%) has real momentum to complete through 61.8% &mdash; or if it's likely to stall. Across 6,582 trading days and 25 years of SPY data, the difference is dramatic.</p>
+</header>
+
+<!-- ── Section 1: The Edge ── -->
+<div class="section reveal">
+  <div class="section-label">01 &mdash; The Edge</div>
+
+  <p class="prose">
+    The Golden Gate is the zone between the <strong>38.2%</strong> and <strong>61.8%</strong> ATR levels. It &ldquo;fires&rdquo; when price enters at 38.2% and &ldquo;completes&rdquo; when it reaches 61.8%. On average it completes about 63&ndash;65% of the time. But that average hides a wide range &mdash; depending on what the 60-minute Phase Oscillator is doing at the moment the 38.2% level is hit.
+  </p>
+
+  <div class="bigstat">
+    <div class="bigstat-item">
+      <div class="bigstat-num bull">77.1%</div>
+      <div class="bigstat-label">Bullish GG completion when<br>PO is High &amp; Rising (vs 63% baseline)</div>
+    </div>
+    <div class="bigstat-item">
+      <div class="bigstat-num bear">90.3%</div>
+      <div class="bigstat-label">Bearish GG completion when<br>PO is Low &amp; Falling (vs 65% baseline)</div>
+    </div>
+  </div>
+
+  <!-- Bullish Table -->
+  <div class="comp-direction">
+    <div class="comp-title"><div class="dot" style="background:var(--bull)"></div> Bullish Golden Gate</div>
+    <table class="comp-table" id="bull-table">
+      <thead><tr><th>60m Phase Oscillator</th><th>Overall</th><th>Within 1h</th><th>Samples</th><th class="bar-cell"></th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <!-- Bearish Table -->
+  <div class="comp-direction">
+    <div class="comp-title"><div class="dot" style="background:var(--bear)"></div> Bearish Golden Gate</div>
+    <table class="comp-table" id="bear-table">
+      <thead><tr><th>60m Phase Oscillator</th><th>Overall</th><th>Within 1h</th><th>Samples</th><th class="bar-cell"></th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <div class="callout">
+    <p><strong>Reading this table:</strong> &ldquo;PO High + Rising&rdquo; means the 60-minute Phase Oscillator was above 61.8 and increasing at the moment the trigger fired. The further the PO is in the direction of the trade, the more likely the Golden Gate completes.</p>
+  </div>
+</div>
+
+<!-- ── Section 2: The Speed ── -->
+<div class="section reveal">
+  <div class="section-label">02 &mdash; The Speed</div>
+
+  <p class="prose">
+    Completion rate only tells half the story. When the Bilbo conditions are met, the Golden Gate doesn't just complete more often &mdash; it completes <strong>on the same 10-minute candle</strong> the majority of the time. Price doesn't pause at the trigger. It blows through.
+  </p>
+
+  <div class="bigstat">
+    <div class="bigstat-item">
+      <div class="bigstat-num bull">34.8<span style="font-size:.5em;opacity:.6">min</span></div>
+      <div class="bigstat-label">Mean completion time<br>Bullish, PO High + Rising</div>
+    </div>
+    <div class="bigstat-item">
+      <div class="bigstat-num bear">24.3<span style="font-size:.5em;opacity:.6">min</span></div>
+      <div class="bigstat-label">Mean completion time<br>Bearish, PO Low + Falling</div>
+    </div>
+    <div class="bigstat-item">
+      <div class="bigstat-num" style="color:var(--text-dim)">60<span style="font-size:.5em;opacity:.6">min</span></div>
+      <div class="bigstat-label">Mean completion time<br>Baseline (all triggers)</div>
+    </div>
+  </div>
+
+  <h3 style="font-size:.9rem;font-weight:600;margin-bottom:1rem">Cumulative completion by time after trigger</h3>
+
+  <!-- Bullish Speed -->
+  <div class="speed-pair">
+    <div class="speed-card bull" id="speed-bull-mo"></div>
+    <div class="speed-card dim" id="speed-bull-base"></div>
+  </div>
+
+  <!-- Bearish Speed -->
+  <div class="speed-pair">
+    <div class="speed-card bear" id="speed-bear-mo"></div>
+    <div class="speed-card dim" id="speed-bear-base"></div>
+  </div>
+
+  <div class="callout">
+    <p><strong>Same bar = same 10-minute candle.</strong> When 38.2% and 61.8% are both hit within a single candle, price moved through the entire Golden Gate zone without pausing. This is momentum in its purest form.</p>
+  </div>
+</div>
+
+<div style="text-align:center;margin:2rem 0 3rem">
+  <a href="/bilbo-10m.html" style="display:inline-flex;align-items:center;gap:.5rem;padding:.7rem 1.4rem;background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text);text-decoration:none;font-size:.85rem;font-weight:500;transition:border-color .2s,background .2s" onmouseover="this.style.borderColor='#60a5fa';this.style.background='#181c24'" onmouseout="this.style.borderColor='';this.style.background=''">
+    10m vs 60m PO Comparison
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+  </a>
+  <a href="/bilbo-continuation.html" style="display:inline-flex;align-items:center;gap:.5rem;padding:.7rem 1.4rem;background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text);text-decoration:none;font-size:.85rem;font-weight:500;transition:border-color .2s,background .2s" onmouseover="this.style.borderColor='var(--accent)';this.style.background='#181c24'" onmouseout="this.style.borderColor='';this.style.background=''">
+    Bilbo Continuation
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+  </a>
+</div>
+
+<a href="/cheatsheet.html" class="cheatsheet-banner"><span>&#x1F4CB; View the complete Golden Gate Cheat Sheet &rarr;</span></a>
+
+<footer class="footer">
+  ATR Levels &amp; Phase Oscillator by <a href="https://satyland.com" target="_blank" rel="noopener">Saty Mahajan</a><br>
+  Analysis inspired by <a href="https://x.com/tesrak" target="_blank" rel="noopener">@tesrak</a> &middot; With thanks to <a href="https://x.com/todaborrego" target="_blank" rel="noopener">@todor</a> for the data<br>
+  25 years of SPY data (2000&ndash;2025) &middot; <a href="https://milkmantrades.com">Milkman Trades</a>
+</footer>
+
+</div>
+
+<script>
+// ── Data ──
+const bullRows = [
+  {label:'PO High + Rising', overall:77.1, h1:64.8, n:388, best:true},
+  {label:'PO High + Falling', overall:78.9, h1:63.6, n:109},
+  {label:'PO Mid + Rising', overall:63.4, h1:42.5, n:2287},
+  {label:'PO Mid + Falling', overall:51.6, h1:32.1, n:672},
+  {label:'Baseline (all)', overall:63.1, h1:43.4, n:3472, baseline:true},
+];
+const bearRows = [
+  {label:'PO Low + Falling', overall:90.3, h1:80.8, n:268, best:true},
+  {label:'PO Low + Rising', overall:89.0, h1:79.2, n:100},
+  {label:'PO Mid + Falling', overall:64.2, h1:45.0, n:2233},
+  {label:'PO Mid + Rising', overall:54.3, h1:38.2, n:639},
+  {label:'Baseline (all)', overall:65.2, h1:47.6, n:3254, baseline:true},
+];
+
+function buildTable(id, rows, color){
+  const tbody = document.querySelector(`#${id} tbody`);
+  rows.forEach(r => {
+    const tr = document.createElement('tr');
+    if(r.baseline) tr.className = 'baseline';
+    if(r.best) tr.className = `best ${color}-row`;
+    const rowKey = color + '_' + r.label;
+    const hits = Math.round(r.overall/100 * r.n);
+    const misses = r.n - hits;
+    const dirLabel = color==='bull'?'Bull':'Bear';
+    let nCell;
+    if(r.baseline){
+      nCell = `<span class="n">n=${r.n.toLocaleString()}</span>`;
+    } else {
+      nCell = `<span class="n-clickable n-yes" data-row="${rowKey}" data-outcome="hit" data-title="${r.label} (${dirLabel})">${hits}</span> <span class="n-clickable n-no" data-row="${rowKey}" data-outcome="miss" data-title="${r.label} (${dirLabel})">${misses}</span>`;
+    }
+    tr.innerHTML = `
+      <td>${r.label}</td>
+      <td>${r.overall.toFixed(1)}%</td>
+      <td>${r.h1.toFixed(1)}%</td>
+      <td>${nCell}</td>
+      <td class="bar-cell"><div class="mini-bar"><div class="mini-bar-fill" style="width:0%;background:${r.baseline?'#3a3f4a':color==='bull'?'var(--bull)':'var(--bear)'};opacity:${r.baseline?.4:r.best?1:.5}" data-w="${r.overall}"></div></div></td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+buildTable('bull-table', bullRows, 'bull');
+buildTable('bear-table', bearRows, 'bear');
+
+// ── Speed Cards ──
+const speedData = {
+  'speed-bull-mo': {
+    label:'Bullish &mdash; PO High + Rising',
+    sub:'n=299 completed',
+    color:'var(--bull)',
+    mean:'34.8 min',
+    rows:[
+      {label:'0 min', cum:43.6},
+      {label:'≤10 min', cum:56.7},
+      {label:'≤20 min', cum:64.4},
+      {label:'≤30 min', cum:73.7},
+      {label:'≤60 min', cum:83.4},
+    ]
+  },
+  'speed-bull-base': {
+    label:'Bullish &mdash; Baseline',
+    sub:'n=2,192 completed',
+    color:'#4a4f5c',
+    mean:'65.4 min',
+    rows:[
+      {label:'0 min', cum:31.0},
+      {label:'≤10 min', cum:40.4},
+      {label:'≤20 min', cum:49.1},
+      {label:'≤30 min', cum:56.4},
+      {label:'≤60 min', cum:69.0},
+    ]
+  },
+  'speed-bear-mo': {
+    label:'Bearish &mdash; PO Low + Falling',
+    sub:'n=242 completed',
+    color:'var(--bear)',
+    mean:'24.3 min',
+    rows:[
+      {label:'0 min', cum:59.0},
+      {label:'≤10 min', cum:69.5},
+      {label:'≤20 min', cum:77.0},
+      {label:'≤30 min', cum:82.8},
+      {label:'≤60 min', cum:89.5},
+    ]
+  },
+  'speed-bear-base': {
+    label:'Bearish &mdash; Baseline',
+    sub:'n=2,121 completed',
+    color:'#4a4f5c',
+    mean:'54.4 min',
+    rows:[
+      {label:'0 min', cum:32.1},
+      {label:'≤10 min', cum:44.3},
+      {label:'≤20 min', cum:53.3},
+      {label:'≤30 min', cum:61.6},
+      {label:'≤60 min', cum:73.3},
+    ]
+  },
+};
+
+Object.entries(speedData).forEach(([id, d]) => {
+  const el = document.getElementById(id);
+  let html = `<div class="card-label">${d.label}</div><div class="card-sub">${d.sub}</div>`;
+  d.rows.forEach(r => {
+    html += `
+      <div class="timeline-row">
+        <div class="timeline-label">${r.label}</div>
+        <div class="timeline-bar-bg">
+          <div class="timeline-bar-fill" style="width:0%;background:${d.color}" data-w="${r.cum}"></div>
+        </div>
+        <div class="timeline-pct" style="color:${d.color === '#4a4f5c'?'var(--text-dim)':d.color}">${r.cum}%</div>
+      </div>`;
+  });
+  html += `<div class="mean-stat"><span>Mean time</span><span class="val">${d.mean}</span></div>`;
+  el.innerHTML = html;
+});
+
+// ── Scroll reveal + animate bars ──
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if(e.isIntersecting){
+      e.target.classList.add('visible');
+      // Animate bars within this section
+      setTimeout(() => {
+        e.target.querySelectorAll('[data-w]').forEach(bar => {
+          bar.style.width = bar.dataset.w + '%';
+        });
+      }, 200);
+      observer.unobserve(e.target);
+    }
+  });
+}, {threshold:0.15});
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Trigger hero immediately
+document.querySelector('.hero').classList.add('visible');
+</script>
+<script src="/study-drawer.js"></script>
+<script>StudyDrawer.loadData('/data/bilbo-gg-dates.json');</script>
+</body>
+</html>

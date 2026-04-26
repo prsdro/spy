@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bilbo Box Breakout | Milkman Trades</title>
+<meta name="description" content="The Bilbo Box is the range of the first five compression bars. When price exits it, does the break carry? 50,889 breaks tested across 3m, 10m, 1h, 4h, and 1d SPY bars.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥛</text></svg>">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0c0e12;
+  --surface:#13161c;
+  --surface-2:#181c24;
+  --border:#1e2230;
+  --text:#e8eaed;
+  --text-dim:#6b7280;
+  --text-mid:#9ca3af;
+  --accent:#fbbf24;
+  --bull:#1cd48a;
+  --bull-bg:#0a1f15;
+  --bear:#ef6c00;
+  --bear-bg:#1f1208;
+  --blue:#38bdf8;
+  --blue-bg:#082331;
+  --violet:#a78bfa;
+}
+html{font-size:15px;scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
+body::before{content:'';position:fixed;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(255,255,255,.018),transparent 46%);pointer-events:none}
+.page{max-width:820px;margin:0 auto;padding:3rem 1.5rem 5rem}
+
+.draft{background:#1a1400;border:1px solid #3d3200;border-radius:6px;padding:.6rem 1rem;margin-bottom:1.5rem;font-size:.75rem;color:#d4a800;line-height:1.5}
+.draft strong{color:var(--accent)}
+
+.back{display:inline-flex;align-items:center;gap:.4rem;font-size:.8rem;color:var(--text-dim);text-decoration:none;margin-bottom:.5rem;transition:color .2s}
+.back:hover{color:var(--text)}
+.back svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2}
+
+.hero{margin-bottom:3.5rem}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:.75rem}
+h1{font-size:2.25rem;font-weight:700;letter-spacing:-.01em;line-height:1.14;text-wrap:balance;margin-bottom:1rem}
+h1 em{font-style:normal;background:linear-gradient(135deg,var(--accent),var(--bear));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.lede{max-width:660px;font-size:1rem;color:var(--text-mid);font-weight:300;line-height:1.7;text-wrap:pretty}
+
+.section{margin-bottom:3.5rem}
+.section-label{font-family:'JetBrains Mono',monospace;font-size:.65rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim);padding-bottom:.6rem;border-bottom:1px solid var(--border);margin-bottom:1.5rem}
+.prose{font-size:.92rem;color:var(--text-mid);font-weight:300;line-height:1.75;margin-bottom:1.5rem;text-wrap:pretty}
+.prose strong{color:var(--text);font-weight:500}
+.prose code{font-family:'JetBrains Mono',monospace;font-size:.82rem;background:var(--surface-2);padding:.1rem .35rem;border-radius:3px;color:var(--text)}
+
+.setup-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem;margin:1.75rem 0}
+.setup-step{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1rem;min-height:118px;position:relative;overflow:hidden}
+.setup-step::before{content:'';position:absolute;left:0;top:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),transparent)}
+.setup-step.bear::before{background:linear-gradient(90deg,var(--bear),transparent)}
+.setup-step.bull::before{background:linear-gradient(90deg,var(--bull),transparent)}
+.setup-step.blue::before{background:linear-gradient(90deg,var(--blue),transparent)}
+.setup-num{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--text-dim);margin-bottom:.55rem}
+.setup-title{font-size:.88rem;font-weight:600;color:var(--text);line-height:1.25;margin-bottom:.45rem}
+.setup-desc{font-size:.72rem;color:var(--text-dim);line-height:1.45}
+
+.bigstat{display:grid;grid-template-columns:repeat(4,1fr);gap:.65rem;margin:2rem 0}
+.bigstat-item{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1.15rem;position:relative;overflow:hidden}
+.bigstat-item::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.bigstat-item.bear::before{background:linear-gradient(90deg,var(--bear),transparent)}
+.bigstat-item.bull::before{background:linear-gradient(90deg,var(--bull),transparent)}
+.bigstat-item.blue::before{background:linear-gradient(90deg,var(--blue),transparent)}
+.bigstat-item.accent::before{background:linear-gradient(90deg,var(--accent),transparent)}
+.bigstat-num{font-family:'JetBrains Mono',monospace;font-size:1.8rem;font-weight:700;line-height:1;margin-bottom:.4rem;font-variant-numeric:tabular-nums}
+.bigstat-num.bear{color:var(--bear)}
+.bigstat-num.bull{color:var(--bull)}
+.bigstat-num.blue{color:var(--blue)}
+.bigstat-num.accent{color:var(--accent)}
+.bigstat-label{font-size:.72rem;color:var(--text-dim);line-height:1.35}
+
+.data-table{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:.8rem}
+.data-table th{font-family:'JetBrains Mono',monospace;font-size:.62rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--text-dim);text-align:right;padding:.62rem .5rem;border-bottom:1px solid var(--border);white-space:nowrap}
+.data-table th:first-child{text-align:left}
+.data-table td{padding:.58rem .5rem;border-bottom:1px solid #151820;text-align:right;font-variant-numeric:tabular-nums}
+.data-table td:first-child{text-align:left;color:var(--text);font-weight:500}
+.data-table tr.group-header td{color:var(--accent);font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;padding-top:1.15rem;padding-bottom:.35rem;border-bottom:1px solid var(--border)}
+.data-table tr.best td{background:rgba(251,191,36,0.05)}
+.pct{font-family:'JetBrains Mono',monospace;font-weight:700}
+.pct.bear{color:var(--bear)}
+.pct.bull{color:var(--bull)}
+.pct.blue{color:var(--blue)}
+.pct.accent{color:var(--accent)}
+.pct.neg{color:var(--bear)}
+.pct.pos{color:var(--bull)}
+.pct.flat{color:var(--text-mid)}
+.n-col{font-family:'JetBrains Mono',monospace;color:var(--text-mid)}
+.pts{font-family:'JetBrains Mono',monospace;color:var(--text)}
+
+.callout{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1rem 1.1rem;margin:1.5rem 0}
+.callout p{font-size:.84rem;color:var(--text-mid);line-height:1.65}
+.callout strong{color:var(--text);font-weight:500}
+.callout.warn{background:var(--bear-bg);border-color:#3d2108}
+.callout.warn strong{color:var(--bear)}
+.callout.accent{background:#1a1400;border-color:#3d3200}
+.callout.accent strong{color:var(--accent)}
+
+.trade-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin:1.5rem 0}
+.trade-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1rem}
+.trade-card.best{border-color:#3d3200;background:#1a1400}
+.trade-label{font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);margin-bottom:.5rem}
+.trade-R{font-family:'JetBrains Mono',monospace;font-size:1.55rem;font-weight:700;font-variant-numeric:tabular-nums;line-height:1;margin-bottom:.35rem}
+.trade-R.pos{color:var(--bull)}
+.trade-R.neg{color:var(--bear)}
+.trade-R.flat{color:var(--text-mid)}
+.trade-sub{font-size:.7rem;color:var(--text-dim);line-height:1.4}
+
+.study-links{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin:3rem 0 2rem}
+.study-link{display:flex;align-items:center;justify-content:space-between;gap:.5rem;padding:.8rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text);text-decoration:none;font-size:.82rem;font-weight:500;transition:border-color .15s,background .15s,transform .15s}
+.study-link:hover{border-color:var(--accent);background:var(--surface-2);transform:translateY(-1px)}
+.study-link:active{transform:scale(.96)}
+.study-link svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;flex-shrink:0}
+
+.footer{text-align:center;font-size:.72rem;color:var(--text-dim);line-height:1.7;margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--border)}
+.footer a{color:var(--text-dim);text-decoration:underline;text-underline-offset:2px}
+
+.reveal{opacity:0;transform:translateY(12px);transition:opacity .55s ease,transform .55s ease}
+.reveal.visible{opacity:1;transform:none}
+
+@media(max-width:760px){
+  .page{padding:2rem 1rem 4rem}
+  h1{font-size:1.75rem}
+  .setup-strip,.bigstat,.trade-grid,.study-links{grid-template-columns:1fr}
+  .setup-step{min-height:auto}
+  .data-table{font-size:.72rem}
+  .data-table th,.data-table td{padding:.5rem .35rem}
+}
+</style>
+<script src="/nav.js"></script>
+</head>
+<body>
+<div class="page">
+
+<div class="draft">
+  <strong>Draft &mdash; 2026-04-23.</strong> Fresh publication. Methodology was codex-reviewed for look-ahead bias (break-watch starts at lock_bar+1), same-bar stop resolution, stale-box rollover, and gap-through entries. Sample: 50,889 breaks across 25 years of SPY data. Do not trade from these numbers without your own validation.
+</div>
+
+<a href="/" class="back">
+  <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+  Home
+</a>
+
+<header class="hero reveal">
+  <div class="kicker">Study &mdash; Bilbo Box Breakout</div>
+  <h1>When price breaks out of a compression box,<br>is the follow-through <em>real</em> edge?</h1>
+  <p class="lede">The Bilbo Box is the range of the first five compression bars. Theory says when price breaks out, momentum carries. Across 50,889 breaks on SPY over 25 years and five timeframes, the median follow-through is about <strong>one-third of the box width</strong> in the break direction over the next ten bars. The edge is real but small. The best entry is the one most traders skip &mdash; immediate, at the break. Waiting costs you the edge.</p>
+</header>
+
+<div class="section reveal">
+  <div class="section-label">01 &mdash; The Setup</div>
+
+  <p class="prose">
+    The Saty Phase Oscillator flags compression when Bollinger Band width falls below 2&times;ATR &mdash; the coiled-spring zone. The <strong>Bilbo Box</strong> is the price range of the first five contiguous compression bars. After that, the box is locked. If compression ends before five bars, the box locks at whatever range has formed so far. Break-watch then begins on the next bar.
+  </p>
+
+  <div class="setup-strip">
+    <div class="setup-step">
+      <div class="setup-num">Step 01</div>
+      <div class="setup-title">Compression opens</div>
+      <div class="setup-desc">First bar with <code style="font-size:.7rem;font-family:inherit">compression=1</code> after a non-compression run. High and low of that bar seed the box.</div>
+    </div>
+    <div class="setup-step">
+      <div class="setup-num">Step 02</div>
+      <div class="setup-title">Box forms (up to 5 bars)</div>
+      <div class="setup-desc">While compression stays on, box expands with each bar. Cap at 5 bars, or lock early if compression ends.</div>
+    </div>
+    <div class="setup-step bull">
+      <div class="setup-num">Step 03</div>
+      <div class="setup-title">Break detected</div>
+      <div class="setup-desc">First bar after lock where price trades outside the box range. Gap-through opens use the opening price as entry.</div>
+    </div>
+    <div class="setup-step bear">
+      <div class="setup-num">Step 04</div>
+      <div class="setup-title">Stop at opposite end</div>
+      <div class="setup-desc">Bull break stops at box_low, bear break stops at box_high. That stop distance is the R unit used for cross-timeframe comparison.</div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <p><strong>Path rules.</strong> Break-watch only begins after the box locks (<code>lock_bar+1</code>) &mdash; the lock bar itself is never used to detect breaks, avoiding same-bar look-ahead. Outside bars that pierce both boundaries count as stopped-out first. If a new compression starts before the old box breaks, the old box is discarded.</p>
+  </div>
+</div>
+
+<div class="section reveal">
+  <div class="section-label">02 &mdash; Headline Numbers (Immediate Entry, 10-bar Window)</div>
+
+  <p class="prose">
+    For every timeframe, <strong>immediate</strong> (enter at the box boundary the moment price touches it) produces a positive median net return in R-units. The win rates hover just above 50% &mdash; this is a small, consistent edge, not a coin-flipper's dream.
+  </p>
+
+  <div class="bigstat">
+    <div class="bigstat-item bull">
+      <div class="bigstat-num bull">+0.03R</div>
+      <div class="bigstat-label">Median net return<br>(3m / 10m / 4h)</div>
+    </div>
+    <div class="bigstat-item accent">
+      <div class="bigstat-num accent">+0.04R</div>
+      <div class="bigstat-label">Median net return<br>(1h &mdash; see caveat)</div>
+    </div>
+    <div class="bigstat-item blue">
+      <div class="bigstat-num blue">+0.06R</div>
+      <div class="bigstat-label">Median net return<br>(1d &mdash; tentative)</div>
+    </div>
+    <div class="bigstat-item">
+      <div class="bigstat-num" style="color:var(--text)">~51%</div>
+      <div class="bigstat-label">Net&nbsp;&gt;&nbsp;0 rate across timeframes</div>
+    </div>
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Timeframe</th>
+        <th>N</th>
+        <th>MFE (pts)</th>
+        <th>MAE (pts)</th>
+        <th>Net (pts)</th>
+        <th>Net R</th>
+        <th>Net&nbsp;&gt;&nbsp;0</th>
+        <th>Stopped</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>3-minute</td><td class="n-col">32,041</td><td class="pts">0.22</td><td class="pts">0.19</td><td class="pts">+0.01</td><td class="pct pos">0.03</td><td class="pct">50.7%</td><td class="pct">33.2%</td></tr>
+      <tr><td>10-minute</td><td class="n-col">7,656</td><td class="pts">0.41</td><td class="pts">0.35</td><td class="pts">+0.02</td><td class="pct pos">0.03</td><td class="pct">51.0%</td><td class="pct">28.4%</td></tr>
+      <tr><td>1-hour*</td><td class="n-col">3,399</td><td class="pts">0.88</td><td class="pts">0.94</td><td class="pts">+0.06</td><td class="pct pos">0.04</td><td class="pct">52.0%</td><td class="pct">33.6%</td></tr>
+      <tr><td>4-hour</td><td class="n-col">936</td><td class="pts">1.77</td><td class="pts">1.65</td><td class="pts">+0.10</td><td class="pct pos">0.03</td><td class="pct">51.1%</td><td class="pct">31.3%</td></tr>
+      <tr><td>Daily*</td><td class="n-col">279</td><td class="pts">3.11</td><td class="pts">2.73</td><td class="pts">+0.50</td><td class="pct pos">0.06</td><td class="pct">53.4%</td><td class="pct">38.4%</td></tr>
+    </tbody>
+  </table>
+
+  <p class="prose" style="font-size:.8rem">
+    *Median values for each column. <strong>1-hour</strong> carries a residual KNOWLEDGE.md caveat that hourly Phase Oscillator runs ~8&ndash;13% low on average vs TradingView (median |&Delta;| &asymp; 6 PO points after the Apr 2026 wick-clip rebuild; pre-clip the gap was 20&ndash;45%). The compression signal is therefore directionally trustworthy but not tick-for-tick on this timeframe. <strong>Daily</strong> with n=279 is underpowered; treat as suggestive, not conclusive.
+  </p>
+</div>
+
+<div class="section reveal">
+  <div class="section-label">03 &mdash; The Entry Variant Question</div>
+
+  <p class="prose">
+    The theory says wait for a retest. The data says don't. <strong>Immediate entry beats retest on every timeframe</strong>, and beats close-outside on the faster intraday frames. On 4h and daily, close-outside becomes competitive (and slightly ahead on raw Net-R), but at the cost of fewer eligible setups &mdash; the trigger rate drops from ~99% to 75&ndash;85%.
+  </p>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Entry variant</th>
+        <th>Trigger rate</th>
+        <th>3m Net-R</th>
+        <th>10m Net-R</th>
+        <th>1h Net-R</th>
+        <th>4h Net-R</th>
+        <th>1d Net-R</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="best">
+        <td>Immediate</td>
+        <td class="pct accent">97&ndash;99%</td>
+        <td class="pct pos">+0.03</td>
+        <td class="pct pos">+0.03</td>
+        <td class="pct pos">+0.04</td>
+        <td class="pct pos">+0.03</td>
+        <td class="pct pos">+0.06</td>
+      </tr>
+      <tr>
+        <td>Close outside the box</td>
+        <td class="pct">81&ndash;85%</td>
+        <td class="pct neg">&minus;0.04</td>
+        <td class="pct neg">&minus;0.02</td>
+        <td class="pct flat">0.00</td>
+        <td class="pct pos">+0.05</td>
+        <td class="pct pos">+0.09</td>
+      </tr>
+      <tr>
+        <td>Wait for retest</td>
+        <td class="pct">76&ndash;88%</td>
+        <td class="pct neg">&minus;0.07</td>
+        <td class="pct neg">&minus;0.08</td>
+        <td class="pct neg">&minus;0.02</td>
+        <td class="pct neg">&minus;0.01</td>
+        <td class="pct flat">0.00</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="prose" style="font-size:.85rem">
+    Median Net-R over the 10-bar forward window. Lower trigger rates reflect the subset of breaks where the variant's conditions actually fire.
+  </p>
+
+  <div class="callout warn">
+    <p><strong>Why does waiting hurt?</strong> Retests and close-outside confirmations are conditional on cleaner-looking breaks. Intuitively that should help. But in the data, the breaks that cleanly close outside or obligingly retest have already shown you their best move by the time you're allowed in &mdash; the mean-reversion crowd is waiting at exactly the same levels. Entering the moment price crosses the box captures the full impulse.</p>
+  </div>
+</div>
+
+<div class="section reveal">
+  <div class="section-label">04 &mdash; Which Box Durations Actually Work</div>
+
+  <p class="prose">
+    The spec says five-bar boxes are canonical. The numbers disagree. <strong>Short-lived compressions (1&ndash;4 bars) carry the edge.</strong> Fully-formed five-bar boxes are flat or slightly negative on the intraday frames. On daily this flips &mdash; 5-bar boxes there have the best median Net-R (+0.16) &mdash; but that's on n=138 and may just be the lower-frequency market behaving differently.
+  </p>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Box bars</th>
+        <th>3m Net-R</th>
+        <th>10m Net-R</th>
+        <th>1h Net-R</th>
+        <th>4h Net-R</th>
+        <th>1d Net-R</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="best"><td>1 bar (degenerate)</td><td class="pct pos">+0.11</td><td class="pct pos">+0.18</td><td class="pct pos">+0.15</td><td class="pct pos">+0.12</td><td class="pct flat">0.00</td></tr>
+      <tr><td>2 bars</td><td class="pct pos">+0.10</td><td class="pct pos">+0.07</td><td class="pct pos">+0.03</td><td class="pct pos">+0.08</td><td class="pct pos">+0.12</td></tr>
+      <tr><td>3 bars</td><td class="pct pos">+0.07</td><td class="pct pos">+0.10</td><td class="pct pos">+0.07</td><td class="pct neg">&minus;0.32</td><td class="pct n-col">n&lt;20</td></tr>
+      <tr><td>4 bars</td><td class="pct pos">+0.02</td><td class="pct pos">+0.11</td><td class="pct pos">+0.14</td><td class="pct pos">+0.22</td><td class="pct pos">+0.05</td></tr>
+      <tr><td>5 bars (full box)</td><td class="pct flat">0.00</td><td class="pct neg">&minus;0.01</td><td class="pct pos">+0.01</td><td class="pct pos">+0.01</td><td class="pct pos">+0.16</td></tr>
+    </tbody>
+  </table>
+
+  <p class="prose" style="font-size:.85rem">
+    Median Net-R, immediate entry, 10-bar window. <strong>1-bar boxes</strong> are the degenerate case where compression was only active on the start bar; these carry the highest stop-out rate (45&ndash;60%) but also the biggest median follow-through when the break holds.
+  </p>
+</div>
+
+<div class="section reveal">
+  <div class="section-label">05 &mdash; Direction Bias</div>
+
+  <p class="prose">
+    Bull breaks slightly outperform bear breaks on every timeframe except 3m (where they're tied). The gap widens on higher timeframes: bull breaks on daily carry a <strong>+0.22R</strong> median, while bear breaks on daily run <strong>&minus;0.18R</strong>. Most of the daily "edge" is a directional edge, not a compression edge.
+  </p>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Timeframe</th>
+        <th>Bull N</th>
+        <th>Bull Net-R</th>
+        <th>Bear N</th>
+        <th>Bear Net-R</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>3-minute</td><td class="n-col">16,629</td><td class="pct pos">+0.05</td><td class="n-col">15,412</td><td class="pct flat">0.00</td></tr>
+      <tr><td>10-minute</td><td class="n-col">3,977</td><td class="pct pos">+0.06</td><td class="n-col">3,679</td><td class="pct neg">&minus;0.01</td></tr>
+      <tr><td>1-hour</td><td class="n-col">1,834</td><td class="pct pos">+0.09</td><td class="n-col">1,565</td><td class="pct neg">&minus;0.02</td></tr>
+      <tr><td>4-hour</td><td class="n-col">514</td><td class="pct pos">+0.16</td><td class="n-col">422</td><td class="pct neg">&minus;0.15</td></tr>
+      <tr><td>Daily</td><td class="n-col">161</td><td class="pct pos">+0.22</td><td class="n-col">118</td><td class="pct neg">&minus;0.18</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <p><strong>The 25-year sample carries an upward drift.</strong> SPY returned roughly 7&times; over this window. Part of the bull-vs-bear asymmetry is that carry &mdash; compression breaks upward are riding the trend, compression breaks downward are fighting it. On intraday bars the drift is washed out by path; on daily bars it's the dominant force.</p>
+  </div>
+</div>
+
+<div class="section reveal">
+  <div class="section-label">06 &mdash; Narrow vs Wide Boxes</div>
+
+  <p class="prose">
+    Normalising box width by daily ATR, <strong>narrow boxes have the best median Net-R but the worst stop-out rate</strong> &mdash; the classic tight-stop tradeoff. Wide boxes rarely stop you out but give you a muddier edge because the box itself already consumed the move.
+  </p>
+
+  <div class="trade-grid">
+    <div class="trade-card best">
+      <div class="trade-label">Narrow third</div>
+      <div class="trade-R pos">+0.07R</div>
+      <div class="trade-sub">3m median Net-R. But 47% stop-out rate &mdash; many attempts, small individual wins.</div>
+    </div>
+    <div class="trade-card">
+      <div class="trade-label">Medium third</div>
+      <div class="trade-R pos">+0.02R</div>
+      <div class="trade-sub">3m median. Stop-out 32%. The middle-of-the-road regime.</div>
+    </div>
+    <div class="trade-card">
+      <div class="trade-label">Wide third</div>
+      <div class="trade-R pos">+0.02R</div>
+      <div class="trade-sub">3m median. Stop-out only 21% &mdash; wide boxes rarely get knocked out, but the follow-through is a smaller fraction of the stop distance.</div>
+    </div>
+  </div>
+</div>
+
+<div class="section reveal">
+  <div class="section-label">07 &mdash; Practical Takeaways</div>
+
+  <p class="prose">
+    <strong>Take the break, not the retest.</strong> Across every timeframe tested, entering the moment price crosses the box boundary produced a better median Net-R than waiting for a close-outside confirmation or a retest. Retest is worse than flipping a coin on the intraday frames (&minus;0.07R on 3m, &minus;0.08R on 10m).
+  </p>
+  <p class="prose">
+    <strong>Smaller boxes, bigger follow-through.</strong> Don't wait for the textbook five-bar formation &mdash; on the intraday frames, compressions that resolve within 1&ndash;4 bars carry more edge than fully-formed boxes. The compression signal's information value decays as the box ages.
+  </p>
+  <p class="prose">
+    <strong>Higher timeframes favour the bull side.</strong> On 4h and daily bars, bear breaks have a negative expectation while bull breaks remain positive. Selling a downside compression break on daily SPY has been a losing proposition over this sample.
+  </p>
+  <p class="prose">
+    <strong>Size stops at the opposite boundary.</strong> The opposite end of the box is the natural invalidation line. R-multiples in this study use that distance. With an MFE of roughly 0.7R and a median stop-out rate of ~30% on the 10-bar window, realistic take-profit targets sit between 0.5R and 1.0R. Aiming beyond that is a regime trade, not a statistical edge.
+  </p>
+
+  <div class="callout accent">
+    <p><strong>What this study does not claim.</strong> The net-positive edge is small. At ~51% hit rates and ~0.03R median on the intraday timeframes, this is a texture, not an exploit. It becomes actionable only when stacked with independent filters (trend, time of day, volatility regime) or when the box itself is unusually narrow relative to ATR. The raw compression-break signal is a starting point, not a setup.</p>
+  </div>
+</div>
+
+<div class="section reveal">
+  <div class="section-label">08 &mdash; Methodology Notes</div>
+  <p class="prose">
+    <strong>Data:</strong> 25 years of SPY 1-minute data (Jan 2000 &ndash; Apr 2026), aggregated into 3m / 10m / 1h / 4h / 1d indicator tables. Pivot Ribbon EMAs validated to 0.000% error vs TradingView on 10m; ATR Levels to 0.00&ndash;0.07%; 10-minute Phase Oscillator to 0.5&ndash;3.5% after warmup. Hourly PO was re-validated post-clip against a fresh TradingView 60m export (4,035 overlapping bars, Apr 2025 &ndash; Apr 2026): median |&Delta;| of 6 PO points and a median relative gap of &minus;8.5% on bars where |TV PO| &ge; 20 &mdash; materially better than the pre-clip 20&ndash;45% range, though tail bars can still diverge by &plusmn;50&ndash;70%.
+  </p>
+  <p class="prose">
+    <strong>Look-ahead safeguards:</strong> break-watch begins on <code>lock_bar + 1</code> (never the lock bar itself). Outcome measurement reads bars <code>entry_idx + 1</code> through <code>entry_idx + N</code> inclusive; same-bar excursions from the entry bar are ignored. Outside bars (both box boundaries pierced intrabar) are classified by close position and flagged; direction-ambiguous outside bars (close inside the box) are excluded from all variant stats.
+  </p>
+  <p class="prose">
+    <strong>Fill model:</strong> immediate-entry fill price equals the box boundary (<code>box_high</code> for bull, <code>box_low</code> for bear) unless the bar gapped through at the open, in which case the bar's open price is used. Close-outside uses the confirming bar's close. Retest uses the relevant box boundary.
+  </p>
+  <p class="prose">
+    <strong>Sample guardrails:</strong> buckets with n&lt;20 are suppressed. Buckets with 20&le;n&lt;50 are flagged in the full run log but not in these tables. Stale-box rollover: if a new compression starts before the current box breaks, the current box is discarded.
+  </p>
+  <p class="prose">
+    Full design doc: <code>/root/spy/proposal_bilbo_box.md</code>. Implementation: <code>/root/spy/backtest_bilbo_box.py</code>. Event-level CSV (50,889 events): <code>/root/spy/analyst/bilbo_box_events.csv</code>.
+  </p>
+</div>
+
+<div class="study-links">
+  <a href="/bilbo-golden-gate.html" class="study-link">
+    <span>Bilbo Golden Gate</span>
+    <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+  </a>
+  <a href="/bilbo-continuation.html" class="study-link">
+    <span>Bilbo Continuation</span>
+    <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+  </a>
+  <a href="/sustained-po.html" class="study-link">
+    <span>Sustained PO Compression</span>
+    <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+  </a>
+</div>
+
+<footer class="footer">
+  ATR Levels &amp; Phase Oscillator by <a href="https://satyland.com" target="_blank" rel="noopener">Saty Mahajan</a><br>
+  Analysis inspired by <a href="https://x.com/tesrak" target="_blank" rel="noopener">@tesrak</a> &middot; With thanks to <a href="https://x.com/todaborrego" target="_blank" rel="noopener">@todor</a> for the data<br>
+  25 years of SPY data (2000&ndash;2026) &middot; <a href="https://milkmantrades.com">Milkman Trades</a>
+</footer>
+
+</div>
+
+<script>
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      obs.unobserve(e.target);
+    }
+  });
+}, {threshold: .12});
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+document.querySelector('.hero').classList.add('visible');
+</script>
+</body>
+</html>

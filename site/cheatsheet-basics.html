@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Golden Gate Basics | Milkman Trades</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥛</text></svg>">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0c0e12;--card:#11131a;--card2:#161922;--border:#1c1f2a;--border2:#252938;
+  --t:#e4e5e9;--t2:#b0b3c0;--t3:#7a7e90;
+  --bull:#1cd48a;--bullD:#0e5c3c;--bear:#ef6c00;--bearD:#6e3200;
+  --acc:#fbbf24;--accD:#5c4500;--red:#ef4444;--blue:#60a5fa;
+}
+html{font-size:14px}
+body{background:#060709;color:var(--t);font-family:'DM Sans',system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;padding:2rem 1rem 4rem}
+
+/* Save button */
+.save-bar{width:1200px;display:flex;justify-content:flex-end;margin-bottom:.75rem}
+.save-btn{
+  padding:.5rem 1.2rem;background:var(--acc);color:#000;border:none;border-radius:4px;
+  font-family:'JetBrains Mono',monospace;font-size:.75rem;font-weight:600;cursor:pointer;
+  letter-spacing:.03em;transition:opacity .15s;
+}
+.save-btn:hover{opacity:.85}
+.save-btn:active{transform:scale(.97)}
+
+/* Poster */
+.poster{
+  width:1200px;background:var(--bg);border:1px solid var(--border);border-radius:8px;
+  overflow:hidden;position:relative;
+}
+
+/* Header */
+.hdr{
+  padding:1.8rem 2rem 1.4rem;
+  background:linear-gradient(135deg,#0e1018 0%,#12151f 100%);
+  border-bottom:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:flex-end;
+}
+.hdr-left h1{
+  font-family:'JetBrains Mono',monospace;font-size:1.5rem;font-weight:700;
+  letter-spacing:-.01em;line-height:1;margin-bottom:.35rem;
+}
+.hdr-left h1 span{color:var(--acc)}
+.hdr-left .sub{font-size:.8rem;color:var(--t3);font-weight:300}
+.hdr-right{text-align:right}
+.hdr-right .draft{
+  font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:500;
+  color:#a08000;background:#1a1600;padding:.2em .5em;border-radius:3px;
+  letter-spacing:.06em;text-transform:uppercase;margin-bottom:.3rem;display:inline-block;
+}
+.hdr-right .url{font-size:.75rem;color:var(--t3)}
+.hdr-right .back{font-size:.65rem;color:var(--blue);text-decoration:none;margin-right:.8rem}
+.hdr-right .back:hover{text-decoration:underline}
+
+/* Section */
+.sec{border-bottom:1px solid var(--border);padding:1.4rem 1.6rem}
+.sec.full{width:100%}
+.sec-num{
+  font-family:'JetBrains Mono',monospace;font-size:.6rem;font-weight:600;
+  color:var(--acc);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.6rem;
+}
+.sec-title{font-size:1rem;font-weight:700;margin-bottom:.8rem;line-height:1.2}
+
+/* Stat row */
+.stats{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:.8rem}
+.stat{
+  flex:1;min-width:100px;background:var(--card);border:1px solid var(--border);
+  border-radius:5px;padding:.6rem .7rem;
+}
+.stat-val{font-family:'JetBrains Mono',monospace;font-size:1.4rem;font-weight:700;line-height:1}
+.stat-label{font-size:.75rem;color:var(--t3);margin-top:.2rem;line-height:1.3}
+.bull{color:var(--bull)}.bear{color:var(--bear)}.acc{color:var(--acc)}.red{color:var(--red)}
+
+/* Mini table */
+.mtable{width:100%;border-collapse:collapse;font-size:.7rem;margin:.5rem 0}
+.mtable th{
+  font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:500;
+  color:var(--t3);text-align:right;padding:.3rem .4rem;border-bottom:1px solid var(--border);
+  letter-spacing:.04em;text-transform:uppercase;
+}
+.mtable th:first-child{text-align:left}
+.mtable td{
+  padding:.3rem .4rem;border-bottom:1px solid #13151d;text-align:right;
+  font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--t2);
+}
+.mtable td:first-child{text-align:left;font-family:'DM Sans',sans-serif;color:var(--t);font-weight:400}
+.mtable tr.hi td{font-weight:600}
+.mtable tr.hi .bull{color:var(--bull)}
+.mtable tr.hi .bear{color:var(--bear)}
+
+/* Level chain */
+.chain{display:flex;align-items:center;gap:0;margin:.6rem 0}
+.chain-node{
+  text-align:center;padding:.4rem .5rem;background:var(--card);
+  border:1px solid var(--border);font-family:'JetBrains Mono',monospace;
+}
+.chain-node .pct{font-size:1rem;font-weight:700;color:var(--acc)}
+.chain-node .lbl{font-size:.65rem;color:var(--t3);margin-top:.1rem}
+.chain-arrow{color:var(--t3);font-size:.7rem;padding:0 .15rem}
+.chain-node:first-child{border-radius:4px 0 0 4px}
+.chain-node:last-child{border-radius:0 4px 4px 0}
+
+/* Bullet list */
+.blist{list-style:none;font-size:.85rem;color:var(--t2);line-height:1.7}
+.blist li::before{content:'›';color:var(--acc);font-weight:700;margin-right:.4rem}
+.blist .key{color:var(--t);font-weight:500}
+.blist .val{font-family:'JetBrains Mono',monospace;font-weight:600}
+
+/* Footer */
+.ftr{
+  padding:.8rem 2rem;border-top:1px solid var(--border);
+  font-size:.6rem;color:var(--t3);display:flex;justify-content:space-between;
+  font-family:'JetBrains Mono',monospace;
+}
+
+/* Divider label */
+.divlbl{
+  font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--t3);
+  letter-spacing:.08em;text-transform:uppercase;margin:.6rem 0 .3rem;
+}
+
+/* Two-col grid */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.grid2 .sec:nth-child(odd){border-right:1px solid var(--border)}
+
+/* ── Mobile ── */
+@media(max-width:767px){
+  body{padding:1rem .5rem 3rem}
+  .save-bar{width:100%;flex-wrap:wrap;gap:.4rem}
+  .poster{width:100%}
+  .hdr{flex-direction:column;align-items:flex-start;gap:.6rem;padding:1.2rem 1rem 1rem}
+  .hdr-left h1{font-size:1.1rem}
+  .hdr-left .sub{font-size:.72rem}
+  .hdr-right{text-align:left}
+  .grid2{grid-template-columns:1fr}
+  .grid2 .sec:nth-child(odd){border-right:none}
+  .sec{padding:1.1rem 1rem}
+  .sec-title{font-size:.95rem}
+  .stats{flex-direction:column}
+  .stat{min-width:0}
+  .stat-val{font-size:1.2rem}
+  .chain{flex-wrap:wrap;gap:.25rem;justify-content:center}
+  .chain-node{padding:.35rem .45rem}
+  .chain-node .pct{font-size:.9rem}
+  .chain-node .lbl{font-size:.58rem}
+  .chain-arrow{font-size:.65rem}
+  .mtable{font-size:.68rem}
+  .mtable th,.mtable td{padding:.25rem .35rem}
+  .ftr{flex-direction:column;gap:.4rem;text-align:center;font-size:.55rem;padding:.7rem 1rem}
+}
+</style>
+<script src="/nav.js"></script>
+<script src="/mobile-png.js"></script>
+</head>
+<body>
+
+<div class="save-bar">
+  <button class="save-btn save-mobile-btn" onclick="saveMobilePNG()" style="background:#60a5fa;margin-right:.5rem">📱 Mobile PNG</button>
+  <button class="save-btn" onclick="savePNG()">&#11015; Save as PNG</button>
+</div>
+
+<div class="poster" id="poster">
+
+<div class="hdr">
+  <div class="hdr-left">
+    <h1>Milkman Trades &mdash; <span>Golden Gate Basics</span></h1>
+    <div class="sub">25 years of SPY (2000&ndash;2025)</div>
+  </div>
+  <div class="hdr-right">
+    <div class="draft">Draft &mdash; Not Verified</div><br>
+    <a class="back" href="cheatsheet.html">&larr; Master Sheet</a>
+    <span class="url">milkmantrades.com</span>
+  </div>
+</div>
+
+<!-- Core stats -->
+<div class="sec full">
+  <div class="sec-num">01 &mdash; What Is the Golden Gate?</div>
+  <div class="sec-title">The zone from 38.2% to 61.8% of the day's ATR</div>
+
+  <div class="stats">
+    <div class="stat"><div class="stat-val bull">63.0%</div><div class="stat-label">Bullish GG<br>completion</div></div>
+    <div class="stat"><div class="stat-val bear">65.0%</div><div class="stat-label">Bearish GG<br>completion</div></div>
+    <div class="stat"><div class="stat-val acc">14%</div><div class="stat-label">Days reaching<br>full ATR from close</div></div>
+  </div>
+
+  <div class="divlbl">Level-to-level probability chain</div>
+  <div class="chain">
+    <div class="chain-node"><div class="pct">80%</div><div class="lbl">Trig&rarr;38.2</div></div>
+    <div class="chain-arrow">&rarr;</div>
+    <div class="chain-node"><div class="pct">69%</div><div class="lbl">38.2&rarr;61.8</div></div>
+    <div class="chain-arrow">&rarr;</div>
+    <div class="chain-node"><div class="pct">60%</div><div class="lbl">61.8&rarr;78.6</div></div>
+    <div class="chain-arrow">&rarr;</div>
+    <div class="chain-node"><div class="pct">55%</div><div class="lbl">78.6&rarr;100</div></div>
+  </div>
+
+  <ul class="blist" style="margin-top:.5rem">
+    <li><span class="key">Golden Gate</span> = the zone between <span class="val acc">38.2%</span> and <span class="val acc">61.8%</span> of ATR</li>
+    <li>Each level-to-level step gets progressively harder to reach</li>
+    <li>Only <span class="val">14%</span> of days travel the full ATR from prior close</li>
+  </ul>
+</div>
+
+<!-- Gap fill stats -->
+<div class="grid2">
+<div class="sec">
+  <div class="sec-num">02 &mdash; Gap Fill Rates</div>
+  <div class="sec-title">How often gaps fill by size</div>
+
+  <table class="mtable">
+    <thead><tr><th>Gap Size</th><th>Up Fill%</th><th>Down Fill%</th></tr></thead>
+    <tbody>
+      <tr class="hi"><td>&lt; 0.1%</td><td class="bull">92.0%</td><td class="bear">92.9%</td></tr>
+      <tr><td>0.1 &ndash; 0.25%</td><td>76.5%</td><td>78.9%</td></tr>
+      <tr><td>0.25 &ndash; 0.5%</td><td>58.6%</td><td>62.9%</td></tr>
+      <tr><td>0.5 &ndash; 0.75%</td><td>44.6%</td><td>47.7%</td></tr>
+      <tr><td>0.75 &ndash; 1.0%</td><td>40.2%</td><td>34.2%</td></tr>
+      <tr><td>1.0 &ndash; 1.5%</td><td>28.3%</td><td>36.7%</td></tr>
+      <tr><td>1.5 &ndash; 2.0%</td><td>20.0%</td><td>31.1%</td></tr>
+      <tr><td>2.0 &ndash; 3.0%</td><td>27.5%</td><td>41.5%</td></tr>
+      <tr class="hi"><td>3.0%+</td><td>43.8%</td><td class="red">15.0%</td></tr>
+    </tbody>
+  </table>
+
+  <ul class="blist" style="margin-top:.5rem">
+    <li>Tiny gaps (&lt;0.1%) fill <span class="val bull">92%+</span> of the time</li>
+    <li>Large gap-ups (3%+) reverse-fill 43.8% &mdash; mean reversion</li>
+    <li>Large gap-downs (3%+) only fill 15% &mdash; panic selling sticks</li>
+  </ul>
+</div>
+
+<!-- Level-to-level hit rates -->
+<div class="sec">
+  <div class="sec-num">03 &mdash; Absolute Hit Rates</div>
+  <div class="sec-title">How far does price reach from open?</div>
+
+  <table class="mtable">
+    <thead><tr><th>ATR Level</th><th>Bull%</th><th>Bear%</th></tr></thead>
+    <tbody>
+      <tr class="hi"><td>Trigger</td><td class="bull">67%</td><td class="bear">63%</td></tr>
+      <tr class="hi"><td>38.2%</td><td class="bull">53%</td><td class="bear">50%</td></tr>
+      <tr><td>61.8%</td><td>33%</td><td>32%</td></tr>
+      <tr><td>78.6%</td><td>23%</td><td>24%</td></tr>
+      <tr><td>100%</td><td>14%</td><td>16%</td></tr>
+    </tbody>
+  </table>
+
+  <ul class="blist" style="margin-top:.5rem">
+    <li><span class="key">Trigger</span> is reached on ~2/3 of days in both directions</li>
+    <li>The <span class="val acc">38.2%</span> level is reached about half the time</li>
+    <li>Only ~<span class="val">15%</span> of days travel the full ATR</li>
+    <li>Bearish slightly more likely to reach extremes (100%: 16% vs 14%)</li>
+  </ul>
+</div>
+</div>
+
+<div class="sec full" style="background:linear-gradient(135deg,#0f1118,#131620);border-bottom:none">
+  <div class="sec-num" style="color:var(--acc)">&#9733; Bottom Line</div>
+  <div class="sec-title">How to use ATR Levels</div>
+  <ul class="blist">
+    <li><span class="key">Trade level-to-level, not close-to-ATR.</span> Each hop is 55&ndash;80% probability. Targeting the full ATR from close (14%) is a lottery ticket.</li>
+    <li><span class="key">Small gaps are free money.</span> Gaps under 0.25% fill 77&ndash;93% of the time. Fade them confidently. Large gap-downs (3%+) do NOT fill &mdash; don't catch the knife.</li>
+    <li><span class="key">Use the trigger as your directional bias.</span> Price reaches the 23.6% trigger on ~99% of days in at least one direction. Whichever side it hits first sets the tone.</li>
+    <li><span class="key">The Golden Gate is your bread and butter.</span> Once 38.2% is hit, there's a 63&ndash;65% chance of reaching 61.8%. That's the core trade &mdash; everything else is refinement.</li>
+  </ul>
+</div>
+
+<div class="ftr">
+  <span>milkmantrades.com &middot; ATR Levels &amp; Phase Oscillator by Saty Mahajan</span>
+  <span>@tesrak &middot; @todor &middot; Draft &mdash; not independently verified</span>
+</div>
+
+</div><!-- /poster -->
+
+<script>
+function savePNG() {
+  const btn = document.querySelector('.save-btn');
+  btn.textContent = 'Rendering...';
+  html2canvas(document.getElementById('poster'), {
+    scale: 2,
+    backgroundColor: '#0c0e12',
+    useCORS: true,
+  }).then(canvas => {
+    const a = document.createElement('a');
+    a.download = 'golden-gate-basics.png';
+    a.href = canvas.toDataURL('image/png');
+    a.click();
+    btn.textContent = '\u2713 Saved';
+    setTimeout(() => btn.textContent = '\u2b07 Save as PNG', 2000);
+  });
+}
+</script>
+</body>
+</html>

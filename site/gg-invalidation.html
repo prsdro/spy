@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Golden Gate Pullback Study | Milkman Trades</title>
+<meta name="description" content="How far can a Golden Gate pull back and still complete? ATR levels and EMAs tested across 25 years of SPY data.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥛</text></svg>">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,300&family=JetBrains+Mono:wght@400;500;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0c0e12;--surface:#13161c;--surface-2:#181c24;--border:#1e2230;--text:#e8eaed;--text-dim:#6b7280;--text-mid:#9ca3af;--bull:#1cd48a;--bear:#ef6c00;--accent:#fbbf24;--red:#ef4444;--green:#22c55e}
+html{font-size:15px;scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
+.page{max-width:760px;margin:0 auto;padding:3rem 1.5rem 5rem}
+.draft{background:#1a1400;border:1px solid #3d3200;border-radius:6px;padding:.6rem 1rem;margin-bottom:1.5rem;font-size:.75rem;color:#d4a800;line-height:1.5}
+.draft strong{color:#fbbf24}
+.back{display:inline-flex;align-items:center;gap:.4rem;font-size:.8rem;color:var(--text-dim);text-decoration:none;margin-bottom:2.5rem;transition:color .2s}
+.back:hover{color:var(--text)}
+.back svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2}
+.hero{margin-bottom:3.5rem}
+.hero .kicker{font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:.75rem}
+.hero h1{font-size:2.2rem;font-weight:700;letter-spacing:-.03em;line-height:1.15;margin-bottom:1rem}
+.hero h1 em{font-style:normal;color:var(--red)}
+.hero .lede{font-size:1.05rem;color:var(--text-mid);font-weight:300;max-width:600px;line-height:1.65}
+.section{margin-bottom:3.5rem}
+.section-label{font-family:'JetBrains Mono',monospace;font-size:.65rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim);padding-bottom:.6rem;border-bottom:1px solid var(--border);margin-bottom:1.5rem}
+.prose{font-size:.92rem;color:var(--text-mid);font-weight:300;line-height:1.7;margin-bottom:1.5rem}
+.prose strong{color:var(--text);font-weight:500}
+.prose code{font-family:'JetBrains Mono',monospace;font-size:.8rem;background:var(--surface);padding:.1em .35em;border-radius:3px}
+.bigstat{display:flex;gap:1.5rem;margin:2rem 0;flex-wrap:wrap}
+.bigstat-item{flex:1;min-width:180px;padding:1.25rem;background:var(--surface);border:1px solid var(--border);border-radius:8px}
+.bigstat-num{font-family:'JetBrains Mono',monospace;font-size:2rem;font-weight:700;line-height:1;margin-bottom:.3rem}
+.bigstat-label{font-size:.75rem;color:var(--text-dim);line-height:1.4}
+
+/* Waterfall chart */
+.waterfall{margin:1.5rem 0 2.5rem}
+.wf-title{font-size:.9rem;font-weight:600;margin-bottom:.75rem;display:flex;align-items:center;gap:.5rem}
+.wf-title .dot{width:8px;height:8px;border-radius:50%}
+.wf-row{display:flex;align-items:center;gap:.5rem;margin-bottom:.3rem}
+.wf-label{flex:0 0 170px;font-size:.78rem;text-align:right;padding-right:.5rem}
+.wf-bar-bg{flex:1;height:22px;background:var(--surface-2);border-radius:4px;overflow:hidden;position:relative}
+.wf-bar{height:100%;border-radius:4px;transition:width .8s cubic-bezier(.22,1,.36,1);display:flex;align-items:center;justify-content:flex-end;padding-right:6px}
+.wf-bar span{font-family:'JetBrains Mono',monospace;font-size:.65rem;font-weight:600;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.5)}
+.wf-n{flex:0 0 90px;font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--text-dim);text-align:right}
+.wf-divider{margin:.5rem 0;padding-left:175px;font-size:.6rem;color:var(--text-dim);font-style:italic;border-top:1px solid var(--border);padding-top:.4rem}
+
+.callout{background:var(--surface);border-left:3px solid var(--accent);padding:1rem 1.25rem;margin:2rem 0;border-radius:0 6px 6px 0}
+.callout p{font-size:.85rem;color:var(--text-mid);font-weight:300;line-height:1.6}
+.callout strong{color:var(--accent);font-weight:500}
+
+.footer{text-align:center;padding-top:2.5rem;border-top:1px solid var(--border);color:var(--text-dim);font-size:.72rem;font-weight:300;line-height:1.8}
+.footer a{color:var(--text-dim);text-decoration:underline;text-underline-offset:2px}
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease}
+.reveal.visible{opacity:1;transform:none}
+
+/* ── Mobile ── */
+@media(max-width:767px){
+  .hero h1{font-size:1.6rem}
+  .bigstat{flex-direction:column;gap:1rem}
+  .bigstat-item{min-width:0}
+  .bigstat-num{font-size:1.6rem}
+  .wf-label{flex:0 0 120px;font-size:.7rem}
+  .wf-bar span{font-size:.6rem}
+  .wf-n{flex:0 0 75px;font-size:.55rem}
+  .wf-divider{padding-left:125px}
+}
+.cheatsheet-banner{display:block;text-align:center;padding:1.5rem 1rem;margin:2rem 0 0;background:var(--surface);border:1px solid var(--border);border-radius:8px;text-decoration:none;transition:border-color .2s,background .2s}
+.cheatsheet-banner:hover{border-color:#fbbf24;background:var(--surface-2)}
+.cheatsheet-banner span{font-size:.95rem;color:var(--text);font-weight:500}
+</style>
+<script src="/nav.js"></script>
+</head>
+<body>
+<div class="page">
+
+<div class="draft"><strong>Draft &mdash;</strong> These backtests have not yet been independently verified. Do not trade based on this data.</div>
+
+<a href="/" style="display:inline-flex;align-items:center;gap:.4rem;font-size:.8rem;color:var(--text-dim);text-decoration:none;margin-bottom:.5rem;transition:color .2s" onmouseover="this.style.color='#e8eaed'" onmouseout="this.style.color=''"><svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0h4"/></svg>Home</a>
+<a href="/golden-gate.html" class="back">
+  <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+  Golden Gate Studies
+</a>
+
+<header class="hero reveal">
+  <div class="kicker">Study &mdash; Golden Gate Pullbacks</div>
+  <h1>How far can a Golden Gate pull back<br>and <em>still complete?</em></h1>
+  <p class="lede">After price hits the 38.2% ATR level and enters the Golden Gate, it often pulls back before reaching 61.8%. We measured completion rates based on the deepest pullback level, using 10-minute candle closes across 25 years of SPY data.</p>
+</header>
+
+<!-- How it works -->
+<div class="section reveal">
+  <div class="section-label">Methodology</div>
+  <p class="prose">
+    For each Golden Gate entry (price hits 38.2%), we tracked the <strong>deepest level</strong> that a 10-minute candle closed beyond during the remainder of the session. We then categorized each GG by its worst pullback and measured the completion rate for each bucket.
+  </p>
+  <p class="prose">
+    This answers a simple question: <strong>if a GG has already pulled back to level X, what are the odds it still completes?</strong> We checked ATR levels (trigger, previous close) and Pivot Ribbon EMAs on 10-minute and 1-hour timeframes. Only candle <strong>closes</strong> count &mdash; wicks below a level that recover don't qualify.
+  </p>
+</div>
+
+<!-- Results -->
+<div class="section reveal">
+  <div class="section-label">Results</div>
+
+  <p class="prose">
+    Read these charts top-to-bottom as a spectrum: the top row is the best case (price never pulled back far) and the bottom is the worst (deep pullback through multiple levels). The further price falls from the 38.2% entry, the less likely the Golden Gate completes.
+  </p>
+
+  <div class="waterfall" id="bull-wf">
+    <div class="wf-title"><div class="dot" style="background:var(--bull)"></div> Bullish Golden Gate (n=3,472 entries)</div>
+  </div>
+
+  <div class="waterfall" id="bear-wf">
+    <div class="wf-title"><div class="dot" style="background:var(--bear)"></div> Bearish Golden Gate (n=3,254 entries)</div>
+  </div>
+</div>
+
+<!-- Key Finding -->
+<div class="section reveal">
+  <div class="section-label">Key Finding</div>
+
+  <div class="bigstat">
+    <div class="bigstat-item">
+      <div class="bigstat-num" style="color:var(--bull)">84%</div>
+      <div class="bigstat-label">Bullish GG completion when price<br>never closes below the call trigger</div>
+    </div>
+    <div class="bigstat-item">
+      <div class="bigstat-num" style="color:var(--bear)">89%</div>
+      <div class="bigstat-label">Bearish GG completion when price<br>never closes above the put trigger</div>
+    </div>
+  </div>
+
+  <div class="bigstat">
+    <div class="bigstat-item">
+      <div class="bigstat-num" style="color:var(--red)">45%</div>
+      <div class="bigstat-label">Bullish GG completion when price<br>closes below the call trigger</div>
+    </div>
+    <div class="bigstat-item">
+      <div class="bigstat-num" style="color:var(--red)">51%</div>
+      <div class="bigstat-label">Bearish GG completion when price<br>closes above the put trigger</div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <p><strong>The trigger level (23.6% ATR) is the natural stop for a Golden Gate trade.</strong> When price holds above it (bullish) or below it (bearish), completion rates are in the 84&ndash;89% range. Once a 10-minute candle closes on the wrong side of the trigger, you're looking at a coin flip. The further it goes past the trigger &mdash; through the previous close, through the opposite trigger &mdash; the worse the odds get.</p>
+  </div>
+</div>
+
+<!-- Practical -->
+<div class="section reveal">
+  <div class="section-label">Practical Takeaways</div>
+  <p class="prose">
+    <strong>The hierarchy of pullback severity:</strong> Fast EMAs (EMA 8, EMA 21 on 10m) are normal intraday noise &mdash; nearly every Golden Gate touches them at some point, and completion rates stay near baseline. <strong>EMA 48 on the 10-minute chart</strong> and <strong>EMA 21 on the 1-hour chart</strong> are the first meaningful warning signs. But the <strong>call/put trigger</strong> (23.6% ATR level) is the clearest line &mdash; it marks the boundary between a healthy pullback and a failed setup.
+  </p>
+  <p class="prose">
+    <strong>For entries:</strong> Waiting for a pullback to the trigger level before entering gives you a 38.2% ATR reward to target (distance from trigger to 61.8%), but completion drops to ~32&ndash;37%. Entering immediately at 38.2% gives a 62&ndash;64% completion rate with a 23.6% ATR reward. The best risk-reward may be entering on a pullback to the <strong>10-minute EMA 8</strong> &mdash; it appears 96% of the time, maintains ~59% completion, and offers slightly more reward than the immediate entry.
+  </p>
+</div>
+
+<a href="/cheatsheet.html" class="cheatsheet-banner"><span>&#x1F4CB; View the complete Golden Gate Cheat Sheet &rarr;</span></a>
+
+<footer class="footer">
+  ATR Levels &amp; Phase Oscillator by <a href="https://satyland.com" target="_blank" rel="noopener">Saty Mahajan</a><br>
+  Analysis inspired by <a href="https://x.com/tesrak" target="_blank" rel="noopener">@tesrak</a> &middot; With thanks to <a href="https://x.com/todaborrego" target="_blank" rel="noopener">@todor</a> for the data<br>
+  25 years of SPY data (2000&ndash;2025) &middot; <a href="https://milkmantrades.com">Milkman Trades</a>
+</footer>
+
+</div>
+
+<script>
+// Waterfall data: "deepest pullback reached" -> completion rate
+// Framed as: "if the WORST the GG did was pull back to X, it completed Y% of the time"
+const bullData = [
+  {label:'Held above 38.2%', pct:84.0, n:1587, group:'best', note:'Never pulled back past entry', dateKey:'bull_held_0382'},
+  {label:'Pulled to EMA 8 (10m)', pct:64.4, n:3222, group:'ema', dateKey:'bull_pulled_ema8'},
+  {label:'Pulled to EMA 21 (10m)', pct:62.0, n:2750, group:'ema', dateKey:'bull_pulled_ema21'},
+  {label:'Pulled to EMA 48 (10m)', pct:55.8, n:2076, group:'ema', divider:'Hourly EMAs'},
+  {label:'Pulled to EMA 21 (1h)', pct:52.5, n:1618, group:'hourly'},
+  {label:'Pulled to EMA 48 (1h)', pct:56.3, n:1493, group:'hourly', divider:'ATR Levels'},
+  {label:'Pulled to Call Trigger', pct:45.5, n:1882, group:'atr', dateKey:'bull_pulled_trigger'},
+  {label:'Pulled to Prev Close', pct:36.4, n:1069, group:'atr'},
+  {label:'Pulled to Put Trigger', pct:32.0, n:608, group:'atr', dateKey:'bull_broke_trigger'},
+];
+
+const bearData = [
+  {label:'Held below -38.2%', pct:88.6, n:1231, group:'best', note:'Never pulled back past entry', dateKey:'bear_held_0382'},
+  {label:'Pulled to EMA 8 (10m)', pct:66.3, n:3004, group:'ema', dateKey:'bear_pulled_ema8'},
+  {label:'Pulled to EMA 21 (10m)', pct:64.2, n:2655, group:'ema', dateKey:'bear_pulled_ema21'},
+  {label:'Pulled to EMA 48 (10m)', pct:58.4, n:2102, group:'ema', divider:'Hourly EMAs'},
+  {label:'Pulled to EMA 21 (1h)', pct:51.7, n:1672, group:'hourly'},
+  {label:'Pulled to EMA 48 (1h)', pct:50.8, n:1598, group:'hourly', divider:'ATR Levels'},
+  {label:'Pulled to Put Trigger', pct:50.8, n:2021, group:'atr', dateKey:'bear_pulled_trigger'},
+  {label:'Pulled to Prev Close', pct:39.7, n:1119, group:'atr'},
+  {label:'Pulled to Call Trigger', pct:33.5, n:556, group:'atr', dateKey:'bear_broke_trigger'},
+];
+
+function buildWaterfall(id, data, color) {
+  const el = document.getElementById(id);
+  data.forEach(d => {
+    if (d.divider) {
+      const div = document.createElement('div');
+      div.className = 'wf-divider';
+      div.textContent = d.divider;
+      el.appendChild(div);
+    }
+    const row = document.createElement('div');
+    row.className = 'wf-row';
+
+    let barColor = color;
+    let opacity = 1;
+    if (d.group === 'best') { barColor = '#22c55e'; }
+    else if (d.group === 'atr') { opacity = d.pct < 40 ? 0.5 : 0.7; }
+    else if (d.group === 'hourly') { opacity = 0.8; }
+
+    const yesCount = Math.round(d.pct / 100 * d.n);
+    const noCount = d.n - yesCount;
+    let nHtml;
+    if (d.dateKey) {
+      nHtml = `<span class="n-clickable n-yes" data-row="${d.dateKey}" data-outcome="hit" data-title="${d.label}">${yesCount}</span>`
+        + ` / `
+        + `<span class="n-clickable n-no" data-row="${d.dateKey}" data-outcome="miss" data-title="${d.label}">${noCount}</span>`;
+    } else {
+      nHtml = `${yesCount} / ${noCount}`;
+    }
+
+    row.innerHTML = `
+      <div class="wf-label" style="color:${d.group==='best'?'var(--text)':d.group==='atr'?'var(--red)':'var(--text-mid)'}">${d.label}</div>
+      <div class="wf-bar-bg"><div class="wf-bar" style="width:0%;background:${barColor};opacity:${opacity}" data-w="${d.pct}"><span>${d.pct.toFixed(1)}%</span></div></div>
+      <div class="wf-n">${nHtml}</div>
+    `;
+    el.appendChild(row);
+  });
+}
+
+buildWaterfall('bull-wf', bullData, 'var(--bull)');
+buildWaterfall('bear-wf', bearData, 'var(--bear)');
+
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      setTimeout(() => {
+        e.target.querySelectorAll('[data-w]').forEach(bar => { bar.style.width = bar.dataset.w + '%'; });
+      }, 200);
+      obs.unobserve(e.target);
+    }
+  });
+}, {threshold: 0.12});
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+document.querySelector('.hero').classList.add('visible');
+</script>
+<script src="/study-drawer.js"></script>
+<script>StudyDrawer.loadData('/data/gg-invalidation-dates.json');</script>
+</body>
+</html>

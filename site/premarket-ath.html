@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Premarket All-Time Highs: The Morning Fade | Milkman Trades</title>
+<meta name="description" content="When SPY makes a new all-time high in premarket, how much does it fade from the open? 243 events across 25 years of data. Max drawdown analysis, risk/reward, and filtering conditions.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥛</text></svg>">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,300;1,9..40,400&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --bg:#0c0e12;
+  --surface:#13161c;
+  --surface-2:#181c24;
+  --border:#1e2230;
+  --text:#e8eaed;
+  --text-dim:#6b7280;
+  --text-mid:#9ca3af;
+  --bull:#1cd48a;
+  --bull-dim:#0d5738;
+  --bull-bg:#0a1f15;
+  --bear:#ef6c00;
+  --bear-dim:#7c3600;
+  --bear-bg:#1f1208;
+  --accent:#fbbf24;
+  --red:#ef4444;
+  --red-dim:#7f1d1d;
+  --blue:#60a5fa;
+}
+
+html{font-size:15px;scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'DM Sans',system-ui,sans-serif;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+
+.page{max-width:760px;margin:0 auto;padding:3rem 1.5rem 5rem}
+
+/* ── Hero ── */
+.hero{margin-bottom:3.5rem}
+.hero .kicker{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.7rem;
+  font-weight:500;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--accent);
+  margin-bottom:.75rem;
+}
+.hero h1{
+  font-size:2.2rem;
+  font-weight:700;
+  letter-spacing:-.03em;
+  line-height:1.15;
+  margin-bottom:1rem;
+}
+.hero h1 em{
+  font-style:normal;
+  background:linear-gradient(135deg,var(--bear),var(--red));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.hero .lede{
+  font-size:1.05rem;
+  color:var(--text-mid);
+  font-weight:300;
+  max-width:600px;
+  line-height:1.65;
+}
+
+/* ── Sections ── */
+.section{margin-bottom:3.5rem}
+.section-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.65rem;
+  font-weight:500;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--text-dim);
+  padding-bottom:.6rem;
+  border-bottom:1px solid var(--border);
+  margin-bottom:1.5rem;
+}
+
+.prose{
+  font-size:.95rem;
+  color:var(--text-mid);
+  font-weight:300;
+  line-height:1.7;
+  margin-bottom:1.5rem;
+}
+.prose strong{color:var(--text);font-weight:500}
+
+/* ── Big Stat ── */
+.bigstat{
+  display:flex;
+  gap:1.5rem;
+  margin:2rem 0;
+  flex-wrap:wrap;
+}
+.bigstat-item{
+  flex:1;
+  min-width:130px;
+  padding:1.25rem;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:8px;
+}
+.bigstat-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:2rem;
+  font-weight:700;
+  line-height:1;
+  margin-bottom:.3rem;
+}
+.bigstat-num.bear{color:var(--bear)}
+.bigstat-num.red{color:var(--red)}
+.bigstat-num.accent{color:var(--accent)}
+.bigstat-num.dim{color:var(--text-dim)}
+.bigstat-num.blue{color:var(--blue)}
+.bigstat-label{
+  font-size:.72rem;
+  color:var(--text-dim);
+  line-height:1.4;
+}
+
+/* ── SVG Chart ── */
+.chart-wrap{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:1.5rem 1.25rem 1rem;
+  margin:2rem 0;
+  overflow-x:auto;
+}
+.chart-wrap h3{
+  font-size:.85rem;
+  font-weight:600;
+  margin-bottom:.25rem;
+}
+.chart-wrap .chart-sub{
+  font-size:.72rem;
+  color:var(--text-dim);
+  margin-bottom:1rem;
+  font-family:'JetBrains Mono',monospace;
+}
+.chart-legend{
+  display:flex;
+  gap:1.5rem;
+  margin-top:.75rem;
+  font-size:.72rem;
+  color:var(--text-mid);
+  font-family:'JetBrains Mono',monospace;
+}
+.chart-legend span{display:flex;align-items:center;gap:.35rem}
+
+/* ── Table ── */
+.data-table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:.8rem;
+  margin:1.5rem 0;
+}
+.data-table th{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.65rem;
+  font-weight:500;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:var(--text-dim);
+  text-align:right;
+  padding:.55rem .5rem;
+  border-bottom:1px solid var(--border);
+}
+.data-table th:first-child{text-align:left}
+.data-table td{
+  padding:.55rem .5rem;
+  border-bottom:1px solid #151820;
+  text-align:right;
+  font-family:'JetBrains Mono',monospace;
+  font-size:.78rem;
+  font-weight:400;
+  color:var(--text-mid);
+}
+.data-table td:first-child{
+  text-align:left;
+  font-family:'DM Sans',sans-serif;
+  font-weight:400;
+  color:var(--text);
+}
+.data-table tr.highlight td{font-weight:700;color:var(--text)}
+.data-table tr.highlight td:nth-child(n+2){color:var(--bear)}
+.data-table tr.baseline td{color:var(--text-dim);font-weight:400}
+.data-table tr.best td{font-weight:600}
+.data-table .bar-cell{width:90px;padding-right:.5rem}
+.mini-bar{
+  height:6px;border-radius:3px;background:var(--surface-2);overflow:hidden;
+}
+.mini-bar-fill{height:100%;border-radius:3px;transition:width .8s cubic-bezier(.22,1,.36,1)}
+
+/* ── Threshold bars ── */
+.thresh-row{
+  display:flex;align-items:center;gap:.6rem;margin-bottom:.6rem;
+}
+.thresh-label{
+  flex:0 0 60px;font-family:'JetBrains Mono',monospace;font-size:.72rem;
+  color:var(--text-dim);text-align:right;
+}
+.thresh-bar-bg{
+  flex:1;height:28px;background:var(--surface-2);border-radius:4px;
+  overflow:hidden;position:relative;
+}
+.thresh-bar-fill{
+  height:100%;border-radius:4px;position:relative;
+  display:flex;align-items:center;padding-left:.5rem;
+  font-family:'JetBrains Mono',monospace;font-size:.65rem;font-weight:600;
+  color:var(--bg);
+  transition:width 1s cubic-bezier(.22,1,.36,1);
+}
+.thresh-bar-fill.pm{background:var(--bear)}
+.thresh-bar-fill.non{background:#374151}
+.thresh-val{
+  flex:0 0 45px;font-family:'JetBrains Mono',monospace;font-size:.72rem;
+  font-weight:500;text-align:right;
+}
+
+/* ── Callout ── */
+.callout{
+  background:var(--surface);
+  border-left:3px solid var(--accent);
+  padding:1rem 1.25rem;
+  margin:2rem 0;
+  border-radius:0 6px 6px 0;
+}
+.callout p{font-size:.85rem;color:var(--text-mid);font-weight:300;line-height:1.6}
+.callout strong{color:var(--accent);font-weight:500}
+
+/* ── Distribution ── */
+.dist-row{
+  display:flex;align-items:center;gap:.5rem;margin-bottom:.25rem;
+}
+.dist-label{
+  flex:0 0 120px;font-family:'JetBrains Mono',monospace;font-size:.65rem;
+  color:var(--text-dim);text-align:right;
+}
+.dist-bar-wrap{flex:1;display:flex;gap:2px;align-items:center}
+.dist-bar{
+  height:18px;border-radius:2px;min-width:1px;
+  transition:width .8s cubic-bezier(.22,1,.36,1);
+}
+.dist-pct{
+  flex:0 0 36px;font-family:'JetBrains Mono',monospace;font-size:.65rem;
+  color:var(--text-dim);text-align:right;
+}
+
+/* ── Footer ── */
+.footer{
+  text-align:center;padding-top:2.5rem;border-top:1px solid var(--border);
+  color:var(--text-dim);font-size:.72rem;font-weight:300;line-height:1.8;
+}
+.footer a{color:var(--text-dim);text-decoration:underline;text-underline-offset:2px}
+
+/* ── Animations ── */
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease}
+.reveal.visible{opacity:1;transform:none}
+
+/* ── Mobile ── */
+@media(max-width:767px){
+  .hero h1{font-size:1.5rem}
+  .bigstat{gap:1rem}
+  .bigstat-item{min-width:0;padding:1rem}
+  .bigstat-num{font-size:1.5rem}
+  .data-table{font-size:.7rem;display:block;overflow-x:auto}
+  .data-table th,.data-table td{padding:.4rem .35rem;white-space:nowrap}
+  .thresh-label{flex:0 0 50px;font-size:.65rem}
+  .dist-label{flex:0 0 90px;font-size:.6rem}
+}
+</style>
+<script src="/nav.js"></script>
+</head>
+<body>
+<div class="page">
+
+<div style="background:#1a1400;border:1px solid #3d3200;border-radius:6px;padding:.6rem 1rem;margin-bottom:1.5rem;font-size:.75rem;color:#d4a800;font-weight:400;line-height:1.5">
+  <strong style="color:#fbbf24">Draft &mdash;</strong> These backtests have not yet been independently verified. Do not trade based on this data.
+</div>
+
+<a href="/" style="display:inline-flex;align-items:center;gap:.4rem;font-size:.8rem;color:var(--text-dim);text-decoration:none;margin-bottom:2.5rem;transition:color .2s" onmouseover="this.style.color='#e8eaed'" onmouseout="this.style.color=''"><svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0h4"/></svg>Home</a>
+
+<header class="hero reveal">
+  <div class="kicker">Study &mdash; Premarket All-Time Highs</div>
+  <h1>When SPY hits a new ATH<br>before the open, it fades&mdash;<br>but <em>less than you think.</em></h1>
+  <p class="lede">Across 243 premarket all-time highs spanning 2013&ndash;2026, the morning drawdown is actually 48% smaller than average. But the risk/reward skews 35% in favor of shorts &mdash; because the upside is even more suppressed. The edge lives in the filters.</p>
+</header>
+
+<!-- ═══ Section 1: The Universe ═══ -->
+<div class="section reveal">
+  <div class="section-label">01 &mdash; The Universe</div>
+
+  <p class="prose">
+    A <strong>premarket ATH day</strong> is any day where SPY's high between 4:00 AM and 9:29 AM ET exceeds the highest price ever recorded in regular trading hours. This captures the moment when overnight futures or early-morning buying pushes SPY into uncharted territory before the opening bell.
+  </p>
+
+  <div class="bigstat">
+    <div class="bigstat-item">
+      <div class="bigstat-num accent">243</div>
+      <div class="bigstat-label">Premarket ATH days<br>out of 6,582 trading days</div>
+    </div>
+    <div class="bigstat-item">
+      <div class="bigstat-num dim">3.7%</div>
+      <div class="bigstat-label">Frequency<br>~12 days per year in bull markets</div>
+    </div>
+    <div class="bigstat-item">
+      <div class="bigstat-num dim">2013&ndash;2026</div>
+      <div class="bigstat-label">Date range<br>premarket data availability</div>
+    </div>
+  </div>
+
+  <p class="prose">
+    Premarket ATH days cluster in bull markets: 44 in 2021, 37 in 2017, 32 in 2024. There are none in bear market years. The sample starts in 2013 reflecting when reliable premarket data becomes available.
+  </p>
+</div>
+
+<!-- ═══ Section 2: The Drawdown Gap ═══ -->
+<div class="section reveal">
+  <div class="section-label">02 &mdash; The Drawdown Gap</div>
+
+  <p class="prose">
+    The thesis says premarket ATH days should produce large morning drawdowns, making them good short entries. The data says the opposite: ATH days have <strong>smaller drawdowns than average</strong> because they are low-volatility, bullish-momentum days. The entire price range is compressed.
+  </p>
+
+  <div class="bigstat">
+    <div class="bigstat-item">
+      <div class="bigstat-num bear">-0.25%</div>
+      <div class="bigstat-label">Mean max morning drawdown<br>Premarket ATH days</div>
+    </div>
+    <div class="bigstat-item">
+      <div class="bigstat-num dim">-0.48%</div>
+      <div class="bigstat-label">Mean max morning drawdown<br>Non-ATH days (baseline)</div>
+    </div>
+    <div class="bigstat-item">
+      <div class="bigstat-num red">48%</div>
+      <div class="bigstat-label">Smaller drawdowns<br>on PM ATH days</div>
+    </div>
+  </div>
+
+  <!-- Running Low Profile Chart -->
+  <div class="chart-wrap">
+    <h3>Running worst drawdown from the open</h3>
+    <div class="chart-sub">Cumulative minimum price vs open, by minutes elapsed (mean across all days)</div>
+    <svg id="lowChart" width="100%" height="220" viewBox="0 0 680 220"></svg>
+    <div class="chart-legend">
+      <span><svg width="12" height="3"><rect width="12" height="3" rx="1.5" fill="#ef6c00"/></svg> PM ATH days (n=243)</span>
+      <span><svg width="12" height="3"><rect width="12" height="3" rx="1.5" fill="#374151"/></svg> Non-ATH days (n=6,157)</span>
+      <span><svg width="12" height="3"><rect width="12" height="3" rx="1.5" fill="#ef6c00" opacity=".3"/></svg> PM ATH max run-up</span>
+    </div>
+  </div>
+
+  <div class="callout">
+    <p><strong>Why smaller?</strong> All-time highs happen during strong uptrends with low volatility. The daily ATR is narrow, the trend is firmly bullish, and there's no panic. The range compresses in both directions &mdash; less downside, but also less upside from the open.</p>
+  </div>
+</div>
+
+<!-- ═══ Section 3: Risk/Reward Asymmetry ═══ -->
+<div class="section reveal">
+  <div class="section-label">03 &mdash; The Asymmetry</div>
+
+  <p class="prose">
+    Here's the non-obvious finding. Although PM ATH days have smaller absolute drawdowns, the <strong>risk/reward is skewed in favor of shorts</strong>. On non-ATH days, the upside and downside from the open are roughly symmetric (R:R ~1.0). On PM ATH days, the downside consistently exceeds the upside by ~35%.
+  </p>
+
+  <div class="bigstat">
+    <div class="bigstat-item">
+      <div class="bigstat-num bear">1.35</div>
+      <div class="bigstat-label">Median reward/risk<br>PM ATH days (all windows)</div>
+    </div>
+    <div class="bigstat-item">
+      <div class="bigstat-num dim">1.01&ndash;1.06</div>
+      <div class="bigstat-label">Median reward/risk<br>Non-ATH days (symmetric)</div>
+    </div>
+  </div>
+
+  <table class="data-table" id="rrTable">
+    <thead><tr><th>Window</th><th>PM Down</th><th>PM Up</th><th>R:R</th><th>Non Down</th><th>Non Up</th><th>R:R</th></tr></thead>
+    <tbody></tbody>
+  </table>
+
+  <div class="callout">
+    <p><strong>Translation:</strong> On PM ATH days, if you short at the open, the average maximum profit exceeds the average maximum loss by 35%. On normal days, they're equal. The edge isn't in the size of the move &mdash; it's in the directional skew.</p>
+  </div>
+</div>
+
+<!-- ═══ Section 4: Threshold Hit Rates ═══ -->
+<div class="section reveal">
+  <div class="section-label">04 &mdash; Threshold Hit Rates</div>
+
+  <p class="prose">
+    How often does price drop at least X% from the open during the morning? PM ATH days underperform non-ATH days at every threshold. If you need a 25bp drop for your short to work, it happens <strong>39% of mornings</strong> on ATH days vs 60% baseline.
+  </p>
+
+  <div id="threshBars" style="margin:2rem 0"></div>
+
+  <p class="prose" style="font-size:.82rem;color:var(--text-dim)">
+    Left bar = PM ATH days, right bar = non-ATH days. Morning session (open to 12:00 ET).
+  </p>
+</div>
+
+<!-- ═══ Section 5: Where the Edge Lives ═══ -->
+<div class="section reveal">
+  <div class="section-label">05 &mdash; Where the Edge Lives</div>
+
+  <p class="prose">
+    The average PM ATH day is a weak short. But specific conditions sharpen the edge. Large ATH extensions, gap-up opens, and Phase Oscillator readings outside distribution/extended_up all produce meaningfully larger drawdowns.
+  </p>
+
+  <h3 style="font-size:.85rem;font-weight:600;margin:1.5rem 0 .75rem">By ATH extension size</h3>
+  <table class="data-table" id="extTable">
+    <thead><tr><th>Extension</th><th>N</th><th>DD Morning</th><th>DD Day</th><th class="bar-cell"></th></tr></thead>
+    <tbody></tbody>
+  </table>
+
+  <h3 style="font-size:.85rem;font-weight:600;margin:1.5rem 0 .75rem">By gap size (prev close &rarr; open)</h3>
+  <table class="data-table" id="gapTable">
+    <thead><tr><th>Gap</th><th>N</th><th>DD Morning</th><th>&ge;25bp</th><th>&ge;50bp</th><th class="bar-cell"></th></tr></thead>
+    <tbody></tbody>
+  </table>
+
+  <h3 style="font-size:.85rem;font-weight:600;margin:1.5rem 0 .75rem">By Phase Oscillator zone at open</h3>
+  <table class="data-table" id="poTable">
+    <thead><tr><th>PO Zone</th><th>N</th><th>DD Morning</th><th>&ge;25bp</th><th>&ge;50bp</th><th class="bar-cell"></th></tr></thead>
+    <tbody></tbody>
+  </table>
+
+  <h3 style="font-size:.85rem;font-weight:600;margin:1.5rem 0 .75rem">By open position in ATR framework</h3>
+  <table class="data-table" id="atrTable">
+    <thead><tr><th>ATR Position</th><th>N</th><th>DD Morning</th><th>&ge;25bp</th><th>&ge;50bp</th><th class="bar-cell"></th></tr></thead>
+    <tbody></tbody>
+  </table>
+
+  <div class="callout">
+    <p><strong>Kill condition:</strong> When the 10m Phase Oscillator is in distribution or extended_up at the open, don't short. These days have a morning drawdown of just -0.06% to -0.11%. Momentum is carrying through &mdash; the ATH is real, not a trap.</p>
+  </div>
+</div>
+
+<!-- ═══ Section 6: Distribution ═══ -->
+<div class="section reveal">
+  <div class="section-label">06 &mdash; Distribution</div>
+
+  <p class="prose">
+    The majority of PM ATH days have a max morning drawdown between <strong>-0.10% and -0.50%</strong>. The distribution is tightly clustered &mdash; you rarely get the kind of large morning selloffs that can happen on non-ATH days.
+  </p>
+
+  <div id="distChart" style="margin:1.5rem 0"></div>
+</div>
+
+<!-- ═══ Section 7: Year by Year ═══ -->
+<div class="section reveal">
+  <div class="section-label">07 &mdash; Year by Year</div>
+  <table class="data-table" id="yearTable">
+    <thead><tr><th>Year</th><th>N</th><th>DD Morning</th><th>&ge;25bp</th><th class="bar-cell"></th></tr></thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+<footer class="footer">
+  ATR Levels &amp; Phase Oscillator by <a href="https://satyland.com" target="_blank" rel="noopener">Saty Mahajan</a><br>
+  Analysis inspired by <a href="https://x.com/tesrak" target="_blank" rel="noopener">@tesrak</a> &middot; With thanks to <a href="https://x.com/todaborrego" target="_blank" rel="noopener">@todor</a> for the data<br>
+  25 years of SPY data (2000&ndash;2025) &middot; <a href="https://milkmantrades.com">Milkman Trades</a>
+</footer>
+
+</div>
+
+<script>
+// ══════════════════════════════════════
+// DATA
+// ══════════════════════════════════════
+
+const runLow = {
+  labels:['10m','20m','30m','40m','50m','1h','1h30','2h','2h30','3h','3h30','4h','4h30','5h','5h30','6h','6h30'],
+  mins:[10,20,30,40,50,60,90,120,150,180,210,240,270,300,330,360,390],
+  pm:  [-0.12,-0.1396,-0.1581,-0.1774,-0.1879,-0.1986,-0.2224,-0.2410,-0.2558,-0.2649,-0.2793,-0.2934,-0.3060,-0.3228,-0.3326,-0.3484,-0.3619],
+  non: [-0.2096,-0.2531,-0.2993,-0.3283,-0.3501,-0.3725,-0.4246,-0.4594,-0.4895,-0.5123,-0.5330,-0.5545,-0.5806,-0.6070,-0.6369,-0.6724,-0.6993],
+  pmUp:[0.0895,0.1037,0.1151,0.1248,0.1333,0.1432,0.1597,0.1737,0.1845,0.1964,0.2078,0.2181,0.2252,0.2333,0.2406,0.2504,0.2656],
+};
+
+const rrData = [
+  {w:'First 30m', pmD:0.140, pmU:0.104, pmRR:1.26, nonD:0.253, nonU:0.241, nonRR:1.00},
+  {w:'First hour', pmD:0.188, pmU:0.133, pmRR:1.37, nonD:0.350, nonU:0.330, nonRR:1.01},
+  {w:'Morning', pmD:0.249, pmU:0.181, pmRR:1.41, nonD:0.480, nonU:0.441, nonRR:1.06},
+  {w:'Full day', pmD:0.362, pmU:0.266, pmRR:1.34, nonD:0.699, nonU:0.635, nonRR:1.05},
+];
+
+const thresholds = [
+  {l:'\u2265 0.10%', pm:73.7, non:83.0},
+  {l:'\u2265 0.25%', pm:37.9, non:59.8},
+  {l:'\u2265 0.50%', pm:11.1, non:34.7},
+  {l:'\u2265 0.75%', pm:3.3, non:19.5},
+  {l:'\u2265 1.00%', pm:2.1, non:11.3},
+];
+
+const extData = [
+  {l:'Marginal (<0.05%)',  n:44,  ddm:-0.178, ddd:-0.303, h25:25, h50:5},
+  {l:'Small (0.05\u20130.15%)',  n:77,  ddm:-0.247, ddd:-0.340, h25:40, h50:10},
+  {l:'Medium (0.15\u20130.40%)', n:100, ddm:-0.271, ddd:-0.410, h25:40, h50:13},
+  {l:'Large (\u22650.40%)',       n:22,  ddm:-0.301, ddd:-0.479, h25:46, h50:18},
+];
+
+const gapData = [
+  {l:'Gap down',              n:31,  ddm:-0.210, h25:36, h50:0},
+  {l:'Tiny up (0\u20130.25%)',    n:118, ddm:-0.231, h25:36, h50:9},
+  {l:'Small up (0.25\u20130.5%)', n:61,  ddm:-0.245, h25:33, h50:13},
+  {l:'Large up (\u22650.5%)',      n:33,  ddm:-0.357, h25:55, h50:24},
+];
+
+const poData = [
+  {l:'Accumulation',  n:16,  ddm:-0.316, h25:44, h50:6},
+  {l:'Neutral Down',  n:45,  ddm:-0.284, h25:56, h50:11},
+  {l:'Neutral',       n:90,  ddm:-0.263, h25:38, h50:16},
+  {l:'Neutral Up',    n:58,  ddm:-0.269, h25:36, h50:12},
+  {l:'Distribution',  n:24,  ddm:-0.119, h25:17, h50:0},
+  {l:'Extended Up',   n:10,  ddm:-0.063, h25:10, h50:0},
+];
+
+const atrData = [
+  {l:'Below prev close',        n:31,  ddm:-0.210, h25:36, h50:0},
+  {l:'0 \u2013 Trigger (0\u201323.6%)',  n:84,  ddm:-0.249, h25:39, h50:12},
+  {l:'Trigger \u2013 GG (23.6\u201338.2%)', n:54,  ddm:-0.232, h25:39, h50:6},
+  {l:'GG zone (38.2\u201361.8%)',       n:39,  ddm:-0.264, h25:33, h50:20},
+  {l:'GG exit \u2013 ATR (61.8\u2013100%)',n:28,  ddm:-0.244, h25:32, h50:14},
+  {l:'Beyond full ATR',         n:7,   ddm:-0.503, h25:71, h50:29},
+];
+
+// Fresh vs continuation breakdown not reproducible in current backtest output
+const freshData = [];
+
+const yearData = [
+  {y:'2013',n:23,ddm:-0.226,h25:30},{y:'2014',n:28,ddm:-0.294,h25:50},
+  {y:'2015',n:2, ddm:-0.122,h25:0}, {y:'2016',n:15,ddm:-0.228,h25:33},
+  {y:'2017',n:37,ddm:-0.160,h25:22},{y:'2018',n:11,ddm:-0.172,h25:27},
+  {y:'2019',n:22,ddm:-0.287,h25:41},{y:'2020',n:19,ddm:-0.313,h25:53},
+  {y:'2021',n:44,ddm:-0.271,h25:46},{y:'2022',n:1, ddm:-0.584,h25:100},
+  {y:'2024',n:32,ddm:-0.254,h25:31},{y:'2025',n:7, ddm:-0.278,h25:43},
+  {y:'2026',n:2, ddm:-0.428,h25:100},
+];
+
+const distData = [
+  {l:'< -1.50%',        pm:0.3,  non:4.3},
+  {l:'-1.50 to -1.00%', pm:2.1,  non:7.2},
+  {l:'-1.00 to -0.75%', pm:1.5,  non:8.3},
+  {l:'-0.75 to -0.50%', pm:9.4,  non:15.3},
+  {l:'-0.50 to -0.25%', pm:25.8, non:25.1},
+  {l:'-0.25 to -0.10%', pm:33.3, non:23.2},
+  {l:'-0.10 to 0.00%',  pm:27.0, non:15.8},
+  {l:'0.00% (no dd)',    pm:0.6,  non:0.9},
+];
+
+// ══════════════════════════════════════
+// RENDER
+// ══════════════════════════════════════
+
+// ── Running Low Chart (SVG) ──
+(function(){
+  const svg = document.getElementById('lowChart');
+  const W=680, H=220, padL=42, padR=20, padT=15, padB=30;
+  const cW = W-padL-padR, cH = H-padT-padB;
+
+  const maxMins = 390;
+  const minY = -0.75;
+  const maxY = 0.30;
+
+  function x(m){return padL + (m/maxMins)*cW}
+  function y(v){return padT + ((maxY-v)/(maxY-minY))*cH}
+
+  // Grid lines
+  const gridVals = [-0.6,-0.4,-0.2,0,0.2];
+  gridVals.forEach(v=>{
+    const yy = y(v);
+    const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+    Object.entries({x1:padL,x2:W-padR,y1:yy,y2:yy,stroke:'#1e2230','stroke-width':1}).forEach(([k,val])=>line.setAttribute(k,val));
+    svg.appendChild(line);
+    const txt = document.createElementNS('http://www.w3.org/2000/svg','text');
+    Object.entries({x:padL-4,y:yy+4,'text-anchor':'end','font-size':'9','font-family':'JetBrains Mono,monospace',fill:'#6b7280'}).forEach(([k,val])=>txt.setAttribute(k,val));
+    txt.textContent = v===0?'0':v.toFixed(1)+'%';
+    svg.appendChild(txt);
+  });
+
+  // Zero line highlight
+  const zLine = document.createElementNS('http://www.w3.org/2000/svg','line');
+  Object.entries({x1:padL,x2:W-padR,y1:y(0),y2:y(0),stroke:'#374151','stroke-width':1.5}).forEach(([k,v])=>zLine.setAttribute(k,v));
+  svg.appendChild(zLine);
+
+  // X-axis labels
+  const xLabels = [{m:0,l:'Open'},{m:60,l:'1h'},{m:120,l:'2h'},{m:180,l:'3h'},{m:240,l:'4h'},{m:300,l:'5h'},{m:360,l:'6h'},{m:390,l:'Close'}];
+  xLabels.forEach(({m,l})=>{
+    const txt = document.createElementNS('http://www.w3.org/2000/svg','text');
+    Object.entries({x:x(m),y:H-2,'text-anchor':'middle','font-size':'9','font-family':'JetBrains Mono,monospace',fill:'#6b7280'}).forEach(([k,v])=>txt.setAttribute(k,v));
+    txt.textContent = l;
+    svg.appendChild(txt);
+  });
+
+  function makePath(data, mins, color, width, dash){
+    const pts = mins.map((m,i)=>`${i===0?'M':'L'}${x(m).toFixed(1)},${y(data[i]).toFixed(1)}`).join(' ');
+    const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+    Object.entries({d:pts,stroke:color,'stroke-width':width,fill:'none','stroke-linecap':'round','stroke-linejoin':'round'}).forEach(([k,v])=>path.setAttribute(k,v));
+    if(dash)path.setAttribute('stroke-dasharray',dash);
+    svg.appendChild(path);
+    return path;
+  }
+
+  // Area fill for PM ATH
+  const areaD = 'M'+runLow.mins.map((m,i)=>`${x(m).toFixed(1)},${y(runLow.pm[i]).toFixed(1)}`).join(' L')+
+    ' L'+x(390).toFixed(1)+','+y(0).toFixed(1)+' L'+x(10).toFixed(1)+','+y(0).toFixed(1)+' Z';
+  const area = document.createElementNS('http://www.w3.org/2000/svg','path');
+  Object.entries({d:areaD,fill:'#ef6c00',opacity:'0.08'}).forEach(([k,v])=>area.setAttribute(k,v));
+  svg.appendChild(area);
+
+  makePath(runLow.non, runLow.mins, '#374151', 2);
+  makePath(runLow.pm, runLow.mins, '#ef6c00', 2.5);
+  makePath(runLow.pmUp, runLow.mins, '#ef6c00', 1.5, '4 3');
+
+  // End labels
+  function endLabel(val, color, yOff){
+    const txt = document.createElementNS('http://www.w3.org/2000/svg','text');
+    Object.entries({x:x(390)+6,y:y(val)+yOff,'font-size':'9','font-family':'JetBrains Mono,monospace',fill:color,'font-weight':'600'}).forEach(([k,v])=>txt.setAttribute(k,v));
+    txt.textContent = val.toFixed(2)+'%';
+    svg.appendChild(txt);
+  }
+  endLabel(runLow.pm[runLow.pm.length-1],'#ef6c00',3);
+  endLabel(runLow.non[runLow.non.length-1],'#6b7280',3);
+  endLabel(runLow.pmUp[runLow.pmUp.length-1],'#ef6c00',-1);
+})();
+
+// ── R:R Table ──
+(function(){
+  const tb = document.querySelector('#rrTable tbody');
+  rrData.forEach(r=>{
+    const tr = document.createElement('tr');
+    if(r.w==='Morning')tr.className='highlight';
+    tr.innerHTML = `<td>${r.w}</td><td>-${r.pmD.toFixed(3)}%</td><td>+${r.pmU.toFixed(3)}%</td><td style="font-weight:700;color:${r.pmRR>1.2?'var(--bear)':'var(--text-mid)'}">${r.pmRR.toFixed(2)}</td><td>-${r.nonD.toFixed(3)}%</td><td>+${r.nonU.toFixed(3)}%</td><td style="color:var(--text-dim)">${r.nonRR.toFixed(2)}</td>`;
+    tb.appendChild(tr);
+  });
+})();
+
+// ── Threshold Bars ──
+(function(){
+  const el = document.getElementById('threshBars');
+  thresholds.forEach(t=>{
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex;align-items:center;gap:.6rem;margin-bottom:.7rem';
+    const maxW = 100;
+    row.innerHTML = `
+      <div style="flex:0 0 60px;font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--text-dim);text-align:right">${t.l}</div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:3px">
+        <div style="display:flex;align-items:center;gap:.4rem">
+          <div style="flex:1;height:16px;background:var(--surface-2);border-radius:3px;overflow:hidden">
+            <div style="width:${t.pm}%;height:100%;background:var(--bear);border-radius:3px;transition:width 1s ease"></div>
+          </div>
+          <span style="flex:0 0 40px;font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:600;text-align:right;color:var(--bear)">${t.pm.toFixed(0)}%</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:.4rem">
+          <div style="flex:1;height:16px;background:var(--surface-2);border-radius:3px;overflow:hidden">
+            <div style="width:${t.non}%;height:100%;background:#374151;border-radius:3px;transition:width 1s ease"></div>
+          </div>
+          <span style="flex:0 0 40px;font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:500;text-align:right;color:var(--text-dim)">${t.non.toFixed(0)}%</span>
+        </div>
+      </div>
+    `;
+    el.appendChild(row);
+  });
+})();
+
+// ── Helper: populate tables with mini bar ──
+function fillTable(id, rows, cols){
+  const tb = document.querySelector('#'+id+' tbody');
+  const maxAbs = Math.max(...rows.map(r=>Math.abs(r.ddm)));
+  rows.forEach(r=>{
+    const tr = document.createElement('tr');
+    if(r.highlight)tr.className='highlight';
+    if(r.baseline)tr.className='baseline';
+    let html = '';
+    cols.forEach(c=>{
+      if(c.key==='bar'){
+        const w = (Math.abs(r.ddm)/maxAbs*100).toFixed(0);
+        html += `<td class="bar-cell"><div class="mini-bar"><div class="mini-bar-fill" style="width:${w}%;background:var(--bear)"></div></div></td>`;
+      } else {
+        const v = r[c.key];
+        let fmt = typeof v==='number' ? (c.pct ? v.toFixed(0)+'%' : v.toFixed(3)+'%') : v;
+        const style = c.key==='ddm'||c.key==='ddd'||c.key==='dd30'||c.key==='dd1h' ? 'color:var(--bear)' : '';
+        html += `<td style="${style}">${fmt}</td>`;
+      }
+    });
+    tr.innerHTML = html;
+    tb.appendChild(tr);
+  });
+}
+
+fillTable('extTable', extData, [
+  {key:'l'},{key:'n'},{key:'ddm'},{key:'ddd'},{key:'bar'}
+]);
+
+fillTable('gapTable', gapData, [
+  {key:'l'},{key:'n'},{key:'ddm'},{key:'h25',pct:true},{key:'h50',pct:true},{key:'bar'}
+]);
+
+fillTable('poTable', poData, [
+  {key:'l'},{key:'n'},{key:'ddm'},{key:'h25',pct:true},{key:'h50',pct:true},{key:'bar'}
+]);
+
+fillTable('atrTable', atrData, [
+  {key:'l'},{key:'n'},{key:'ddm'},{key:'h25',pct:true},{key:'h50',pct:true},{key:'bar'}
+]);
+
+fillTable('freshTable', freshData, [
+  {key:'l'},{key:'n'},{key:'dd30'},{key:'dd1h'},{key:'ddm'},{key:'h25',pct:true},{key:'h50',pct:true}
+]);
+
+fillTable('yearTable', yearData.map(r=>({l:r.y,...r})), [
+  {key:'l'},{key:'n'},{key:'ddm'},{key:'h25',pct:true},{key:'bar'}
+]);
+
+// ── Distribution Chart ──
+(function(){
+  const el = document.getElementById('distChart');
+  const maxPct = Math.max(...distData.map(d=>Math.max(d.pm, d.non)));
+  distData.forEach(d=>{
+    const row = document.createElement('div');
+    row.className = 'dist-row';
+    row.innerHTML = `
+      <div class="dist-label">${d.l}</div>
+      <div class="dist-bar-wrap">
+        <div class="dist-bar" style="width:${(d.pm/maxPct*100).toFixed(1)}%;background:var(--bear);opacity:.85"></div>
+        <div class="dist-bar" style="width:${(d.non/maxPct*100).toFixed(1)}%;background:#374151"></div>
+      </div>
+      <div class="dist-pct" style="color:var(--bear)">${d.pm.toFixed(0)}%</div>
+      <div class="dist-pct">${d.non.toFixed(0)}%</div>
+    `;
+    el.appendChild(row);
+  });
+  // Legend
+  const leg = document.createElement('div');
+  leg.style.cssText = 'display:flex;gap:1.5rem;margin-top:.5rem;padding-left:125px;font-size:.65rem;color:var(--text-dim);font-family:JetBrains Mono,monospace';
+  leg.innerHTML = '<span style="display:flex;align-items:center;gap:.3rem"><span style="width:10px;height:6px;border-radius:2px;background:var(--bear);opacity:.85"></span>PM ATH</span><span style="display:flex;align-items:center;gap:.3rem"><span style="width:10px;height:6px;border-radius:2px;background:#374151"></span>Non-ATH</span>';
+  el.appendChild(leg);
+})();
+
+// ── Scroll-triggered reveals ──
+const obs = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target)}});
+},{threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>

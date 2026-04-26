@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Milkman Trades</title>
+  <meta name="description" content="SPY backtests and Golden Gate studies using Saty ATR Levels, Pivot Ribbon, and Phase Oscillator.">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://milkmantrades.com">
+  <meta property="og:title" content="Milkman Trades">
+  <meta property="og:description" content="SPY backtests and Golden Gate studies using Saty ATR Levels, Pivot Ribbon, and Phase Oscillator.">
+  <meta property="og:image" content="https://milkmantrades.com/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Milkman Trades">
+  <meta name="twitter:image" content="https://milkmantrades.com/og.png">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥛</text></svg>">
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700&family=JetBrains+Mono:wght@400;600&family=Playfair+Display:wght@900&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #0a0b0f;
+      --surface: #12131a;
+      --border: #1e2030;
+      --text: #e8e6e1;
+      --muted: #6b6a72;
+      --accent: #c9f76f;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse at 20% 50%, rgba(201, 247, 111, 0.03) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 20%, rgba(100, 120, 200, 0.02) 0%, transparent 40%);
+      pointer-events: none;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem 4rem;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.4rem;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.4rem;
+    }
+    .logo span { color: var(--accent); }
+    .tagline {
+      font-size: 0.85rem;
+      color: var(--muted);
+      font-weight: 300;
+    }
+
+    /* Section labels */
+    .section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.6rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section { margin-bottom: 2rem; }
+
+    /* Two-column grid on desktop */
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+    }
+    @media (max-width: 640px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+
+    /* Single column for resources */
+    .list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .study-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.7rem 0.9rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.82rem;
+      font-weight: 400;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .study-link:hover {
+      border-color: var(--accent);
+      background: #161720;
+    }
+    .study-link .arrow {
+      color: var(--muted);
+      font-size: 0.7rem;
+      transition: color 0.15s, transform 0.15s;
+      flex-shrink: 0;
+      margin-left: 0.5rem;
+    }
+    .study-link:hover .arrow {
+      color: var(--accent);
+      transform: translateX(2px);
+    }
+    .study-link .tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.55rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 0.15em 0.4em;
+      border-radius: 3px;
+      margin-left: 0.4rem;
+      flex-shrink: 0;
+    }
+    .tag-gg { background: #1a2a10; color: var(--accent); }
+    .tag-bilbo { background: #2a2000; color: #fbbf24; }
+    .tag-data { background: #1a1a2e; color: #60a5fa; }
+    .tag-pdf { background: #1a0a20; color: #c084fc; }
+    .tag-ath { background: #2a1010; color: #ef6c00; }
+    .tag-core { background: #1a2a10; color: var(--accent); }
+    .tag-draft { background: #2a1f08; color: #f59e0b; }
+    .tag-killed { background: #2a0e0e; color: #ef4444; }
+
+    /* Core playbook section gets a subtle highlight */
+    .section-core .section-label {
+      color: var(--accent);
+      border-bottom-color: rgba(201, 247, 111, 0.25);
+    }
+    .section-core .study-link {
+      border-color: #1e2a14;
+      background: linear-gradient(180deg, #12131a 0%, #131a12 100%);
+    }
+    .section-core .order-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem;
+      color: var(--muted);
+      margin-right: 0.5rem;
+      letter-spacing: 0.05em;
+    }
+    .section-intro {
+      font-size: 0.78rem;
+      color: var(--muted);
+      line-height: 1.55;
+      margin-bottom: 0.9rem;
+      max-width: 60ch;
+    }
+    .drafts-link {
+      border-style: dashed !important;
+      border-color: #2a1f08 !important;
+    }
+    .drafts-link:hover { border-color: #f59e0b !important; }
+
+    .footer {
+      text-align: center;
+      font-size: 0.7rem;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-top: 1rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+    .footer a { color: var(--muted); text-decoration: underline; text-underline-offset: 2px; }
+  </style>
+<script src="/nav.js"></script>
+</head>
+<body>
+
+  <div class="page">
+    <div class="header">
+      <div class="logo">milkman<span>.</span></div>
+      <div class="tagline">SPY backtests &amp; Golden Gate studies &mdash; 25 years of data</div>
+    </div>
+
+    <!-- Day Trading -->
+    <div class="section section-core">
+      <div class="section-label">Day Trading &mdash; Intraday &amp; 0DTE</div>
+      <div class="section-intro">
+        Studies that survived the editorial audit and fit a same-session SPX/SPY workflow. Top six form the core entry/risk loop (regime &rarr; entry &rarr; risk); the rest are foundational reference and regime filters used alongside them.
+      </div>
+      <div class="grid">
+        <a class="study-link" href="/call-trigger.html">
+          <span><span class="order-num">01</span>The 3-Minute Close <span class="tag tag-core">Core</span></span>
+          <span class="arrow">&rarr;</span>
+        </a>
+        <a class="study-link" href="/bilbo-golden-gate.html">
+          <span><span class="order-num">02</span>Bilbo Golden Gate <span class="tag tag-core">Core</span></span>
+          <span class="arrow">&rarr;</span>
+        </a>
+        <a class="study-link" href="/gg-invalidation.html">
+          <span><span class="order-num">03</span>Pullback / Invalidation <span class="tag tag-core">Core</span></span>
+          <span class="arrow">&rarr;</span>
+        </a>
+        <a class="study-link" href="/gg-entries.html">
+          <span><span class="order-num">04</span>Entry Optimization <span class="tag tag-core">Core</span></span>
+          <span class="arrow">&rarr;</span>
+        </a>
+        <a class="study-link" href="/trigger-box.html">
+          <span><span class="order-num">05</span>Trigger Box Directional <span class="tag tag-core">Core</span></span>
+          <span class="arrow">&rarr;</span>
+        </a>
+        <a class="study-link" href="/call-to-put-reversal.html">
+          <span><span class="order-num">06</span>Call to Put Morning Reversal <span class="tag tag-core">Core</span></span>
+          <span class="arrow">&rarr;</span>
+        </a>
+        <a class="study-link" href="/golden-gate.html">
+          <span>Subway Timing Stats <span class="tag tag-gg">GG</span></span>
+          <span class="arrow">&rarr;</span>
+        </a>
+        <a class="study-link" href="/gg-chop-zone.html">
+          <span>GG Chop Zone Filter <span class="tag tag-gg">GG+PO</span></span>
+          <span class="arrow">&rarr;</span>
+        </a>
+        <a class="study-link" href="/sustained-po.html">
+          <span>Sustained PO Compression <span class="tag tag-bilbo">PO</span></span>
+          <span class="arrow">&rarr;</span>
+        </a>
+        <a class="study-link" href="/gap-fills.html">
+          <span>Cumulative Midpoint Fills <span class="tag tag-data">Gaps</span></span>
+          <span class="arrow">&rarr;</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Swing / Multi-Day -->
+    <div class="section">
+      <div class="section-label">Swing &amp; Multi-Day</div>
+      <div class="section-intro">
+        Horizon stretches beyond a single session &mdash; weekly and monthly ATR setups for swing/1DTE plays.
+      </div>
+      <div class="grid">
+        <a class="study-link" href="/multiday-gg.html">
+          <span>Multi-Day GG (Weekly ATR) <span class="tag tag-core">Core</span></span>
+          <span class="arrow">&rarr;</span>
+        </a>
+        <a class="study-link" href="/swing-gg.html">
+          <span>Swing GG (Monthly ATR) <span class="tag tag-gg">Swing</span></span>
+          <span class="arrow">&rarr;</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Drafts & Failed -->
+    <div class="section">
+      <div class="section-label">Drafts &amp; Failed Studies</div>
+      <div class="section-intro">
+        Studies that didn&rsquo;t make the core playbook. Some are works-in-progress that need tweaks before an edge can be confirmed; others were tested and didn&rsquo;t hold up. Listed transparently so the catalog stays honest.
+      </div>
+      <div class="grid">
+        <a class="study-link drafts-link" href="/drafts.html">
+          <span>Draft Studies &mdash; In Progress <span class="tag tag-draft">Draft</span></span>
+          <span class="arrow">&rarr;</span>
+        </a>
+        <a class="study-link drafts-link" href="/drafts.html#failed">
+          <span>Failed Studies &mdash; No Edge Found <span class="tag tag-killed">Failed</span></span>
+          <span class="arrow">&rarr;</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Resources -->
+    <div class="section">
+      <div class="section-label">Resources</div>
+      <div class="grid">
+        <a class="study-link" href="/cheatsheet.html">
+          <span>Master Cheat Sheet <span class="tag tag-pdf">PDF</span></span>
+          <span class="arrow">&rarr;</span>
+        </a>
+        <a class="study-link" href="/cheatsheet-multiday-swing.html">
+          <span>Multi-Day &amp; Swing Sheet <span class="tag tag-pdf">PDF</span></span>
+          <span class="arrow">&rarr;</span>
+        </a>
+        <a class="study-link" href="/analyst.html">
+          <span>Live Analyst Chat <span class="tag tag-data">AI</span></span>
+          <span class="arrow">&rarr;</span>
+        </a>
+        <a class="study-link" href="/data/">
+          <span>Data Vault <span class="tag tag-data">Data</span></span>
+          <span class="arrow">&rarr;</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="footer">
+      ATR Levels &amp; Phase Oscillator by <a href="https://satyland.com" target="_blank">Saty Mahajan</a><br>
+      Analysis inspired by <a href="https://x.com/tesrak" target="_blank">@tesrak</a> &middot;
+      Data from <a href="https://x.com/todaborrego" target="_blank">@todor</a>
+    </div>
+  </div>
+
+  <canvas id="mc" width="20" height="28" style="position:fixed;bottom:20px;left:50px;width:100px;height:140px;image-rendering:pixelated;image-rendering:crisp-edges;z-index:999;pointer-events:none"></canvas>
+  <canvas id="dc" width="28" height="18" style="position:fixed;bottom:8px;width:196px;height:126px;image-rendering:pixelated;image-rendering:crisp-edges;z-index:1000;pointer-events:none;display:none"></canvas>
+  <canvas id="vc" style="position:fixed;inset:0;width:100vw;height:100vh;z-index:998;pointer-events:none"></canvas>
+  <div id="hint" style="position:fixed;bottom:185px;left:50%;transform:translateX(-50%);font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;color:#c9f76f;z-index:1002;opacity:0;transition:opacity 0.4s;pointer-events:none;text-shadow:0 0 12px rgba(201,247,111,0.4);white-space:nowrap;letter-spacing:0.04em;text-align:center;line-height:1.6"></div>
+
+  <script>
+  (() => {
+    /* ═══════════════════ MILKMAN SPRITES ═══════════════════ */
+    const mcvs = document.getElementById('mc');
+    const mctx = mcvs.getContext('2d');
+    const MW = 20, MH = 28;
+    const MP = {
+      1:'#1a1a1a', 2:'#e0a870', 3:'#c08850', 4:'#f0f0f0', 5:'#3a3a50',
+      6:'#d4a800', 7:'#ffffff', 8:'#1a1a1a', 9:'#2a1a0a', 10:'#c03030',
+      11:'#f0f0f0', 12:'#c8c8d0', 13:'#4a4a5a', 14:'#6a4a30', 15:'#1a1a1a',
+      16:'#3a3a4a', 17:'#5a5a6a', 18:'#888890'
+    };
+
+    const mSprites = {
+      walk1: [
+        [0,0,0,0,0,0,4,4,4,4,4,4,4,4,0,0,0,0,0,0],
+        [0,0,0,0,4,4,4,4,4,4,4,4,4,4,4,4,0,0,0,0],
+        [0,0,0,4,4,4,4,4,4,4,4,4,4,4,4,4,4,0,0,0],
+        [0,0,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,0,0],
+        [0,0,0,5,5,6,5,5,5,5,5,5,5,5,5,5,5,0,0,0],
+        [0,0,0,0,2,2,2,2,2,2,2,2,2,2,2,2,0,0,0,0],
+        [0,0,0,2,2,7,8,2,2,2,2,7,8,2,2,2,2,0,0,0],
+        [0,0,0,2,2,7,8,2,2,2,2,7,8,2,2,2,2,0,0,0],
+        [0,0,0,2,2,2,2,2,3,2,2,2,2,2,2,2,2,0,0,0],
+        [0,0,0,0,2,9,9,9,9,9,9,9,9,9,2,2,0,0,0,0],
+        [0,0,0,0,0,2,2,10,10,10,2,2,2,0,0,0,0,0,0],
+        [0,0,0,0,0,0,2,2,2,2,2,2,0,0,0,0,0,0,0,0],
+        [0,0,0,0,11,11,11,11,11,11,11,11,11,11,0,0,0,0,0,0],
+        [0,0,0,11,11,11,11,13,11,11,13,11,11,11,11,0,0,0,0,0],
+        [0,0,14,11,11,11,11,13,11,11,13,11,11,11,11,14,0,0,0,0],
+        [0,0,14,11,11,11,11,11,11,11,11,11,11,11,11,14,0,0,0,0],
+        [0,0,0,12,11,11,11,11,11,11,11,11,11,11,12,0,0,0,0,0],
+        [0,0,0,0,11,11,11,11,11,11,11,11,11,11,0,0,0,0,0,0],
+        [0,0,0,0,11,11,11,11,11,11,11,11,11,11,0,0,0,0,0,0],
+        [0,0,0,0,0,11,11,11,11,11,11,11,11,0,0,0,0,0,0,0],
+        [0,0,0,0,0,11,11,0,0,0,0,11,11,0,0,0,0,0,0,0],
+        [0,0,0,0,11,11,0,0,0,0,0,0,11,11,0,0,0,0,0,0],
+        [0,0,0,0,11,11,0,0,0,0,0,0,11,11,0,0,0,0,0,0],
+        [0,0,0,11,11,0,0,0,0,0,0,0,0,11,11,0,0,0,0,0],
+        [0,0,0,11,11,0,0,0,0,0,0,0,0,0,11,11,0,0,0,0],
+        [0,0,0,15,15,0,0,0,0,0,0,0,0,0,15,15,0,0,0,0],
+        [0,0,15,15,15,15,0,0,0,0,0,0,15,15,15,15,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      ],
+      walk2: [
+        [0,0,0,0,0,0,4,4,4,4,4,4,4,4,0,0,0,0,0,0],
+        [0,0,0,0,4,4,4,4,4,4,4,4,4,4,4,4,0,0,0,0],
+        [0,0,0,4,4,4,4,4,4,4,4,4,4,4,4,4,4,0,0,0],
+        [0,0,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,0,0],
+        [0,0,0,5,5,6,5,5,5,5,5,5,5,5,5,5,5,0,0,0],
+        [0,0,0,0,2,2,2,2,2,2,2,2,2,2,2,2,0,0,0,0],
+        [0,0,0,2,2,7,8,2,2,2,2,7,8,2,2,2,2,0,0,0],
+        [0,0,0,2,2,7,8,2,2,2,2,7,8,2,2,2,2,0,0,0],
+        [0,0,0,2,2,2,2,2,3,2,2,2,2,2,2,2,2,0,0,0],
+        [0,0,0,0,2,9,9,9,9,9,9,9,9,9,2,2,0,0,0,0],
+        [0,0,0,0,0,2,2,10,10,10,2,2,2,0,0,0,0,0,0],
+        [0,0,0,0,0,0,2,2,2,2,2,2,0,0,0,0,0,0,0,0],
+        [0,0,0,0,11,11,11,11,11,11,11,11,11,11,0,0,0,0,0,0],
+        [0,0,0,11,11,11,11,13,11,11,13,11,11,11,11,0,0,0,0,0],
+        [0,0,14,11,11,11,11,13,11,11,13,11,11,11,11,14,0,0,0,0],
+        [0,0,14,11,11,11,11,11,11,11,11,11,11,11,11,14,0,0,0,0],
+        [0,0,0,12,11,11,11,11,11,11,11,11,11,11,12,0,0,0,0,0],
+        [0,0,0,0,11,11,11,11,11,11,11,11,11,11,0,0,0,0,0,0],
+        [0,0,0,0,11,11,11,11,11,11,11,11,11,11,0,0,0,0,0,0],
+        [0,0,0,0,0,11,11,11,11,11,11,11,11,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,11,11,11,11,11,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,11,11,0,11,11,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,11,11,0,0,11,11,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,11,11,0,0,11,11,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,11,11,11,11,11,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,15,15,15,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,15,15,0,15,15,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,15,15,15,15,15,15,15,0,0,0,0,0,0,0,0,0],
+      ],
+      dance1: [
+        [0,0,0,0,0,0,4,4,4,4,4,4,4,4,0,0,0,0,0,0],
+        [0,0,0,0,4,4,4,4,4,4,4,4,4,4,4,4,0,0,0,0],
+        [0,0,0,4,4,4,4,4,4,4,4,4,4,4,4,4,4,0,0,0],
+        [0,0,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,0,0],
+        [0,0,0,5,5,6,5,5,5,5,5,5,5,5,5,5,5,0,0,0],
+        [0,0,0,0,2,2,2,2,2,2,2,2,2,2,2,2,0,0,0,0],
+        [0,0,0,2,2,7,8,2,2,2,2,7,8,2,2,2,2,0,0,0],
+        [0,0,0,2,2,7,8,2,2,2,2,7,8,2,2,2,2,0,0,0],
+        [0,0,0,2,2,2,2,2,3,2,2,2,2,2,2,2,2,0,0,0],
+        [0,0,0,0,2,9,9,9,9,9,9,9,9,9,2,2,0,0,0,0],
+        [0,0,0,0,0,2,2,10,10,10,2,2,2,0,0,0,0,0,0],
+        [14,14,0,0,0,0,2,2,2,2,2,2,0,0,0,0,14,14,0,0],
+        [0,14,14,0,11,11,11,11,11,11,11,11,11,11,0,14,14,0,0,0],
+        [0,0,14,11,11,11,11,13,11,11,13,11,11,11,14,0,0,0,0,0],
+        [0,0,0,11,11,11,11,13,11,11,13,11,11,11,11,0,0,0,0,0],
+        [0,0,0,11,11,11,11,11,11,11,11,11,11,11,11,0,0,0,0,0],
+        [0,0,0,12,11,11,11,11,11,11,11,11,11,11,12,0,0,0,0,0],
+        [0,0,0,0,11,11,11,11,11,11,11,11,11,11,0,0,0,0,0,0],
+        [0,0,0,0,11,11,11,11,11,11,11,11,11,11,0,0,0,0,0,0],
+        [0,0,0,0,0,11,11,11,11,11,11,11,11,0,0,0,0,0,0,0],
+        [0,0,0,0,0,11,11,0,0,0,0,11,11,0,0,0,0,0,0,0],
+        [0,0,0,0,0,11,11,0,0,0,0,11,11,0,0,0,0,0,0,0],
+        [0,0,0,0,0,11,11,0,0,0,0,11,11,0,0,0,0,0,0,0],
+        [0,0,0,0,0,15,15,0,0,0,0,15,15,0,0,0,0,0,0,0],
+        [0,0,0,0,15,15,15,0,0,0,0,15,15,15,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      ],
+      dance2: [
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,4,4,4,4,4,4,4,4,0,0,0,0,0,0],
+        [0,0,0,0,4,4,4,4,4,4,4,4,4,4,4,4,0,0,0,0],
+        [0,0,0,4,4,4,4,4,4,4,4,4,4,4,4,4,4,0,0,0],
+        [0,0,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,0,0],
+        [0,0,0,5,5,6,5,5,5,5,5,5,5,5,5,5,5,0,0,0],
+        [0,0,0,0,2,2,2,2,2,2,2,2,2,2,2,2,0,0,0,0],
+        [0,0,0,2,2,7,8,2,2,2,2,7,8,2,2,2,2,0,0,0],
+        [0,0,0,2,2,7,8,2,2,2,2,7,8,2,2,2,2,0,0,0],
+        [0,0,0,2,2,2,2,2,3,2,2,2,2,2,2,2,2,0,0,0],
+        [0,0,0,0,2,9,9,9,9,9,9,9,9,9,2,2,0,0,0,0],
+        [0,0,0,0,0,2,2,10,10,10,2,2,2,0,0,0,0,0,0],
+        [0,0,0,0,0,0,2,2,2,2,2,2,0,0,0,0,0,0,0,0],
+        [0,0,0,0,11,11,11,11,11,11,11,11,11,11,0,0,0,0,0,0],
+        [14,14,0,11,11,11,11,13,11,11,13,11,11,11,11,0,0,14,14,0],
+        [0,14,14,11,11,11,11,13,11,11,13,11,11,11,11,14,14,0,0,0],
+        [0,0,14,12,11,11,11,11,11,11,11,11,11,11,12,14,0,0,0,0],
+        [0,0,0,0,11,11,11,11,11,11,11,11,11,11,0,0,0,0,0,0],
+        [0,0,0,0,0,11,11,11,11,11,11,11,11,0,0,0,0,0,0,0],
+        [0,0,0,0,11,11,0,0,0,0,0,0,11,11,0,0,0,0,0,0],
+        [0,0,0,11,11,0,0,0,0,0,0,0,0,11,11,0,0,0,0,0],
+        [0,0,0,11,11,0,0,0,0,0,0,0,0,11,11,0,0,0,0,0],
+        [0,0,0,15,15,0,0,0,0,0,0,0,0,15,15,0,0,0,0,0],
+        [0,0,15,15,15,0,0,0,0,0,0,0,0,15,15,15,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      ],
+      scared: [
+        [0,0,0,0,0,0,4,4,4,4,4,4,4,4,0,0,0,0,0,0],
+        [0,0,0,0,4,4,4,4,4,4,4,4,4,4,4,4,0,0,0,0],
+        [0,0,0,4,4,4,4,4,4,4,4,4,4,4,4,4,4,0,0,0],
+        [0,0,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,0,0],
+        [0,0,0,5,5,6,5,5,5,5,5,5,5,5,5,5,5,0,0,0],
+        [0,0,0,0,2,2,2,2,2,2,2,2,2,2,2,2,0,0,0,0],
+        [0,0,0,2,7,7,8,2,2,2,7,7,8,2,2,2,2,0,0,0],
+        [0,0,0,2,7,7,8,2,2,2,7,7,8,2,2,2,2,0,0,0],
+        [0,0,0,2,2,2,2,2,3,2,2,2,2,2,2,2,2,0,0,0],
+        [0,0,0,0,2,9,9,9,9,9,9,9,9,9,2,2,0,0,0,0],
+        [0,0,0,0,0,2,10,10,10,10,10,10,2,0,0,0,0,0,0],
+        [0,0,0,0,0,0,2,10,10,10,10,2,0,0,0,0,0,0,0],
+        [0,0,0,0,11,11,11,11,11,11,11,11,11,11,0,0,0,0,0,0],
+        [14,14,0,11,11,11,11,13,11,11,13,11,11,11,11,0,14,14,0,0],
+        [14,14,0,11,11,11,11,13,11,11,13,11,11,11,11,0,14,14,0,0],
+        [0,0,0,11,11,11,11,11,11,11,11,11,11,11,11,0,0,0,0,0],
+        [0,0,0,12,11,11,11,11,11,11,11,11,11,11,12,0,0,0,0,0],
+        [0,0,0,0,11,11,11,11,11,11,11,11,11,11,0,0,0,0,0,0],
+        [0,0,0,0,11,11,11,11,11,11,11,11,11,11,0,0,0,0,0,0],
+        [0,0,0,0,0,11,11,11,11,11,11,11,11,0,0,0,0,0,0,0],
+        [0,0,0,0,0,11,11,0,0,0,0,11,11,0,0,0,0,0,0,0],
+        [0,0,0,0,0,11,11,0,0,0,0,11,11,0,0,0,0,0,0,0],
+        [0,0,0,0,0,11,11,0,0,0,0,11,11,0,0,0,0,0,0,0],
+        [0,0,0,0,0,15,15,0,0,0,0,15,15,0,0,0,0,0,0,0],
+        [0,0,0,0,15,15,15,0,0,0,0,15,15,15,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      ],
+      gunner: [
+        [0,0,0,0,0,0,4,4,4,4,4,4,4,4,0,0,0,0,0,0],
+        [0,0,0,0,4,4,4,4,4,4,4,4,4,4,4,4,0,0,0,0],
+        [0,0,0,4,4,4,4,4,4,4,4,4,4,4,4,4,4,0,0,0],
+        [0,0,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,0,0],
+        [0,0,0,5,5,6,5,5,5,5,5,5,5,5,5,5,5,0,0,0],
+        [0,0,0,0,2,2,2,2,2,2,2,2,2,2,2,2,0,0,0,0],
+        [0,0,0,2,2,7,8,2,2,2,2,7,8,2,2,2,2,0,0,0],
+        [0,0,0,2,2,7,8,2,2,2,2,7,8,2,2,2,2,0,0,0],
+        [0,0,0,2,2,2,2,2,3,2,2,2,2,2,2,2,2,0,0,0],
+        [0,0,0,0,2,9,9,9,9,9,9,9,9,9,2,2,0,0,0,0],
+        [0,0,0,0,0,2,2,2,2,2,2,2,2,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,2,2,2,2,2,2,0,0,0,0,0,0,0,0],
+        [0,0,0,0,11,11,11,11,11,11,11,11,11,11,0,0,0,0,0,0],
+        [0,0,0,11,11,11,11,13,11,11,13,11,11,14,14,16,17,0,0,0],
+        [0,0,0,11,11,11,11,13,11,11,13,11,14,14,16,16,17,18,18,0],
+        [0,0,0,11,11,11,11,11,11,11,11,11,14,14,16,16,17,18,18,0],
+        [0,0,0,12,11,11,11,11,11,11,11,11,11,14,14,16,17,0,0,0],
+        [0,0,0,0,11,11,11,11,11,11,11,11,11,11,0,0,0,0,0,0],
+        [0,0,0,0,11,11,11,11,11,11,11,11,11,11,0,0,0,0,0,0],
+        [0,0,0,0,0,11,11,11,11,11,11,11,11,0,0,0,0,0,0,0],
+        [0,0,0,0,0,11,11,0,0,0,0,11,11,0,0,0,0,0,0,0],
+        [0,0,0,0,0,11,11,0,0,0,0,11,11,0,0,0,0,0,0,0],
+        [0,0,0,0,0,11,11,0,0,0,0,11,11,0,0,0,0,0,0,0],
+        [0,0,0,0,0,15,15,0,0,0,0,15,15,0,0,0,0,0,0,0],
+        [0,0,0,0,15,15,15,0,0,0,0,15,15,15,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      ],
+    };
+
+    function drawMilkman(name, flip) {
+      mctx.clearRect(0, 0, MW, MH);
+      const s = mSprites[name];
+      for (let y = 0; y < s.length; y++) {
+        for (let x = 0; x < s[y].length; x++) {
+          let c = s[y][flip ? MW - 1 - x : x];
+          if (c === 0) continue;
+          /* Shirtless: replace shirt/torso colors with skin in rows 12-19 */
+          if (milkmanPoweredUp && y >= 12 && y <= 19) {
+            if (c === 11) c = 2;       /* shirt white → skin */
+            else if (c === 12) c = 3;  /* shirt gray → darker skin */
+            else if (c === 13) c = 2;  /* buttons → skin */
+          }
+          mctx.fillStyle = MP[c];
+          if (mctx.fillStyle) mctx.fillRect(x, y, 1, 1);
+        }
+      }
+    }
+
+    /* ═══════════════════ DOLPHIN SPRITES ═══════════════════ */
+    const dcvs = document.getElementById('dc');
+    const dctx = dcvs.getContext('2d');
+    const DW = 28, DH = 18;
+    const DP = {
+      1:'#1e4a6a', 2:'#3a80a8', 3:'#6ab8e0', 4:'#0e0e0e', 5:'#2a6888', 6:'#501515'
+    };
+
+    const dSprites = {
+      closed: [
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,2,2,2,5,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,2,2,2,2,2,2,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,2,2,2,4,2,2,2,2,2,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,0,0,0,0,0,0,0,0,0],
+        [0,0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,0,0,0,0,0,0,0,0],
+        [0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,0,0,0,0,0,0,0],
+        [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,0,0,0,0,0,0],
+        [0,3,3,3,3,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,0,0,0,0,0,0],
+        [0,0,3,3,3,3,2,2,5,5,2,2,2,2,2,2,2,2,2,1,1,1,0,0,0,0,0,0],
+        [0,0,0,3,3,3,2,5,5,5,5,2,2,2,2,2,2,2,1,1,0,0,0,0,0,0,0,0],
+        [0,0,0,0,3,2,2,2,5,5,2,2,2,2,2,2,1,1,1,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,2,2,2,2,2,2,2,2,1,1,1,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,2,2,2,2,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0],
+      ],
+      open: [
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,2,2,2,5,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,2,2,2,2,2,2,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,2,2,2,4,2,2,2,2,2,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,0,0,0,0,0,0,0,0,0],
+        [0,0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,0,0,0,0,0,0,0,0],
+        [0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,0,0,0,0,0,0,0],
+        [2,2,0,0,0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,0,0,0,0,0,0],
+        [0,0,0,6,6,6,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,0,0,0,0,0,0],
+        [0,0,0,6,6,6,6,2,5,5,2,2,2,2,2,2,2,2,2,1,1,1,0,0,0,0,0,0],
+        [0,3,3,3,3,3,2,5,5,5,5,2,2,2,2,2,2,2,1,1,0,0,0,0,0,0,0,0],
+        [0,0,0,0,3,2,2,2,5,5,2,2,2,2,2,2,1,1,1,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,2,2,2,2,2,2,2,2,1,1,1,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,2,2,2,2,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0],
+      ],
+    };
+
+    function drawDolphin(name, flip) {
+      dctx.clearRect(0, 0, DW, DH);
+      const s = dSprites[name];
+      for (let y = 0; y < s.length; y++) {
+        for (let x = 0; x < s[y].length; x++) {
+          const c = s[y][flip ? DW - 1 - x : x];
+          if (c === 0) continue;
+          dctx.fillStyle = DP[c];
+          dctx.fillRect(x, y, 1, 1);
+        }
+      }
+    }
+
+    /* ═══════════════════ PARTICLES ═══════════════════ */
+    const vcvs = document.getElementById('vc');
+    const vctx = vcvs.getContext('2d');
+    const particles = [];
+    const puddles = [];
+    const milkBullets = [];
+    const VOMIT_COLORS = ['#c02020','#e03030','#901010','#ff2020','#700a0a','#d04040','#b01818','#ff4040','#801515'];
+    const MILK_COLORS = ['#ffffff','#f5f5e8','#e8e0c0','#fffdd0','#d4ceb0','#f0ead0'];
+
+    function resizeVomitCanvas() {
+      vcvs.width = window.innerWidth;
+      vcvs.height = window.innerHeight;
+    }
+    resizeVomitCanvas();
+    window.addEventListener('resize', resizeVomitCanvas);
+
+    function spawnVomit(sx, sy, burst, dirX) {
+      const count = burst ? 12 : 3;
+      for (let i = 0; i < count; i++) {
+        const angle = -0.3 + Math.random() * 0.6 - Math.PI * 0.1;
+        const speed = burst ? 4 + Math.random() * 8 : 2 + Math.random() * 5;
+        particles.push({
+          x: sx, y: sy,
+          vx: dirX * Math.cos(angle) * speed * (0.7 + Math.random() * 0.6),
+          vy: -Math.abs(Math.sin(angle)) * speed * 0.5 + (Math.random() - 0.5) * 3,
+          size: 2 + Math.random() * 6,
+          color: VOMIT_COLORS[Math.floor(Math.random() * VOMIT_COLORS.length)],
+          life: 1, grounded: false,
+        });
+      }
+    }
+
+    function updateAndDrawParticles() {
+      vctx.clearRect(0, 0, vcvs.width, vcvs.height);
+      const groundY = vcvs.height - 8;
+
+      for (const p of puddles) {
+        vctx.globalAlpha = 0.8;
+        vctx.fillStyle = p.color;
+        vctx.beginPath();
+        vctx.ellipse(p.x, groundY + 2, p.w, p.h, 0, 0, Math.PI * 2);
+        vctx.fill();
+      }
+      vctx.globalAlpha = 1;
+
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        if (!p.grounded) {
+          p.vy += 0.25;
+          p.x += p.vx;
+          p.y += p.vy;
+          if (p.y > groundY) {
+            p.y = groundY;
+            if (Math.abs(p.vy) > 1.5) { p.vy = -p.vy * 0.25; p.vx *= 0.7; }
+            else { p.grounded = true; puddles.push({ x: p.x, color: p.color, w: p.size * 1.5 + Math.random() * 3, h: 1.5 + Math.random() * 1.5 }); }
+          }
+        }
+        if (p.grounded) { p.life -= 0.015; if (p.life <= 0) { particles.splice(i, 1); continue; } }
+        vctx.globalAlpha = p.grounded ? p.life : 1;
+        vctx.fillStyle = p.color;
+        vctx.fillRect(p.x - p.size/2, p.y - p.size/2, p.size, p.size);
+      }
+      vctx.globalAlpha = 1;
+
+      for (const b of milkBullets) {
+        vctx.globalAlpha = 0.9;
+        vctx.fillStyle = b.color;
+        vctx.fillRect(b.x - b.size/2, b.y - b.size/2, b.size, b.size);
+      }
+      vctx.globalAlpha = 1;
+    }
+
+    /* ═══════════════════ KEYBOARD ═══════════════════ */
+    const keys = {};
+    window.addEventListener('keydown', e => {
+      keys[e.key] = true;
+      if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].includes(e.key)) e.preventDefault();
+    });
+    window.addEventListener('keyup', e => { keys[e.key] = false; });
+
+    /* ═══════════════════ STATE MACHINE ═══════════════════ */
+    const startTime = Date.now();
+    const DOLPHIN_TIME = 5000;
+    const CHASE_LIMIT = 20;
+    const MILK_KILL_TIME = 15;
+    let state = 'normal';
+    let stateTimer = 0;
+
+    let mx = window.innerWidth - 160, mdir = -1, mtick = 0, mmode = 'walk', mmodeTimer = 0;
+    let milkmanVX = 0, jumpY = 0, jumpVY = 0;
+    let jumpCount = 0, jumpWasPressed = false;
+    let chaseStart = 0;
+    const M_ACCEL = 1.4;
+    const M_FRIC = 0.87;
+    const M_MAX = 12;
+    const JUMP_POW = 19;
+    const GRAV = 0.55;
+
+    let dx = 0, dolphinBob = 0;
+    let flashAlpha = 0;
+
+    let cannonActive = false;
+    let milkHitTime = 0;
+    let dolphinHurtFlash = 0;
+
+    let milkmanPoweredUp = false;
+    let milkmanW = 100, milkmanH = 140;
+
+    const hint = document.getElementById('hint');
+
+    function pickMilkmanMode() {
+      const r = Math.random();
+      if (r < 0.35) { mmode = 'walk'; mmodeTimer = 180 + Math.random() * 200; }
+      else if (r < 0.6) { mmode = 'moon'; mmodeTimer = 120 + Math.random() * 150; }
+      else { mmode = 'dance'; mmodeTimer = 80 + Math.random() * 60; }
+    }
+    pickMilkmanMode();
+
+    function loop() {
+      mtick++;
+      const elapsed = Date.now() - startTime;
+      const f = Math.floor(mtick / 10) % 2;
+
+      /* ──── NORMAL ──── */
+      if (state === 'normal') {
+        mmodeTimer--;
+        if (mmodeTimer <= 0) pickMilkmanMode();
+
+        if (mmode === 'walk') {
+          drawMilkman(f ? 'walk1' : 'walk2', mdir < 0);
+          mx += 1.1 * mdir;
+        } else if (mmode === 'moon') {
+          drawMilkman(f ? 'walk1' : 'walk2', mdir > 0);
+          mx -= 0.8 * mdir;
+        } else {
+          drawMilkman(f ? 'dance1' : 'dance2', mdir < 0);
+          mx += Math.sin(mtick * 0.12) * 0.5;
+        }
+
+        const maxX = window.innerWidth - 110;
+        if (mx > maxX) { mx = maxX; mdir = -1; pickMilkmanMode(); }
+        if (mx < 0) { mx = 0; mdir = 1; pickMilkmanMode(); }
+        mcvs.style.left = mx + 'px';
+
+        if (elapsed >= DOLPHIN_TIME) {
+          state = 'chase';
+          chaseStart = Date.now();
+          dx = -210;
+          dcvs.style.display = 'block';
+          milkmanVX = 0;
+          hint.innerHTML = '\u2190 \u2192 RUN &nbsp; \u2191 JUMP (x2!)<br>SPACE \u2014 secret weapon';
+          hint.style.opacity = '1';
+          setTimeout(() => { hint.style.opacity = '0'; }, 4000);
+        }
+      }
+
+      /* ──── CHASE ──── */
+      if (state === 'chase') {
+        const chaseSec = (Date.now() - chaseStart) / 1000;
+
+        if (keys['ArrowLeft'] || keys['a'] || keys['A']) milkmanVX -= M_ACCEL;
+        if (keys['ArrowRight'] || keys['d'] || keys['D']) milkmanVX += M_ACCEL;
+        milkmanVX *= M_FRIC;
+        if (Math.abs(milkmanVX) < 0.1) milkmanVX = 0;
+        milkmanVX = Math.max(-M_MAX, Math.min(M_MAX, milkmanVX));
+        mx += milkmanVX;
+
+        const jumpKey = !!(keys['ArrowUp'] || keys['w'] || keys['W']);
+        const jumpJust = jumpKey && !jumpWasPressed;
+        jumpWasPressed = jumpKey;
+
+        if (jumpJust && jumpCount < 2) {
+          jumpVY = JUMP_POW;
+          if (jumpY <= 0) jumpY = 0.1;
+          jumpCount++;
+          if (jumpCount === 2) {
+            const px = mx + milkmanW/2, py = window.innerHeight - 20 - jumpY;
+            for (let i = 0; i < 6; i++) {
+              particles.push({ x: px + (Math.random()-0.5)*20, y: py, vx: (Math.random()-0.5)*3, vy: 1+Math.random()*2, size: 2+Math.random()*3, color: '#aaaaaa', life: 0.4, grounded: false });
+            }
+          }
+        }
+        if (jumpY > 0 || jumpVY > 0) {
+          jumpVY -= GRAV;
+          jumpY += jumpVY;
+          if (jumpY <= 0) { jumpY = 0; jumpVY = 0; jumpCount = 0; }
+        }
+
+        mx = Math.max(0, Math.min(window.innerWidth - milkmanW, mx));
+
+        cannonActive = !!keys[' '];
+        const dolphinCX = dx + 98;
+        const milkmanCX = mx + 50;
+        const shootLeft = dolphinCX < milkmanCX;
+
+        if (cannonActive) {
+          const gunTipX = shootLeft ? mx - 2 : mx + milkmanW + 2;
+          const gunScreenY = window.innerHeight - (20 + jumpY) - milkmanH * 0.47;
+          const bulletCount = milkmanPoweredUp ? 10 : 5;
+          const bulletSpread = milkmanPoweredUp ? 20 : 10;
+          const bulletSize = milkmanPoweredUp ? 3 + Math.random()*4 : 1.5 + Math.random()*2.5;
+          for (let i = 0; i < bulletCount; i++) {
+            milkBullets.push({
+              x: gunTipX, y: gunScreenY + (Math.random()-0.5)*bulletSpread,
+              vx: (shootLeft ? -1 : 1) * (14 + Math.random()*6),
+              vy: (Math.random()-0.5)*2.5,
+              size: bulletSize,
+              color: MILK_COLORS[Math.floor(Math.random()*MILK_COLORS.length)],
+            });
+          }
+          if (mtick % 3 === 0) {
+            milkBullets.push({
+              x: gunTipX, y: gunScreenY,
+              vx: (shootLeft ? -1 : 1) * (6 + Math.random()*4),
+              vy: (Math.random()-0.5)*4,
+              size: 4 + Math.random()*3,
+              color: '#ffffff',
+            });
+          }
+        }
+
+        const dLeft = dx, dRight = dx + 196;
+        const dTop = window.innerHeight - (8 + dolphinBob) - 126;
+        const dBot = window.innerHeight - (8 + dolphinBob);
+        let hitting = false;
+
+        for (let i = milkBullets.length - 1; i >= 0; i--) {
+          const b = milkBullets[i];
+          b.x += b.vx;
+          b.y += b.vy;
+          if (b.x > dLeft && b.x < dRight && b.y > dTop && b.y < dBot) {
+            milkBullets.splice(i, 1);
+            hitting = true;
+            continue;
+          }
+          if (b.x < -20 || b.x > window.innerWidth + 20 || b.y < -20 || b.y > window.innerHeight + 20) {
+            milkBullets.splice(i, 1);
+          }
+        }
+
+        if (hitting) {
+          milkHitTime += (milkmanPoweredUp ? 2 : 1) / 60;
+          dx -= milkmanPoweredUp ? 6 : 3;
+          dolphinHurtFlash = 4;
+        }
+        if (dolphinHurtFlash > 0) dolphinHurtFlash--;
+
+        if (cannonActive) {
+          drawMilkman('gunner', shootLeft);
+        } else {
+          const spd = Math.abs(milkmanVX);
+          const flipM = milkmanVX < -0.3;
+          if (jumpY > 15) {
+            drawMilkman('dance1', flipM);
+          } else if (spd > 0.8) {
+            const wf = Math.floor(mtick / Math.max(4, Math.round(12 - spd * 1.5))) % 2;
+            drawMilkman(wf ? 'walk1' : 'walk2', flipM);
+          } else {
+            drawMilkman('scared', true);
+          }
+        }
+        mcvs.style.left = mx + 'px';
+        mcvs.style.bottom = (20 + jumpY) + 'px';
+
+        let dSpeed = 2.2 + chaseSec * 0.18;
+        if (chaseSec > CHASE_LIMIT - 3) dSpeed += (chaseSec - (CHASE_LIMIT - 3)) * 3;
+        if (chaseSec > CHASE_LIMIT) dSpeed = 50;
+
+        const dolphinMouthX = dx + 188;
+        if (dolphinMouthX < milkmanCX - 5) dx += dSpeed;
+        else if (dolphinMouthX > milkmanCX + 5) dx -= dSpeed * 0.6;
+
+        dolphinBob = Math.sin(mtick * 0.1) * 3;
+        const isClose = Math.abs(dolphinMouthX - milkmanCX) < 140;
+        drawDolphin(isClose ? 'open' : 'closed', true);
+
+        if (dolphinHurtFlash > 0) {
+          dcvs.style.filter = 'brightness(3)';
+        } else {
+          dcvs.style.filter = '';
+        }
+
+        dcvs.style.left = dx + 'px';
+        dcvs.style.bottom = (8 + dolphinBob) + 'px';
+
+        if (milkHitTime > 0) {
+          const bw = 80, bh = 6;
+          const bx = dx + 98 - bw/2;
+          const by = window.innerHeight - 8 - 126 - 18 - dolphinBob;
+          vctx.fillStyle = '#222';
+          vctx.fillRect(bx, by, bw, bh);
+          vctx.fillStyle = '#ff3030';
+          vctx.fillRect(bx, by, bw * Math.min(1, milkHitTime / MILK_KILL_TIME), bh);
+          vctx.strokeStyle = '#555';
+          vctx.lineWidth = 1;
+          vctx.strokeRect(bx, by, bw, bh);
+        }
+
+        if (milkHitTime >= MILK_KILL_TIME) {
+          state = 'exploded';
+          stateTimer = 0;
+          flashAlpha = 1;
+          const ecx = dx + 98, ecy = window.innerHeight - 8 - 63;
+          const EC = ['#1e4a6a','#3a80a8','#6ab8e0','#2a6888','#ffffff','#ff6040','#ffaa20','#ff2020'];
+          for (let i = 0; i < 100; i++) {
+            const a = Math.random()*Math.PI*2, sp = 3+Math.random()*12;
+            particles.push({ x: ecx+(Math.random()-0.5)*60, y: ecy+(Math.random()-0.5)*40, vx: Math.cos(a)*sp, vy: Math.sin(a)*sp-4, size: 3+Math.random()*8, color: EC[Math.floor(Math.random()*EC.length)], life: 1, grounded: false });
+          }
+          dcvs.style.display = 'none';
+          dcvs.style.filter = '';
+          milkBullets.length = 0;
+        }
+
+        const overlap = dolphinMouthX > mx + 10 && dx + 30 < mx + milkmanW * 0.8;
+        const onGround = jumpY < milkmanH * 0.57;
+        if (state === 'chase' && ((overlap && onGround) || chaseSec > CHASE_LIMIT + 0.5)) {
+          state = 'chomp';
+          stateTimer = 0;
+          flashAlpha = 1;
+          dx = mx - 90;
+          jumpY = 0; jumpVY = 0;
+          mcvs.style.bottom = '20px';
+          milkBullets.length = 0;
+          dcvs.style.filter = '';
+        }
+      }
+
+      /* ──── EXPLODED ──── */
+      if (state === 'exploded') {
+        stateTimer++;
+        if (flashAlpha > 0) {
+          flashAlpha -= 0.03;
+          vctx.fillStyle = 'rgba(255,255,200,' + Math.max(0, flashAlpha) + ')';
+          vctx.fillRect(0, 0, vcvs.width, vcvs.height);
+        }
+        const vf = Math.floor(mtick / 8) % 2;
+        drawMilkman(vf ? 'dance1' : 'dance2', false);
+        mcvs.style.left = mx + 'px';
+        mcvs.style.bottom = '20px';
+
+        if (stateTimer > 300) {
+          state = 'normal';
+          jumpY = 0; jumpVY = 0; jumpCount = 0;
+          milkHitTime = 0;
+          pickMilkmanMode();
+        }
+      }
+
+      /* ──── CHOMP ──── */
+      if (state === 'chomp') {
+        stateTimer++;
+        drawDolphin('closed', true);
+        dcvs.style.left = dx + 'px';
+        dcvs.style.bottom = (8 + Math.sin(mtick * 0.08) * 2) + 'px';
+
+        if (flashAlpha > 0) {
+          flashAlpha -= 0.06;
+          vctx.fillStyle = 'rgba(255,255,255,' + Math.max(0, flashAlpha) + ')';
+          vctx.fillRect(0, 0, vcvs.width, vcvs.height);
+        }
+        if (stateTimer < 15) {
+          const scale = 1 - stateTimer / 15;
+          mcvs.style.width = (milkmanW * scale) + 'px';
+          mcvs.style.height = (milkmanH * scale) + 'px';
+          mcvs.style.left = (mx + milkmanW/2 * (1 - scale)) + 'px';
+          mcvs.style.bottom = (20 + milkmanH/2 * (1 - scale)) + 'px';
+        } else {
+          mcvs.style.display = 'none';
+        }
+        if (stateTimer > 50) { state = 'vomit'; stateTimer = 0; }
+      }
+
+      /* ──── VOMIT ──── */
+      if (state === 'vomit') {
+        stateTimer++;
+        const shake = Math.sin(stateTimer * 0.5) * 3;
+        const dxPos = dx + shake;
+        dcvs.style.left = dxPos + 'px';
+        dcvs.style.bottom = (8 + Math.sin(mtick * 0.1) * 2) + 'px';
+        drawDolphin('open', true);
+
+        const mouthX = dxPos + 188;
+        const mouthY = window.innerHeight - 8 - 126 * 0.55;
+
+        if (stateTimer < 180) {
+          const intensity = stateTimer < 20 ? stateTimer / 20 : (stateTimer < 140 ? 1 : (180 - stateTimer) / 40);
+          if (Math.random() < intensity) spawnVomit(mouthX, mouthY, stateTimer % 15 === 0, 1);
+          if (Math.random() < intensity * 0.5) spawnVomit(mouthX, mouthY, false, 1);
+          if (stateTimer % 30 < 3) { for (let j = 0; j < 8; j++) spawnVomit(mouthX, mouthY + (Math.random()-0.5)*10, true, 1); }
+        }
+        if (stateTimer > 220 && particles.length === 0) { state = 'done'; stateTimer = 0; }
+      }
+
+      /* ──── DONE ──── */
+      if (state === 'done') {
+        stateTimer++;
+        drawDolphin('closed', false);
+        const dxOff = dx - stateTimer * 2.5;
+        dcvs.style.left = dxOff + 'px';
+        dcvs.style.bottom = (8 + Math.sin(mtick * 0.08) * 4) + 'px';
+        if (dxOff < -250) dcvs.style.display = 'none';
+
+        /* Respawn milkman after 3 seconds — shirtless, 2× size, 2× power */
+        if (stateTimer > 180 && !milkmanPoweredUp) {
+          milkmanPoweredUp = true;
+          milkmanW = 200;
+          milkmanH = 280;
+          state = 'chase';
+          chaseStart = Date.now();
+          stateTimer = 0;
+          mx = window.innerWidth / 2 - milkmanW / 2;
+          milkmanVX = 0;
+          jumpY = 0; jumpVY = 0; jumpCount = 0;
+          milkHitTime = 0;
+          dx = -210;
+          dcvs.style.display = 'block';
+          dcvs.style.filter = '';
+          mcvs.style.display = 'block';
+          mcvs.style.width = milkmanW + 'px';
+          mcvs.style.height = milkmanH + 'px';
+          milkBullets.length = 0;
+          flashAlpha = 1;
+          hint.innerHTML = 'HE\'S BACK... <b>SHIRTLESS.</b>';
+          hint.style.opacity = '1';
+          setTimeout(() => { hint.style.opacity = '0'; }, 3000);
+        }
+      }
+
+      updateAndDrawParticles();
+      requestAnimationFrame(loop);
+    }
+
+    loop();
+  })();
+  </script>
+
+</body>
+</html>

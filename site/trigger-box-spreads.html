@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trigger Box Credit Spreads | Milkman Trades</title>
+<meta name="description" content="Selling credit spreads when price opens in the trigger box. Win rates by hold time, strike distance, and box position.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥛</text></svg>">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,300&family=JetBrains+Mono:wght@400;500;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0c0e12;--surface:#13161c;--surface-2:#181c24;--border:#1e2230;--text:#eaebef;--text-dim:#7a7e90;--text-mid:#b0b3c0;--bull:#1cd48a;--bear:#ef6c00;--accent:#fbbf24;--red:#ef4444;--green:#22c55e;--blue:#60a5fa}
+html{font-size:15px;scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
+.page{max-width:800px;margin:0 auto;padding:3rem 1.5rem 5rem}
+.draft{background:#1a1400;border:1px solid #3d3200;border-radius:6px;padding:.6rem 1rem;margin-bottom:1.5rem;font-size:.75rem;color:#d4a800;line-height:1.5}
+.draft strong{color:#fbbf24}
+.back{display:inline-flex;align-items:center;gap:.4rem;font-size:.8rem;color:var(--text-dim);text-decoration:none;margin-bottom:2.5rem;transition:color .2s}
+.back:hover{color:var(--text)}
+.back svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2}
+.hero{margin-bottom:3.5rem}
+.hero .kicker{font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:.75rem}
+.hero h1{font-size:2.1rem;font-weight:700;letter-spacing:-.03em;line-height:1.15;margin-bottom:1rem}
+.hero h1 em{font-style:normal;color:var(--green)}
+.hero .lede{font-size:1.05rem;color:var(--text-mid);font-weight:300;max-width:640px;line-height:1.65}
+.section{margin-bottom:3.5rem}
+.section-label{font-family:'JetBrains Mono',monospace;font-size:.65rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim);padding-bottom:.6rem;border-bottom:1px solid var(--border);margin-bottom:1.5rem}
+.prose{font-size:.95rem;color:var(--text-mid);font-weight:300;line-height:1.7;margin-bottom:1.5rem}
+.prose strong{color:var(--text);font-weight:500}
+.prose code{font-family:'JetBrains Mono',monospace;font-size:.82rem;background:var(--surface);padding:.1em .35em;border-radius:3px}
+.bigstat{display:flex;gap:1.5rem;margin:2rem 0;flex-wrap:wrap}
+.bigstat-item{flex:1;min-width:160px;padding:1.25rem;background:var(--surface);border:1px solid var(--border);border-radius:8px}
+.bigstat-num{font-family:'JetBrains Mono',monospace;font-size:1.8rem;font-weight:700;line-height:1;margin-bottom:.3rem}
+.bigstat-label{font-size:.78rem;color:var(--text-mid);line-height:1.4}
+
+.wtable{width:100%;border-collapse:collapse;font-size:.82rem;margin:.75rem 0}
+.wtable th{font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:500;color:var(--text-dim);text-align:right;padding:.45rem .5rem;border-bottom:1px solid var(--border);letter-spacing:.03em}
+.wtable th:first-child{text-align:left}
+.wtable td{padding:.45rem .5rem;border-bottom:1px solid #151820;text-align:right;font-family:'JetBrains Mono',monospace;font-size:.82rem;color:var(--text-mid)}
+.wtable td:first-child{text-align:left;font-family:'DM Sans',sans-serif;color:var(--text);font-weight:400;font-size:.82rem}
+.wtable td:nth-child(2){color:var(--text-dim);font-size:.75rem}
+.wtable tr.hi td{font-weight:600;color:var(--text)}
+.wtable .win90{color:var(--green);font-weight:700}
+.wtable .win80{color:var(--bull);font-weight:600}
+.wtable .win70{color:var(--accent)}
+.wtable .win60{color:var(--text-mid)}
+
+.callout{background:var(--surface);border-left:3px solid var(--accent);padding:1rem 1.25rem;margin:2rem 0;border-radius:0 6px 6px 0}
+.callout p{font-size:.9rem;color:var(--text-mid);font-weight:300;line-height:1.6}
+.callout strong{color:var(--accent);font-weight:500}
+
+.footer{text-align:center;padding-top:2.5rem;border-top:1px solid var(--border);color:var(--text-dim);font-size:.72rem;font-weight:300;line-height:1.8}
+.footer a{color:var(--text-dim);text-decoration:underline;text-underline-offset:2px}
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease}
+.reveal.visible{opacity:1;transform:none}
+.cheatsheet-banner{display:block;text-align:center;padding:1.5rem 1rem;margin:2rem 0 0;background:var(--surface);border:1px solid var(--border);border-radius:8px;text-decoration:none;transition:border-color .2s,background .2s}
+.cheatsheet-banner:hover{border-color:#fbbf24;background:var(--surface-2)}
+.cheatsheet-banner span{font-size:.95rem;color:var(--text);font-weight:500}
+@media(max-width:767px){
+  .hero h1{font-size:1.6rem}
+  .bigstat{flex-direction:column;gap:1rem}
+  .bigstat-item{min-width:0}
+  .wtable{font-size:.72rem;display:block;overflow-x:auto}
+  .wtable th,.wtable td{padding:.35rem .4rem;white-space:nowrap}
+}
+</style>
+<script src="/nav.js"></script>
+</head>
+<body>
+<div class="page">
+
+<div class="draft"><strong>Draft &mdash;</strong> These backtests have not yet been independently verified. Do not trade based on this data.</div>
+
+<a href="/trigger-box.html" class="back">
+  <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+  Trigger Box Study
+</a>
+
+<header class="hero reveal">
+  <div class="kicker">Study &mdash; Trigger Box Credit Spreads</div>
+  <h1>Selling spreads when price<br>opens in the trigger box:<br><em>the win rates.</em></h1>
+  <p class="lede">If price opens between the previous close and the trigger level, and holds there, what are the historical probabilities for selling credit spreads at the opposing ATR levels? We measured how often price does NOT reach each strike across 25 years of SPY data.</p>
+</header>
+
+<div class="section reveal">
+  <div class="section-label">The Setup</div>
+  <p class="prose">
+    <strong>Bearish trigger box:</strong> Price opens below PDC but above the put trigger (-23.6%). You sell a <strong>call credit spread</strong> at a higher ATR level. You win if price stays down.
+  </p>
+  <p class="prose">
+    <strong>Bullish trigger box:</strong> Price opens above PDC but below the call trigger (+23.6%). You sell a <strong>put credit spread</strong> at a lower ATR level. You win if price stays up.
+  </p>
+  <p class="prose">
+    The table shows the <strong>% of days price did NOT reach that level</strong> — i.e., your win rate if your short strike was at that ATR level and expired that day.
+  </p>
+</div>
+
+<div class="section reveal">
+  <div class="section-label">Sell Call Spreads — Bearish Trigger Box</div>
+
+  <div class="bigstat">
+    <div class="bigstat-item"><div class="bigstat-num" style="color:var(--green)">98.7%</div><div class="bigstat-label">Historical rate at +100% ATR<br>after holding 1 hour (safer)</div></div>
+    <div class="bigstat-item"><div class="bigstat-num" style="color:var(--bull)">93.8%</div><div class="bigstat-label">Historical rate at +61.8%<br>after holding 1 hour</div></div>
+    <div class="bigstat-item"><div class="bigstat-num" style="color:var(--accent)">n=673</div><div class="bigstat-label">Days matching<br>held 1 hour condition</div></div>
+  </div>
+
+  <table class="wtable">
+    <thead><tr><th>Condition</th><th>N</th><th>+38.2%</th><th>+50%</th><th>+61.8%</th><th>+100%</th></tr></thead>
+    <tbody>
+      <tr><td>All box days</td><td>1,483</td><td class="win60"><span class="n-clickable n-yes" data-row="bear_call_0382" data-outcome="hit" data-title="Bear Call +38.2% — Yes">66.4%</span> · <span class="n-clickable n-no" data-row="bear_call_0382" data-outcome="miss" data-title="Bear Call +38.2% — No">No</span></td><td class="win70">76.9%</td><td class="win80"><span class="n-clickable n-yes" data-row="bear_call_0618" data-outcome="hit" data-title="Bear Call +61.8% — Yes">84.5%</span> · <span class="n-clickable n-no" data-row="bear_call_0618" data-outcome="miss" data-title="Bear Call +61.8% — No">No</span></td><td class="win90"><span class="n-clickable n-yes" data-row="bear_call_100" data-outcome="hit" data-title="Bear Call +100% — Yes">96.2%</span> · <span class="n-clickable n-no" data-row="bear_call_100" data-outcome="miss" data-title="Bear Call +100% — No">No</span></td></tr>
+      <tr class="hi"><td>Held 30 min</td><td>875</td><td class="win70">79.8%</td><td class="win80">87.0%</td><td class="win90">91.0%</td><td class="win90">97.9%</td></tr>
+      <tr class="hi"><td>Held 1 hour</td><td>673</td><td class="win80">85.7%</td><td class="win90">91.2%</td><td class="win90">93.8%</td><td class="win90">98.7%</td></tr>
+      <tr><td>Held 30m, top half</td><td>342</td><td class="win70">77.5%</td><td class="win80">84.5%</td><td class="win90">90.4%</td><td class="win90">98.0%</td></tr>
+      <tr><td>Held 30m, bottom half</td><td>533</td><td class="win80">81.2%</td><td class="win80">88.6%</td><td class="win90">91.4%</td><td class="win90">97.9%</td></tr>
+      <tr><td>Held 1h, top half</td><td>242</td><td class="win80">86.8%</td><td class="win90">91.7%</td><td class="win90">94.2%</td><td class="win90">98.3%</td></tr>
+      <tr><td>Held 1h, bottom half</td><td>431</td><td class="win80">85.2%</td><td class="win90">91.0%</td><td class="win90">93.5%</td><td class="win90">98.8%</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section reveal">
+  <div class="section-label">Sell Put Spreads — Bullish Trigger Box</div>
+
+  <div class="bigstat">
+    <div class="bigstat-item"><div class="bigstat-num" style="color:var(--green)">97.6%</div><div class="bigstat-label">Historical rate at -100% ATR<br>after holding 1 hour (safer)</div></div>
+    <div class="bigstat-item"><div class="bigstat-num" style="color:var(--bull)">92.1%</div><div class="bigstat-label">Historical rate at -61.8%<br>after holding 1 hour</div></div>
+    <div class="bigstat-item"><div class="bigstat-num" style="color:var(--accent)">n=776</div><div class="bigstat-label">Days matching<br>held 1 hour condition</div></div>
+  </div>
+
+  <table class="wtable">
+    <thead><tr><th>Condition</th><th>N</th><th>-38.2%</th><th>-50%</th><th>-61.8%</th><th>-100%</th></tr></thead>
+    <tbody>
+      <tr><td>All box days</td><td>1,725</td><td class="win60"><span class="n-clickable n-yes" data-row="bull_put_0382" data-outcome="hit" data-title="Bull Put -38.2% — Yes">64.7%</span> · <span class="n-clickable n-no" data-row="bull_put_0382" data-outcome="miss" data-title="Bull Put -38.2% — No">No</span></td><td class="win70">73.6%</td><td class="win70"><span class="n-clickable n-yes" data-row="bull_put_0618" data-outcome="hit" data-title="Bull Put -61.8% — Yes">79.8%</span> · <span class="n-clickable n-no" data-row="bull_put_0618" data-outcome="miss" data-title="Bull Put -61.8% — No">No</span></td><td class="win90"><span class="n-clickable n-yes" data-row="bull_put_100" data-outcome="hit" data-title="Bull Put -100% — Yes">92.3%</span> · <span class="n-clickable n-no" data-row="bull_put_100" data-outcome="miss" data-title="Bull Put -100% — No">No</span></td></tr>
+      <tr class="hi"><td>Held 30 min</td><td>1,004</td><td class="win70">76.2%</td><td class="win80">82.6%</td><td class="win80">87.7%</td><td class="win90">95.9%</td></tr>
+      <tr class="hi"><td>Held 1 hour</td><td>776</td><td class="win80">82.9%</td><td class="win80">88.0%</td><td class="win90">92.1%</td><td class="win90">97.6%</td></tr>
+      <tr><td>Held 30m, top half</td><td>618</td><td class="win70">74.9%</td><td class="win80">81.7%</td><td class="win80">87.7%</td><td class="win90">95.8%</td></tr>
+      <tr><td>Held 30m, bottom half</td><td>386</td><td class="win70">78.2%</td><td class="win80">83.9%</td><td class="win80">87.8%</td><td class="win90">96.1%</td></tr>
+      <tr><td>Held 1h, top half</td><td>485</td><td class="win80">80.6%</td><td class="win80">86.2%</td><td class="win90">90.7%</td><td class="win90">96.9%</td></tr>
+      <tr><td>Held 1h, bottom half</td><td>291</td><td class="win80">86.6%</td><td class="win90">91.1%</td><td class="win90">94.5%</td><td class="win90">98.6%</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section reveal">
+  <div class="section-label">Practical Takeaways</div>
+
+  <div class="callout">
+    <p><strong>Consider two approaches based on risk tolerance.</strong> The &plusmn;100% ATR level offers 97&ndash;99% historical win rates with minimal risk, though the credit collected is smaller. The &plusmn;61.8% level offers 88&ndash;93% rates with more premium but a worse loss-to-profit ratio when it goes wrong. A 30-minute hold tends to be the minimum filter worth waiting for.</p>
+  </div>
+
+  <div class="callout" style="border-left-color:var(--bull)">
+    <p><strong>Consider the opposing 38.2% as a potential stop.</strong> If price reaches it, the trigger box thesis may be weakening. This gives defined risk at entry. Keep in mind that the loss on a single losing trade can be several times the credit collected &mdash; size positions accordingly.</p>
+  </div>
+
+  <div class="callout" style="border-left-color:var(--blue)">
+    <p><strong>Hold time appears to matter more than box position.</strong> Top vs bottom half of the box changes historical win rates by 1&ndash;4%, while the 30-minute hold filter is associated with 10&ndash;15% higher rates. Time in the box may be the more useful signal.</p>
+  </div>
+
+  <div class="callout" style="border-left-color:var(--bear)">
+    <p><strong>This setup fires ~10% of trading days.</strong> The trigger box open + 1-hour hold occurs on roughly 1 in 10 days. It's not an every-day trade — it's a selective, high-probability setup.</p>
+  </div>
+</div>
+
+<a href="/cheatsheet.html" class="cheatsheet-banner"><span>&#x1F4CB; View the complete Golden Gate Cheat Sheet &rarr;</span></a>
+
+<footer class="footer">
+  ATR Levels &amp; Phase Oscillator by <a href="https://satyland.com" target="_blank" rel="noopener">Saty Mahajan</a><br>
+  Analysis inspired by <a href="https://x.com/tesrak" target="_blank" rel="noopener">@tesrak</a> &middot; With thanks to <a href="https://x.com/todaborrego" target="_blank" rel="noopener">@todor</a> for the data<br>
+  25 years of SPY data (2000&ndash;2025) &middot; <a href="https://milkmantrades.com">Milkman Trades</a>
+</footer>
+
+</div>
+
+<script>
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('visible'); obs.unobserve(e.target); }});
+},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+document.querySelector('.hero').classList.add('visible');
+</script>
+<script src="/study-drawer.js"></script>
+<script>StudyDrawer.loadData('/data/trigger-box-spreads-dates.json');</script>
+</body>
+</html>

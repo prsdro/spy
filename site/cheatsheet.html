@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Golden Gate Cheat Sheet | Milkman Trades</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥛</text></svg>">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0c0e12;--card:#111419;--border:#1e2230;
+  --t:#eaebef;--t2:#b0b3c0;--t3:#7a7e90;
+  --bull:#1cd48a;--bear:#ef6c00;--acc:#fbbf24;--red:#ef4444;
+}
+html{font-size:14px}
+body{background:#060709;color:var(--t);font-family:'DM Sans',system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;padding:2rem 1rem 4rem}
+
+.save-bar{width:1200px;display:flex;justify-content:flex-end;margin-bottom:.75rem}
+.save-btn{padding:.5rem 1.2rem;background:var(--acc);color:#000;border:none;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:.8rem;font-weight:600;cursor:pointer;transition:opacity .15s}
+.save-btn:hover{opacity:.85}
+
+.poster{width:1200px;background:var(--bg);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+
+.hdr{padding:1.8rem 2rem 1.4rem;background:linear-gradient(135deg,#0e1018,#12151f);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-end}
+.hdr h1{font-family:'JetBrains Mono',monospace;font-size:1.6rem;font-weight:700;line-height:1;margin-bottom:.35rem}
+.hdr h1 span{color:var(--acc)}
+.hdr .sub{font-size:.9rem;color:var(--t2)}
+.hdr .draft{font-family:'JetBrains Mono',monospace;font-size:.65rem;font-weight:500;color:#c0a000;background:#1a1600;padding:.2em .5em;border-radius:3px;letter-spacing:.05em;text-transform:uppercase}
+.hdr .url{font-size:.8rem;color:var(--t3);display:block;margin-top:.3rem;text-align:right}
+
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.sec{border-right:1px solid var(--border);border-bottom:1px solid var(--border);padding:1.5rem 1.8rem}
+.sec:nth-child(even){border-right:none}
+.sec.full{grid-column:1/-1}
+
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:600;color:var(--acc);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.5rem}
+.sec-title{font-size:1.15rem;font-weight:700;margin-bottom:.6rem;line-height:1.2}
+
+/* Takeaway box */
+.take{background:#111418;border:1px solid #252a38;border-left:3px solid var(--acc);border-radius:0 6px 6px 0;padding:.7rem 1rem;margin-bottom:.8rem;font-size:.9rem;color:var(--t);line-height:1.6;font-weight:400}
+.take strong{color:var(--acc);font-weight:600}
+.take .val{font-family:'JetBrains Mono',monospace;font-weight:700}
+
+/* Stat row */
+.stats{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:.7rem}
+.stat{flex:1;min-width:100px;background:var(--card);border:1px solid var(--border);border-radius:5px;padding:.6rem .75rem}
+.stat-val{font-family:'JetBrains Mono',monospace;font-size:1.5rem;font-weight:700;line-height:1}
+.stat-label{font-size:.75rem;color:var(--t2);margin-top:.25rem;line-height:1.3}
+.bull{color:var(--bull)}.bear{color:var(--bear)}.acc{color:var(--acc)}.red{color:var(--red)}
+
+/* Level chain */
+.chain{display:flex;align-items:center;gap:0;margin:.5rem 0}
+.chain-node{text-align:center;padding:.45rem .6rem;background:var(--card);border:1px solid var(--border);font-family:'JetBrains Mono',monospace}
+.chain-node .pct{font-size:1.1rem;font-weight:700;color:var(--acc)}
+.chain-node .lbl{font-size:.65rem;color:var(--t2);margin-top:.1rem}
+.chain-arrow{color:var(--t3);font-size:.8rem;padding:0 .2rem}
+.chain-node:first-child{border-radius:5px 0 0 5px}
+.chain-node:last-child{border-radius:0 5px 5px 0}
+
+/* PO Grid */
+.pogrid{display:grid;grid-template-columns:auto 1fr 1fr;gap:0;font-size:.8rem;margin:.5rem 0}
+.pogrid .corner{background:var(--card);border:1px solid var(--border);padding:.3rem .5rem}
+.pogrid .colhdr{background:var(--card);border:1px solid var(--border);padding:.3rem .5rem;text-align:center;font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:600;color:var(--t2);text-transform:uppercase}
+.pogrid .rowhdr{background:var(--card);border:1px solid var(--border);padding:.3rem .6rem;font-weight:500;color:var(--t)}
+.pogrid .cell{border:1px solid var(--border);padding:.35rem .5rem;text-align:center;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:.85rem;color:var(--t2)}
+.pogrid .cell.hot{background:rgba(28,212,138,.08)}
+.pogrid .cell.cold{background:rgba(239,68,68,.06);color:var(--t3)}
+
+/* Mini table */
+.mtable{width:100%;border-collapse:collapse;font-size:.8rem;margin:.5rem 0}
+.mtable th{font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:500;color:var(--t2);text-align:right;padding:.35rem .5rem;border-bottom:1px solid var(--border);letter-spacing:.03em;text-transform:uppercase}
+.mtable th:first-child{text-align:left}
+.mtable td{padding:.4rem .5rem;border-bottom:1px solid #151820;text-align:right;font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--t2)}
+.mtable td:first-child{text-align:left;font-family:'DM Sans',sans-serif;color:var(--t);font-weight:400}
+.mtable tr.hi td{font-weight:600;color:var(--t)}
+
+/* Timing bars */
+.tbar-row{display:flex;align-items:center;gap:.4rem;margin-bottom:.25rem}
+.tbar-lbl{width:42px;text-align:right;color:var(--t2);font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:500}
+.tbar-bg{flex:1;height:12px;background:#161922;border-radius:3px;overflow:hidden}
+.tbar-fill{height:100%;border-radius:3px}
+.tbar-val{width:36px;font-family:'JetBrains Mono',monospace;font-size:.75rem;font-weight:600}
+
+/* Bullet list */
+.blist{list-style:none;font-size:.85rem;color:var(--t2);line-height:1.7}
+.blist li::before{content:'›';color:var(--acc);font-weight:700;margin-right:.4rem}
+.blist .key{color:var(--t);font-weight:600}
+.blist .val{font-family:'JetBrains Mono',monospace;font-weight:700}
+
+.divlbl{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--t3);letter-spacing:.06em;text-transform:uppercase;margin:.6rem 0 .3rem}
+
+.links{padding:1rem 2rem;border-bottom:1px solid var(--border);display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center}
+.links a{padding:.4rem .8rem;background:var(--card);border:1px solid var(--border);border-radius:4px;color:var(--t2);text-decoration:none;font-size:.75rem;font-family:'JetBrains Mono',monospace;transition:border-color .15s}
+.links a:hover{border-color:var(--acc);color:var(--t)}
+
+.ftr{padding:.9rem 2rem;border-top:1px solid var(--border);font-size:.7rem;color:var(--t3);display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace}
+
+/* ── Mobile ── */
+@media(max-width:767px){
+  body{padding:1rem .5rem 3rem}
+  .save-bar{width:100%;flex-wrap:wrap;gap:.4rem}
+  .poster{width:100%}
+  .hdr{flex-direction:column;align-items:flex-start;gap:.6rem;padding:1.2rem 1rem 1rem}
+  .hdr h1{font-size:1.15rem}
+  .hdr .sub{font-size:.78rem}
+  .hdr .url{text-align:left;margin-top:.2rem}
+  .grid{grid-template-columns:1fr}
+  .sec{border-right:none !important;padding:1.1rem 1rem}
+  .sec-title{font-size:1rem}
+  .stats{flex-direction:column}
+  .stat{min-width:0}
+  .stat-val{font-size:1.2rem}
+  .chain{flex-wrap:wrap;gap:.25rem;justify-content:center}
+  .chain-node{padding:.35rem .45rem}
+  .chain-node .pct{font-size:.95rem}
+  .chain-node .lbl{font-size:.6rem}
+  .chain-arrow{font-size:.7rem}
+  .pogrid{font-size:.7rem}
+  .mtable{font-size:.7rem}
+  .mtable th,.mtable td{padding:.3rem .35rem}
+  .tbar-row{gap:.3rem}
+  .tbar-lbl{width:36px;font-size:.65rem}
+  .tbar-val{width:46px;font-size:.65rem}
+  div[style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr !important}
+  .links{padding:.8rem 1rem}
+  .links a{font-size:.68rem;padding:.35rem .6rem}
+  .ftr{flex-direction:column;gap:.4rem;text-align:center;font-size:.6rem;padding:.8rem 1rem}
+}
+</style>
+<script src="/nav.js"></script>
+<script src="/mobile-png.js"></script>
+</head>
+<body>
+
+<div class="save-bar">
+  <button class="save-btn save-mobile-btn" onclick="saveMobilePNG()" style="background:#60a5fa;margin-right:.5rem">📱 Mobile PNG</button>
+  <button class="save-btn" onclick="savePNG()">&#11015; Save as PNG</button>
+</div>
+
+<div class="poster" id="poster">
+
+<div class="hdr">
+  <div>
+    <h1>Golden Gate <span>Cheat Sheet</span></h1>
+    <div class="sub">Saty ATR Levels &times; Pivot Ribbon &times; Phase Oscillator &mdash; 25 years of SPY (2000&ndash;2025)</div>
+  </div>
+  <div style="text-align:right">
+    <div class="draft">Draft &mdash; Not Verified</div>
+    <div class="url">milkmantrades.com</div>
+  </div>
+</div>
+
+<div class="grid">
+
+<!-- 1. BASICS -->
+<div class="sec">
+  <div class="sec-num">01 &mdash; The Golden Gate</div>
+  <div class="sec-title">Trade level-to-level, not close-to-ATR</div>
+
+  <div class="take"><strong>The core trade:</strong> once price hits 38.2%, target 61.8%. It completes <span class="val bull">63%</span> bullish / <span class="val bear">65%</span> bearish. Only <span class="val">14%</span> of days reach the full ATR &mdash; don't hold for that.</div>
+
+  <div class="divlbl">Each hop gets progressively harder</div>
+  <div class="chain">
+    <div class="chain-node"><div class="pct">80%</div><div class="lbl">Trig &rarr; 38.2</div></div>
+    <div class="chain-arrow">&rarr;</div>
+    <div class="chain-node"><div class="pct">69%</div><div class="lbl">38.2 &rarr; 61.8</div></div>
+    <div class="chain-arrow">&rarr;</div>
+    <div class="chain-node"><div class="pct">60%</div><div class="lbl">61.8 &rarr; 78.6</div></div>
+    <div class="chain-arrow">&rarr;</div>
+    <div class="chain-node"><div class="pct">55%</div><div class="lbl">78.6 &rarr; 100</div></div>
+  </div>
+</div>
+
+<!-- 2. BILBO -->
+<div class="sec">
+  <div class="sec-num">02 &mdash; The Bilbo Filter</div>
+  <div class="sec-title">Check the 1-hour PO before every GG entry</div>
+
+  <div class="take"><strong>If 1h PO confirms direction, take the trade.</strong> Bull GG jumps from 63% to <span class="val bull">78%</span>. Bear GG jumps from 65% to <span class="val bear">90%</span>. Counter-trend PO? Skip it &mdash; completion drops to 51&ndash;54%.</div>
+
+  <div class="stats">
+    <div class="stat"><div class="stat-val bull">78%</div><div class="stat-label">Bull + PO High Rising</div></div>
+    <div class="stat"><div class="stat-val bear">90%</div><div class="stat-label">Bear + PO Low Falling</div></div>
+    <div class="stat"><div class="stat-val bear">66%</div><div class="stat-label">Bear Bilbo &rarr; full ATR</div></div>
+  </div>
+
+  <div class="take" style="border-left-color:var(--bear)"><strong>Consider letting bearish Bilbo winners run.</strong> 66% chance of reaching the full ATR. That's higher than the baseline chance of completing the GG itself. Trail your stop.</div>
+</div>
+
+<!-- 3. ENTRIES -->
+<div class="sec">
+  <div class="sec-num">03 &mdash; Best Entry</div>
+  <div class="sec-title">The simplest entry — 38.2% — is hard to beat.</div>
+
+  <div class="take"><strong>Immediate entry wins.</strong> 63&ndash;65% completion, +10% ATR expected value, appears 100% of the time. The EMA 8 pullback is marginally better (+11% EV) and appears 97%. Everything deeper is worse.</div>
+
+  <table class="mtable">
+    <thead><tr><th>Entry</th><th>Appears</th><th>Win%</th><th>R:R</th><th>EV</th></tr></thead>
+    <tbody>
+      <tr class="hi"><td>Immediate 38.2%</td><td>100%</td><td class="bull">63%</td><td>1.6x</td><td class="bull">+10%</td></tr>
+      <tr class="hi"><td>EMA 8 pullback</td><td>97%</td><td class="bull">62%</td><td>1.4x</td><td class="bull">+11%</td></tr>
+      <tr><td>EMA 21 pullback</td><td>88%</td><td>58%</td><td>1.3x</td><td>+8%</td></tr>
+      <tr><td>1h EMA 21 pullback</td><td>57%</td><td>42%</td><td>2.3x</td><td>+7%</td></tr>
+      <tr><td>50% midpoint</td><td>94%</td><td>60%</td><td>0.4x</td><td class="red">&minus;3%</td></tr>
+    </tbody>
+  </table>
+
+  <div class="take" style="border-left-color:var(--red)"><strong>Be cautious at the 50% midpoint.</strong> The move is already half done and this is the only entry with <span class="val red">negative EV</span> — small reward relative to the risk.</div>
+</div>
+
+<!-- 4. STOP LOSS -->
+<div class="sec">
+  <div class="sec-num">04 &mdash; Your Stop</div>
+  <div class="sec-title">The trigger (23.6%) is the line. Period.</div>
+
+  <div class="take"><strong>If the trigger holds:</strong> GG completes <span class="val bull">84&ndash;89%</span>. <strong>If it breaks:</strong> <span class="val red">45&ndash;51%</span>. That's a 39-point swing. No other level comes close to this signal strength.</div>
+
+  <div class="stats">
+    <div class="stat"><div class="stat-val bull">84%</div><div class="stat-label">GG% when trigger holds</div></div>
+    <div class="stat"><div class="stat-val red">45%</div><div class="stat-label">GG% when trigger breaks</div></div>
+    <div class="stat"><div class="stat-val acc">&minus;39%</div><div class="stat-label">Delta (biggest of any level)</div></div>
+  </div>
+
+  <ul class="blist">
+    <li><span class="key">Early warning:</span> 1h EMA 21 break (&minus;24% delta) &mdash; tighten your stop</li>
+    <li><span class="key">Noise (ignore):</span> 10m EMA 8 and EMA 21 are touched on 80&ndash;93% of all GGs</li>
+  </ul>
+</div>
+
+<!-- 5. 3-MINUTE CLOSE -->
+<div class="sec">
+  <div class="sec-num">05 &mdash; The 3-Minute Close</div>
+  <div class="sec-title">Open in the box, confirm with a 3m close above the trigger.</div>
+
+  <div class="take"><strong>Setup:</strong> SPY opens inside the trigger box (&plusmn;23.6%), then a 3-minute bar closes above the call trigger. Overall <span class="val bull">73.8%</span> chance of hitting 38.2%. But clean runs &mdash; no close back below &mdash; hit <span class="val bull">97.1%</span>.</div>
+
+  <div class="stats">
+    <div class="stat"><div class="stat-val bull">97%</div><div class="stat-label">Clean run hit rate</div></div>
+    <div class="stat"><div class="stat-val red">60%</div><div class="stat-label">After close back below</div></div>
+    <div class="stat"><div class="stat-val acc">+38pp</div><div class="stat-label">Edge from filter</div></div>
+  </div>
+
+  <div class="take" style="border-left-color:var(--red)"><strong>A 3m close back below the trigger is a kill signal.</strong> Clean morning triggers (before 14:00) are effectively 100%. If price closes back below, the trade is broken.</div>
+
+  <ul class="blist">
+    <li><span class="key">Median time to target:</span> <span class="val">18 min</span> (6 bars)</li>
+    <li><span class="key">First hour triggers:</span> <span class="val bull">81%</span> overall hit rate</li>
+    <li><span class="key">After 15:00:</span> <span class="val red">29%</span> &mdash; skip it</li>
+  </ul>
+</div>
+
+<!-- 6. TIMING -->
+<div class="sec full">
+  <div class="sec-num">06 &mdash; When to Trade</div>
+  <div class="sec-title">Open triggers are the A+ setup. Afternoon is a coin flip.</div>
+
+  <div class="take"><strong>If the GG fires at the open (gap through 38.2%), take it immediately.</strong> 86&ndash;88% completion, most within the first hour. Morning triggers (09:00) are still solid at 63&ndash;64%. After noon, you're looking at 50/50 or worse. Bullish at 15:00 rarely completes (16%).</div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:.5rem">
+    <div>
+      <div class="divlbl" style="margin-top:0">Bullish</div>
+      <div class="tbar-row"><div class="tbar-lbl">Open</div><div class="tbar-bg"><div class="tbar-fill" style="width:86%;background:var(--bull)"></div></div><div class="tbar-val bull">86%</div></div>
+      <div class="tbar-row"><div class="tbar-lbl">09:00</div><div class="tbar-bg"><div class="tbar-fill" style="width:63%;background:var(--bull);opacity:.75"></div></div><div class="tbar-val" style="color:var(--t)">63%</div></div>
+      <div class="tbar-row"><div class="tbar-lbl">10:00</div><div class="tbar-bg"><div class="tbar-fill" style="width:57%;background:var(--bull);opacity:.55"></div></div><div class="tbar-val" style="color:var(--t2)">57%</div></div>
+      <div class="tbar-row"><div class="tbar-lbl">11&ndash;12</div><div class="tbar-bg"><div class="tbar-fill" style="width:51%;background:var(--bull);opacity:.4"></div></div><div class="tbar-val" style="color:var(--t2)">48&ndash;55%</div></div>
+      <div class="tbar-row"><div class="tbar-lbl">13&ndash;14</div><div class="tbar-bg"><div class="tbar-fill" style="width:40%;background:var(--bull);opacity:.3"></div></div><div class="tbar-val" style="color:var(--t3)">39&ndash;41%</div></div>
+      <div class="tbar-row"><div class="tbar-lbl">15:00</div><div class="tbar-bg"><div class="tbar-fill" style="width:16%;background:var(--red);opacity:.4"></div></div><div class="tbar-val red">16%</div></div>
+    </div>
+    <div>
+      <div class="divlbl" style="margin-top:0">Bearish</div>
+      <div class="tbar-row"><div class="tbar-lbl">Open</div><div class="tbar-bg"><div class="tbar-fill" style="width:88%;background:var(--bear)"></div></div><div class="tbar-val bear">88%</div></div>
+      <div class="tbar-row"><div class="tbar-lbl">09:00</div><div class="tbar-bg"><div class="tbar-fill" style="width:64%;background:var(--bear);opacity:.75"></div></div><div class="tbar-val" style="color:var(--t)">64%</div></div>
+      <div class="tbar-row"><div class="tbar-lbl">10:00</div><div class="tbar-bg"><div class="tbar-fill" style="width:60%;background:var(--bear);opacity:.55"></div></div><div class="tbar-val" style="color:var(--t2)">60%</div></div>
+      <div class="tbar-row"><div class="tbar-lbl">11&ndash;13</div><div class="tbar-bg"><div class="tbar-fill" style="width:56%;background:var(--bear);opacity:.45"></div></div><div class="tbar-val" style="color:var(--t2)">56%</div></div>
+      <div class="tbar-row"><div class="tbar-lbl">14:00</div><div class="tbar-bg"><div class="tbar-fill" style="width:48%;background:var(--bear);opacity:.35"></div></div><div class="tbar-val" style="color:var(--t2)">48%</div></div>
+      <div class="tbar-row"><div class="tbar-lbl">15:00</div><div class="tbar-bg"><div class="tbar-fill" style="width:30%;background:var(--bear);opacity:.3"></div></div><div class="tbar-val" style="color:var(--t2)">30%</div></div>
+    </div>
+  </div>
+
+  <div class="take" style="margin-top:.8rem;border-left-color:var(--bear)"><strong>Bearish is faster than bullish at every hour.</strong> Bear 15:00 triggers still complete 30% (selling cascades are fast). Bull 15:00 is only 16%. Plan bear plays more aggressively.</div>
+</div>
+
+</div><!-- /grid -->
+
+<div class="links">
+  <a href="/cheatsheet-basics.html">01 Basics</a>
+  <a href="/cheatsheet-bilbo.html">02 Bilbo</a>
+  <a href="/cheatsheet-entries.html">03 Entries</a>
+  <a href="/cheatsheet-pullbacks.html">04 Pullbacks</a>
+  <a href="/call-trigger.html">05 3m Close</a>
+  <a href="/cheatsheet-timing.html">06 Timing</a>
+  <a href="/cheatsheet-trigger-box.html">Trigger Box</a>
+  <a href="/cheatsheet-call-to-put.html">Call→Put Reversal</a>
+  <a href="/cheatsheet-chop-zone.html">GG Chop Zone</a>
+  <a href="/cheatsheet-sustained-po.html">Sustained PO</a>
+  <a href="/cheatsheet-gap-fills.html">Gap Fills</a>
+  <a href="/cheatsheet-multiday-swing.html">Multi-Day &amp; Swing</a>
+</div>
+
+<div class="ftr">
+  <span>milkmantrades.com &middot; ATR Levels &amp; Phase Oscillator by Saty Mahajan</span>
+  <span>Analysis inspired by @tesrak &middot; Data from @todor &middot; Draft &mdash; not independently verified</span>
+</div>
+
+</div><!-- /poster -->
+
+<script>
+function savePNG() {
+  const btn = document.querySelector('.save-btn');
+  btn.textContent = 'Rendering...';
+  html2canvas(document.getElementById('poster'), {
+    scale: 2, backgroundColor: '#0c0e12', useCORS: true,
+  }).then(canvas => {
+    const a = document.createElement('a');
+    a.download = 'golden-gate-cheatsheet.png';
+    a.href = canvas.toDataURL('image/png');
+    a.click();
+    btn.textContent = '✓ Saved';
+    setTimeout(() => btn.textContent = '⬇ Save as PNG', 2000);
+  });
+}
+</script>
+</body>
+</html>

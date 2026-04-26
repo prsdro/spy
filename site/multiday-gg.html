@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Multi-Day Golden Gate | Milkman Trades</title>
+<meta name="description" content="Multi-Day Golden Gate: weekly ATR levels tracked over 1-5 trading days. Bearish Bilbo reaches 96.3% completion on day 1.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥛</text></svg>">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,300;1,9..40,400&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --bg:#0c0e12;
+  --surface:#13161c;
+  --surface-2:#181c24;
+  --border:#1e2230;
+  --text:#e8eaed;
+  --text-dim:#6b7280;
+  --text-mid:#9ca3af;
+  --bull:#1cd48a;
+  --bull-dim:#0d5738;
+  --bull-bg:#0a1f15;
+  --bear:#ef6c00;
+  --bear-dim:#7c3600;
+  --bear-bg:#1f1208;
+  --accent:#fbbf24;
+}
+
+html{font-size:15px;scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'DM Sans',system-ui,sans-serif;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ── Layout ── */
+.page{max-width:720px;margin:0 auto;padding:3rem 1.5rem 5rem}
+
+/* ── Navigation ── */
+.back{
+  display:inline-flex;
+  align-items:center;
+  gap:.4rem;
+  font-size:.8rem;
+  color:var(--text-dim);
+  text-decoration:none;
+  margin-bottom:2.5rem;
+  transition:color .2s;
+}
+.back:hover{color:var(--text)}
+.back svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2}
+
+/* ── Hero ── */
+.hero{margin-bottom:3.5rem}
+.hero .kicker{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.7rem;
+  font-weight:500;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--accent);
+  margin-bottom:.75rem;
+}
+.hero h1{
+  font-size:2.4rem;
+  font-weight:700;
+  letter-spacing:-.03em;
+  line-height:1.15;
+  margin-bottom:1rem;
+}
+.hero h1 em{
+  font-style:normal;
+  background:linear-gradient(135deg,var(--bear),var(--accent));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.hero .lede{
+  font-size:1.05rem;
+  color:var(--text-mid);
+  font-weight:300;
+  max-width:580px;
+  line-height:1.65;
+}
+
+/* ── Sections ── */
+.section{margin-bottom:3.5rem}
+.section-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.65rem;
+  font-weight:500;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--text-dim);
+  padding-bottom:.6rem;
+  border-bottom:1px solid var(--border);
+  margin-bottom:1.5rem;
+}
+
+.prose{
+  font-size:.95rem;
+  color:var(--text-mid);
+  font-weight:300;
+  line-height:1.7;
+  margin-bottom:1.5rem;
+}
+.prose strong{color:var(--text);font-weight:500}
+
+/* ── Big Stat ── */
+.bigstat{
+  display:flex;
+  gap:2rem;
+  margin:2rem 0;
+  flex-wrap:wrap;
+}
+.bigstat-item{
+  flex:1;
+  min-width:140px;
+  padding:1.25rem;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:8px;
+}
+.bigstat-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:2.2rem;
+  font-weight:700;
+  line-height:1;
+  margin-bottom:.3rem;
+}
+.bigstat-num.bull{color:var(--bull)}
+.bigstat-num.bear{color:var(--bear)}
+.bigstat-label{
+  font-size:.75rem;
+  color:var(--text-dim);
+  line-height:1.4;
+}
+
+/* ── Completion Table ── */
+.comp-grid{
+  margin:1.5rem 0;
+}
+.comp-direction{
+  margin-bottom:2rem;
+}
+.comp-title{
+  font-size:.85rem;
+  font-weight:600;
+  margin-bottom:.75rem;
+  display:flex;
+  align-items:center;
+  gap:.5rem;
+}
+.comp-title .dot{
+  width:8px;height:8px;border-radius:50%;
+}
+
+.comp-table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:.8rem;
+}
+.comp-table th{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.65rem;
+  font-weight:500;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:var(--text-dim);
+  text-align:right;
+  padding:.5rem .6rem;
+  border-bottom:1px solid var(--border);
+}
+.comp-table th:first-child{text-align:left}
+.comp-table td{
+  padding:.55rem .6rem;
+  border-bottom:1px solid #151820;
+  text-align:right;
+  font-family:'JetBrains Mono',monospace;
+  font-size:.8rem;
+  font-weight:400;
+  color:var(--text-mid);
+}
+.comp-table td:first-child{
+  text-align:left;
+  font-family:'DM Sans',sans-serif;
+  font-weight:400;
+  color:var(--text);
+}
+.comp-table tr.baseline td{
+  color:var(--text-dim);
+  font-weight:400;
+}
+.comp-table tr.best td{
+  font-weight:700;
+}
+.comp-table tr.best.bull-row td{color:var(--bull)}
+.comp-table tr.best.bear-row td{color:var(--bear)}
+.comp-table tr.best td:first-child{color:var(--text)}
+
+.comp-table .n{
+  font-size:.65rem;
+  color:var(--text-dim);
+  font-weight:400;
+}
+.comp-table .bar-cell{
+  width:120px;
+  padding-right:1rem;
+}
+.mini-bar{
+  height:6px;
+  border-radius:3px;
+  background:var(--surface-2);
+  overflow:hidden;
+}
+.mini-bar-fill{
+  height:100%;
+  border-radius:3px;
+  transition:width .8s cubic-bezier(.22,1,.36,1);
+}
+
+/* ── Speed Cards (reused for Full ATR) ── */
+.speed-pair{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:1.5rem;
+  margin:1.5rem 0;
+}
+@media(max-width:640px){.speed-pair{grid-template-columns:1fr}}
+
+.speed-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:1.25rem;
+  position:relative;
+  overflow:hidden;
+}
+.speed-card::before{
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;
+  height:2px;
+}
+.speed-card.bull::before{background:linear-gradient(90deg,var(--bull),transparent)}
+.speed-card.bear::before{background:linear-gradient(90deg,var(--bear),transparent)}
+.speed-card.dim::before{background:linear-gradient(90deg,var(--text-dim),transparent);opacity:.3}
+
+.speed-card .card-label{
+  font-size:.75rem;
+  font-weight:500;
+  margin-bottom:.15rem;
+}
+.speed-card .card-sub{
+  font-size:.7rem;
+  color:var(--text-dim);
+  margin-bottom:1rem;
+  font-family:'JetBrains Mono',monospace;
+}
+
+.timeline-row{
+  display:flex;
+  align-items:center;
+  gap:.5rem;
+  margin-bottom:.4rem;
+}
+.timeline-label{
+  flex:0 0 52px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:.65rem;
+  color:var(--text-dim);
+  text-align:right;
+}
+.timeline-bar-bg{
+  flex:1;
+  height:14px;
+  background:var(--surface-2);
+  border-radius:3px;
+  overflow:hidden;
+  position:relative;
+}
+.timeline-bar-fill{
+  height:100%;
+  border-radius:3px;
+  position:relative;
+  transition:width 1s cubic-bezier(.22,1,.36,1);
+}
+.timeline-pct{
+  flex:0 0 42px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:.7rem;
+  font-weight:500;
+  text-align:right;
+}
+
+.speed-card .mean-stat{
+  margin-top:.75rem;
+  padding-top:.6rem;
+  border-top:1px solid var(--border);
+  font-family:'JetBrains Mono',monospace;
+  font-size:.7rem;
+  color:var(--text-dim);
+  display:flex;
+  justify-content:space-between;
+}
+.mean-stat .val{color:var(--text);font-weight:700}
+
+/* ── Callout ── */
+.callout{
+  background:var(--surface);
+  border-left:3px solid var(--accent);
+  padding:1rem 1.25rem;
+  margin:2rem 0;
+  border-radius:0 6px 6px 0;
+}
+.callout p{
+  font-size:.85rem;
+  color:var(--text-mid);
+  font-weight:300;
+  line-height:1.6;
+}
+.callout strong{color:var(--accent);font-weight:500}
+
+/* ── Footer ── */
+.footer{
+  text-align:center;
+  padding-top:2.5rem;
+  border-top:1px solid var(--border);
+  color:var(--text-dim);
+  font-size:.72rem;
+  font-weight:300;
+  line-height:1.8;
+}
+.footer a{color:var(--text-dim);text-decoration:underline;text-underline-offset:2px}
+
+/* ── Animations ── */
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease}
+.reveal.visible{opacity:1;transform:none}
+
+/* ── Cheatsheet Banner ── */
+.cheatsheet-banner{display:block;text-align:center;padding:1.5rem 1rem;margin:2rem 0 0;background:var(--surface);border:1px solid var(--border);border-radius:8px;text-decoration:none;transition:border-color .2s,background .2s}
+.cheatsheet-banner:hover{border-color:#fbbf24;background:var(--surface-2)}
+.cheatsheet-banner span{font-size:.95rem;color:var(--text);font-weight:500}
+
+/* ── Mobile ── */
+@media(max-width:767px){
+  .hero h1{font-size:1.6rem}
+  .bigstat{flex-direction:column;gap:1rem}
+  .bigstat-item{min-width:0}
+  .bigstat-num{font-size:1.6rem}
+  .comp-table{font-size:.72rem;display:block;overflow-x:auto}
+  .comp-table th,.comp-table td{padding:.4rem .4rem;white-space:nowrap}
+  .speed-pair{grid-template-columns:1fr}
+}
+</style>
+<script src="/nav.js"></script>
+</head>
+<body>
+<div class="page">
+
+<div style="background:#1a1400;border:1px solid #3d3200;border-radius:6px;padding:.6rem 1rem;margin-bottom:1.5rem;font-size:.75rem;color:#d4a800;font-weight:400;line-height:1.5">
+  <strong style="color:#fbbf24">Draft &mdash;</strong> These backtests have not yet been independently verified. Do not trade based on this data.
+</div>
+
+<a href="/" style="display:inline-flex;align-items:center;gap:.4rem;font-size:.8rem;color:var(--text-dim);text-decoration:none;margin-bottom:.5rem;transition:color .2s" onmouseover="this.style.color='#e8eaed'" onmouseout="this.style.color=''"><svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0h4"/></svg>Home</a>
+<a href="/golden-gate.html" class="back">
+  <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+  Golden Gate Subway Stats
+</a>
+
+<header class="hero reveal">
+  <div class="kicker">Study &mdash; Multi-Day Golden Gate</div>
+  <h1>Multi-Day Golden Gate:<br>weekly ATR tracked over<br><em>1&ndash;5 trading days.</em></h1>
+  <p class="lede">Using weekly ATR levels instead of daily, this study tracks how often the Golden Gate (38.2% to 61.8%) completes across multiple trading days. The higher-timeframe filter is the daily Phase Oscillator &mdash; specifically the previous day&rsquo;s closing value, to avoid any look-ahead bias.</p>
+</header>
+
+<!-- ── Section 1: Methodology ── -->
+<div class="section reveal">
+  <div class="section-label">01 &mdash; Methodology</div>
+
+  <p class="prose">
+    The weekly ATR levels define a wider range than daily ATR. Rather than expecting completion within a single session, the Golden Gate is tracked across <strong>1 to 5 trading days</strong> after the 38.2% level is hit.
+  </p>
+  <p class="prose">
+    The &ldquo;Bilbo&rdquo; filter uses the <strong>daily Phase Oscillator</strong> (previous day&rsquo;s close). This eliminates look-ahead bias entirely &mdash; the PO state is known before the trading day begins. The full ATR target is the 100% weekly ATR level.
+  </p>
+
+  <div class="callout">
+    <p><strong>No look-ahead bias:</strong> The daily PO value used is always from the previous day&rsquo;s close. You know the setup conditions before the session opens.</p>
+  </div>
+</div>
+
+<!-- ── Section 2: Key Findings ── -->
+<div class="section reveal">
+  <div class="section-label">02 &mdash; Key Findings</div>
+
+  <p class="prose">
+    The bearish Bilbo signal (daily PO Low + Falling) is the strongest edge in this dataset. When the daily PO was already deeply bearish entering the session, the weekly Golden Gate completed <strong>96.3% of the time &mdash; on day 1 alone</strong>. Most of those reached the full weekly ATR.
+  </p>
+
+  <div class="bigstat">
+    <div class="bigstat-item">
+      <div class="bigstat-num bear">96.3%</div>
+      <div class="bigstat-label">Bearish Bilbo GG completion<br>Day 1 (n=54)</div>
+    </div>
+    <div class="bigstat-item">
+      <div class="bigstat-num bear">81.5%</div>
+      <div class="bigstat-label">Reach full weekly ATR<br>Day 1, bearish Bilbo</div>
+    </div>
+    <div class="bigstat-item">
+      <div class="bigstat-num bull">73.9%</div>
+      <div class="bigstat-label">Bullish Bilbo GG completion<br>Day 1 (n=115)</div>
+    </div>
+  </div>
+
+  <p class="prose">
+    Most multi-day Golden Gates that complete do so on day 1 &mdash; the baseline is 65&ndash;72% completion on the first trading day. The bearish Bilbo at 96.3% is effectively a certainty, suggesting deeply bearish daily momentum creates a powerful weekly downside continuation.
+  </p>
+
+  <div class="callout">
+    <p><strong>Bearish Bilbo is the standout:</strong> 96.3% day-1 completion vs 72% baseline is a +24-point edge. Bullish Bilbo is modest at +9 points (73.9% vs 65%). The asymmetry is striking &mdash; bearish momentum carries weekly ATR far more reliably.</p>
+  </div>
+</div>
+
+<!-- ── Section 3: Bullish Multi-Day GG ── -->
+<div class="section reveal">
+  <div class="section-label">03 &mdash; Bullish Multi-Day GG</div>
+
+  <p class="prose">
+    Bullish weekly Golden Gate completion rates by daily PO state. <strong>n=901</strong> total entries. The Bilbo condition (High + Rising) provides a modest edge, but the biggest differentiator is whether the PO is rising or falling.
+  </p>
+
+  <div class="comp-direction">
+    <div class="comp-title"><div class="dot" style="background:var(--bull)"></div> Bullish GG Completion (weekly ATR)</div>
+    <table class="comp-table" id="bull-table">
+      <thead><tr><th>Daily PO State</th><th>Day 1</th><th>Day 2</th><th>Day 3</th><th>Day 4</th><th>Day 5</th><th>n</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <div class="comp-direction" style="margin-top:2rem">
+    <div class="comp-title"><div class="dot" style="background:var(--bull)"></div> Bullish Full ATR Rates</div>
+    <table class="comp-table" id="bull-fullatr-table">
+      <thead><tr><th>Daily PO State</th><th>Day 1</th><th>Day 2</th><th>Day 3</th><th>Day 4</th><th>Day 5</th><th>n</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ── Section 4: Bearish Multi-Day GG ── -->
+<div class="section reveal">
+  <div class="section-label">04 &mdash; Bearish Multi-Day GG</div>
+
+  <p class="prose">
+    Bearish weekly Golden Gate completion rates by daily PO state. <strong>n=706</strong> total entries. The Bilbo condition (Low + Falling) dominates everything else in this dataset &mdash; 96.3% completion flat across all five days.
+  </p>
+
+  <div class="comp-direction">
+    <div class="comp-title"><div class="dot" style="background:var(--bear)"></div> Bearish GG Completion (weekly ATR)</div>
+    <table class="comp-table" id="bear-table">
+      <thead><tr><th>Daily PO State</th><th>Day 1</th><th>Day 2</th><th>Day 3</th><th>Day 4</th><th>Day 5</th><th>n</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <div class="comp-direction" style="margin-top:2rem">
+    <div class="comp-title"><div class="dot" style="background:var(--bear)"></div> Bearish Full ATR Rates</div>
+    <table class="comp-table" id="bear-fullatr-table">
+      <thead><tr><th>Daily PO State</th><th>Day 1</th><th>Day 2</th><th>Day 3</th><th>Day 4</th><th>Day 5</th><th>n</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ── Section 5: Bilbo Full ATR Continuation ── -->
+<div class="section reveal">
+  <div class="section-label">05 &mdash; Bilbo Full ATR Continuation</div>
+
+  <p class="prose">
+    Beyond the 61.8% Golden Gate completion, how often does price reach the full 100% weekly ATR? The Bilbo filter dramatically improves full ATR rates, especially on the bearish side.
+  </p>
+
+  <div class="speed-pair">
+    <div class="speed-card bear" id="card-bear-bilbo"></div>
+    <div class="speed-card dim" id="card-bear-base"></div>
+  </div>
+
+  <div class="speed-pair">
+    <div class="speed-card bull" id="card-bull-bilbo"></div>
+    <div class="speed-card dim" id="card-bull-base"></div>
+  </div>
+
+  <div class="callout">
+    <p><strong>88.9% full weekly ATR by day 4</strong> for bearish Bilbo. When the daily PO is already deeply bearish, the weekly range isn&rsquo;t just reached &mdash; it&rsquo;s blown through. This is the most actionable multi-day signal in the dataset.</p>
+  </div>
+</div>
+
+<!-- ── Section 6: Practical Takeaways ── -->
+<div class="section reveal">
+  <div class="section-label">06 &mdash; Practical Takeaways</div>
+
+  <p class="prose">
+    <strong>1. Bearish Bilbo multi-day is near-certainty.</strong> When the daily PO closed Low + Falling, the weekly GG completed 96.3% of the time on day 1 alone. 81.5% reached the full weekly ATR on that same day. This is the strongest signal across all Golden Gate studies.
+  </p>
+
+  <p class="prose">
+    <strong>2. Most completions happen on day 1.</strong> The baseline shows 65&ndash;72% of multi-day GGs that ever complete do so on the first trading day. The multi-day window mostly adds marginal completions &mdash; the big move happens early.
+  </p>
+
+  <p class="prose">
+    <strong>3. Bullish Bilbo is modest but real.</strong> High + Rising daily PO gives 73.9% day-1 completion vs 65% baseline (+9 points). The full ATR edge is more meaningful: 31.3% vs 23.5% baseline on day 1, rising to 52.2% vs 47.3% by day 5.
+  </p>
+
+  <p class="prose">
+    <strong>4. Falling PO without extreme levels underperforms.</strong> Mid + Falling shows the weakest completion rates on both sides. The PO direction matters, but it matters most at extremes (the Bilbo condition).
+  </p>
+
+  <p class="prose">
+    <strong>5. No look-ahead bias.</strong> The daily PO value is the previous day&rsquo;s close. You can evaluate the Bilbo condition before the market opens, making this actionable for real trading.
+  </p>
+</div>
+
+<div style="text-align:center;margin:2rem 0 3rem">
+  <a href="/bilbo-golden-gate.html" style="display:inline-flex;align-items:center;gap:.5rem;padding:.7rem 1.4rem;background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text);text-decoration:none;font-size:.85rem;font-weight:500;transition:border-color .2s,background .2s" onmouseover="this.style.borderColor='var(--accent)';this.style.background='#181c24'" onmouseout="this.style.borderColor='';this.style.background=''">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    Intraday Bilbo GG
+  </a>
+  <a href="/bilbo-continuation.html" style="display:inline-flex;align-items:center;gap:.5rem;padding:.7rem 1.4rem;background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text);text-decoration:none;font-size:.85rem;font-weight:500;transition:border-color .2s,background .2s" onmouseover="this.style.borderColor='var(--accent)';this.style.background='#181c24'" onmouseout="this.style.borderColor='';this.style.background=''">
+    Bilbo Continuation
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+  </a>
+</div>
+
+<a href="/cheatsheet.html" class="cheatsheet-banner"><span>&#x1F4CB; View the complete Golden Gate Cheat Sheet &rarr;</span></a>
+
+<footer class="footer">
+  ATR Levels &amp; Phase Oscillator by <a href="https://satyland.com" target="_blank" rel="noopener">Saty Mahajan</a><br>
+  Analysis inspired by <a href="https://x.com/tesrak" target="_blank" rel="noopener">@tesrak</a> &middot; With thanks to <a href="https://x.com/todaborrego" target="_blank" rel="noopener">@todor</a> for the data<br>
+  25 years of SPY data (2000&ndash;2025) &middot; <a href="https://milkmantrades.com">Milkman Trades</a>
+</footer>
+
+</div>
+
+<script>
+// ── Bullish GG Completion Data ──
+const bullGG = [
+  {label:'High + Rising (Bilbo)', d1:73.9, d2:79.1, d3:81.7, d4:83.5, d5:84.3, n:115, best:true},
+  {label:'High + Falling', d1:58.3, d2:70.8, d3:81.2, d4:85.4, d5:89.6, n:48},
+  {label:'Mid + Rising', d1:68.2, d2:77.0, d3:82.1, d4:83.5, d5:85.9, n:547},
+  {label:'Mid + Falling', d1:52.7, d2:64.9, d3:70.7, d4:76.6, d5:78.2, n:188},
+  {label:'Baseline (all)', d1:65.0, d2:74.3, d3:79.5, d4:82.0, d5:84.1, n:901, baseline:true},
+];
+
+const bullFullATR = [
+  {label:'High + Rising (Bilbo)', d1:31.3, d2:36.5, d3:42.6, d4:47.8, d5:52.2, n:115, best:true},
+  {label:'Baseline (all)', d1:23.5, d2:30.9, d3:37.1, d4:43.7, d5:47.3, n:901, baseline:true},
+];
+
+// ── Bearish GG Completion Data ──
+const bearGG = [
+  {label:'Low + Falling (Bilbo)', d1:96.3, d2:96.3, d3:96.3, d4:96.3, d5:96.3, n:54, best:true},
+  {label:'Mid + Falling', d1:69.1, d2:74.9, d3:78.4, d4:80.2, d5:81.6, n:450},
+  {label:'Mid + Rising', d1:70.9, d2:77.1, d3:80.4, d4:82.1, d5:82.7, n:179},
+  {label:'Baseline (all)', d1:72.0, d2:77.2, d3:80.3, d4:82.0, d5:83.0, n:706, baseline:true},
+];
+
+const bearFullATR = [
+  {label:'Low + Falling (Bilbo)', d1:81.5, d2:83.3, d3:87.0, d4:88.9, d5:88.9, n:54, best:true},
+  {label:'Baseline (all)', d1:34.7, d2:43.3, d3:47.7, d4:52.5, d5:55.8, n:706, baseline:true},
+];
+
+function buildMultiDayTable(id, rows, color) {
+  const tbody = document.querySelector('#' + id + ' tbody');
+  rows.forEach(function(r) {
+    const tr = document.createElement('tr');
+    if (r.baseline) tr.className = 'baseline';
+    if (r.best) tr.className = 'best ' + color + '-row';
+    var nCell;
+    if (r.baseline) {
+      nCell = '<td><span class="n">n=' + r.n.toLocaleString() + '</span></td>';
+    } else {
+      var rowKey = color + '_' + r.label.replace(' (Bilbo)', '');
+      var yesCount = Math.round(r.d5 / 100 * r.n);
+      var noCount = r.n - yesCount;
+      nCell = '<td>' +
+        '<span class="n n-clickable n-yes" data-row="' + rowKey + '" data-outcome="hit" data-title="' + r.label + ' — Yes">' + yesCount + ' Yes</span>' +
+        ' <span class="n" style="color:var(--text-dim)">/</span> ' +
+        '<span class="n n-clickable n-no" data-row="' + rowKey + '" data-outcome="miss" data-title="' + r.label + ' — No">' + noCount + ' No</span>' +
+        '</td>';
+    }
+    tr.innerHTML =
+      '<td>' + r.label + '</td>' +
+      '<td>' + r.d1.toFixed(1) + '%</td>' +
+      '<td>' + r.d2.toFixed(1) + '%</td>' +
+      '<td>' + r.d3.toFixed(1) + '%</td>' +
+      '<td>' + r.d4.toFixed(1) + '%</td>' +
+      '<td>' + r.d5.toFixed(1) + '%</td>' +
+      nCell;
+    tbody.appendChild(tr);
+  });
+}
+
+buildMultiDayTable('bull-table', bullGG, 'bull');
+buildMultiDayTable('bull-fullatr-table', bullFullATR, 'bull');
+buildMultiDayTable('bear-table', bearGG, 'bear');
+buildMultiDayTable('bear-fullatr-table', bearFullATR, 'bear');
+
+// ── Speed Cards: Full ATR by Day ──
+const cardData = {
+  'card-bear-bilbo': {
+    label: 'Bearish Bilbo &mdash; Full ATR',
+    sub: 'Low + Falling, n=54',
+    color: 'var(--bear)',
+    stat: '88.9% by day 4',
+    rows: [
+      {label:'Day 1', val:81.5},
+      {label:'Day 2', val:83.3},
+      {label:'Day 3', val:87.0},
+      {label:'Day 4', val:88.9},
+      {label:'Day 5', val:88.9},
+    ]
+  },
+  'card-bear-base': {
+    label: 'Bearish Baseline &mdash; Full ATR',
+    sub: 'All entries, n=706',
+    color: '#4a4f5c',
+    stat: '55.8% by day 5',
+    rows: [
+      {label:'Day 1', val:34.7},
+      {label:'Day 2', val:43.3},
+      {label:'Day 3', val:47.7},
+      {label:'Day 4', val:52.5},
+      {label:'Day 5', val:55.8},
+    ]
+  },
+  'card-bull-bilbo': {
+    label: 'Bullish Bilbo &mdash; Full ATR',
+    sub: 'High + Rising, n=115',
+    color: 'var(--bull)',
+    stat: '52.2% by day 5',
+    rows: [
+      {label:'Day 1', val:31.3},
+      {label:'Day 2', val:36.5},
+      {label:'Day 3', val:42.6},
+      {label:'Day 4', val:47.8},
+      {label:'Day 5', val:52.2},
+    ]
+  },
+  'card-bull-base': {
+    label: 'Bullish Baseline &mdash; Full ATR',
+    sub: 'All entries, n=901',
+    color: '#4a4f5c',
+    stat: '47.3% by day 5',
+    rows: [
+      {label:'Day 1', val:23.5},
+      {label:'Day 2', val:30.9},
+      {label:'Day 3', val:37.1},
+      {label:'Day 4', val:43.7},
+      {label:'Day 5', val:47.3},
+    ]
+  },
+};
+
+Object.entries(cardData).forEach(function([id, d]) {
+  var el = document.getElementById(id);
+  var html = '<div class="card-label">' + d.label + '</div><div class="card-sub">' + d.sub + '</div>';
+  d.rows.forEach(function(r) {
+    html +=
+      '<div class="timeline-row">' +
+        '<div class="timeline-label">' + r.label + '</div>' +
+        '<div class="timeline-bar-bg">' +
+          '<div class="timeline-bar-fill" style="width:0%;background:' + d.color + '" data-w="' + r.val + '"></div>' +
+        '</div>' +
+        '<div class="timeline-pct" style="color:' + (d.color === '#4a4f5c' ? 'var(--text-dim)' : d.color) + '">' + r.val + '%</div>' +
+      '</div>';
+  });
+  html += '<div class="mean-stat"><span>Peak rate</span><span class="val">' + d.stat + '</span></div>';
+  el.innerHTML = html;
+});
+
+// ── Scroll reveal + animate bars ──
+var observer = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e) {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      setTimeout(function() {
+        e.target.querySelectorAll('[data-w]').forEach(function(bar) {
+          bar.style.width = bar.dataset.w + '%';
+        });
+      }, 200);
+      observer.unobserve(e.target);
+    }
+  });
+}, {threshold: 0.15});
+
+document.querySelectorAll('.reveal').forEach(function(el) { observer.observe(el); });
+
+// Trigger hero immediately
+document.querySelector('.hero').classList.add('visible');
+</script>
+<script src="/study-drawer.js"></script>
+<script>StudyDrawer.loadData('/data/multiday-gg-dates.json');</script>
+</body>
+</html>

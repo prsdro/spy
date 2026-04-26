@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Golden Gate Entry Study | Milkman Trades</title>
+<meta name="description" content="Where should you enter a Golden Gate trade? Immediate vs pullback entries tested across 25 years of SPY data.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥛</text></svg>">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,300&family=JetBrains+Mono:wght@400;500;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0c0e12;--surface:#13161c;--surface-2:#181c24;--border:#1e2230;--text:#e8eaed;--text-dim:#6b7280;--text-mid:#9ca3af;--bull:#1cd48a;--bear:#ef6c00;--accent:#fbbf24;--red:#ef4444;--green:#22c55e}
+html{font-size:15px;scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
+.page{max-width:760px;margin:0 auto;padding:3rem 1.5rem 5rem}
+.draft{background:#1a1400;border:1px solid #3d3200;border-radius:6px;padding:.6rem 1rem;margin-bottom:1.5rem;font-size:.75rem;color:#d4a800;line-height:1.5}
+.draft strong{color:#fbbf24}
+.back{display:inline-flex;align-items:center;gap:.4rem;font-size:.8rem;color:var(--text-dim);text-decoration:none;margin-bottom:2.5rem;transition:color .2s}
+.back:hover{color:var(--text)}
+.back svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2}
+.hero{margin-bottom:3.5rem}
+.hero .kicker{font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:.75rem}
+.hero h1{font-size:2.2rem;font-weight:700;letter-spacing:-.03em;line-height:1.15;margin-bottom:1rem}
+.hero h1 em{font-style:normal;color:var(--green)}
+.hero .lede{font-size:1.05rem;color:var(--text-mid);font-weight:300;max-width:600px;line-height:1.65}
+.section{margin-bottom:3.5rem}
+.section-label{font-family:'JetBrains Mono',monospace;font-size:.65rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim);padding-bottom:.6rem;border-bottom:1px solid var(--border);margin-bottom:1.5rem}
+.prose{font-size:.92rem;color:var(--text-mid);font-weight:300;line-height:1.7;margin-bottom:1.5rem}
+.prose strong{color:var(--text);font-weight:500}
+
+/* Entry table */
+.entry-section{margin-bottom:2.5rem}
+.entry-title{font-size:.9rem;font-weight:600;margin-bottom:.75rem;display:flex;align-items:center;gap:.5rem}
+.entry-title .dot{width:8px;height:8px;border-radius:50%}
+
+.etable{width:100%;border-collapse:collapse;font-size:.78rem;margin-bottom:.5rem}
+.etable th{
+  font-family:'JetBrains Mono',monospace;font-size:.6rem;font-weight:500;letter-spacing:.05em;
+  text-transform:uppercase;color:var(--text-dim);text-align:right;padding:.5rem .5rem;border-bottom:1px solid var(--border);
+}
+.etable th:first-child{text-align:left}
+.etable td{padding:.55rem .5rem;border-bottom:1px solid #151820;text-align:right;font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--text-mid)}
+.etable td:first-child{text-align:left;font-family:'DM Sans',sans-serif;color:var(--text);font-weight:400;font-size:.8rem}
+.etable tr.highlight{background:rgba(34,197,94,.06)}
+.etable tr.highlight td{color:var(--text)}
+.etable tr.highlight td:first-child{font-weight:500}
+.etable tr.baseline td{color:var(--text-dim);font-style:italic}
+.etable .ev-pos{color:var(--green);font-weight:600}
+.etable .ev-neg{color:var(--red);font-weight:600}
+.etable .ev-zero{color:var(--text-dim)}
+
+.callout{background:var(--surface);border-left:3px solid var(--accent);padding:1rem 1.25rem;margin:2rem 0;border-radius:0 6px 6px 0}
+.callout p{font-size:.85rem;color:var(--text-mid);font-weight:300;line-height:1.6}
+.callout strong{color:var(--accent);font-weight:500}
+
+.bigstat{display:flex;gap:1.5rem;margin:2rem 0;flex-wrap:wrap}
+.bigstat-item{flex:1;min-width:160px;padding:1.25rem;background:var(--surface);border:1px solid var(--border);border-radius:8px}
+.bigstat-num{font-family:'JetBrains Mono',monospace;font-size:1.8rem;font-weight:700;line-height:1;margin-bottom:.3rem}
+.bigstat-label{font-size:.72rem;color:var(--text-dim);line-height:1.4}
+
+.footer{text-align:center;padding-top:2.5rem;border-top:1px solid var(--border);color:var(--text-dim);font-size:.72rem;font-weight:300;line-height:1.8}
+.footer a{color:var(--text-dim);text-decoration:underline;text-underline-offset:2px}
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease}
+.reveal.visible{opacity:1;transform:none}
+
+/* ── Mobile ── */
+@media(max-width:767px){
+  .hero h1{font-size:1.6rem}
+  .bigstat{flex-direction:column;gap:1rem}
+  .bigstat-item{min-width:0}
+  .bigstat-num{font-size:1.5rem}
+  .etable{font-size:.68rem;display:block;overflow-x:auto}
+  .etable th,.etable td{padding:.4rem .35rem;white-space:nowrap}
+  .etable td:first-child{font-size:.72rem}
+}
+.cheatsheet-banner{display:block;text-align:center;padding:1.5rem 1rem;margin:2rem 0 0;background:var(--surface);border:1px solid var(--border);border-radius:8px;text-decoration:none;transition:border-color .2s,background .2s}
+.cheatsheet-banner:hover{border-color:#fbbf24;background:var(--surface-2)}
+.cheatsheet-banner span{font-size:.95rem;color:var(--text);font-weight:500}
+</style>
+<script src="/nav.js"></script>
+</head>
+<body>
+<div class="page">
+
+<div class="draft"><strong>Draft &mdash;</strong> These backtests have not yet been independently verified. Do not trade based on this data.</div>
+
+<a href="/" style="display:inline-flex;align-items:center;gap:.4rem;font-size:.8rem;color:var(--text-dim);text-decoration:none;margin-bottom:.5rem;transition:color .2s" onmouseover="this.style.color='#e8eaed'" onmouseout="this.style.color=''"><svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0h4"/></svg>Home</a>
+<a href="/golden-gate.html" class="back">
+  <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+  Golden Gate Studies
+</a>
+
+<header class="hero reveal">
+  <div class="kicker">Study &mdash; Golden Gate Entries</div>
+  <h1>Where should you enter<br>a Golden Gate for<br><em>maximum edge?</em></h1>
+  <p class="lede">The Golden Gate opens at 38.2%. But should you enter immediately, or wait for a pullback? We tested nine entry strategies across 25 years of SPY to find the optimal balance of completion rate, reward, and opportunity cost.</p>
+</header>
+
+<!-- Methodology -->
+<div class="section reveal">
+  <div class="section-label">Methodology</div>
+  <p class="prose">
+    After the 38.2% ATR level is first hit, we test each entry strategy: <strong>does price pull back to give this entry?</strong> If so, we enter at that level and measure whether the Golden Gate completes to 61.8%. The <strong>reward</strong> is the distance from entry to 61.8% (in ATR%), and the <strong>risk</strong> is the distance from entry back to the call/put trigger (the natural stop from our <a href="/gg-invalidation.html" style="color:var(--accent)">pullback study</a>).
+  </p>
+  <p class="prose">
+    <strong>Expected Value</strong> combines everything: EV = (win% &times; reward) &minus; (loss% &times; risk). A higher EV means more ATR% captured per trade on average. But EV alone isn't enough &mdash; you also need the entry to actually <strong>appear</strong> frequently enough to be tradeable.
+  </p>
+</div>
+
+<!-- Bullish -->
+<div class="section reveal">
+  <div class="section-label">Results</div>
+
+  <div class="entry-section">
+    <div class="entry-title"><div class="dot" style="background:var(--bull)"></div> Bullish Golden Gate (n=3,472 entries)</div>
+    <table class="etable">
+      <thead><tr><th>Entry Strategy</th><th>Appears</th><th>GG%</th><th>Reward</th><th>Risk</th><th>R:R</th><th>EV</th></tr></thead>
+      <tbody id="bull-tbody"></tbody>
+    </table>
+  </div>
+
+  <div class="entry-section">
+    <div class="entry-title"><div class="dot" style="background:var(--bear)"></div> Bearish Golden Gate (n=3,254 entries)</div>
+    <table class="etable">
+      <thead><tr><th>Entry Strategy</th><th>Appears</th><th>GG%</th><th>Reward</th><th>Risk</th><th>R:R</th><th>EV</th></tr></thead>
+      <tbody id="bear-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Key findings -->
+<div class="section reveal">
+  <div class="section-label">Key Findings</div>
+
+  <div class="bigstat">
+    <div class="bigstat-item">
+      <div class="bigstat-num" style="color:var(--green)">+9.4%</div>
+      <div class="bigstat-label">EV of entering immediately<br>at 38.2% (both directions)</div>
+    </div>
+    <div class="bigstat-item">
+      <div class="bigstat-num" style="color:var(--green)">+6.9%</div>
+      <div class="bigstat-label">EV of EMA 8 (10m) pullback<br>entry &mdash; competitive</div>
+    </div>
+    <div class="bigstat-item">
+      <div class="bigstat-num" style="color:var(--red)">&minus;3%</div>
+      <div class="bigstat-label">EV of waiting for 50%<br>midpoint &mdash; negative EV</div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <p><strong>The immediate entry at 38.2% is hard to beat.</strong> It has a strong completion rate (62&ndash;64%), appears 100% of the time (no missed trades), and delivers +9&ndash;10% ATR EV. The 10-minute EMA 8 pullback is competitive (+6&ndash;8% EV) but appears only 96% of the time, so missed trades eat into the expected advantage.</p>
+  </div>
+
+  <p class="prose">
+    <strong>Deep pullback entries require patience and discipline.</strong> Waiting for a pullback to the trigger level sounds attractive &mdash; the reward is 38.2% ATR (huge!) &mdash; but completion drops to 32&ndash;37%. The 50% midpoint entry is actually <strong>negative EV</strong> because the reward is tiny (only 11.8% ATR) while the risk of pulling back to the trigger is large (26.4% ATR).
+  </p>
+  <p class="prose">
+    <strong>The 1-hour EMA 21 is a sleeper.</strong> It appears 55&ndash;60% of the time with a strong 2.3&ndash;3.1x risk-reward ratio. Completion is lower (33&ndash;36%) but the favorable R:R keeps the EV positive at +3&ndash;5%. This is the patient trader's entry.
+  </p>
+</div>
+
+<a href="/cheatsheet.html" class="cheatsheet-banner"><span>&#x1F4CB; View the complete Golden Gate Cheat Sheet &rarr;</span></a>
+
+<footer class="footer">
+  ATR Levels &amp; Phase Oscillator by <a href="https://satyland.com" target="_blank" rel="noopener">Saty Mahajan</a><br>
+  Analysis inspired by <a href="https://x.com/tesrak" target="_blank" rel="noopener">@tesrak</a> &middot; With thanks to <a href="https://x.com/todaborrego" target="_blank" rel="noopener">@todor</a> for the data<br>
+  25 years of SPY data (2000&ndash;2025) &middot; <a href="https://milkmantrades.com">Milkman Trades</a>
+</footer>
+
+</div>
+
+<script>
+const bullRows = [
+  {name:'Immediate (at 38.2%)',     appears:100.0, gg:61.6, reward:23.6, risk:14.6, highlight:true, key:'immediate'},
+  {name:'Pullback to EMA 8 (10m)', appears:96.3,  gg:59.2, reward:27.3, risk:24.6, highlight:true, key:'ema8'},
+  {name:'Pullback to EMA 21 (10m)',appears:87.0,  gg:53.6, reward:31.4, risk:27.5, key:'ema21'},
+  {name:'Pullback to EMA 48 (10m)',appears:68.9,  gg:41.9, reward:36.6, risk:20.7},
+  {name:'Pullback to EMA 21 (1h)', appears:54.6,  gg:36.2, reward:41.4, risk:18.3},
+  {name:'Pullback to EMA 48 (1h)', appears:47.8,  gg:43.8, reward:41.5, risk:38.9},
+  {name:'Pullback to 50% midpoint',appears:91.1,  gg:56.6, reward:11.8, risk:26.4},
+  {name:'Pullback to Call Trigger', appears:62.8,  gg:32.4, reward:38.2, risk:0},
+  {name:'Pullback to Prev Close',  appears:37.8,  gg:17.0, reward:61.8, risk:0},
+];
+const bearRows = [
+  {name:'Immediate (at 38.2%)',     appears:100.0, gg:64.0, reward:23.6, risk:14.6, highlight:true, key:'immediate'},
+  {name:'Pullback to EMA 8 (10m)', appears:95.9,  gg:59.8, reward:30.2, risk:26.0, highlight:true, key:'ema8'},
+  {name:'Pullback to EMA 21 (10m)',appears:88.0,  gg:54.7, reward:34.3, risk:30.3, key:'ema21'},
+  {name:'Pullback to EMA 48 (10m)',appears:72.2,  gg:42.5, reward:39.6, risk:24.3},
+  {name:'Pullback to EMA 21 (1h)', appears:60.1,  gg:33.1, reward:45.5, risk:14.6},
+  {name:'Pullback to EMA 48 (1h)', appears:54.5,  gg:38.0, reward:40.4, risk:25.9},
+  {name:'Pullback to 50% midpoint',appears:92.7,  gg:58.8, reward:11.8, risk:26.4},
+  {name:'Pullback to Put Trigger',  appears:70.2,  gg:36.8, reward:38.2, risk:0},
+  {name:'Pullback to Prev Close',  appears:41.9,  gg:18.0, reward:61.8, risk:0},
+];
+
+function buildTable(id, rows) {
+  const tbody = document.getElementById(id);
+  const dir = id.startsWith('bull') ? 'bull' : 'bear';
+  rows.forEach(r => {
+    const rr = r.risk > 0 ? (r.reward / r.risk).toFixed(1) + 'x' : '—';
+    const ev = (r.gg/100) * r.reward - (1 - r.gg/100) * r.risk;
+    const evClass = ev > 5 ? 'ev-pos' : (ev < 0 ? 'ev-neg' : 'ev-zero');
+    const trClass = r.highlight ? 'highlight' : (r.name.includes('Prev Close') ? 'baseline' : '');
+    const tr = document.createElement('tr');
+    tr.className = trClass;
+
+    let ggCell;
+    if (r.key) {
+      const rowKey = dir + '_' + r.key;
+      const title = r.name + ' (' + (dir === 'bull' ? 'Bull' : 'Bear') + ')';
+      ggCell = `<td><span class="n-clickable n-yes" data-row="${rowKey}" data-outcome="hit" data-title="${title}">${r.gg.toFixed(1)}%</span> · <span class="n-clickable n-no" data-row="${rowKey}" data-outcome="miss" data-title="${title}">${(100 - r.gg).toFixed(1)}%</span></td>`;
+    } else {
+      ggCell = `<td>${r.gg.toFixed(1)}%</td>`;
+    }
+
+    tr.innerHTML = `
+      <td>${r.name}</td>
+      <td>${r.appears.toFixed(0)}%</td>
+      ${ggCell}
+      <td>${r.reward.toFixed(1)}%</td>
+      <td>${r.risk > 0 ? r.risk.toFixed(1) + '%' : '—'}</td>
+      <td>${rr}</td>
+      <td class="${evClass}">${ev >= 0 ? '+' : ''}${ev.toFixed(1)}%</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+buildTable('bull-tbody', bullRows);
+buildTable('bear-tbody', bearRows);
+
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('visible'); obs.unobserve(e.target); } });
+}, {threshold:.12});
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+document.querySelector('.hero').classList.add('visible');
+</script>
+<script src="/study-drawer.js"></script>
+<script>StudyDrawer.loadData('/data/gg-entries-dates.json');</script>
+</body>
+</html>

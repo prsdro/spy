@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data | Milkman Trades</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥛</text></svg>">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0c0e12;--surface:#13161c;--border:#1e2230;--text:#e8eaed;--text-dim:#6b7280;--text-mid:#9ca3af;--accent:#fbbf24;--green:#1cd48a;--red:#ef4444}
+html{font-size:15px}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center}
+
+/* Gate */
+.gate{max-width:400px;width:100%;padding:2rem;text-align:center}
+.gate h1{font-size:1.1rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);margin-bottom:2rem}
+.gate .question{font-size:1.3rem;font-weight:700;margin-bottom:1.5rem;line-height:1.3}
+.gate input{
+  width:100%;padding:.75rem 1rem;background:var(--surface);border:1px solid var(--border);
+  border-radius:6px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:1rem;
+  text-align:center;outline:none;transition:border-color .2s;
+}
+.gate input:focus{border-color:var(--accent)}
+.gate input::placeholder{color:var(--text-dim)}
+.gate .hint{font-size:.75rem;color:var(--text-dim);margin-top:.75rem;min-height:1.2em}
+.gate .hint.wrong{color:var(--red)}
+.gate .btn{
+  display:inline-block;margin-top:1rem;padding:.6rem 2rem;background:var(--accent);color:#000;
+  border:none;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:600;
+  cursor:pointer;transition:opacity .2s;
+}
+.gate .btn:hover{opacity:.85}
+
+/* Vault */
+.vault{display:none;max-width:680px;margin:0 auto;padding:3rem 1.5rem 5rem}
+.vault.open{display:block}
+.vault h1{font-size:1.6rem;font-weight:700;letter-spacing:-.02em;margin-bottom:.25rem}
+.vault .sub{font-size:.85rem;color:var(--text-dim);font-weight:300;margin-bottom:2rem}
+.vault .section-label{
+  font-family:'JetBrains Mono',monospace;font-size:.65rem;font-weight:500;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--text-dim);padding-bottom:.6rem;border-bottom:1px solid var(--border);margin-bottom:1rem;
+}
+.vault .desc{font-size:.9rem;color:var(--text-mid);font-weight:300;line-height:1.7;margin-bottom:1.5rem}
+.vault .desc strong{color:var(--text);font-weight:500}
+
+.file-list{list-style:none;margin-bottom:2.5rem}
+.file-item{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:.75rem 1rem;background:var(--surface);border:1px solid var(--border);
+  border-radius:6px;margin-bottom:.5rem;transition:border-color .15s;
+}
+.file-item:hover{border-color:#333}
+.file-info{display:flex;flex-direction:column;gap:.15rem}
+.file-name{font-family:'JetBrains Mono',monospace;font-size:.8rem;font-weight:500}
+.file-meta{font-size:.7rem;color:var(--text-dim)}
+.file-dl{
+  padding:.4rem .8rem;background:transparent;border:1px solid var(--border);border-radius:4px;
+  color:var(--accent);font-size:.75rem;font-weight:500;text-decoration:none;transition:all .15s;
+  font-family:'JetBrains Mono',monospace;
+}
+.file-dl:hover{background:var(--accent);color:#000;border-color:var(--accent)}
+
+.methodology{
+  background:var(--surface);border:1px solid var(--border);border-radius:8px;
+  padding:1.25rem;margin-bottom:2rem;font-size:.82rem;color:var(--text-mid);line-height:1.7;
+}
+.methodology h3{font-size:.85rem;color:var(--text);font-weight:600;margin-bottom:.5rem}
+.methodology code{font-family:'JetBrains Mono',monospace;font-size:.75rem;background:var(--bg);padding:.1em .3em;border-radius:3px}
+.methodology ul{margin:.5rem 0 .5rem 1.2rem}
+.methodology li{margin-bottom:.3rem}
+
+.footer{text-align:center;padding-top:2rem;border-top:1px solid var(--border);color:var(--text-dim);font-size:.72rem;font-weight:300;line-height:1.8}
+.footer a{color:var(--text-dim);text-decoration:underline;text-underline-offset:2px}
+</style>
+<script src="/nav.js"></script>
+</head>
+<body>
+
+<div class="gate" id="gate">
+  <h1>Milkman Trades &mdash; Data Vault</h1>
+  <div class="question">What is Bilbo's last name?</div>
+  <input type="text" id="answer" placeholder="Type your answer..." autocomplete="off" autofocus>
+  <div class="hint" id="hint"></div>
+  <button class="btn" id="submit">Enter</button>
+</div>
+
+<div class="vault" id="vault">
+  <h1>Data Vault</h1>
+  <div class="sub">SPY indicator data &amp; analysis scripts for independent verification</div>
+
+  <div class="section-label">Data Files</div>
+  <div class="desc">Pre-computed indicator values for SPY across multiple timeframes. All files are gzip-compressed CSVs. Each row contains OHLCV data plus all Saty indicator values (Pivot Ribbon EMAs, ATR Levels, Phase Oscillator).</div>
+
+  <ul class="file-list" id="file-list"></ul>
+
+  <div class="section-label">Scripts</div>
+  <div class="desc">Python scripts used to ingest raw data, compute indicators, and run backtests. Requires <strong>Python 3.10+</strong> with <strong>pandas</strong> and <strong>sqlite3</strong>.</div>
+
+  <ul class="file-list" id="script-list"></ul>
+
+  <div class="section-label">Methodology</div>
+  <div class="methodology">
+    <h3>Data Pipeline</h3>
+    <ul>
+      <li><strong>Source:</strong> 1-minute SPY OHLCV bars, Jan 2000 &ndash; Oct 2025 (4.5M bars)</li>
+      <li><strong>Aggregation:</strong> 1m &rarr; 3m, 10m, 1h, 4h candles (all hours, excluding 20:00 bar to match TradingView session). Daily/weekly candles use RTH only (9:30&ndash;16:00) with 2% wick clipping for bad ticks.</li>
+      <li><strong>ATR:</strong> Wilder's RMA (alpha=1/14), matching TradingView's <code>ta.atr(14)</code></li>
+      <li><strong>ATR Levels:</strong> Intraday tables use daily ATR reference (matching TradingView's <code>request.security(ticker, 'D', ta.atr(14))</code>)</li>
+      <li><strong>EMAs:</strong> Standard EWM (span=N, adjust=False), matching TradingView's <code>ta.ema()</code></li>
+      <li><strong>Phase Oscillator:</strong> <code>EMA(((close - EMA21) / (3 * ATR14)) * 100, 3)</code></li>
+    </ul>
+    <h3>Validation</h3>
+    <ul>
+      <li>Pivot Ribbon EMAs: <strong>0.000%</strong> match vs TradingView export (10m bars)</li>
+      <li>ATR Levels (daily ref): <strong>0.00&ndash;0.07%</strong> match</li>
+      <li>Phase Oscillator (10m): <strong>0.5&ndash;3.5%</strong> after convergence</li>
+      <li>Phase Oscillator (60m): <strong>0.00%</strong> match with full history warmup</li>
+    </ul>
+    <h3>Golden Gate Definition</h3>
+    <p>The Golden Gate is the zone between the <strong>38.2%</strong> and <strong>61.8%</strong> ATR levels. &ldquo;Entry&rdquo; = price reaches 38.2%. &ldquo;Completion&rdquo; = price reaches 61.8% within the same session.</p>
+  </div>
+
+  <div class="section-label">The Bilbo Golden Gate Thesis</div>
+  <div class="methodology">
+    <h3>Core Finding</h3>
+    <p>The <strong>60-minute Phase Oscillator</strong> at the moment of Golden Gate entry (38.2% hit) is a strong predictor of whether the Golden Gate will complete through 61.8%. When the 1-hour PO is aligned with the trade direction, completion rates jump significantly and time-to-completion is cut roughly in half.</p>
+
+    <h3>The Bilbo Conditions</h3>
+    <ul>
+      <li><strong>Bullish Bilbo:</strong> 60m Phase Oscillator is above +61.8 (High zone) and rising at the moment the +38.2% ATR level is hit. Completion rate: <strong>77.7%</strong> vs 63.0% baseline. Mean time: <strong>34.8 min</strong> vs 65.4 min baseline.</li>
+      <li><strong>Bearish Bilbo:</strong> 60m Phase Oscillator is below -61.8 (Low zone) and falling at the moment the -38.2% ATR level is hit. Completion rate: <strong>90.2%</strong> vs 65.0% baseline. Mean time: <strong>24.3 min</strong> vs 54.4 min baseline.</li>
+    </ul>
+
+    <h3>Why 60 Minutes?</h3>
+    <p>The 10-minute Phase Oscillator was also tested but provides 5&ndash;12x less predictive edge. The 10m PO captures short-term noise &mdash; bar-by-bar swings don't reflect sustained momentum. The 60m PO filters for genuine directional conviction built over multiple hours, which is what drives Golden Gate completions.</p>
+
+    <h3>Key Data Columns for Replication</h3>
+    <ul>
+      <li>Use <code>ind_10m</code> for Golden Gate entry/completion detection (filter to RTH: 09:30&ndash;15:59)</li>
+      <li>Use <code>ind_1h</code> for the 60-minute Phase Oscillator snapshot at trigger time</li>
+      <li>Join with <code>pd.merge_asof(df10, df60, on='timestamp', direction='backward')</code></li>
+      <li>Golden Gate entry: <code>atr_upper_0382</code> / <code>atr_lower_0382</code></li>
+      <li>Golden Gate completion: <code>atr_upper_0618</code> / <code>atr_lower_0618</code></li>
+      <li>PO zone classification: High (&gt;61.8), Mid (-61.8 to 61.8), Low (&lt;-61.8)</li>
+      <li>PO slope: compare <code>phase_oscillator</code> to its previous bar value</li>
+    </ul>
+
+    <p style="margin-top:1rem"><a href="/bilbo-golden-gate.html" style="color:var(--accent);text-decoration:underline;text-underline-offset:2px">Read the full Bilbo Golden Gate study &rarr;</a></p>
+  </div>
+
+  <footer class="footer">
+    ATR Levels &amp; Phase Oscillator by <a href="https://satyland.com" target="_blank">Saty Mahajan</a><br>
+    Analysis inspired by <a href="https://x.com/tesrak" target="_blank">@tesrak</a> &middot; Data from <a href="https://x.com/todaborrego" target="_blank">@todor</a><br>
+    <a href="https://milkmantrades.com">Milkman Trades</a>
+  </footer>
+</div>
+
+<script>
+const KEY = 'bangerz';
+const FILES = [
+  // Live data
+  {name:'indicators_1h_live.csv.gz', desc:'Live hourly indicators &mdash; TradingView export through Apr 16 2026 (299 rows, 76 columns)', size:'36 KB', href:'indicators_1h_live.csv.gz'},
+  // Indicators (Jan 2000 - Oct 2025, 56 columns each)
+  {name:'indicators_daily.csv.gz', desc:'Daily indicators (6,467 rows)', size:'1.9 MB', href:'indicators_daily.csv.gz'},
+  {name:'indicators_1w.csv.gz', desc:'Weekly indicators (1,367 rows)', size:'384 KB', href:'indicators_1w.csv.gz'},
+  {name:'indicators_4h.csv.gz', desc:'4-hour indicators (25K rows)', size:'3.5 MB', href:'indicators_4h.csv.gz'},
+  {name:'indicators_1h.csv.gz', desc:'Hourly indicators (94K rows)', size:'9.8 MB', href:'indicators_1h.csv.gz'},
+  {name:'indicators_10m.csv.gz', desc:'10-minute indicators (540K rows)', size:'46.3 MB', href:'indicators_10m.csv.gz'},
+  {name:'indicators_3m.csv.gz.part_aa', desc:'3-minute indicators (1.7M rows) &mdash; part 1/2, cat parts then gunzip', size:'90 MB', href:'indicators_3m.csv.gz.part_aa'},
+  {name:'indicators_3m.csv.gz.part_ab', desc:'3-minute indicators &mdash; part 2/2', size:'40 MB', href:'indicators_3m.csv.gz.part_ab'},
+  {name:'indicators_1m.csv.gz.part_aa', desc:'1-minute indicators (4.6M rows) &mdash; part 1/4, cat parts then gunzip', size:'90 MB', href:'indicators_1m.csv.gz.part_aa'},
+  {name:'indicators_1m.csv.gz.part_ab', desc:'1-minute indicators &mdash; part 2/4', size:'90 MB', href:'indicators_1m.csv.gz.part_ab'},
+  {name:'indicators_1m.csv.gz.part_ac', desc:'1-minute indicators &mdash; part 3/4', size:'90 MB', href:'indicators_1m.csv.gz.part_ac'},
+  {name:'indicators_1m.csv.gz.part_ad', desc:'1-minute indicators &mdash; part 4/4', size:'66 MB', href:'indicators_1m.csv.gz.part_ad'},
+  // Candles (Jan 2000 - Oct 2025, OHLCV)
+  {name:'candles_daily.csv.gz', desc:'Daily OHLCV candles, RTH only (6,467 rows)', size:'116 KB', href:'candles_daily.csv.gz'},
+  {name:'candles_1w.csv.gz', desc:'Weekly OHLCV candles (1,367 rows)', size:'28 KB', href:'candles_1w.csv.gz'},
+  {name:'candles_4h.csv.gz', desc:'4-hour OHLCV candles (25K rows)', size:'418 KB', href:'candles_4h.csv.gz'},
+  {name:'candles_1h.csv.gz', desc:'Hourly OHLCV candles (96K rows)', size:'1.5 MB', href:'candles_1h.csv.gz'},
+  {name:'candles_10m.csv.gz', desc:'10-minute OHLCV candles (550K rows)', size:'7.1 MB', href:'candles_10m.csv.gz'},
+  {name:'candles_3m.csv.gz', desc:'3-minute OHLCV candles (1.7M rows)', size:'21 MB', href:'candles_3m.csv.gz'},
+  {name:'candles_1m.csv.gz', desc:'1-minute OHLCV candles (4.6M rows)', size:'52 MB', href:'candles_1m.csv.gz'},
+];
+const SCRIPTS = [
+  {name:'scripts.zip', desc:'ingest.py, aggregate.py, indicators.py, 4 backtest scripts, KNOWLEDGE.md', size:'16 KB', href:'scripts.zip'},
+];
+
+function unlock(){
+  const val = document.getElementById('answer').value.trim().toLowerCase();
+  if(val === KEY){
+    document.getElementById('gate').style.display = 'none';
+    document.getElementById('vault').classList.add('open');
+    document.body.style.alignItems = 'flex-start';
+    sessionStorage.setItem('vault','1');
+    renderFiles();
+  } else if(val.length > 0){
+    document.getElementById('hint').textContent = 'Nope. Try again.';
+    document.getElementById('hint').className = 'hint wrong';
+  }
+}
+
+function renderFiles(){
+  const fl = document.getElementById('file-list');
+  FILES.forEach(f => {
+    fl.innerHTML += `<li class="file-item"><div class="file-info"><div class="file-name">${f.name}</div><div class="file-meta">${f.desc} &middot; ${f.size}</div></div><a class="file-dl" href="${f.href}" download>Download</a></li>`;
+  });
+  const sl = document.getElementById('script-list');
+  SCRIPTS.forEach(f => {
+    sl.innerHTML += `<li class="file-item"><div class="file-info"><div class="file-name">${f.name}</div><div class="file-meta">${f.desc} &middot; ${f.size}</div></div><a class="file-dl" href="${f.href}" download>Download</a></li>`;
+  });
+}
+
+document.getElementById('submit').addEventListener('click', unlock);
+document.getElementById('answer').addEventListener('keydown', e => { if(e.key === 'Enter') unlock(); });
+
+// Persist unlock for the session
+if(sessionStorage.getItem('vault') === '1'){
+  document.getElementById('gate').style.display = 'none';
+  document.getElementById('vault').classList.add('open');
+  document.body.style.alignItems = 'flex-start';
+  renderFiles();
+}
+</script>
+</body>
+</html>

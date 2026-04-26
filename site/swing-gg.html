@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Swing Golden Gate | Milkman Trades</title>
+<meta name="description" content="Swing Golden Gate: monthly ATR levels tracked over 1-20 trading days. Bearish moves are 3x faster than bullish on day 1.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥛</text></svg>">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,300;1,9..40,400&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --bg:#0c0e12;
+  --surface:#13161c;
+  --surface-2:#181c24;
+  --border:#1e2230;
+  --text:#e8eaed;
+  --text-dim:#6b7280;
+  --text-mid:#9ca3af;
+  --bull:#1cd48a;
+  --bull-dim:#0d5738;
+  --bull-bg:#0a1f15;
+  --bear:#ef6c00;
+  --bear-dim:#7c3600;
+  --bear-bg:#1f1208;
+  --accent:#fbbf24;
+}
+
+html{font-size:15px;scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'DM Sans',system-ui,sans-serif;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ── Layout ── */
+.page{max-width:720px;margin:0 auto;padding:3rem 1.5rem 5rem}
+
+/* ── Navigation ── */
+.back{
+  display:inline-flex;
+  align-items:center;
+  gap:.4rem;
+  font-size:.8rem;
+  color:var(--text-dim);
+  text-decoration:none;
+  margin-bottom:2.5rem;
+  transition:color .2s;
+}
+.back:hover{color:var(--text)}
+.back svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2}
+
+/* ── Hero ── */
+.hero{margin-bottom:3.5rem}
+.hero .kicker{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.7rem;
+  font-weight:500;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--accent);
+  margin-bottom:.75rem;
+}
+.hero h1{
+  font-size:2.4rem;
+  font-weight:700;
+  letter-spacing:-.03em;
+  line-height:1.15;
+  margin-bottom:1rem;
+}
+.hero h1 em{
+  font-style:normal;
+  background:linear-gradient(135deg,var(--bear),var(--accent));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.hero .lede{
+  font-size:1.05rem;
+  color:var(--text-mid);
+  font-weight:300;
+  max-width:580px;
+  line-height:1.65;
+}
+
+/* ── Sections ── */
+.section{margin-bottom:3.5rem}
+.section-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.65rem;
+  font-weight:500;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--text-dim);
+  padding-bottom:.6rem;
+  border-bottom:1px solid var(--border);
+  margin-bottom:1.5rem;
+}
+
+.prose{
+  font-size:.95rem;
+  color:var(--text-mid);
+  font-weight:300;
+  line-height:1.7;
+  margin-bottom:1.5rem;
+}
+.prose strong{color:var(--text);font-weight:500}
+
+/* ── Big Stat ── */
+.bigstat{
+  display:flex;
+  gap:2rem;
+  margin:2rem 0;
+  flex-wrap:wrap;
+}
+.bigstat-item{
+  flex:1;
+  min-width:140px;
+  padding:1.25rem;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:8px;
+}
+.bigstat-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:2.2rem;
+  font-weight:700;
+  line-height:1;
+  margin-bottom:.3rem;
+}
+.bigstat-num.bull{color:var(--bull)}
+.bigstat-num.bear{color:var(--bear)}
+.bigstat-label{
+  font-size:.75rem;
+  color:var(--text-dim);
+  line-height:1.4;
+}
+
+/* ── Completion Table ── */
+.comp-grid{
+  margin:1.5rem 0;
+}
+.comp-direction{
+  margin-bottom:2rem;
+}
+.comp-title{
+  font-size:.85rem;
+  font-weight:600;
+  margin-bottom:.75rem;
+  display:flex;
+  align-items:center;
+  gap:.5rem;
+}
+.comp-title .dot{
+  width:8px;height:8px;border-radius:50%;
+}
+
+.comp-table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:.8rem;
+}
+.comp-table th{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.65rem;
+  font-weight:500;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:var(--text-dim);
+  text-align:right;
+  padding:.5rem .6rem;
+  border-bottom:1px solid var(--border);
+}
+.comp-table th:first-child{text-align:left}
+.comp-table td{
+  padding:.55rem .6rem;
+  border-bottom:1px solid #151820;
+  text-align:right;
+  font-family:'JetBrains Mono',monospace;
+  font-size:.8rem;
+  font-weight:400;
+  color:var(--text-mid);
+}
+.comp-table td:first-child{
+  text-align:left;
+  font-family:'DM Sans',sans-serif;
+  font-weight:400;
+  color:var(--text);
+}
+.comp-table tr.baseline td{
+  color:var(--text-dim);
+  font-weight:400;
+}
+.comp-table tr.best td{
+  font-weight:700;
+}
+.comp-table tr.best.bull-row td{color:var(--bull)}
+.comp-table tr.best.bear-row td{color:var(--bear)}
+.comp-table tr.best td:first-child{color:var(--text)}
+
+.comp-table .n{
+  font-size:.65rem;
+  color:var(--text-dim);
+  font-weight:400;
+}
+.comp-table .bar-cell{
+  width:120px;
+  padding-right:1rem;
+}
+.mini-bar{
+  height:6px;
+  border-radius:3px;
+  background:var(--surface-2);
+  overflow:hidden;
+}
+.mini-bar-fill{
+  height:100%;
+  border-radius:3px;
+  transition:width .8s cubic-bezier(.22,1,.36,1);
+}
+
+/* ── Speed Cards ── */
+.speed-pair{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:1.5rem;
+  margin:1.5rem 0;
+}
+@media(max-width:640px){.speed-pair{grid-template-columns:1fr}}
+
+.speed-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:1.25rem;
+  position:relative;
+  overflow:hidden;
+}
+.speed-card::before{
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;
+  height:2px;
+}
+.speed-card.bull::before{background:linear-gradient(90deg,var(--bull),transparent)}
+.speed-card.bear::before{background:linear-gradient(90deg,var(--bear),transparent)}
+.speed-card.dim::before{background:linear-gradient(90deg,var(--text-dim),transparent);opacity:.3}
+
+.speed-card .card-label{
+  font-size:.75rem;
+  font-weight:500;
+  margin-bottom:.15rem;
+}
+.speed-card .card-sub{
+  font-size:.7rem;
+  color:var(--text-dim);
+  margin-bottom:1rem;
+  font-family:'JetBrains Mono',monospace;
+}
+
+.timeline-row{
+  display:flex;
+  align-items:center;
+  gap:.5rem;
+  margin-bottom:.4rem;
+}
+.timeline-label{
+  flex:0 0 52px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:.65rem;
+  color:var(--text-dim);
+  text-align:right;
+}
+.timeline-bar-bg{
+  flex:1;
+  height:14px;
+  background:var(--surface-2);
+  border-radius:3px;
+  overflow:hidden;
+  position:relative;
+}
+.timeline-bar-fill{
+  height:100%;
+  border-radius:3px;
+  position:relative;
+  transition:width 1s cubic-bezier(.22,1,.36,1);
+}
+.timeline-pct{
+  flex:0 0 42px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:.7rem;
+  font-weight:500;
+  text-align:right;
+}
+
+.speed-card .mean-stat{
+  margin-top:.75rem;
+  padding-top:.6rem;
+  border-top:1px solid var(--border);
+  font-family:'JetBrains Mono',monospace;
+  font-size:.7rem;
+  color:var(--text-dim);
+  display:flex;
+  justify-content:space-between;
+}
+.mean-stat .val{color:var(--text);font-weight:700}
+
+/* ── Callout ── */
+.callout{
+  background:var(--surface);
+  border-left:3px solid var(--accent);
+  padding:1rem 1.25rem;
+  margin:2rem 0;
+  border-radius:0 6px 6px 0;
+}
+.callout p{
+  font-size:.85rem;
+  color:var(--text-mid);
+  font-weight:300;
+  line-height:1.6;
+}
+.callout strong{color:var(--accent);font-weight:500}
+
+/* ── Footer ── */
+.footer{
+  text-align:center;
+  padding-top:2.5rem;
+  border-top:1px solid var(--border);
+  color:var(--text-dim);
+  font-size:.72rem;
+  font-weight:300;
+  line-height:1.8;
+}
+.footer a{color:var(--text-dim);text-decoration:underline;text-underline-offset:2px}
+
+/* ── Animations ── */
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease}
+.reveal.visible{opacity:1;transform:none}
+
+/* ── Cheatsheet Banner ── */
+.cheatsheet-banner{display:block;text-align:center;padding:1.5rem 1rem;margin:2rem 0 0;background:var(--surface);border:1px solid var(--border);border-radius:8px;text-decoration:none;transition:border-color .2s,background .2s}
+.cheatsheet-banner:hover{border-color:#fbbf24;background:var(--surface-2)}
+.cheatsheet-banner span{font-size:.95rem;color:var(--text);font-weight:500}
+
+/* ── Mobile ── */
+@media(max-width:767px){
+  .hero h1{font-size:1.6rem}
+  .bigstat{flex-direction:column;gap:1rem}
+  .bigstat-item{min-width:0}
+  .bigstat-num{font-size:1.6rem}
+  .comp-table{font-size:.72rem;display:block;overflow-x:auto}
+  .comp-table th,.comp-table td{padding:.4rem .4rem;white-space:nowrap}
+  .speed-pair{grid-template-columns:1fr}
+}
+</style>
+<script src="/nav.js"></script>
+</head>
+<body>
+<div class="page">
+
+<div style="background:#1a1400;border:1px solid #3d3200;border-radius:6px;padding:.6rem 1rem;margin-bottom:1.5rem;font-size:.75rem;color:#d4a800;font-weight:400;line-height:1.5">
+  <strong style="color:#fbbf24">Draft &mdash;</strong> These backtests have not yet been independently verified. Do not trade based on this data.
+</div>
+
+<a href="/" style="display:inline-flex;align-items:center;gap:.4rem;font-size:.8rem;color:var(--text-dim);text-decoration:none;margin-bottom:.5rem;transition:color .2s" onmouseover="this.style.color='#e8eaed'" onmouseout="this.style.color=''"><svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0h4"/></svg>Home</a>
+<a href="/multiday-gg.html" class="back">
+  <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+  Multi-Day Golden Gate
+</a>
+
+<header class="hero reveal">
+  <div class="kicker">Study &mdash; Swing Golden Gate</div>
+  <h1>Swing Golden Gate:<br>monthly ATR tracked over<br><em>1&ndash;20 trading days.</em></h1>
+  <p class="lede">Using monthly ATR levels, this study tracks how often the Golden Gate (38.2% to 61.8%) completes across 1 to 20 trading days. The higher-timeframe filter is the weekly Phase Oscillator &mdash; specifically the previous week&rsquo;s closing value. Unlike day and multi-day GGs, swing moves take much longer to develop.</p>
+</header>
+
+<!-- ── Section 1: Methodology ── -->
+<div class="section reveal">
+  <div class="section-label">01 &mdash; Methodology</div>
+
+  <p class="prose">
+    Monthly ATR levels define the widest range in the study series. Rather than expecting completion within a single session or even a week, the Golden Gate is tracked across <strong>1 to 20 trading days</strong> (roughly one calendar month) after the 38.2% level is hit.
+  </p>
+  <p class="prose">
+    The filter uses the <strong>weekly Phase Oscillator</strong> (previous week&rsquo;s close). This eliminates look-ahead bias &mdash; you know the PO state before the week begins. The full ATR target is the 100% monthly ATR level.
+  </p>
+
+  <div class="callout">
+    <p><strong>Why weekly PO?</strong> At the monthly timeframe, the daily PO cycles too fast to be a meaningful filter. The previous week&rsquo;s PO is the appropriate higher-timeframe momentum lens for swing setups.</p>
+  </div>
+</div>
+
+<!-- ── Section 2: Key Findings ── -->
+<div class="section reveal">
+  <div class="section-label">02 &mdash; Key Findings</div>
+
+  <p class="prose">
+    Swing Golden Gates behave fundamentally differently from daily and multi-day. Day 1 completion is dramatically lower &mdash; only <strong>10.7% bullish</strong> and <strong>36.1% bearish</strong> compared to 63&ndash;72% at shorter timeframes. The monthly range simply needs more time to resolve.
+  </p>
+
+  <div class="bigstat">
+    <div class="bigstat-item">
+      <div class="bigstat-num bear">36.1%</div>
+      <div class="bigstat-label">Bearish day 1 completion<br>(vs 11% bullish &mdash; 3x faster)</div>
+    </div>
+    <div class="bigstat-item">
+      <div class="bigstat-num" style="color:var(--text-mid)">73&ndash;77%</div>
+      <div class="bigstat-label">Completion by day 20<br>(similar final rate to daily)</div>
+    </div>
+    <div class="bigstat-item">
+      <div class="bigstat-num" style="color:var(--accent)">~0%</div>
+      <div class="bigstat-label">Weekly PO edge<br>(minimal differentiation)</div>
+    </div>
+  </div>
+
+  <p class="prose">
+    Unlike daily and multi-day studies where the Phase Oscillator dramatically filters winners from losers, the weekly PO adds <strong>minimal edge</strong> at the monthly timeframe. There simply aren&rsquo;t enough extreme weekly PO readings to create a strong Bilbo signal.
+  </p>
+
+  <div class="callout">
+    <p><strong>Bearish is 3.4x faster on day 1.</strong> 36.1% bearish completion vs 10.7% bullish. This asymmetry echoes every timeframe &mdash; bearish moves are simply faster &mdash; but the gap is most dramatic at the monthly level.</p>
+  </div>
+</div>
+
+<!-- ── Section 3: Bullish Swing GG ── -->
+<div class="section reveal">
+  <div class="section-label">03 &mdash; Bullish Swing GG</div>
+
+  <p class="prose">
+    Bullish monthly Golden Gate completion rates by previous week&rsquo;s PO state. <strong>n=298</strong> total entries. Only PO buckets with n&ge;15 are shown.
+  </p>
+
+  <div class="comp-direction">
+    <div class="comp-title"><div class="dot" style="background:var(--bull)"></div> Bullish GG Baseline (monthly ATR)</div>
+    <table class="comp-table" id="bull-base-table">
+      <thead><tr><th>Metric</th><th>Day 1</th><th>Day 3</th><th>Day 5</th><th>Day 10</th><th>Day 15</th><th>Day 20</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <div class="comp-direction" style="margin-top:2rem">
+    <div class="comp-title"><div class="dot" style="background:var(--bull)"></div> Bullish by Weekly PO State</div>
+    <table class="comp-table" id="bull-po-table">
+      <thead><tr><th>Weekly PO State</th><th>Day 1</th><th>Day 3</th><th>Day 5</th><th>Day 10</th><th>Day 15</th><th>Day 20</th><th>n</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ── Section 4: Bearish Swing GG ── -->
+<div class="section reveal">
+  <div class="section-label">04 &mdash; Bearish Swing GG</div>
+
+  <p class="prose">
+    Bearish monthly Golden Gate completion rates by previous week&rsquo;s PO state. <strong>n=233</strong> total entries. Bearish moves start much faster &mdash; 36.1% complete on day 1 vs just 10.7% bullish.
+  </p>
+
+  <div class="comp-direction">
+    <div class="comp-title"><div class="dot" style="background:var(--bear)"></div> Bearish GG Baseline (monthly ATR)</div>
+    <table class="comp-table" id="bear-base-table">
+      <thead><tr><th>Metric</th><th>Day 1</th><th>Day 3</th><th>Day 5</th><th>Day 10</th><th>Day 15</th><th>Day 20</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <div class="comp-direction" style="margin-top:2rem">
+    <div class="comp-title"><div class="dot" style="background:var(--bear)"></div> Bearish by Weekly PO State</div>
+    <table class="comp-table" id="bear-po-table">
+      <thead><tr><th>Weekly PO State</th><th>Day 1</th><th>Day 3</th><th>Day 5</th><th>Day 10</th><th>Day 15</th><th>Day 20</th><th>n</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <div class="callout">
+    <p><strong>No clear Bilbo signal.</strong> Unlike daily and multi-day studies, the weekly PO doesn&rsquo;t differentiate strongly at the monthly timeframe. The PO buckets show similar completion rates &mdash; the edge diminishes as the timeframe increases.</p>
+  </div>
+</div>
+
+<!-- ── Section 5: Day Mode Comparison ── -->
+<div class="section reveal">
+  <div class="section-label">05 &mdash; Comparison vs Day Mode</div>
+
+  <p class="prose">
+    How swing GG completion compares to daily and multi-day. The same fundamental pattern &mdash; bearish faster than bullish, ~70&ndash;80% eventual completion &mdash; holds across all timeframes, but the <strong>speed</strong> is radically different.
+  </p>
+
+  <div class="speed-pair">
+    <div class="speed-card bull" id="card-bull-compare"></div>
+    <div class="speed-card bear" id="card-bear-compare"></div>
+  </div>
+
+  <div class="callout">
+    <p><strong>Same destination, different speed.</strong> All three timeframes converge to ~73&ndash;84% completion eventually. The difference is how long it takes: daily GGs resolve in minutes, multi-day in 1&ndash;2 sessions, and swing GGs need weeks.</p>
+  </div>
+</div>
+
+<!-- ── Section 6: Practical Takeaways ── -->
+<div class="section reveal">
+  <div class="section-label">06 &mdash; Practical Takeaways</div>
+
+  <p class="prose">
+    <strong>1. Monthly GGs take MUCH longer.</strong> Only 11% bullish and 36% bearish complete on day 1, compared to 63%/65% for daily GGs. The monthly ATR range is simply too wide for a single session.
+  </p>
+
+  <p class="prose">
+    <strong>2. Bearish is 3x faster than bullish on day 1.</strong> This echoes the asymmetry seen at every timeframe, but it&rsquo;s most extreme here. Bearish swing setups develop faster, period.
+  </p>
+
+  <p class="prose">
+    <strong>3. By day 20, 73&ndash;77% complete.</strong> The final completion rate is similar to daily GGs, just stretched over ~1 calendar month. Patience is the key variable.
+  </p>
+
+  <p class="prose">
+    <strong>4. Weekly PO adds minimal edge.</strong> Unlike the dramatic Bilbo effect with 1h PO (day mode) and daily PO (multi-day), the weekly PO doesn&rsquo;t produce actionable differentiation at this timeframe.
+  </p>
+
+  <p class="prose">
+    <strong>5. Full ATR is very rare.</strong> Only 26% bullish and 45% bearish reach the full monthly ATR by day 20. The 61.8% target is the realistic objective for swing GG trades.
+  </p>
+</div>
+
+<div style="text-align:center;margin:2rem 0 3rem">
+  <a href="/multiday-gg.html" style="display:inline-flex;align-items:center;gap:.5rem;padding:.7rem 1.4rem;background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text);text-decoration:none;font-size:.85rem;font-weight:500;transition:border-color .2s,background .2s" onmouseover="this.style.borderColor='var(--accent)';this.style.background='#181c24'" onmouseout="this.style.borderColor='';this.style.background=''">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    Multi-Day GG
+  </a>
+  <a href="/bilbo-golden-gate.html" style="display:inline-flex;align-items:center;gap:.5rem;padding:.7rem 1.4rem;background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text);text-decoration:none;font-size:.85rem;font-weight:500;transition:border-color .2s,background .2s" onmouseover="this.style.borderColor='var(--accent)';this.style.background='#181c24'" onmouseout="this.style.borderColor='';this.style.background=''">
+    Intraday Bilbo GG
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+  </a>
+</div>
+
+<a href="/cheatsheet-multiday-swing.html" class="cheatsheet-banner"><span>&#x1F4CB; Multi-Day &amp; Swing Cheat Sheet &rarr;</span></a>
+
+<footer class="footer">
+  ATR Levels &amp; Phase Oscillator by <a href="https://satyland.com" target="_blank" rel="noopener">Saty Mahajan</a><br>
+  Analysis inspired by <a href="https://x.com/tesrak" target="_blank" rel="noopener">@tesrak</a> &middot; With thanks to <a href="https://x.com/todaborrego" target="_blank" rel="noopener">@todor</a> for the data<br>
+  25 years of SPY data (2000&ndash;2025) &middot; <a href="https://milkmantrades.com">Milkman Trades</a>
+</footer>
+
+</div>
+
+<script>
+// ── Bullish Baseline + Full ATR ──
+var bullBase = [
+  {label:'Baseline (61.8%)', d1:10.7, d3:26.2, d5:35.9, d10:54.4, d15:65.4, d20:72.1, baseline:true},
+  {label:'Full ATR (100%)', d1:0.3, d3:1.3, d5:3.7, d10:12.1, d15:17.8, d20:25.8, baseline:true},
+];
+
+// ── Bullish by weekly PO (n>=15 only) ──
+var bullPO = [
+  {label:'High + Falling', d1:23.5, d3:35.3, d5:41.2, d10:64.7, d15:70.6, d20:76.5, n:17, best:true},
+  {label:'Mid + Rising', d1:6.8, d3:19.7, d5:33.3, d10:56.1, d15:68.9, d20:75.8, n:132},
+  {label:'Mid + Falling', d1:17.0, d3:34.0, d5:42.0, d10:53.0, d15:61.0, d20:67.0, n:100},
+  {label:'High + Rising', d1:0, d3:19.0, d5:21.4, d10:45.2, d15:61.9, d20:69.0, n:42},
+];
+
+// ── Bearish Baseline + Full ATR ──
+var bearBase = [
+  {label:'Baseline (61.8%)', d1:36.1, d3:53.6, d5:58.4, d10:69.1, d15:74.7, d20:77.3, baseline:true},
+  {label:'Full ATR (100%)', d1:4.7, d3:11.6, d5:18.5, d10:32.6, d15:39.9, d20:45.1, baseline:true},
+];
+
+// ── Bearish by weekly PO ──
+var bearPO = [
+  {label:'High + Rising', d1:44.4, d3:61.1, d5:61.1, d10:77.8, d15:83.3, d20:83.3, n:18, best:true},
+  {label:'Mid + Rising', d1:37.4, d3:54.9, d5:58.2, d10:69.2, d15:75.8, d20:78.0, n:91},
+  {label:'Mid + Falling', d1:31.7, d3:51.5, d5:58.4, d10:67.3, d15:73.3, d20:77.2, n:101},
+];
+
+function fmt(v) { return v.toFixed(1) + '%'; }
+
+function buildBaseTable(id, rows) {
+  var tbody = document.querySelector('#' + id + ' tbody');
+  rows.forEach(function(r) {
+    var tr = document.createElement('tr');
+    if (r.baseline) tr.className = 'baseline';
+    tr.innerHTML =
+      '<td>' + r.label + '</td>' +
+      '<td>' + fmt(r.d1) + '</td>' +
+      '<td>' + fmt(r.d3) + '</td>' +
+      '<td>' + fmt(r.d5) + '</td>' +
+      '<td>' + fmt(r.d10) + '</td>' +
+      '<td>' + fmt(r.d15) + '</td>' +
+      '<td>' + fmt(r.d20) + '</td>';
+    tbody.appendChild(tr);
+  });
+}
+
+function buildPOTable(id, rows, color) {
+  var tbody = document.querySelector('#' + id + ' tbody');
+  rows.forEach(function(r) {
+    var tr = document.createElement('tr');
+    if (r.best) tr.className = 'best ' + color + '-row';
+    var nCell;
+    if (r.baseline) {
+      nCell = '<td><span class="n">n=' + r.n + '</span></td>';
+    } else {
+      var rowKey = color + '_' + r.label;
+      var yesCount = Math.round(r.d20 / 100 * r.n);
+      var noCount = r.n - yesCount;
+      nCell = '<td>' +
+        '<span class="n n-clickable n-yes" data-row="' + rowKey + '" data-outcome="hit" data-title="' + r.label + ' — Yes">' + yesCount + ' Yes</span>' +
+        ' <span class="n" style="color:var(--text-dim)">/</span> ' +
+        '<span class="n n-clickable n-no" data-row="' + rowKey + '" data-outcome="miss" data-title="' + r.label + ' — No">' + noCount + ' No</span>' +
+        '</td>';
+    }
+    tr.innerHTML =
+      '<td>' + r.label + '</td>' +
+      '<td>' + fmt(r.d1) + '</td>' +
+      '<td>' + fmt(r.d3) + '</td>' +
+      '<td>' + fmt(r.d5) + '</td>' +
+      '<td>' + fmt(r.d10) + '</td>' +
+      '<td>' + fmt(r.d15) + '</td>' +
+      '<td>' + fmt(r.d20) + '</td>' +
+      nCell;
+    tbody.appendChild(tr);
+  });
+}
+
+buildBaseTable('bull-base-table', bullBase);
+buildPOTable('bull-po-table', bullPO, 'bull');
+buildBaseTable('bear-base-table', bearBase);
+buildPOTable('bear-po-table', bearPO, 'bear');
+
+// ── Comparison Cards ──
+var cardData = {
+  'card-bull-compare': {
+    label: 'Bullish GG Completion',
+    sub: 'Day 1 across timeframes',
+    color: 'var(--bull)',
+    stat: '72.1% by day 20',
+    rows: [
+      {label:'Day 1', val:10.7},
+      {label:'Day 3', val:26.2},
+      {label:'Day 5', val:35.9},
+      {label:'Day 10', val:54.4},
+      {label:'Day 15', val:65.4},
+      {label:'Day 20', val:72.1},
+    ]
+  },
+  'card-bear-compare': {
+    label: 'Bearish GG Completion',
+    sub: 'Day 1 across timeframes',
+    color: 'var(--bear)',
+    stat: '77.3% by day 20',
+    rows: [
+      {label:'Day 1', val:36.1},
+      {label:'Day 3', val:53.6},
+      {label:'Day 5', val:58.4},
+      {label:'Day 10', val:69.1},
+      {label:'Day 15', val:74.7},
+      {label:'Day 20', val:77.3},
+    ]
+  },
+};
+
+Object.entries(cardData).forEach(function([id, d]) {
+  var el = document.getElementById(id);
+  var html = '<div class="card-label">' + d.label + '</div><div class="card-sub">' + d.sub + '</div>';
+  d.rows.forEach(function(r) {
+    html +=
+      '<div class="timeline-row">' +
+        '<div class="timeline-label">' + r.label + '</div>' +
+        '<div class="timeline-bar-bg">' +
+          '<div class="timeline-bar-fill" style="width:0%;background:' + d.color + '" data-w="' + r.val + '"></div>' +
+        '</div>' +
+        '<div class="timeline-pct" style="color:' + d.color + '">' + r.val + '%</div>' +
+      '</div>';
+  });
+  html += '<div class="mean-stat"><span>Peak rate</span><span class="val">' + d.stat + '</span></div>';
+  el.innerHTML = html;
+});
+
+// ── Scroll reveal + animate bars ──
+var observer = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e) {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      setTimeout(function() {
+        e.target.querySelectorAll('[data-w]').forEach(function(bar) {
+          bar.style.width = bar.dataset.w + '%';
+        });
+      }, 200);
+      observer.unobserve(e.target);
+    }
+  });
+}, {threshold: 0.15});
+
+document.querySelectorAll('.reveal').forEach(function(el) { observer.observe(el); });
+
+// Trigger hero immediately
+document.querySelector('.hero').classList.add('visible');
+</script>
+<script src="/study-drawer.js"></script>
+<script>StudyDrawer.loadData('/data/swing-gg-dates.json');</script>
+</body>
+</html>

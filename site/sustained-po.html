@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sustained Morning PO | Milkman Trades</title>
+<meta name="description" content="When the 10m Phase Oscillator holds above 61.8 through 11am, these are strong trend days — but the edge is already priced in. The 10m fast cloud tells you which ones keep going.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥛</text></svg>">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,300;1,9..40,400&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --bg:#0c0e12;
+  --surface:#13161c;
+  --surface-2:#181c24;
+  --border:#1e2230;
+  --text:#e8eaed;
+  --text-dim:#6b7280;
+  --text-mid:#9ca3af;
+  --bull:#1cd48a;
+  --bull-dim:#0d5738;
+  --bull-bg:#0a1f15;
+  --bear:#ef6c00;
+  --bear-dim:#7c3600;
+  --bear-bg:#1f1208;
+  --accent:#fbbf24;
+  --dist:#a78bfa;
+  --dist-dim:#4c1d95;
+  --neutral:#64748b;
+}
+
+html{font-size:15px;scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'DM Sans',system-ui,sans-serif;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+
+.page{max-width:740px;margin:0 auto;padding:3rem 1.5rem 5rem}
+
+/* ── Nav ── */
+.back{
+  display:inline-flex;align-items:center;gap:.4rem;
+  font-size:.8rem;color:var(--text-dim);text-decoration:none;
+  margin-bottom:2.5rem;transition:color .2s;
+}
+.back:hover{color:var(--text)}
+.back svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2}
+
+/* ── Hero ── */
+.hero{margin-bottom:3.5rem}
+.hero .kicker{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.7rem;font-weight:500;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--dist);margin-bottom:.75rem;
+}
+.hero h1{
+  font-size:2.2rem;font-weight:700;letter-spacing:-.03em;
+  line-height:1.15;margin-bottom:1rem;
+}
+.hero h1 em{
+  font-style:normal;
+  background:linear-gradient(135deg,var(--dist),var(--accent));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.hero .lede{
+  font-size:1.05rem;color:var(--text-mid);font-weight:300;
+  max-width:600px;line-height:1.65;
+}
+
+/* ── Sections ── */
+.section{margin-bottom:3.5rem}
+.section-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.65rem;font-weight:500;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--text-dim);
+  padding-bottom:.6rem;border-bottom:1px solid var(--border);
+  margin-bottom:1.5rem;
+}
+
+.prose{font-size:.95rem;color:var(--text-mid);font-weight:300;line-height:1.7;margin-bottom:1.5rem}
+.prose strong{color:var(--text);font-weight:500}
+
+/* ── Big Stat ── */
+.bigstat{display:flex;gap:1.5rem;margin:2rem 0;flex-wrap:wrap}
+.bigstat-item{
+  flex:1;min-width:130px;padding:1.25rem;
+  background:var(--surface);border:1px solid var(--border);border-radius:8px;
+}
+.bigstat-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:2rem;font-weight:700;line-height:1;margin-bottom:.3rem;
+}
+.bigstat-num.bull{color:var(--bull)}
+.bigstat-num.bear{color:var(--bear)}
+.bigstat-num.dist{color:var(--dist)}
+.bigstat-num.accent{color:var(--accent)}
+.bigstat-num.dim{color:var(--text-mid)}
+.bigstat-label{font-size:.72rem;color:var(--text-dim);line-height:1.4}
+
+/* ── Chart containers ── */
+.chart-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:8px;padding:1.5rem;margin:1.5rem 0;
+  overflow:hidden;
+}
+.chart-card .card-title{
+  font-size:.85rem;font-weight:600;margin-bottom:.2rem;
+}
+.chart-card .card-sub{
+  font-size:.7rem;color:var(--text-dim);margin-bottom:1.25rem;
+  font-family:'JetBrains Mono',monospace;
+}
+
+/* ── Bar chart rows ── */
+.bar-row{display:flex;align-items:center;gap:.5rem;margin-bottom:.45rem}
+.bar-label{
+  flex:0 0 88px;font-family:'JetBrains Mono',monospace;
+  font-size:.68rem;color:var(--text-dim);text-align:right;
+}
+.bar-track{
+  flex:1;height:18px;background:var(--surface-2);
+  border-radius:3px;overflow:hidden;position:relative;
+}
+.bar-fill{
+  height:100%;border-radius:3px;
+  transition:width 1s cubic-bezier(.22,1,.36,1);
+}
+.bar-pct{
+  flex:0 0 52px;font-family:'JetBrains Mono',monospace;
+  font-size:.72rem;font-weight:500;text-align:right;
+}
+
+/* ── PO Line Chart (CSS) ── */
+.po-chart{position:relative;height:200px;margin:1rem 0 .5rem;overflow:visible}
+.po-chart canvas{width:100%;height:100%;display:block}
+.po-zone{
+  position:absolute;left:0;right:0;
+  border-top:1px dashed var(--border);
+}
+.po-zone-label{
+  position:absolute;right:4px;top:-10px;
+  font-family:'JetBrains Mono',monospace;font-size:.55rem;color:var(--text-dim);
+}
+
+/* ── Tables ── */
+.data-table{width:100%;border-collapse:collapse;font-size:.8rem}
+.data-table th{
+  font-family:'JetBrains Mono',monospace;font-size:.65rem;
+  font-weight:500;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--text-dim);text-align:right;
+  padding:.5rem .6rem;border-bottom:1px solid var(--border);
+}
+.data-table th:first-child{text-align:left}
+.data-table td{
+  padding:.55rem .6rem;border-bottom:1px solid #151820;text-align:right;
+  font-family:'JetBrains Mono',monospace;font-size:.78rem;
+  color:var(--text-mid);
+}
+.data-table td:first-child{text-align:left;font-family:'DM Sans',sans-serif;color:var(--text)}
+.data-table tr.highlight td{font-weight:700;color:var(--text)}
+.data-table tr.highlight .v-bull{color:var(--bull)}
+.data-table tr.highlight .v-bear{color:var(--bear)}
+.data-table .small{font-size:.6rem;color:var(--text-dim);font-weight:400}
+
+/* ── Callout ── */
+.callout{
+  background:var(--surface);border-left:3px solid var(--accent);
+  padding:1rem 1.25rem;margin:2rem 0;border-radius:0 6px 6px 0;
+}
+.callout.dist{border-left-color:var(--dist)}
+.callout.bull{border-left-color:var(--bull)}
+.callout p{font-size:.85rem;color:var(--text-mid);font-weight:300;line-height:1.6}
+.callout strong{color:var(--accent);font-weight:500}
+.callout.dist strong{color:var(--dist)}
+.callout.bull strong{color:var(--bull)}
+
+/* ── Two-col grid ── */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin:1.5rem 0}
+@media(max-width:640px){.two-col{grid-template-columns:1fr}}
+
+/* ── Comparison card ── */
+.cmp-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:8px;padding:1.25rem;position:relative;overflow:hidden;
+}
+.cmp-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+}
+.cmp-card.bull-card::before{background:linear-gradient(90deg,var(--bull),transparent)}
+.cmp-card.bear-card::before{background:linear-gradient(90deg,var(--bear),transparent)}
+.cmp-card.dist-card::before{background:linear-gradient(90deg,var(--dist),transparent)}
+.cmp-card .cmp-title{font-size:.82rem;font-weight:600;margin-bottom:.15rem}
+.cmp-card .cmp-sub{font-size:.68rem;color:var(--text-dim);margin-bottom:1rem;font-family:'JetBrains Mono',monospace}
+.cmp-card .big-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:1.8rem;font-weight:700;line-height:1;margin-bottom:.25rem;
+}
+.cmp-card .big-label{font-size:.68rem;color:var(--text-dim);line-height:1.4}
+.cmp-card .divider{height:1px;background:var(--border);margin:.75rem 0}
+.cmp-card .sub-stat{
+  display:flex;justify-content:space-between;
+  font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--text-dim);
+}
+.cmp-card .sub-stat .val{color:var(--text);font-weight:600}
+
+/* ── Footer ── */
+.footer{
+  text-align:center;padding-top:2.5rem;border-top:1px solid var(--border);
+  color:var(--text-dim);font-size:.72rem;font-weight:300;line-height:1.8;
+}
+.footer a{color:var(--text-dim);text-decoration:underline;text-underline-offset:2px}
+
+/* ── Animations ── */
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease}
+.reveal.visible{opacity:1;transform:none}
+
+/* ── Mobile ── */
+@media(max-width:767px){
+  .hero h1{font-size:1.5rem}
+  .bigstat{flex-direction:column;gap:1rem}
+  .bigstat-item{min-width:0}
+  .bigstat-num{font-size:1.6rem}
+  .data-table{font-size:.72rem;display:block;overflow-x:auto}
+  .data-table th,.data-table td{padding:.4rem .4rem;white-space:nowrap}
+  .bar-label{flex:0 0 68px;font-size:.6rem}
+  .page{padding:2rem 1rem 4rem}
+}
+</style>
+<script src="/nav.js"></script>
+</head>
+<body>
+<div class="page">
+
+<div style="background:#1a1400;border:1px solid #3d3200;border-radius:6px;padding:.6rem 1rem;margin-bottom:1.5rem;font-size:.75rem;color:#d4a800;font-weight:400;line-height:1.5">
+  <strong style="color:#fbbf24">Draft &mdash;</strong> These backtests have not yet been independently verified. Do not trade based on this data.
+</div>
+
+<a href="/" style="display:inline-flex;align-items:center;gap:.4rem;font-size:.8rem;color:var(--text-dim);text-decoration:none;margin-bottom:.5rem;transition:color .2s" onmouseover="this.style.color='#e8eaed'" onmouseout="this.style.color=''"><svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0h4"/></svg>Home</a>
+
+<header class="hero reveal">
+  <div class="kicker">Study &mdash; Sustained Morning Distribution</div>
+  <h1>When 10m PO holds above 61.8<br>through 11am &mdash; the move is<br><em>already priced in.</em></h1>
+  <p class="lede">On days where the 10-minute Phase Oscillator crosses into distribution in the first 30 minutes and stays there until 11am, these are 84% green days &mdash; but the afternoon tells a different story. The PO collapses from 91 to 9 by close, and only the fast cloud tells you which days keep running.</p>
+</header>
+
+<!-- ══ Section 1: The Setup ══ -->
+<div class="section reveal">
+  <div class="section-label">01 &mdash; The Setup</div>
+
+  <p class="prose">
+    We screened 25 years of SPY data for days where the <strong>10-minute Phase Oscillator</strong> crossed above 61.8 during bullish expansion in the first 30 minutes of RTH, and stayed above 61.8 on every bar through 11:00 AM. This is sustained early-session momentum &mdash; price pushing hard into distribution territory from the open.
+  </p>
+
+  <div class="bigstat">
+    <div class="bigstat-item">
+      <div class="bigstat-num accent">274</div>
+      <div class="bigstat-label">Qualifying days<br>out of 6,580 (4.2%)</div>
+    </div>
+    <div class="bigstat-item">
+      <div class="bigstat-num bull">83.6%</div>
+      <div class="bigstat-label">Close green<br>(avg +0.65% open&rarr;close)</div>
+    </div>
+    <div class="bigstat-item">
+      <div class="bigstat-num dist">111%</div>
+      <div class="bigstat-label">Median day high<br>as % of daily ATR</div>
+    </div>
+  </div>
+
+  <div class="callout dist">
+    <p>These are strong trend days. The median day high sits at 110% of the daily ATR &mdash; just past the full ATR move. <strong>89.1% reach the midrange (61.8% ATR)</strong>, 77.7% hit 78.6%, and 63.9% reach the full ATR.</p>
+  </div>
+</div>
+
+<!-- ══ Section 2: The Collapse ══ -->
+<div class="section reveal">
+  <div class="section-label">02 &mdash; The PO Collapse</div>
+
+  <p class="prose">
+    Despite the strong morning, the Phase Oscillator <strong>mean-reverts hard</strong>. It peaks around 10:00&ndash;10:10 and then falls continuously through the close. Only 1 out of 274 days held PO above 61.8 all day. By close, the average PO is just 8.5 &mdash; barely above neutral.
+  </p>
+
+  <div class="chart-card">
+    <div class="card-title">Average PO Path Through the Day</div>
+    <div class="card-sub">Mean Phase Oscillator value on qualifying days</div>
+    <div style="position:relative;height:220px;margin:.5rem 0 .25rem">
+      <canvas id="poChart" style="width:100%;height:100%"></canvas>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--text-dim);padding:0 .5rem">
+      <span>9:30</span><span>10:00</span><span>10:30</span><span>11:00</span><span>11:30</span><span>12:00</span><span>13:00</span><span>14:00</span><span>15:00</span><span>15:30</span>
+    </div>
+  </div>
+
+  <div class="bigstat">
+    <div class="bigstat-item">
+      <div class="bigstat-num dist">91.3</div>
+      <div class="bigstat-label">Mean PO at 11am</div>
+    </div>
+    <div class="bigstat-item">
+      <div class="bigstat-num dim">8.5</div>
+      <div class="bigstat-label">Mean PO at close</div>
+    </div>
+    <div class="bigstat-item">
+      <div class="bigstat-num dim">0.4%</div>
+      <div class="bigstat-label">Stayed above 61.8<br>all day</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ Section 3: 11am Onward ══ -->
+<div class="section reveal">
+  <div class="section-label">03 &mdash; From 11am Onward</div>
+
+  <p class="prose">
+    The <strong>afternoon is basically flat</strong>. The 11am&rarr;Close return averages just +0.027% (median +0.095%). Price drifts slightly upward through mid-afternoon, then fades. The mean and median diverge because a few outlier days drag the mean down &mdash; the median path stays modestly positive.
+  </p>
+
+  <div class="bigstat">
+    <div class="bigstat-item">
+      <div class="bigstat-num" style="color:var(--text-mid)">+0.027%</div>
+      <div class="bigstat-label">Mean return<br>11am &rarr; Close</div>
+    </div>
+    <div class="bigstat-item">
+      <div class="bigstat-num" style="color:var(--text-mid)">56.9%</div>
+      <div class="bigstat-label">Positive<br>11am &rarr; Close</div>
+    </div>
+    <div class="bigstat-item">
+      <div class="bigstat-num" style="color:var(--text-mid)">+0.015%</div>
+      <div class="bigstat-label">Edge vs all-days<br>baseline</div>
+    </div>
+  </div>
+
+  <!-- Return distribution -->
+  <div class="chart-card">
+    <div class="card-title">11am &rarr; Close Return Distribution</div>
+    <div class="card-sub">n = 274 qualifying days</div>
+
+    <div class="bar-row"><div class="bar-label">&lt; -1%</div><div class="bar-track"><div class="bar-fill" style="width:28.9%;background:var(--bear)"></div></div><div class="bar-pct">22 <span style="color:var(--text-dim);font-size:.6rem">8.0%</span></div></div>
+    <div class="bar-row"><div class="bar-label">-1 to -0.5%</div><div class="bar-track"><div class="bar-fill" style="width:25.0%;background:var(--bear);opacity:.8"></div></div><div class="bar-pct">19 <span style="color:var(--text-dim);font-size:.6rem">6.9%</span></div></div>
+    <div class="bar-row"><div class="bar-label">-0.5 to -0.25%</div><div class="bar-track"><div class="bar-fill" style="width:30.3%;background:var(--bear);opacity:.6"></div></div><div class="bar-pct">23 <span style="color:var(--text-dim);font-size:.6rem">8.4%</span></div></div>
+    <div class="bar-row"><div class="bar-label">-0.25 to 0%</div><div class="bar-track"><div class="bar-fill" style="width:69.7%;background:var(--neutral)"></div></div><div class="bar-pct">53 <span style="color:var(--text-dim);font-size:.6rem">19.3%</span></div></div>
+    <div class="bar-row"><div class="bar-label">0 to +0.25%</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--bull);opacity:.7"></div></div><div class="bar-pct" style="color:var(--bull)">76 <span style="font-size:.6rem">27.7%</span></div></div>
+    <div class="bar-row"><div class="bar-label">+0.25 to +0.5%</div><div class="bar-track"><div class="bar-fill" style="width:52.6%;background:var(--bull);opacity:.8"></div></div><div class="bar-pct">40 <span style="color:var(--text-dim);font-size:.6rem">14.6%</span></div></div>
+    <div class="bar-row"><div class="bar-label">+0.5 to +1%</div><div class="bar-track"><div class="bar-fill" style="width:34.2%;background:var(--bull)"></div></div><div class="bar-pct">26 <span style="color:var(--text-dim);font-size:.6rem">9.5%</span></div></div>
+    <div class="bar-row"><div class="bar-label">&gt; +1%</div><div class="bar-track"><div class="bar-fill" style="width:19.7%;background:var(--bull)"></div></div><div class="bar-pct">15 <span style="color:var(--text-dim);font-size:.6rem">5.5%</span></div></div>
+  </div>
+
+  <p class="prose">
+    Nearly half of all days (47.4%) close within &plusmn;0.25% of the 11am price. The distribution is slightly right-skewed &mdash; more small winners than losers &mdash; but the tails are symmetric. Not an edge you can trade on its own.
+  </p>
+</div>
+
+<!-- ══ Section 4: Where Price Tops Out ══ -->
+<div class="section reveal">
+  <div class="section-label">04 &mdash; Where Price Tops Out</div>
+
+  <p class="prose">
+    The day high clusters between <strong>100% and 161.8% of ATR</strong>. 57.6% of days top out beyond the full ATR move. And 30.7% of day highs come in the <strong>last 30 minutes</strong> &mdash; many of these are close-on-high days.
+  </p>
+
+  <div class="chart-card">
+    <div class="card-title">Day High &mdash; ATR Level Bracket</div>
+    <div class="card-sub">Where does the day high fall relative to ATR levels?</div>
+
+    <div class="bar-row"><div class="bar-label">&lt; 61.8%</div><div class="bar-track"><div class="bar-fill" style="width:15.3%;background:var(--text-dim)"></div></div><div class="bar-pct">26 <span style="color:var(--text-dim);font-size:.6rem">9.5%</span></div></div>
+    <div class="bar-row"><div class="bar-label">61.8&ndash;78.6%</div><div class="bar-track"><div class="bar-fill" style="width:20.0%;background:var(--dist);opacity:.5"></div></div><div class="bar-pct">34 <span style="color:var(--text-dim);font-size:.6rem">12.4%</span></div></div>
+    <div class="bar-row"><div class="bar-label">78.6&ndash;100%</div><div class="bar-track"><div class="bar-fill" style="width:21.2%;background:var(--dist);opacity:.7"></div></div><div class="bar-pct">36 <span style="color:var(--text-dim);font-size:.6rem">13.1%</span></div></div>
+    <div class="bar-row"><div class="bar-label">100&ndash;123.6%</div><div class="bar-track"><div class="bar-fill" style="width:42.9%;background:var(--accent);opacity:.7"></div></div><div class="bar-pct" style="color:var(--accent)">73 <span style="font-size:.6rem">26.6%</span></div></div>
+    <div class="bar-row"><div class="bar-label">123.6&ndash;161.8%</div><div class="bar-track"><div class="bar-fill" style="width:50%;background:var(--accent)"></div></div><div class="bar-pct" style="color:var(--accent)">85 <span style="font-size:.6rem">31.0%</span></div></div>
+    <div class="bar-row"><div class="bar-label">&gt; 161.8%</div><div class="bar-track"><div class="bar-fill" style="width:11.8%;background:var(--accent);opacity:.5"></div></div><div class="bar-pct">20 <span style="color:var(--text-dim);font-size:.6rem">7.3%</span></div></div>
+  </div>
+
+  <div class="chart-card">
+    <div class="card-title">When Does the Day High Occur?</div>
+    <div class="card-sub">Half-hour time bucket of the day's highest price</div>
+
+    <div class="bar-row"><div class="bar-label">10:00</div><div class="bar-track"><div class="bar-fill" style="width:25.0%;background:var(--dist)"></div></div><div class="bar-pct">21 <span style="color:var(--text-dim);font-size:.6rem">7.7%</span></div></div>
+    <div class="bar-row"><div class="bar-label">10:30</div><div class="bar-track"><div class="bar-fill" style="width:35.7%;background:var(--dist)"></div></div><div class="bar-pct">30 <span style="color:var(--text-dim);font-size:.6rem">10.9%</span></div></div>
+    <div class="bar-row"><div class="bar-label">11:00</div><div class="bar-track"><div class="bar-fill" style="width:21.4%;background:var(--text-dim)"></div></div><div class="bar-pct">18 <span style="color:var(--text-dim);font-size:.6rem">6.6%</span></div></div>
+    <div class="bar-row"><div class="bar-label">11:30</div><div class="bar-track"><div class="bar-fill" style="width:17.9%;background:var(--text-dim)"></div></div><div class="bar-pct">15 <span style="color:var(--text-dim);font-size:.6rem">5.5%</span></div></div>
+    <div class="bar-row"><div class="bar-label">12:00&ndash;13:30</div><div class="bar-track"><div class="bar-fill" style="width:60.7%;background:var(--text-dim);opacity:.6"></div></div><div class="bar-pct">51 <span style="color:var(--text-dim);font-size:.6rem">18.6%</span></div></div>
+    <div class="bar-row"><div class="bar-label">14:00&ndash;15:00</div><div class="bar-track"><div class="bar-fill" style="width:63.1%;background:var(--bull);opacity:.6"></div></div><div class="bar-pct">53 <span style="color:var(--text-dim);font-size:.6rem">19.3%</span></div></div>
+    <div class="bar-row"><div class="bar-label">15:30</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--bull)"></div></div><div class="bar-pct" style="color:var(--bull)">84 <span style="font-size:.6rem">30.7%</span></div></div>
+  </div>
+
+  <div class="callout bull">
+    <p><strong>30.7% of day highs come in the final 30 minutes.</strong> These sustained-PO mornings frequently produce close-on-high days &mdash; but you won't know until the fast cloud tells you.</p>
+  </div>
+</div>
+
+<!-- ══ Section 5: The Fast Cloud Signal ══ -->
+<div class="section reveal">
+  <div class="section-label">05 &mdash; The Fast Cloud Signal</div>
+
+  <p class="prose">
+    The Phase Oscillator downtick is <strong>not</strong> the reversal signal &mdash; 59% of days make a new high <em>after</em> PO leaves distribution. Instead, the <strong>fast cloud flip</strong> (EMA8 crossing below EMA21) is the real tell. We tested it across three timeframes.
+  </p>
+
+  <!-- Multi-TF comparison table -->
+  <div class="chart-card">
+    <div class="card-title">Fast Cloud Flip &mdash; Multi-Timeframe Comparison</div>
+    <div class="card-sub">EMA8 crosses below EMA21 after 11:00 AM on qualifying days</div>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Timeframe</th>
+          <th>Flip Rate</th>
+          <th>Flip&rarr;Close</th>
+          <th>Neg %</th>
+          <th>No-Flip 11am&rarr;Close</th>
+          <th>Pos %</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>3-minute</td>
+          <td>96.9% <span class="small">~n=289 analysis</span></td>
+          <td>-0.019%</td>
+          <td>44.6%</td>
+          <td>+0.689% <span class="small">small sample</span></td>
+          <td>100%</td>
+        </tr>
+        <tr class="highlight">
+          <td>10-minute</td>
+          <td class="v-bull">45.7% <span class="small">~n=289 analysis</span></td>
+          <td>-0.106%</td>
+          <td>53.0%</td>
+          <td class="v-bull">+0.391%</td>
+          <td class="v-bull">89.8%</td>
+        </tr>
+        <tr>
+          <td>1-hour</td>
+          <td>4.8% <span class="small">~n=289 analysis</span></td>
+          <td>+0.082%</td>
+          <td>21.4%</td>
+          <td>+0.059%</td>
+          <td>58.9%</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="prose">
+    The <strong>3-minute</strong> cloud flips 97% of the time &mdash; too noisy to be useful as a filter. The <strong>1-hour</strong> barely ever flips (&lt;5%) &mdash; too rare and too late. The <strong>10-minute</strong> is the Goldilocks timeframe: it discriminates cleanly and produces a real edge.
+  </p>
+
+  <div style="background:#1a1400;border:1px solid #3d3200;border-radius:6px;padding:.55rem .9rem;margin:.75rem 0 1rem;font-size:.72rem;color:#d4a800;line-height:1.5">
+    <strong style="color:#fbbf24">Note:</strong> fast-cloud timeframe comparison was produced by a prior run (n=289). Ratios above still reflect that sample. Current qualifying-day count is 274; directional conclusion holds but exact counts will shift slightly on rerun.
+  </div>
+
+  <!-- 10m Head-to-head -->
+  <div class="two-col">
+    <div class="cmp-card bull-card">
+      <div class="cmp-title" style="color:var(--bull)">10m Cloud Stays Bullish</div>
+      <div class="cmp-sub">~54% of days (prior sample)</div>
+      <div class="big-num" style="color:var(--bull)">+0.391%</div>
+      <div class="big-label">Avg 11am &rarr; Close</div>
+      <div class="divider"></div>
+      <div class="sub-stat"><span>Positive</span><span class="val" style="color:var(--bull)">89.8%</span></div>
+      <div class="sub-stat"><span>Median</span><span class="val">+0.270%</span></div>
+    </div>
+    <div class="cmp-card bear-card">
+      <div class="cmp-title" style="color:var(--bear)">10m Cloud Flips Bearish</div>
+      <div class="cmp-sub">~46% of days (prior sample)</div>
+      <div class="big-num" style="color:var(--bear)">&minus;0.430%</div>
+      <div class="big-label">Avg 11am &rarr; Close</div>
+      <div class="divider"></div>
+      <div class="sub-stat"><span>Flip&rarr;Close avg</span><span class="val" style="color:var(--bear)">&minus;0.106%</span></div>
+      <div class="sub-stat"><span>Neg after flip</span><span class="val">53.0%</span></div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <p>The edge between the two groups is <strong>+0.821%</strong>. Days where the 10m fast cloud stays bullish close higher from 11am nearly 90% of the time. Days where it flips average &minus;0.43% from 11am and the flip itself runs an additional &minus;0.11% to close.</p>
+  </div>
+
+  <!-- When does the 10m flip happen? -->
+  <div class="chart-card">
+    <div class="card-title">When Does the 10m Fast Cloud Flip?</div>
+    <div class="card-sub">Timing of EMA8/EMA21 bearish cross (132 flip days)</div>
+
+    <div class="bar-row"><div class="bar-label">11:30</div><div class="bar-track"><div class="bar-fill" style="width:9.5%;background:var(--bear)"></div></div><div class="bar-pct">4 <span style="color:var(--text-dim);font-size:.6rem">&minus;0.30%</span></div></div>
+    <div class="bar-row"><div class="bar-label">12:00</div><div class="bar-track"><div class="bar-fill" style="width:19%;background:var(--bear);opacity:.8"></div></div><div class="bar-pct">8 <span style="color:var(--text-dim);font-size:.6rem">+0.07%</span></div></div>
+    <div class="bar-row"><div class="bar-label">12:30</div><div class="bar-track"><div class="bar-fill" style="width:33.3%;background:var(--bear)"></div></div><div class="bar-pct">14 <span style="color:var(--text-dim);font-size:.6rem">&minus;0.29%</span></div></div>
+    <div class="bar-row"><div class="bar-label">13:00</div><div class="bar-track"><div class="bar-fill" style="width:35.7%;background:var(--bear)"></div></div><div class="bar-pct">15 <span style="color:var(--text-dim);font-size:.6rem">&minus;0.26%</span></div></div>
+    <div class="bar-row"><div class="bar-label">13:30</div><div class="bar-track"><div class="bar-fill" style="width:23.8%;background:var(--bear);opacity:.7"></div></div><div class="bar-pct">10 <span style="color:var(--text-dim);font-size:.6rem">&minus;0.03%</span></div></div>
+    <div class="bar-row"><div class="bar-label">14:00</div><div class="bar-track"><div class="bar-fill" style="width:42.9%;background:var(--bear)"></div></div><div class="bar-pct">18 <span style="color:var(--text-dim);font-size:.6rem">&minus;0.20%</span></div></div>
+    <div class="bar-row"><div class="bar-label">14:30</div><div class="bar-track"><div class="bar-fill" style="width:54.8%;background:var(--bear)"></div></div><div class="bar-pct" style="color:var(--bear)">23 <span style="font-size:.6rem">&minus;0.01%</span></div></div>
+    <div class="bar-row"><div class="bar-label">15:00</div><div class="bar-track"><div class="bar-fill" style="width:47.6%;background:var(--bear);opacity:.7"></div></div><div class="bar-pct">20 <span style="color:var(--text-dim);font-size:.6rem">&minus;0.11%</span></div></div>
+    <div class="bar-row"><div class="bar-label">15:30</div><div class="bar-track"><div class="bar-fill" style="width:47.6%;background:var(--text-dim)"></div></div><div class="bar-pct">20 <span style="color:var(--text-dim);font-size:.6rem">+0.05%</span></div></div>
+  </div>
+
+  <p class="prose">
+    Flips cluster in the <strong>early-to-mid afternoon</strong> (12:30&ndash;15:00). The earliest flips (12:30, 13:00) tend to produce the largest bearish follow-through (&minus;0.26% to &minus;0.29% flip&rarr;close). Late flips (15:30) barely matter &mdash; not enough time left.
+  </p>
+</div>
+
+<!-- ══ Section 6: The 3-Minute Cloud ══ -->
+<div class="section reveal">
+  <div class="section-label">06 &mdash; 3-Minute Cloud: Timing Matters</div>
+
+  <p class="prose">
+    The 3-minute cloud is too sensitive as a binary filter (97% flip rate), but its <strong>flip timing</strong> carries signal. Early 3m flips (11:00) average &minus;0.29% to close, while late flips (13:30) average +0.28%. The 3m cloud can serve as a <strong>first warning</strong> if it flips in the 11:00 window.
+  </p>
+
+  <div class="chart-card">
+    <div class="card-title">3m Fast Cloud Flip &mdash; Return by Timing</div>
+    <div class="card-sub">Average flip&rarr;close return by half-hour (280 flip days)</div>
+
+    <div style="display:flex;align-items:flex-end;gap:2px;height:120px;padding:0 .5rem;margin-bottom:.5rem">
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:.55rem;color:var(--bear);margin-bottom:2px">&minus;.29%</span>
+        <div style="width:100%;height:72px;background:var(--bear);border-radius:3px 3px 0 0;opacity:.9"></div>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:.55rem;color:var(--text-dim);margin-top:4px">11:00</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:.5rem;color:var(--text-dim)">n=47</span>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:.55rem;color:var(--bear);margin-bottom:2px">&minus;.02%</span>
+        <div style="width:100%;height:6px;background:var(--bear);border-radius:3px 3px 0 0;opacity:.6"></div>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:.55rem;color:var(--text-dim);margin-top:4px">11:30</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:.5rem;color:var(--text-dim)">n=62</span>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:.55rem;color:var(--bear);margin-bottom:2px">&minus;.13%</span>
+        <div style="width:100%;height:33px;background:var(--bear);border-radius:3px 3px 0 0;opacity:.7"></div>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:.55rem;color:var(--text-dim);margin-top:4px">12:00</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:.5rem;color:var(--text-dim)">n=52</span>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:.55rem;color:var(--bull);margin-bottom:2px">+.18%</span>
+        <div style="width:100%;height:44px;background:var(--bull);border-radius:3px 3px 0 0;opacity:.7"></div>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:.55rem;color:var(--text-dim);margin-top:4px">12:30</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:.5rem;color:var(--text-dim)">n=40</span>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:.55rem;color:var(--bull);margin-bottom:2px">+.05%</span>
+        <div style="width:100%;height:14px;background:var(--bull);border-radius:3px 3px 0 0;opacity:.5"></div>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:.55rem;color:var(--text-dim);margin-top:4px">13:00</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:.5rem;color:var(--text-dim)">n=26</span>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:.55rem;color:var(--bull);margin-bottom:2px">+.28%</span>
+        <div style="width:100%;height:70px;background:var(--bull);border-radius:3px 3px 0 0;opacity:.9"></div>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:.55rem;color:var(--text-dim);margin-top:4px">13:30</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:.5rem;color:var(--text-dim)">n=25</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ Section 7: PO at the High ══ -->
+<div class="section reveal">
+  <div class="section-label">07 &mdash; PO at the Day High Predicts Drawdown</div>
+
+  <p class="prose">
+    The Phase Oscillator reading at the moment price makes its day high predicts how far price pulls back. A hotter PO at the top means a sharper reversal.
+  </p>
+
+  <div class="chart-card">
+    <div class="card-title">PO at Day High vs Subsequent Drawdown</div>
+    <div class="card-sub">Average drawdown from day high to post-high low</div>
+
+    <table class="data-table">
+      <thead>
+        <tr><th>PO at High</th><th>n</th><th>Avg Drawdown</th><th>Avg Close from High</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>PO &lt; 40</td><td>17</td><td>&minus;0.811%</td><td>&minus;0.497%</td></tr>
+        <tr><td>PO 40&ndash;61.8</td><td>46</td><td>&minus;0.604%</td><td>&minus;0.318%</td></tr>
+        <tr><td>PO 61.8&ndash;80</td><td>53</td><td>&minus;0.554%</td><td>&minus;0.367%</td></tr>
+        <tr><td>PO 80&ndash;100</td><td>46</td><td>&minus;0.771%</td><td>&minus;0.560%</td></tr>
+        <tr class="highlight"><td>PO &gt; 100</td><td>73</td><td class="v-bear">&minus;0.985%</td><td class="v-bear">&minus;0.644%</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout">
+    <p>When PO is <strong>&gt; 100 at the day high</strong>, expect a nearly 1% drawdown from that high. When PO has already cooled to the 40&ndash;80 range at the high, the pullback is shallower (&minus;0.55% to &minus;0.60%). The 61.8&ndash;80 zone at the top is the sweet spot for longs &mdash; smallest drawdown.</p>
+  </div>
+</div>
+
+<!-- ══ Section 8: The Playbook ══ -->
+<div class="section reveal">
+  <div class="section-label">08 &mdash; The Playbook</div>
+
+  <p class="prose" style="margin-bottom:.75rem">
+    On a day where 10m PO sustains &gt; 61.8 through 11am in bullish expansion:
+  </p>
+
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:1rem 0">
+    <div style="display:flex;gap:1rem;margin-bottom:1.25rem;align-items:flex-start">
+      <div style="flex:0 0 28px;height:28px;border-radius:50%;background:var(--bear-bg);border:1px solid var(--bear-dim);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:700;color:var(--bear)">1</div>
+      <div style="flex:1">
+        <div style="font-size:.88rem;font-weight:600;margin-bottom:.2rem">Don't fade the PO downtick</div>
+        <div style="font-size:.78rem;color:var(--text-dim);font-weight:300">59% of days make a new high after PO leaves distribution. The PO rolling over is not the reversal.</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:1rem;margin-bottom:1.25rem;align-items:flex-start">
+      <div style="flex:0 0 28px;height:28px;border-radius:50%;background:var(--bull-bg);border:1px solid var(--bull-dim);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:700;color:var(--bull)">2</div>
+      <div style="flex:1">
+        <div style="font-size:.88rem;font-weight:600;margin-bottom:.2rem">Watch the 10m fast cloud</div>
+        <div style="font-size:.78rem;color:var(--text-dim);font-weight:300">If EMA8 stays above EMA21 on the 10-minute chart, these are continuation days: <span style="color:var(--bull);font-weight:500">+0.39% avg, 90% positive</span> from 11am.</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:1rem;margin-bottom:1.25rem;align-items:flex-start">
+      <div style="flex:0 0 28px;height:28px;border-radius:50%;background:var(--bear-bg);border:1px solid var(--bear-dim);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:700;color:var(--bear)">3</div>
+      <div style="flex:1">
+        <div style="font-size:.88rem;font-weight:600;margin-bottom:.2rem">10m cloud flip = reversal confirmed</div>
+        <div style="font-size:.78rem;color:var(--text-dim);font-weight:300">When 10m EMA8 crosses below EMA21 &mdash; especially between 12:30&ndash;14:00 &mdash; the day averages <span style="color:var(--bear);font-weight:500">&minus;0.43% from 11am</span>. Earlier flips hit harder.</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:1rem;margin-bottom:1.25rem;align-items:flex-start">
+      <div style="flex:0 0 28px;height:28px;border-radius:50%;background:#1a1400;border:1px solid #3d3200;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:700;color:var(--accent)">4</div>
+      <div style="flex:1">
+        <div style="font-size:.88rem;font-weight:600;margin-bottom:.2rem">Use PO at the high to size the fade</div>
+        <div style="font-size:.78rem;color:var(--text-dim);font-weight:300">If PO &gt; 100 when price tops, expect <span style="color:var(--bear);font-weight:500">&minus;1% drawdown</span> from that high. PO 61.8&ndash;80 at the high means a shallower pullback.</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:1rem;align-items:flex-start">
+      <div style="flex:0 0 28px;height:28px;border-radius:50%;background:var(--surface-2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:700;color:var(--dist)">5</div>
+      <div style="flex:1">
+        <div style="font-size:.88rem;font-weight:600;margin-bottom:.2rem">Median day high = 111% ATR</div>
+        <div style="font-size:.78rem;color:var(--text-dim);font-weight:300">If price is approaching the full ATR move and PO is rolling, the risk/reward shifts. But 30% of highs come in the last 30 minutes &mdash; don't fade prematurely.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Footer ── -->
+<footer class="footer reveal">
+  Indicators by <a href="https://x.com/sataborsa">Saty Mahajan</a>.<br>
+  Data engineering by <a href="https://x.com/todor">@todor</a>.
+  Analysis inspired by <a href="https://x.com/tesrak">@tesrak</a>.<br>
+  Built by <a href="https://x.com/milkmantrades">Milkman Trades</a>. 25 years of SPY. 6,580 trading days. 274 qualifying setups.
+</footer>
+
+</div><!-- .page -->
+
+<script>
+// ── PO Path Chart (Canvas) ──
+(function(){
+  const data = [
+    {t:"9:30",v:66.4},{t:"9:40",v:83.1},{t:"9:50",v:95.4},{t:"10:00",v:103.9},
+    {t:"10:10",v:106.7},{t:"10:20",v:105.8},{t:"10:30",v:103.9},{t:"10:40",v:101.4},
+    {t:"10:50",v:97.0},{t:"11:00",v:91.4},{t:"11:10",v:84.6},{t:"11:20",v:78.3},
+    {t:"11:30",v:73.8},{t:"11:40",v:68.3},{t:"11:50",v:62.8},{t:"12:00",v:58.3},
+    {t:"12:30",v:46.4},{t:"13:00",v:38.3},{t:"13:30",v:30.7},{t:"14:00",v:23.2},
+    {t:"14:30",v:20.3},{t:"15:00",v:17.0},{t:"15:30",v:11.5}
+  ];
+
+  const canvas = document.getElementById('poChart');
+  if(!canvas) return;
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  canvas.style.width = rect.width + 'px';
+  canvas.style.height = rect.height + 'px';
+
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  const W = rect.width, H = rect.height;
+
+  const pad = {t:20,r:10,b:5,l:10};
+  const cw = W - pad.l - pad.r;
+  const ch = H - pad.t - pad.b;
+
+  const minV = -10, maxV = 130;
+  const yScale = v => pad.t + ch * (1 - (v - minV) / (maxV - minV));
+  const xScale = (i) => pad.l + (i / (data.length - 1)) * cw;
+
+  // Zone lines
+  const zones = [
+    {v:100, label:'100', color:'#ef6c0040'},
+    {v:61.8, label:'61.8', color:'#a78bfa40'},
+    {v:23.6, label:'23.6', color:'#64748b30'},
+    {v:0, label:'0', color:'#64748b20'},
+  ];
+
+  zones.forEach(z => {
+    const y = yScale(z.v);
+    ctx.strokeStyle = z.color;
+    ctx.lineWidth = 1;
+    ctx.setLineDash([4,4]);
+    ctx.beginPath();
+    ctx.moveTo(pad.l, y);
+    ctx.lineTo(W - pad.r, y);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    ctx.font = '10px JetBrains Mono, monospace';
+    ctx.fillStyle = '#6b728080';
+    ctx.textAlign = 'right';
+    ctx.fillText(z.label, W - pad.r - 2, y - 3);
+  });
+
+  // Area fill
+  ctx.beginPath();
+  data.forEach((d,i) => {
+    const x = xScale(i), y = yScale(d.v);
+    if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+  });
+  ctx.lineTo(xScale(data.length-1), yScale(minV));
+  ctx.lineTo(xScale(0), yScale(minV));
+  ctx.closePath();
+
+  const grad = ctx.createLinearGradient(0, yScale(maxV), 0, yScale(minV));
+  grad.addColorStop(0, '#a78bfa18');
+  grad.addColorStop(0.5, '#a78bfa08');
+  grad.addColorStop(1, '#a78bfa00');
+  ctx.fillStyle = grad;
+  ctx.fill();
+
+  // Line
+  ctx.beginPath();
+  data.forEach((d,i) => {
+    const x = xScale(i), y = yScale(d.v);
+    if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+  });
+  ctx.strokeStyle = '#a78bfa';
+  ctx.lineWidth = 2.5;
+  ctx.lineJoin = 'round';
+  ctx.stroke();
+
+  // Peak dot
+  const peakIdx = data.reduce((best,d,i) => d.v > data[best].v ? i : best, 0);
+  ctx.beginPath();
+  ctx.arc(xScale(peakIdx), yScale(data[peakIdx].v), 4, 0, Math.PI*2);
+  ctx.fillStyle = '#a78bfa';
+  ctx.fill();
+  ctx.font = 'bold 10px JetBrains Mono, monospace';
+  ctx.fillStyle = '#a78bfa';
+  ctx.textAlign = 'center';
+  ctx.fillText(data[peakIdx].v.toFixed(1), xScale(peakIdx), yScale(data[peakIdx].v) - 8);
+
+  // End dot
+  const endIdx = data.length - 1;
+  ctx.beginPath();
+  ctx.arc(xScale(endIdx), yScale(data[endIdx].v), 4, 0, Math.PI*2);
+  ctx.fillStyle = '#64748b';
+  ctx.fill();
+  ctx.fillStyle = '#64748b';
+  ctx.fillText(data[endIdx].v.toFixed(1), xScale(endIdx) - 18, yScale(data[endIdx].v) - 8);
+
+  // 11am marker
+  const idx11 = data.findIndex(d => d.t === '11:00');
+  if(idx11 >= 0){
+    const x11 = xScale(idx11), y11 = yScale(data[idx11].v);
+    ctx.strokeStyle = '#fbbf2450';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([3,3]);
+    ctx.beginPath();
+    ctx.moveTo(x11, pad.t);
+    ctx.lineTo(x11, H - pad.b);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.font = '9px JetBrains Mono, monospace';
+    ctx.fillStyle = '#fbbf24';
+    ctx.textAlign = 'center';
+    ctx.fillText('11am', x11, pad.t - 5);
+  }
+})();
+
+// ── Scroll Reveal ──
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible') });
+}, {threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>

@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4h PO Extended — Reversal Anatomy | Milkman Trades</title>
+<meta name="description" content="When the 4-hour Phase Oscillator peaks above 80-110, what distinguishes a real 5%+ reversal from a sideways pause? 25 years of SPY data reveals the escalation sequence.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥛</text></svg>">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,300;1,9..40,400&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --bg:#0c0e12;
+  --surface:#13161c;
+  --surface-2:#181c24;
+  --border:#1e2230;
+  --text:#e8eaed;
+  --text-dim:#6b7280;
+  --text-mid:#9ca3af;
+  --bull:#1cd48a;
+  --bull-dim:#0d5738;
+  --bull-bg:#0a1f15;
+  --bear:#ef6c00;
+  --bear-dim:#7c3600;
+  --bear-bg:#1f1208;
+  --accent:#fbbf24;
+  --danger:#ef4444;
+  --danger-dim:#7f1d1d;
+  --danger-bg:#1c0a0a;
+  --safe:#22d3ee;
+  --safe-dim:#155e75;
+  --neutral:#64748b;
+  --dist:#a78bfa;
+}
+
+html{font-size:15px;scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'DM Sans',system-ui,sans-serif;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+
+.page{max-width:780px;margin:0 auto;padding:3rem 1.5rem 5rem}
+
+/* ── Hero ── */
+.hero{margin-bottom:3.5rem}
+.hero .kicker{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.7rem;font-weight:500;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--danger);margin-bottom:.75rem;
+}
+.hero h1{
+  font-size:2.1rem;font-weight:700;letter-spacing:-.03em;
+  line-height:1.15;margin-bottom:1rem;
+}
+.hero h1 em{
+  font-style:normal;
+  background:linear-gradient(135deg,var(--danger),var(--accent));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.hero .lede{
+  font-size:1.02rem;color:var(--text-mid);font-weight:300;
+  max-width:640px;line-height:1.65;
+}
+
+/* ── Sections ── */
+.section{margin-bottom:3.5rem}
+.section-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.65rem;font-weight:500;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--text-dim);
+  padding-bottom:.6rem;border-bottom:1px solid var(--border);
+  margin-bottom:1.5rem;
+}
+
+.prose{font-size:.95rem;color:var(--text-mid);font-weight:300;line-height:1.7;margin-bottom:1.5rem}
+.prose strong{color:var(--text);font-weight:500}
+
+/* ── Big Stat ── */
+.bigstat{display:flex;gap:1.5rem;margin:2rem 0;flex-wrap:wrap}
+.bigstat-item{
+  flex:1;min-width:130px;padding:1.25rem;
+  background:var(--surface);border:1px solid var(--border);border-radius:8px;
+}
+.bigstat-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:2rem;font-weight:700;line-height:1;margin-bottom:.3rem;
+}
+.bigstat-num.bull{color:var(--bull)}
+.bigstat-num.bear{color:var(--bear)}
+.bigstat-num.danger{color:var(--danger)}
+.bigstat-num.safe{color:var(--safe)}
+.bigstat-num.accent{color:var(--accent)}
+.bigstat-num.dim{color:var(--text-mid)}
+.bigstat-label{font-size:.72rem;color:var(--text-dim);line-height:1.4}
+
+/* ── Callout ── */
+.callout{
+  background:var(--surface);border-left:3px solid var(--accent);
+  padding:1rem 1.25rem;margin:2rem 0;border-radius:0 6px 6px 0;
+}
+.callout.danger{border-left-color:var(--danger)}
+.callout.safe{border-left-color:var(--safe)}
+.callout.bull{border-left-color:var(--bull)}
+.callout p{font-size:.85rem;color:var(--text-mid);font-weight:300;line-height:1.6}
+.callout strong{color:var(--accent);font-weight:500}
+.callout.danger strong{color:var(--danger)}
+.callout.safe strong{color:var(--safe)}
+.callout.bull strong{color:var(--bull)}
+
+/* ── Chart card ── */
+.chart-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:8px;padding:1.5rem;margin:1.5rem 0;
+  overflow:hidden;
+}
+.chart-card .card-title{font-size:.85rem;font-weight:600;margin-bottom:.2rem}
+.chart-card .card-sub{
+  font-size:.7rem;color:var(--text-dim);margin-bottom:1.25rem;
+  font-family:'JetBrains Mono',monospace;
+}
+
+/* ── Bar chart rows ── */
+.bar-row{display:flex;align-items:center;gap:.5rem;margin-bottom:.55rem}
+.bar-label{
+  flex:0 0 200px;font-family:'JetBrains Mono',monospace;
+  font-size:.68rem;color:var(--text-mid);text-align:right;
+}
+.bar-track{
+  flex:1;height:22px;background:var(--surface-2);
+  border-radius:3px;overflow:hidden;position:relative;
+}
+.bar-fill{
+  height:100%;border-radius:3px;
+  transition:width 1.2s cubic-bezier(.22,1,.36,1);
+  width:0;
+}
+.bar-pct{
+  flex:0 0 70px;font-family:'JetBrains Mono',monospace;
+  font-size:.72rem;font-weight:600;text-align:right;
+}
+.bar-n{
+  flex:0 0 46px;font-family:'JetBrains Mono',monospace;
+  font-size:.6rem;color:var(--text-dim);text-align:right;
+}
+
+/* ── Sequence diagram ── */
+.sequence{
+  position:relative;padding:1.5rem 0 1rem;
+}
+.seq-step{
+  display:flex;align-items:flex-start;gap:1.25rem;
+  margin-bottom:2rem;position:relative;
+}
+.seq-step::before{
+  content:'';position:absolute;left:18px;top:36px;bottom:-16px;
+  width:2px;background:var(--border);
+}
+.seq-step:last-child::before{display:none}
+
+.seq-dot{
+  flex-shrink:0;width:38px;height:38px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:700;
+  position:relative;z-index:2;
+}
+.seq-dot.yellow{background:#422006;color:var(--accent);border:2px solid var(--accent)}
+.seq-dot.orange{background:#431407;color:var(--bear);border:2px solid var(--bear)}
+.seq-dot.red{background:var(--danger-dim);color:var(--danger);border:2px solid var(--danger)}
+.seq-dot.skull{background:#1c0a0a;color:#ff6b6b;border:2px solid #ff6b6b}
+
+.seq-content{flex:1;padding-top:.35rem}
+.seq-title{font-size:.9rem;font-weight:600;margin-bottom:.15rem}
+.seq-timing{
+  font-family:'JetBrains Mono',monospace;font-size:.68rem;
+  color:var(--text-dim);margin-bottom:.25rem;
+}
+.seq-desc{font-size:.82rem;color:var(--text-mid);font-weight:300;line-height:1.55}
+
+/* ── Tables ── */
+.data-table{width:100%;border-collapse:collapse;font-size:.8rem}
+.data-table th{
+  font-family:'JetBrains Mono',monospace;font-size:.63rem;
+  font-weight:500;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--text-dim);text-align:right;
+  padding:.5rem .5rem;border-bottom:1px solid var(--border);
+}
+.data-table th:first-child{text-align:left}
+.data-table td{
+  padding:.5rem .5rem;border-bottom:1px solid #151820;text-align:right;
+  font-family:'JetBrains Mono',monospace;font-size:.72rem;
+  color:var(--text-mid);
+}
+.data-table td:first-child{text-align:left;font-family:'DM Sans',sans-serif;color:var(--text);font-size:.82rem}
+.data-table tr.hl td{font-weight:700;color:var(--text)}
+.data-table .v-danger{color:var(--danger)}
+.data-table .v-safe{color:var(--safe)}
+.data-table .v-bull{color:var(--bull)}
+.data-table .v-bear{color:var(--bear)}
+.data-table .v-accent{color:var(--accent)}
+.data-table .dim{font-size:.58rem;color:var(--text-dim);font-weight:400}
+
+/* ── Two col ── */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin:1.5rem 0}
+@media(max-width:640px){.two-col{grid-template-columns:1fr}}
+
+/* ── Comparison card ── */
+.cmp-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:8px;padding:1.25rem;position:relative;overflow:hidden;
+}
+.cmp-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+}
+.cmp-card.danger-card::before{background:linear-gradient(90deg,var(--danger),transparent)}
+.cmp-card.safe-card::before{background:linear-gradient(90deg,var(--safe),transparent)}
+.cmp-card .cmp-title{font-size:.82rem;font-weight:600;margin-bottom:.15rem}
+.cmp-card .cmp-sub{font-size:.68rem;color:var(--text-dim);margin-bottom:1rem;font-family:'JetBrains Mono',monospace}
+.cmp-card .big-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:1.8rem;font-weight:700;line-height:1;margin-bottom:.25rem;
+}
+.cmp-card .big-label{font-size:.68rem;color:var(--text-dim);line-height:1.4}
+.cmp-card .divider{height:1px;background:var(--border);margin:.75rem 0}
+.cmp-card .sub-stat{
+  display:flex;justify-content:space-between;
+  font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--text-dim);
+}
+.cmp-card .sub-stat .val{color:var(--text);font-weight:600}
+
+/* ── Footer ── */
+.footer{
+  text-align:center;padding-top:2.5rem;border-top:1px solid var(--border);
+  color:var(--text-dim);font-size:.72rem;font-weight:300;line-height:1.8;
+  margin-top:2rem;
+}
+.footer a{color:var(--text-dim);text-decoration:underline;text-underline-offset:2px}
+
+/* ── Animations ── */
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease}
+.reveal.visible{opacity:1;transform:none}
+
+/* ── Mobile ── */
+@media(max-width:767px){
+  .hero h1{font-size:1.5rem}
+  .bigstat{flex-direction:column;gap:1rem}
+  .bigstat-item{min-width:0}
+  .bigstat-num{font-size:1.6rem}
+  .data-table{font-size:.72rem;display:block;overflow-x:auto}
+  .data-table th,.data-table td{padding:.4rem .4rem;white-space:nowrap}
+  .bar-label{flex:0 0 130px;font-size:.58rem}
+  .page{padding:2rem 1rem 4rem}
+  .seq-step{gap:.75rem}
+}
+</style>
+<script src="/nav.js"></script>
+</head>
+<body>
+<div class="page">
+
+<div style="background:#2a0b0b;border:1px solid #5d0f0f;border-radius:6px;padding:.75rem 1rem;margin-bottom:1.5rem;font-size:.8rem;color:#ff8787;font-weight:400;line-height:1.55">
+  <strong style="color:#ff6b6b">Under Re-Verification (2026-04-22) &mdash;</strong> This study was built using a pre-audit version of the backtest pipeline. The current code (post methodology-audit, commit c92ef0f) produces 88 episodes with 4h PO peak &gt; 80, not the 118 shown below. The event log, signal bar chart, and velocity buckets reflect the older analysis and are pending rebuild. <strong style="color:#ff6b6b">Do not trade from the specific numbers on this page until it has been refreshed.</strong>
+</div>
+
+<a href="/" style="display:inline-flex;align-items:center;gap:.4rem;font-size:.8rem;color:var(--text-dim);text-decoration:none;margin-bottom:.5rem;transition:color .2s" onmouseover="this.style.color='#e8eaed'" onmouseout="this.style.color=''"><svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0h4"/></svg>Home</a>
+
+<header class="hero reveal">
+  <div class="kicker">Study &mdash; 4-Hour Phase Oscillator</div>
+  <h1>When the 4h PO peaks<br>above 80 &mdash; <em>what makes<br>it a real reversal?</em></h1>
+  <p class="lede">The 4-hour Phase Oscillator in extended territory is not a sell signal. 65% of the time, price consolidates sideways and the 8 EMA catches up. But when a real reversal comes, it follows a specific escalation sequence &mdash; and the warning signs are early.</p>
+</header>
+
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- Section 1: The Base Rate -->
+<!-- ══════════════════════════════════════════════ -->
+<div class="section reveal">
+  <div class="section-label">01 &mdash; The Base Rate</div>
+
+  <p class="prose">
+    Over 25 years of SPY data, we found <strong>118 episodes</strong> where the 4-hour Phase Oscillator peaked above 80. We tracked what happened next: did price consolidate and continue, or did it reverse into a 5%+ drawdown?
+  </p>
+
+  <div class="bigstat">
+    <div class="bigstat-item">
+      <div class="bigstat-num accent">118</div>
+      <div class="bigstat-label">Episodes with<br>4h PO peak &gt; 80</div>
+    </div>
+    <div class="bigstat-item">
+      <div class="bigstat-num danger">35%</div>
+      <div class="bigstat-label">Led to 5%+ drawdown<br>(41 episodes)</div>
+    </div>
+    <div class="bigstat-item">
+      <div class="bigstat-num safe">44%</div>
+      <div class="bigstat-label">Consolidated &lt;3%<br>(52 episodes)</div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <p>The 4h PO being extended is <strong>not the sell signal &mdash; it just loads the spring.</strong> Two thirds of the time, price barely dips and the uptrend resumes. The question isn't whether the PO is extended. It's what happens <em>after</em> it starts falling.</p>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- Section 2: The False Alarm — PO > 110 -->
+<!-- ══════════════════════════════════════════════ -->
+<div class="section reveal">
+  <div class="section-label">02 &mdash; The False Alarm: PO above 110</div>
+
+  <p class="prose">
+    When the 4h PO peaks above 110 and then drops below 100, how often does price mean-revert to the 4h 8 EMA? <strong>100% of the time.</strong> But the price action is almost always sideways consolidation, not a drop.
+  </p>
+
+  <div class="two-col">
+    <div class="cmp-card safe-card">
+      <div class="cmp-title">Mean Reversion Rate</div>
+      <div class="cmp-sub">PO &gt; 110 &rarr; crosses below 100</div>
+      <div class="big-num" style="color:var(--safe)">100%</div>
+      <div class="big-label">7 of 7 episodes touched the 4h EMA8</div>
+      <div class="divider"></div>
+      <div class="sub-stat"><span>Median time</span><span class="val">1 bar (4h)</span></div>
+      <div class="sub-stat"><span>Max time</span><span class="val">8 bars (48h)</span></div>
+    </div>
+    <div class="cmp-card safe-card">
+      <div class="cmp-title">What Price Actually Did</div>
+      <div class="cmp-sub">Peak PO &rarr; cross below 100</div>
+      <div class="big-num" style="color:var(--text-mid)">-0.22%</div>
+      <div class="big-label">Median price change &mdash; all 7 were sideways</div>
+      <div class="divider"></div>
+      <div class="sub-stat"><span>Max drawdown</span><span class="val">-0.59%</span></div>
+      <div class="sub-stat"><span>Fwd 10 bars</span><span class="val" style="color:var(--bull)">+0.74%</span></div>
+    </div>
+  </div>
+
+  <div class="callout safe">
+    <p>The "mean reversion" is misleading. Price barely moves &mdash; the <strong>EMA catches up to price</strong> during a shallow pause, not the other way around. In the PO &gt; 110 group, forward 10-bar returns were positive 100% of the time.</p>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- Section 3: Signal Edge Ranking -->
+<!-- ══════════════════════════════════════════════ -->
+<div class="section reveal">
+  <div class="section-label">03 &mdash; The Warning Signals</div>
+
+  <p class="prose">
+    What actually distinguishes the 35% that drop 5%+ from the 65% that consolidate? We tested every indicator in the system. Here are the results, ranked by predictive edge over the 35% base rate.
+  </p>
+
+  <div class="chart-card">
+    <div class="card-title">Signal Predictive Power</div>
+    <div class="card-sub">Drop rate when signal present vs. 35% base rate &middot; 118 episodes</div>
+
+    <div id="signal-bars"></div>
+  </div>
+
+  <div class="callout danger">
+    <p>The killer combination: <strong>4h fast cloud flips red while price was &gt;2% above the 21 EMA at the PO peak.</strong> This has predicted a 5%+ drop 14 out of 14 times over 25 years. When the uptrend has stretched that far and the short-term trend structure breaks, it doesn't recover.</p>
+  </div>
+
+  <p class="prose">
+    Notice what does <em>not</em> predict the drop: the daily PO zone. Whether the daily PO is also extended (above 80) or not makes no difference &mdash; 33% vs 35% drop rate. Both timeframes being overbought is not more dangerous than just the 4h.
+  </p>
+</div>
+
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- Section 4: The Escalation Sequence -->
+<!-- ══════════════════════════════════════════════ -->
+<div class="section reveal">
+  <div class="section-label">04 &mdash; The Escalation Sequence</div>
+
+  <p class="prose">
+    Every real 5%+ reversal from an extended 4h PO followed the same sequence of breakdown events. The order is remarkably consistent across 41 episodes spanning 25 years.
+  </p>
+
+  <div class="sequence">
+    <div class="seq-step">
+      <div class="seq-dot yellow">1</div>
+      <div class="seq-content">
+        <div class="seq-title">Price closes below 4h EMA8</div>
+        <div class="seq-timing">~5 bars after PO peak (20 hours)</div>
+        <div class="seq-desc">The first crack. By itself, this happens in both benign and dangerous cases &mdash; 37% drop rate vs 24% when absent. This is the "heads up" signal.</div>
+      </div>
+    </div>
+    <div class="seq-step">
+      <div class="seq-dot orange">2</div>
+      <div class="seq-content">
+        <div class="seq-title">Price closes below 4h EMA21</div>
+        <div class="seq-timing">~11 bars after PO peak (44 hours)</div>
+        <div class="seq-desc">Trend structure is breaking. The 21 EMA is the core pivot &mdash; when price falls through it, the Phase Oscillator is typically collapsing. Drop rate: 41% vs 21%.</div>
+      </div>
+    </div>
+    <div class="seq-step">
+      <div class="seq-dot red">3</div>
+      <div class="seq-content">
+        <div class="seq-title">4h fast cloud flips bearish</div>
+        <div class="seq-timing">~15 bars after PO peak (60 hours)</div>
+        <div class="seq-desc">EMA8 crosses below EMA21 &mdash; the fast cloud turns red. This is the confirmation signal. When this fires within 10 bars, the drop rate jumps to 67%. When combined with &gt;2% EMA21 stretch at peak: 100% (14/14).</div>
+      </div>
+    </div>
+    <div class="seq-step">
+      <div class="seq-dot skull">4</div>
+      <div class="seq-content">
+        <div class="seq-title">Conviction bear arrow</div>
+        <div class="seq-timing">~25 bars after PO peak (100 hours)</div>
+        <div class="seq-desc">EMA13 crosses below EMA48 &mdash; the slow cloud confirms the reversal. When this fires within 20 bars: 89% drop rate (8/9). But it's late &mdash; by this point, much of the damage is done.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <p>The key insight: <strong>the sequence is the signal, not any single event.</strong> A close below EMA8 alone is a coin flip. But when it's followed by a close below EMA21 and then a cloud flip &mdash; within the expected timeframes &mdash; the reversal is underway.</p>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- Section 5: Speed of PO Decline -->
+<!-- ══════════════════════════════════════════════ -->
+<div class="section reveal">
+  <div class="section-label">05 &mdash; The Velocity Tell</div>
+
+  <p class="prose">
+    How fast the 4h PO drops in the first 10 bars after peaking is one of the strongest discriminators. A slow, orderly decline means consolidation. A violent collapse means reversal.
+  </p>
+
+  <div class="chart-card">
+    <div class="card-title">PO Decline Speed &rarr; Drop Probability</div>
+    <div class="card-sub">4h PO change in first 10 bars after peak</div>
+    <div id="velocity-bars"></div>
+  </div>
+
+  <div class="two-col">
+    <div class="cmp-card danger-card">
+      <div class="cmp-title">Real Reversals</div>
+      <div class="cmp-sub">41 episodes with 5%+ drawdown</div>
+      <div class="big-num" style="color:var(--danger)">-68</div>
+      <div class="big-label">Median PO drop in 10 bars</div>
+      <div class="divider"></div>
+      <div class="sub-stat"><span>Mean PO drop</span><span class="val" style="color:var(--danger)">-77 pts</span></div>
+      <div class="sub-stat"><span>Avg drawdown</span><span class="val" style="color:var(--danger)">-9.7%</span></div>
+    </div>
+    <div class="cmp-card safe-card">
+      <div class="cmp-title">Benign Consolidation</div>
+      <div class="cmp-sub">52 episodes with &lt;3% drawdown</div>
+      <div class="big-num" style="color:var(--safe)">-43</div>
+      <div class="big-label">Median PO drop in 10 bars</div>
+      <div class="divider"></div>
+      <div class="sub-stat"><span>Mean PO drop</span><span class="val" style="color:var(--safe)">-47 pts</span></div>
+      <div class="sub-stat"><span>Avg drawdown</span><span class="val" style="color:var(--safe)">-1.5%</span></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- Section 6: The Scorecard -->
+<!-- ══════════════════════════════════════════════ -->
+<div class="section reveal">
+  <div class="section-label">06 &mdash; Full Signal Scorecard</div>
+
+  <p class="prose">
+    Every signal tested, with sample sizes and edge. The base rate is 35% (41 of 118 episodes led to 5%+ drawdown). Signals are ranked by edge &mdash; the difference in drop rate when the signal is present vs absent.
+  </p>
+
+  <div class="chart-card" style="overflow-x:auto">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th style="min-width:200px">Signal</th>
+          <th>Present</th>
+          <th>n</th>
+          <th>Absent</th>
+          <th>n</th>
+          <th>Edge</th>
+          <th>Avg DD</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="hl">
+          <td>Cloud flip + EMA21 stretch &gt;2%</td>
+          <td class="v-danger">100%</td>
+          <td class="dim">14</td>
+          <td class="v-safe">26%</td>
+          <td class="dim">104</td>
+          <td class="v-accent">+74pp</td>
+          <td class="v-danger">-11.5%</td>
+        </tr>
+        <tr class="hl">
+          <td>Conviction bear within 20 bars</td>
+          <td class="v-danger">89%</td>
+          <td class="dim">9</td>
+          <td>30%</td>
+          <td class="dim">109</td>
+          <td class="v-accent">+59pp</td>
+          <td class="v-danger">-11.9%</td>
+        </tr>
+        <tr>
+          <td>PO crashes &gt;100 pts in 10 bars</td>
+          <td class="v-danger">71%</td>
+          <td class="dim">14</td>
+          <td>30%</td>
+          <td class="dim">104</td>
+          <td class="v-accent">+42pp</td>
+          <td class="v-danger">-9.1%</td>
+        </tr>
+        <tr>
+          <td>Cloud flip + PO drop &gt;80</td>
+          <td class="v-danger">67%</td>
+          <td class="dim">24</td>
+          <td>27%</td>
+          <td class="dim">94</td>
+          <td class="v-accent">+40pp</td>
+          <td class="v-danger">-8.2%</td>
+        </tr>
+        <tr>
+          <td>EMA21 distance &gt;2% at peak</td>
+          <td class="v-danger">61%</td>
+          <td class="dim">36</td>
+          <td>23%</td>
+          <td class="dim">82</td>
+          <td>+38pp</td>
+          <td class="v-danger">-7.8%</td>
+        </tr>
+        <tr>
+          <td>EMA8 distance &gt;1% at peak</td>
+          <td class="v-danger">61%</td>
+          <td class="dim">36</td>
+          <td>23%</td>
+          <td class="dim">82</td>
+          <td>+38pp</td>
+          <td class="v-danger">-7.9%</td>
+        </tr>
+        <tr>
+          <td>PO drops &gt;80 pts in 10 bars</td>
+          <td class="v-danger">64%</td>
+          <td class="dim">28</td>
+          <td>26%</td>
+          <td class="dim">90</td>
+          <td>+39pp</td>
+          <td class="v-danger">-7.8%</td>
+        </tr>
+        <tr>
+          <td>Cloud flip within 10 bars</td>
+          <td class="v-danger">67%</td>
+          <td class="dim">12</td>
+          <td>31%</td>
+          <td class="dim">106</td>
+          <td>+36pp</td>
+          <td class="v-danger">-9.1%</td>
+        </tr>
+        <tr>
+          <td>Cloud flip within 20 bars</td>
+          <td class="v-bear">52%</td>
+          <td class="dim">46</td>
+          <td>24%</td>
+          <td class="dim">72</td>
+          <td>+29pp</td>
+          <td>-7.0%</td>
+        </tr>
+        <tr>
+          <td>PO drops &gt;50 pts in 10 bars</td>
+          <td class="v-bear">45%</td>
+          <td class="dim">71</td>
+          <td>19%</td>
+          <td class="dim">47</td>
+          <td>+26pp</td>
+          <td>-5.8%</td>
+        </tr>
+        <tr>
+          <td>Close below EMA21 within 20 bars</td>
+          <td class="v-bear">41%</td>
+          <td class="dim">80</td>
+          <td>21%</td>
+          <td class="dim">38</td>
+          <td>+20pp</td>
+          <td>-5.9%</td>
+        </tr>
+        <tr>
+          <td>4h PO peak &gt; 100</td>
+          <td class="v-bear">46%</td>
+          <td class="dim">24</td>
+          <td>32%</td>
+          <td class="dim">94</td>
+          <td>+14pp</td>
+          <td>-6.1%</td>
+        </tr>
+        <tr>
+          <td>Close below EMA8 within 10 bars</td>
+          <td>37%</td>
+          <td class="dim">97</td>
+          <td>24%</td>
+          <td class="dim">21</td>
+          <td>+13pp</td>
+          <td>-5.2%</td>
+        </tr>
+        <tr style="opacity:.55">
+          <td>Daily PO &gt; 80 (both TFs extended)</td>
+          <td>33%</td>
+          <td class="dim">39</td>
+          <td>35%</td>
+          <td class="dim">79</td>
+          <td style="color:var(--text-dim)">-2pp</td>
+          <td>-4.7%</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- Section 7: The Playbook -->
+<!-- ══════════════════════════════════════════════ -->
+<div class="section reveal">
+  <div class="section-label">07 &mdash; The Playbook</div>
+
+  <p class="prose">
+    When the 4h Phase Oscillator is extended above 80&ndash;110, here's what the data says to watch for.
+  </p>
+
+  <div class="chart-card" style="border-left:3px solid var(--bull)">
+    <div class="card-title" style="color:var(--bull)">Don't Sell the Extension</div>
+    <div style="font-size:.85rem;color:var(--text-mid);font-weight:300;line-height:1.65;margin-top:.75rem">
+      The PO being extended is not a short signal. 65% of the time it consolidates sideways, the 8 EMA catches up, and the trend resumes. When PO peaked above 110 and crossed below 100, forward 10-bar returns were <strong style="color:var(--bull)">positive 100% of the time.</strong>
+    </div>
+  </div>
+
+  <div class="chart-card" style="border-left:3px solid var(--accent)">
+    <div class="card-title" style="color:var(--accent)">Watch for the Sequence</div>
+    <div style="font-size:.85rem;color:var(--text-mid);font-weight:300;line-height:1.65;margin-top:.75rem">
+      Real reversals follow a consistent order: <strong style="color:var(--accent)">close below EMA8 &rarr; close below EMA21 &rarr; fast cloud flip &rarr; conviction bear.</strong> If the first step doesn't happen within ~5 bars, it's probably consolidation. If it does, watch for escalation.
+    </div>
+  </div>
+
+  <div class="chart-card" style="border-left:3px solid var(--danger)">
+    <div class="card-title" style="color:var(--danger)">The Kill Shot: Cloud Flip + Stretch</div>
+    <div style="font-size:.85rem;color:var(--text-mid);font-weight:300;line-height:1.65;margin-top:.75rem">
+      If the 4h fast cloud flips red <em>and</em> price was &gt;2% above EMA21 when the PO peaked, <strong style="color:var(--danger)">every single occurrence in 25 years produced a 5%+ drawdown</strong> (14 for 14). Average drawdown: -11.5%. This is the highest-conviction reversal signal in the dataset.
+    </div>
+  </div>
+
+  <div class="chart-card" style="border-left:3px solid var(--text-dim)">
+    <div class="card-title">Velocity Matters</div>
+    <div style="font-size:.85rem;color:var(--text-mid);font-weight:300;line-height:1.65;margin-top:.75rem">
+      A slow PO decline (&lt;50 pts in 10 bars) means consolidation &mdash; only 19% drop rate. A violent PO collapse (&gt;100 pts in 10 bars) means reversal &mdash; <strong>71% drop rate.</strong> The speed of the unwind, not just the direction, tells you which one it is.
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- Section 8: Event Log -->
+<!-- ══════════════════════════════════════════════ -->
+<div class="section reveal">
+  <div class="section-label">08 &mdash; Every 5%+ Reversal from Extended 4h PO</div>
+
+  <p class="prose">
+    Complete log of all 41 episodes where the 4h PO peaked above 80 and a 5%+ drawdown followed. Each row shows the PO peak, the maximum drawdown, and the sequence of warning signals with their timing (bars after peak).
+  </p>
+
+  <div class="chart-card" style="overflow-x:auto">
+    <table class="data-table" style="font-size:.7rem">
+      <thead>
+        <tr>
+          <th style="min-width:90px">Date</th>
+          <th>Peak PO</th>
+          <th>Max DD</th>
+          <th style="text-align:left;min-width:320px">Signal Sequence (bars after peak)</th>
+        </tr>
+      </thead>
+      <tbody id="event-log"></tbody>
+    </table>
+  </div>
+</div>
+
+
+<footer class="footer">
+  Statistics computed using 25 years of SPY data (2000&ndash;2025) &middot; 118 episodes with 4h PO &gt; 80<br>
+  Phase Oscillator &amp; Pivot Ribbon indicators by <a href="https://satyland.com" target="_blank" rel="noopener">Saty Mahajan</a> &middot;
+  Analysis by <a href="https://milkmantrades.com">Milkman Trades</a><br>
+  Analysis inspired by <a href="https://x.com/tesrak" target="_blank" rel="noopener">@tesrak</a> &middot;
+  With thanks to <a href="https://x.com/todaborrego" target="_blank" rel="noopener">@todor</a> for the data
+</footer>
+
+</div>
+
+<script>
+// ── Signal bar chart ──
+(function(){
+  const signals = [
+    {label:"Cloud flip + EMA21 >2%", rate:100, base:35, n:14, color:"var(--danger)"},
+    {label:"Conviction bear (20 bars)", rate:89, base:35, n:9, color:"var(--danger)"},
+    {label:"PO crashes >100 pts / 10 bars", rate:71, base:35, n:14, color:"var(--danger)"},
+    {label:"Cloud flip within 10 bars", rate:67, base:35, n:12, color:"var(--bear)"},
+    {label:"Cloud flip + PO drop >80", rate:67, base:35, n:24, color:"var(--bear)"},
+    {label:"PO drops >80 pts / 10 bars", rate:64, base:35, n:28, color:"var(--bear)"},
+    {label:"EMA21 distance >2%", rate:61, base:35, n:36, color:"var(--bear)"},
+    {label:"Cloud flip within 20 bars", rate:52, base:35, n:46, color:"var(--text-mid)"},
+    {label:"PO drops >50 pts / 10 bars", rate:45, base:35, n:71, color:"var(--text-mid)"},
+    {label:"Daily PO > 80", rate:33, base:35, n:39, color:"var(--text-dim)"},
+  ];
+  const el = document.getElementById("signal-bars");
+  let html = "";
+  signals.forEach(s => {
+    html += `<div class="bar-row">
+      <div class="bar-label">${s.label}</div>
+      <div class="bar-track" style="position:relative">
+        <div class="bar-fill" data-w="${s.rate}" style="background:${s.color}"></div>
+        <div style="position:absolute;left:${s.base}%;top:0;bottom:0;width:1px;background:var(--accent);opacity:.6;z-index:2"></div>
+      </div>
+      <div class="bar-pct" style="color:${s.color}">${s.rate}%</div>
+      <div class="bar-n">n=${s.n}</div>
+    </div>`;
+  });
+  el.innerHTML = html;
+})();
+
+// ── Velocity bar chart ──
+(function(){
+  const buckets = [
+    {label:"< 50 pts decline", rate:19, n:47, color:"var(--safe)"},
+    {label:"50–80 pts decline", rate:37, n:43, color:"var(--text-mid)"},
+    {label:"80–100 pts decline", rate:57, n:14, color:"var(--bear)"},
+    {label:"> 100 pts decline", rate:71, n:14, color:"var(--danger)"},
+  ];
+  const el = document.getElementById("velocity-bars");
+  let html = "";
+  buckets.forEach(b => {
+    html += `<div class="bar-row">
+      <div class="bar-label">${b.label}</div>
+      <div class="bar-track" style="position:relative">
+        <div class="bar-fill" data-w="${b.rate}" style="background:${b.color}"></div>
+        <div style="position:absolute;left:35%;top:0;bottom:0;width:1px;background:var(--accent);opacity:.6;z-index:2"></div>
+      </div>
+      <div class="bar-pct" style="color:${b.color}">${b.rate}%</div>
+      <div class="bar-n">n=${b.n}</div>
+    </div>`;
+  });
+  el.innerHTML = html;
+})();
+
+// ── Event log table ──
+(function(){
+  const events = [
+    {date:"2000-03-17",po:100.0,dd:-9.7,seq:"close<EMA8(20) → close<EMA21(28) → cloud flip(30)"},
+    {date:"2000-03-21",po:80.4,dd:-10.8,seq:"close<EMA8(12) → close<EMA21(20) → cloud flip(22) → conv bear(49)"},
+    {date:"2000-03-24",po:107.3,dd:-14.2,seq:"close<EMA8(5) → close<EMA21(13) → cloud flip(15) → conv bear(42)"},
+    {date:"2001-05-21",po:82.7,dd:-10.5,seq:"close<EMA8(4) → close<EMA21(6) → cloud flip(12) → conv bear(18)"},
+    {date:"2002-03-06",po:81.7,dd:-6.0,seq:"close<EMA8(11) → close<EMA21(15) → cloud flip(31) → conv bear(39)"},
+    {date:"2003-01-06",po:93.4,dd:-13.1,seq:"close<EMA8(4) → close<EMA21(19) → cloud flip(24) → conv bear(28)"},
+    {date:"2003-03-21",po:89.1,dd:-6.2,seq:"close<EMA8(1) → close<EMA21(2) → cloud flip(15)"},
+    {date:"2004-04-05",po:85.8,dd:-6.3,seq:"close<EMA8(3) → close<EMA21(13) → cloud flip(15) → conv bear(29)"},
+    {date:"2007-02-02",po:81.6,dd:-5.2,seq:"close<EMA8(9) → close<EMA21(17) → cloud flip(23)"},
+    {date:"2009-01-02",po:85.3,dd:-13.8,seq:"close<EMA8(9) → close<EMA21(11) → cloud flip(14) → conv bear(22)"},
+    {date:"2009-05-07",po:81.2,dd:-5.7,seq:"close<EMA8(2) → close<EMA21(11) → cloud flip(17) → conv bear(26)"},
+    {date:"2011-05-02",po:94.6,dd:-6.2,seq:"close<EMA8(2) → close<EMA21(4) → cloud flip(10) → conv bear(38)"},
+    {date:"2011-07-01",po:117.2,dd:-17.5,seq:"close<EMA8(14) → close<EMA21(17) → cloud flip(19) → conv bear(32)"},
+    {date:"2011-07-07",po:103.0,dd:-18.8,seq:"close<EMA8(2) → close<EMA21(5) → cloud flip(7) → conv bear(20)"},
+    {date:"2011-10-27",po:83.2,dd:-10.9,seq:"close<EMA8(5) → close<EMA21(7) → cloud flip(9)"},
+    {date:"2013-09-19",po:87.2,dd:-5.4,seq:"close<EMA8(4) → close<EMA21(5) → cloud flip(9) → conv bear(24)"},
+    {date:"2018-01-05",po:112.5,dd:-7.5,seq:"close<EMA8(10)"},
+    {date:"2018-01-16",po:121.0,dd:-9.6,seq:"close<EMA8(2) → close<EMA21(40) → cloud flip(43)"},
+    {date:"2018-01-22",po:87.7,dd:-10.6,seq:"close<EMA8(11) → close<EMA21(21) → cloud flip(24) → conv bear(35)"},
+    {date:"2018-01-24",po:82.0,dd:-10.9,seq:"close<EMA8(6) → close<EMA21(16) → cloud flip(19) → conv bear(30)"},
+    {date:"2018-01-26",po:80.9,dd:-11.9,seq:"close<EMA8(3) → close<EMA21(5) → cloud flip(8) → conv bear(19)"},
+    {date:"2018-05-10",po:88.9,dd:-24.8,seq:"close<EMA8(10) → close<EMA21(11) → cloud flip(46) → conv bear(49)"},
+    {date:"2018-08-29",po:83.9,dd:-6.8,seq:"close<EMA8(3) → close<EMA21(11) → cloud flip(15) → conv bear(30)"},
+    {date:"2018-11-07",po:80.2,dd:-8.1,seq:"close<EMA8(5) → close<EMA21(10) → cloud flip(11) → conv bear(17)"},
+    {date:"2018-12-03",po:93.4,dd:-17.5,seq:"close<EMA8(5) → close<EMA21(6) → cloud flip(8) → conv bear(11)"},
+    {date:"2019-04-23",po:80.5,dd:-5.6,seq:"close<EMA8(7) → close<EMA21(23) → cloud flip(26) → conv bear(38)"},
+    {date:"2019-07-03",po:88.1,dd:-7.2,seq:"close<EMA8(2) → close<EMA21(9) → cloud flip(36)"},
+    {date:"2020-06-08",po:104.6,dd:-8.7,seq:"close<EMA8(7) → close<EMA21(9) → cloud flip(11) → conv bear(17)"},
+    {date:"2020-08-27",po:101.9,dd:-8.6,seq:"close<EMA8(9) → close<EMA21(20) → cloud flip(22) → conv bear(27)"},
+    {date:"2020-09-02",po:107.3,dd:-10.8,seq:"close<EMA8(2) → close<EMA21(2) → cloud flip(4) → conv bear(9)"},
+    {date:"2020-10-12",po:100.2,dd:-8.9,seq:"close<EMA8(4) → close<EMA21(10) → cloud flip(20) → conv bear(30)"},
+    {date:"2021-12-28",po:94.2,dd:-12.1,seq:"close<EMA8(10) → cloud flip(26) → close<EMA21(26) → conv bear(30)"},
+    {date:"2022-03-29",po:84.2,dd:-12.3,seq:"close<EMA8(7) → close<EMA21(8) → cloud flip(12) → conv bear(26)"},
+    {date:"2022-05-27",po:92.1,dd:-13.1,seq:"close<EMA8(6) → close<EMA21(21) → cloud flip(31) → conv bear(33)"},
+    {date:"2022-07-29",po:101.1,dd:-5.6,seq:"close<EMA8(6) → close<EMA21(26)"},
+    {date:"2022-08-12",po:93.8,dd:-10.7,seq:"close<EMA8(9) → close<EMA21(17) → cloud flip(19) → conv bear(25)"},
+    {date:"2022-08-15",po:90.3,dd:-11.2,seq:"close<EMA8(6) → close<EMA21(14) → cloud flip(16) → conv bear(22)"},
+    {date:"2022-09-13",po:85.1,dd:-15.9,seq:"close<EMA8(1) → close<EMA21(1) → cloud flip(3) → conv bear(3)"},
+    {date:"2022-11-11",po:85.9,dd:-5.2,seq:"close<EMA8(8) → close<EMA21(13) → cloud flip(42)"},
+    {date:"2023-02-02",po:89.4,dd:-8.1,seq:"close<EMA8(4) → close<EMA21(16) → cloud flip(21) → conv bear(45)"},
+    {date:"2023-05-19",po:80.6,dd:-6.4,seq:"close<EMA8(8) → close<EMA21(10) → cloud flip(12)"},
+  ];
+  const tbody = document.getElementById("event-log");
+  let html = "";
+  events.forEach(e => {
+    const ddColor = e.dd <= -10 ? "var(--danger)" : e.dd <= -7 ? "var(--bear)" : "var(--text-mid)";
+    const poColor = e.po >= 100 ? "var(--danger)" : e.po >= 90 ? "var(--bear)" : "var(--text-mid)";
+    html += `<tr>
+      <td>${e.date}</td>
+      <td style="color:${poColor}">${e.po.toFixed(1)}</td>
+      <td style="color:${ddColor}">${e.dd.toFixed(1)}%</td>
+      <td style="text-align:left;font-size:.62rem;color:var(--text-dim);letter-spacing:-.01em">${e.seq}</td>
+    </tr>`;
+  });
+  tbody.innerHTML = html;
+})();
+
+// ── Scroll reveal ──
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add("visible") });
+}, {threshold:0.1});
+document.querySelectorAll(".reveal").forEach(el => obs.observe(el));
+
+// ── Animate bars on scroll ──
+const barObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting){
+      e.target.querySelectorAll(".bar-fill[data-w]").forEach(bar => {
+        bar.style.width = bar.dataset.w + "%";
+      });
+    }
+  });
+}, {threshold:0.2});
+document.querySelectorAll(".chart-card").forEach(el => barObs.observe(el));
+</script>
+</body>
+</html>

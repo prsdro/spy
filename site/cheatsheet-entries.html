@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Golden Gate Entry Optimization | Milkman Trades</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥛</text></svg>">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0c0e12;--card:#11131a;--card2:#161922;--border:#1c1f2a;--border2:#252938;
+  --t:#e4e5e9;--t2:#b0b3c0;--t3:#7a7e90;
+  --bull:#1cd48a;--bullD:#0e5c3c;--bear:#ef6c00;--bearD:#6e3200;
+  --acc:#fbbf24;--accD:#5c4500;--red:#ef4444;--blue:#60a5fa;
+}
+html{font-size:14px}
+body{background:#060709;color:var(--t);font-family:'DM Sans',system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;padding:2rem 1rem 4rem}
+
+.save-bar{width:1200px;display:flex;justify-content:flex-end;margin-bottom:.75rem}
+.save-btn{
+  padding:.5rem 1.2rem;background:var(--acc);color:#000;border:none;border-radius:4px;
+  font-family:'JetBrains Mono',monospace;font-size:.75rem;font-weight:600;cursor:pointer;
+  letter-spacing:.03em;transition:opacity .15s;
+}
+.save-btn:hover{opacity:.85}
+.save-btn:active{transform:scale(.97)}
+
+.poster{
+  width:1200px;background:var(--bg);border:1px solid var(--border);border-radius:8px;
+  overflow:hidden;position:relative;
+}
+
+.hdr{
+  padding:1.8rem 2rem 1.4rem;
+  background:linear-gradient(135deg,#0e1018 0%,#12151f 100%);
+  border-bottom:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:flex-end;
+}
+.hdr-left h1{
+  font-family:'JetBrains Mono',monospace;font-size:1.5rem;font-weight:700;
+  letter-spacing:-.01em;line-height:1;margin-bottom:.35rem;
+}
+.hdr-left h1 span{color:var(--acc)}
+.hdr-left .sub{font-size:.8rem;color:var(--t3);font-weight:300}
+.hdr-right{text-align:right}
+.hdr-right .draft{
+  font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:500;
+  color:#a08000;background:#1a1600;padding:.2em .5em;border-radius:3px;
+  letter-spacing:.06em;text-transform:uppercase;margin-bottom:.3rem;display:inline-block;
+}
+.hdr-right .url{font-size:.75rem;color:var(--t3)}
+.hdr-right .back{font-size:.65rem;color:var(--blue);text-decoration:none;margin-right:.8rem}
+.hdr-right .back:hover{text-decoration:underline}
+
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.sec{border-right:1px solid var(--border);border-bottom:1px solid var(--border);padding:1.4rem 1.6rem}
+.sec:nth-child(even){border-right:none}
+.sec.full{grid-column:1/-1;border-right:none}
+.sec-num{
+  font-family:'JetBrains Mono',monospace;font-size:.6rem;font-weight:600;
+  color:var(--acc);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.6rem;
+}
+.sec-title{font-size:1rem;font-weight:700;margin-bottom:.8rem;line-height:1.2}
+
+.stats{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:.8rem}
+.stat{
+  flex:1;min-width:100px;background:var(--card);border:1px solid var(--border);
+  border-radius:5px;padding:.6rem .7rem;
+}
+.stat-val{font-family:'JetBrains Mono',monospace;font-size:1.4rem;font-weight:700;line-height:1}
+.stat-label{font-size:.75rem;color:var(--t3);margin-top:.2rem;line-height:1.3}
+.bull{color:var(--bull)}.bear{color:var(--bear)}.acc{color:var(--acc)}.red{color:var(--red)}
+
+.mtable{width:100%;border-collapse:collapse;font-size:.7rem;margin:.5rem 0}
+.mtable th{
+  font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:500;
+  color:var(--t3);text-align:right;padding:.3rem .4rem;border-bottom:1px solid var(--border);
+  letter-spacing:.04em;text-transform:uppercase;
+}
+.mtable th:first-child{text-align:left}
+.mtable td{
+  padding:.3rem .4rem;border-bottom:1px solid #13151d;text-align:right;
+  font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--t2);
+}
+.mtable td:first-child{text-align:left;font-family:'DM Sans',sans-serif;color:var(--t);font-weight:400}
+.mtable tr.hi td{font-weight:600}
+.mtable tr.hi .bull{color:var(--bull)}
+.mtable tr.hi .bear{color:var(--bear)}
+
+.blist{list-style:none;font-size:.85rem;color:var(--t2);line-height:1.7}
+.blist li::before{content:'›';color:var(--acc);font-weight:700;margin-right:.4rem}
+.blist .key{color:var(--t);font-weight:500}
+.blist .val{font-family:'JetBrains Mono',monospace;font-weight:600}
+
+.ftr{
+  padding:.8rem 2rem;border-top:1px solid var(--border);
+  font-size:.6rem;color:var(--t3);display:flex;justify-content:space-between;
+  font-family:'JetBrains Mono',monospace;
+}
+
+.divlbl{
+  font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--t3);
+  letter-spacing:.08em;text-transform:uppercase;margin:.6rem 0 .3rem;
+}
+
+/* ── Mobile ── */
+@media(max-width:767px){
+  body{padding:1rem .5rem 3rem}
+  .save-bar{width:100%;flex-wrap:wrap;gap:.4rem}
+  .poster{width:100%}
+  .hdr{flex-direction:column;align-items:flex-start;gap:.6rem;padding:1.2rem 1rem 1rem}
+  .hdr-left h1{font-size:1.1rem}
+  .hdr-left .sub{font-size:.72rem}
+  .hdr-right{text-align:left}
+  .grid{grid-template-columns:1fr}
+  .sec{border-right:none !important;padding:1.1rem 1rem}
+  .sec-title{font-size:.95rem}
+  .stats{flex-direction:column}
+  .stat{min-width:0}
+  .stat-val{font-size:1.2rem}
+  .mtable{font-size:.68rem}
+  .mtable th,.mtable td{padding:.25rem .35rem}
+  .ftr{flex-direction:column;gap:.4rem;text-align:center;font-size:.55rem;padding:.7rem 1rem}
+}
+</style>
+<script src="/nav.js"></script>
+<script src="/mobile-png.js"></script>
+</head>
+<body>
+
+<div class="save-bar">
+  <button class="save-btn save-mobile-btn" onclick="saveMobilePNG()" style="background:#60a5fa;margin-right:.5rem">📱 Mobile PNG</button>
+  <button class="save-btn" onclick="savePNG()">&#11015; Save as PNG</button>
+</div>
+
+<div class="poster" id="poster">
+
+<div class="hdr">
+  <div class="hdr-left">
+    <h1>Milkman Trades &mdash; <span>Golden Gate Entry Optimization</span></h1>
+    <div class="sub">Where to enter for best EV &mdash; 25 years of SPY (2000&ndash;2025)</div>
+  </div>
+  <div class="hdr-right">
+    <div class="draft">Draft &mdash; Not Verified</div><br>
+    <a class="back" href="cheatsheet.html">&larr; Master Sheet</a>
+    <span class="url">milkmantrades.com</span>
+  </div>
+</div>
+
+<div class="grid">
+
+<!-- Key stats -->
+<div class="sec full">
+  <div class="sec-num">01 &mdash; Key Findings</div>
+  <div class="sec-title">Entry selection matters more than you think</div>
+
+  <div class="stats">
+    <div class="stat"><div class="stat-val bull">+10%</div><div class="stat-label">Immediate entry<br>EV at 38.2%</div></div>
+    <div class="stat"><div class="stat-val bull">+11%</div><div class="stat-label">EMA 8 pullback<br>best EV</div></div>
+    <div class="stat"><div class="stat-val red">&minus;3%</div><div class="stat-label">50% midpoint<br>negative EV — use caution</div></div>
+    <div class="stat"><div class="stat-val acc">2.3x</div><div class="stat-label">1h EMA 21<br>best R:R</div></div>
+  </div>
+</div>
+
+<!-- Bull entries -->
+<div class="sec">
+  <div class="sec-num">02 &mdash; Bullish Entry Table</div>
+  <div class="sec-title">All bull entries ranked by EV</div>
+
+  <table class="mtable">
+    <thead><tr><th>Entry</th><th>Appears</th><th>GG%</th><th>R:R</th><th>EV</th></tr></thead>
+    <tbody>
+      <tr class="hi"><td>Immediate 38.2%</td><td>100%</td><td class="bull">63%</td><td>1.6x</td><td class="bull">+10%</td></tr>
+      <tr class="hi"><td>EMA 8 (10m)</td><td>97%</td><td class="bull">62%</td><td>1.4x</td><td class="bull">+11%</td></tr>
+      <tr><td>EMA 21 (10m)</td><td>88%</td><td>58%</td><td>1.3x</td><td>+8%</td></tr>
+      <tr><td>EMA 48 (10m)</td><td>70%</td><td>47%</td><td>1.9x</td><td>+7%</td></tr>
+      <tr><td>EMA 21 (1h)</td><td>57%</td><td>42%</td><td>2.3x</td><td>+7%</td></tr>
+      <tr><td>EMA 48 (1h)</td><td>50%</td><td>48%</td><td>1.1x</td><td>+0%</td></tr>
+      <tr><td style="color:var(--t3)">50% midpoint</td><td style="color:var(--t3)">94%</td><td style="color:var(--t3)">60%</td><td style="color:var(--t3)">0.4x</td><td class="red">&minus;3%</td></tr>
+      <tr><td>Trigger retrace</td><td>71%</td><td>43%</td><td>&mdash;</td><td class="bull">+16%</td></tr>
+      <tr><td>Prev Close retrace</td><td>39%</td><td>20%</td><td>&mdash;</td><td class="bull">+12%</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Bear entries -->
+<div class="sec">
+  <div class="sec-num">03 &mdash; Bearish Entry Table</div>
+  <div class="sec-title">All bear entries ranked by EV</div>
+
+  <table class="mtable">
+    <thead><tr><th>Entry</th><th>Appears</th><th>GG%</th><th>R:R</th><th>EV</th></tr></thead>
+    <tbody>
+      <tr class="hi"><td>Immediate 38.2%</td><td>100%</td><td class="bear">65%</td><td>1.6x</td><td class="bear">+10%</td></tr>
+      <tr class="hi"><td>EMA 8 (10m)</td><td>97%</td><td class="bear">63%</td><td>1.4x</td><td class="bear">+12%</td></tr>
+      <tr><td>EMA 21 (10m)</td><td>89%</td><td>59%</td><td>1.2x</td><td>+9%</td></tr>
+      <tr><td>EMA 48 (10m)</td><td>73%</td><td>47%</td><td>1.7x</td><td>+6%</td></tr>
+      <tr><td>EMA 21 (1h)</td><td>62%</td><td>39%</td><td>3.2x</td><td>+9%</td></tr>
+      <tr><td>EMA 48 (1h)</td><td>58%</td><td>43%</td><td>1.6x</td><td>+3%</td></tr>
+      <tr><td style="color:var(--t3)">50% midpoint</td><td style="color:var(--t3)">95%</td><td style="color:var(--t3)">63%</td><td style="color:var(--t3)">0.4x</td><td class="red">&minus;3%</td></tr>
+      <tr><td>Trigger retrace</td><td>79%</td><td>48%</td><td>&mdash;</td><td class="bear">+18%</td></tr>
+      <tr><td>Prev Close retrace</td><td>44%</td><td>22%</td><td>&mdash;</td><td class="bear">+14%</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Takeaways -->
+<div class="sec full">
+  <div class="sec-num">04 &mdash; Takeaways</div>
+  <div class="sec-title">Practical entry rules</div>
+
+  <ul class="blist">
+    <li><span class="key">Best all-around:</span> Enter immediately at 38.2% or wait for an <span class="val bull">EMA 8</span> pullback &mdash; both are <span class="val bull">+10&ndash;12% EV</span></li>
+    <li><span class="key">Patient sniper:</span> 1h EMA 21 gives <span class="val acc">2.3&ndash;3.2x R:R</span> but only appears 57&ndash;62% of the time</li>
+    <li><span class="key">Use caution:</span> The 50% midpoint looks safe (appears 94&ndash;95%) but is <span class="val red">&minus;3% EV</span> &mdash; negative expectancy</li>
+    <li><span class="key">High-conviction retrace:</span> Trigger retrace is +16&ndash;18% EV when it appears, but only in 71&ndash;79% of setups</li>
+    <li><span class="key">Bear entries are slightly better</span> across the board &mdash; EMA 8 bear is <span class="val bear">+12%</span> vs bull <span class="val bull">+11%</span></li>
+    <li><span class="key">1h EMA 48</span> is breakeven for bulls (+0% EV) and barely positive for bears (+3%) &mdash; too deep</li>
+  </ul>
+</div>
+
+</div><!-- /grid -->
+
+<div class="sec full" style="background:linear-gradient(135deg,#0f1118,#131620);border-bottom:none">
+  <div class="sec-num" style="color:var(--acc)">&#9733; Bottom Line</div>
+  <div class="sec-title">Where to enter</div>
+  <ul class="blist">
+    <li><span class="key">The simplest entry is often the best.</span> Immediate entry has the highest completion rate (63&ndash;65%), appears every time, and delivers +10% ATR expected value. Waiting costs more than it saves.</li>
+    <li><span class="key">If you must wait, wait for the 10m EMA 8.</span> It appears 97% of the time (you almost never miss the trade), adds a tiny bit of reward, and has marginally better EV (+11%).</li>
+    <li><span class="key">Be cautious entering at the 50% midpoint.</span> The move is already half done — this entry has <span class="val red">negative EV</span> because the remaining reward is small relative to the risk of falling back to the trigger.</li>
+    <li><span class="key">Deep pullbacks are for patient traders only.</span> The 1h EMA 21 has the best R:R (2.3&ndash;3.2x) but only 39&ndash;42% win rate and only appears 57&ndash;62% of the time. Size accordingly.</li>
+  </ul>
+</div>
+
+<div class="ftr">
+  <span>milkmantrades.com &middot; ATR Levels &amp; Phase Oscillator by Saty Mahajan</span>
+  <span>@tesrak &middot; @todor &middot; Draft &mdash; not independently verified</span>
+</div>
+
+</div><!-- /poster -->
+
+<script>
+function savePNG() {
+  const btn = document.querySelector('.save-btn');
+  btn.textContent = 'Rendering...';
+  html2canvas(document.getElementById('poster'), {
+    scale: 2,
+    backgroundColor: '#0c0e12',
+    useCORS: true,
+  }).then(canvas => {
+    const a = document.createElement('a');
+    a.download = 'golden-gate-entries.png';
+    a.href = canvas.toDataURL('image/png');
+    a.click();
+    btn.textContent = '\u2713 Saved';
+    setTimeout(() => btn.textContent = '\u2b07 Save as PNG', 2000);
+  });
+}
+</script>
+</body>
+</html>

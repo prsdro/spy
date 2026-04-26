@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Drafts &amp; Failed Studies — Milkman Trades</title>
+  <meta name="description" content="Draft and failed Milkman studies — works in progress and studies where no edge was found.">
+  <meta name="robots" content="noindex,follow">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥛</text></svg>">
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700&family=JetBrains+Mono:wght@400;600&family=Playfair+Display:wght@900&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #0a0b0f;
+      --surface: #12131a;
+      --border: #1e2030;
+      --text: #e8e6e1;
+      --muted: #6b6a72;
+      --accent: #c9f76f;
+      --draft: #f59e0b;
+      --killed: #ef4444;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse at 20% 50%, rgba(245, 158, 11, 0.025) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 80%, rgba(239, 68, 68, 0.02) 0%, transparent 45%);
+      pointer-events: none;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem 4rem;
+    }
+
+    .breadcrumb {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+      letter-spacing: 0.05em;
+    }
+    .breadcrumb a { color: var(--muted); text-decoration: none; border-bottom: 1px dotted var(--muted); }
+    .breadcrumb a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+
+    .header {
+      margin-bottom: 2rem;
+    }
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.4rem;
+    }
+    .logo span.dot { color: var(--accent); }
+    .logo .sub {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+      font-size: 0.95rem;
+      color: var(--muted);
+      letter-spacing: 0;
+    }
+    .preamble {
+      font-size: 0.92rem;
+      line-height: 1.65;
+      color: var(--text);
+      max-width: 65ch;
+      margin-top: 1rem;
+    }
+    .preamble + .preamble { margin-top: 0.8rem; }
+    .preamble strong { color: var(--accent); font-weight: 500; }
+
+    .section {
+      margin-top: 3rem;
+    }
+    .section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 0.4rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+    }
+    .section-draft .section-label { color: var(--draft); border-bottom-color: rgba(245, 158, 11, 0.25); }
+    .section-failed .section-label { color: var(--killed); border-bottom-color: rgba(239, 68, 68, 0.25); }
+    .section-label .count {
+      font-size: 0.62rem;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+    .section-intro {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.6;
+      margin: 0.9rem 0 1.2rem;
+      max-width: 62ch;
+    }
+
+    .study-card {
+      display: block;
+      padding: 0.9rem 1rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left-width: 3px;
+      border-radius: 6px;
+      color: var(--text);
+      text-decoration: none;
+      margin-bottom: 0.55rem;
+      transition: border-color 0.15s, background 0.15s, transform 0.15s;
+    }
+    .section-draft .study-card { border-left-color: var(--draft); }
+    .section-failed .study-card { border-left-color: var(--killed); }
+    .study-card:hover { background: #161720; transform: translateX(2px); }
+    .section-draft .study-card:hover { border-color: var(--draft); }
+    .section-failed .study-card:hover { border-color: var(--killed); }
+
+    .study-card .head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 0.25rem;
+      gap: 0.5rem;
+    }
+    .study-card .name {
+      font-size: 0.95rem;
+      font-weight: 500;
+      letter-spacing: -0.005em;
+    }
+    .study-card .arrow {
+      color: var(--muted);
+      font-size: 0.7rem;
+      flex-shrink: 0;
+    }
+    .study-card:hover .arrow { color: inherit; }
+    .study-card .reason {
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+    .section-draft .study-card .reason strong { color: var(--draft); font-weight: 500; }
+    .section-failed .study-card .reason strong { color: var(--killed); font-weight: 500; }
+
+    .footer {
+      text-align: center;
+      font-size: 0.7rem;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+    .footer a { color: var(--muted); text-decoration: underline; text-underline-offset: 2px; }
+    .back-home {
+      display: inline-block;
+      margin-top: 0.8rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.05em;
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px dotted var(--accent);
+    }
+  </style>
+<script src="/nav.js"></script>
+</head>
+<body>
+
+  <div class="page">
+
+    <div class="breadcrumb">
+      <a href="/">milkman.</a> &nbsp;/&nbsp; drafts &amp; failed
+    </div>
+
+    <div class="header">
+      <div class="logo">drafts &amp; failed<span class="dot">.</span></div>
+      <div class="logo sub">studies that didn&rsquo;t make the core playbook</div>
+
+      <p class="preamble">
+        These pages live outside the core 7-study playbook for a reason. Every study here was reviewed against the same two filters used for the keepers: <strong>quality</strong> (sample size, edge magnitude, caveats acknowledged) and <strong>actionability</strong> (entry/exit clarity, real-time identifiability, fit for 0DTE/short-dated SPX/SPY).
+      </p>
+      <p class="preamble">
+        Listing them transparently &mdash; rather than burying them &mdash; keeps the catalog honest. The point of a research site is to publish what worked <em>and</em> what didn&rsquo;t.
+      </p>
+    </div>
+
+    <!-- DRAFTS -->
+    <div class="section section-draft" id="drafts">
+      <div class="section-label">
+        <span>Draft Studies &mdash; In Progress</span>
+        <span class="count">8 studies</span>
+      </div>
+      <div class="section-intro">
+        Real signal but a weak frame. These need tweaks &mdash; sample-size deepening, reframed metrics, rebuilt code, or merging into adjacent studies &mdash; before an edge can be confirmed. Treat as research drafts, not playbook material.
+      </div>
+
+      <a class="study-card" href="/trigger-box-spreads.html">
+        <div class="head">
+          <span class="name">Trigger Box &mdash; Credit Spread Win Rates</span>
+          <span class="arrow">&rarr;</span>
+        </div>
+        <div class="reason">
+          <strong>Mislabel.</strong> The 93.6% figure is short-strike no-touch probability, not a realized P&amp;L on credit spreads. Real spreads carry credit, gamma, and settlement risk that the page doesn&rsquo;t model. Needs reframing to &ldquo;no-touch probability&rdquo; with explicit caveats.
+        </div>
+      </a>
+
+      <a class="study-card" href="/bilbo-box-breakout.html">
+        <div class="head">
+          <span class="name">Bilbo Box Breakout (raw)</span>
+          <span class="arrow">&rarr;</span>
+        </div>
+        <div class="reason">
+          <strong>Near-zero edge.</strong> 51% / +0.03R across 50,889 events. Raw signal isn&rsquo;t tradable on its own. Either retire or repackage as the negative finding that motivates Bilbo Box &times; HTF PO Bracket Exits.
+        </div>
+      </a>
+
+      <a class="study-card" href="/bilbo-htf-po.html">
+        <div class="head">
+          <span class="name">Bilbo Box &times; HTF PO Bracket Exits</span>
+          <span class="arrow">&rarr;</span>
+        </div>
+        <div class="reason">
+          <strong>Sound frame, shaky entry.</strong> The bracket-exit framework is reasonable, but the underlying signal it brackets (raw Bilbo Box Breakout) sits in drafts for near-zero edge. Needs a stronger entry trigger before it&rsquo;s tradable &mdash; or a rebuild that doesn&rsquo;t depend on the raw box.
+        </div>
+      </a>
+
+      <a class="study-card" href="/bilbo-continuation.html">
+        <div class="head">
+          <span class="name">Bilbo Continuation</span>
+          <span class="arrow">&rarr;</span>
+        </div>
+        <div class="reason">
+          <strong>Not reproducible.</strong> 78.6 &rarr; 200% extension reach rates can&rsquo;t be regenerated from the current `backtest_gg_with_po.py`. Rebuild from current code, or fold the surviving 60m PO buckets into Bilbo Golden Gate.
+        </div>
+      </a>
+
+      <a class="study-card" href="/4h-po-reversal.html">
+        <div class="head">
+          <span class="name">4h PO Reversal Anatomy</span>
+          <span class="arrow">&rarr;</span>
+        </div>
+        <div class="reason">
+          <strong>Stale code.</strong> Still under re-verification. Event log and velocity buckets came from a script no longer in the repo. Rebuild before promoting to a tradable study.
+        </div>
+      </a>
+
+      <a class="study-card" href="/ema21-reversion.html">
+        <div class="head">
+          <span class="name">Daily 21 EMA Reversion</span>
+          <span class="arrow">&rarr;</span>
+        </div>
+        <div class="reason">
+          <strong>Underpowered.</strong> 50 episodes is too thin to stand alone. Useful as context for swing setups, not a standalone tradable. Needs explicit &ldquo;close-confirmed / next-session executable&rdquo; framing.
+        </div>
+      </a>
+
+      <a class="study-card" href="/premarket-ath.html">
+        <div class="head">
+          <span class="name">Premarket ATH Morning Fade</span>
+          <span class="arrow">&rarr;</span>
+        </div>
+        <div class="reason">
+          <strong>Too rare.</strong> Real edge per event but frequency is only 3.7% (post-rerun n=243). Standalone page doesn&rsquo;t earn its slot &mdash; consolidate with Call-to-Put Reversal under a unified &ldquo;morning fade&rdquo; cluster.
+        </div>
+      </a>
+
+      <a class="study-card" href="/multiday-put-trigger-reversion.html">
+        <div class="head">
+          <span class="name">Multiday Put Trigger Reversion</span>
+          <span class="arrow">&rarr;</span>
+        </div>
+        <div class="reason">
+          <strong>Needs baseline.</strong> Reads as a thinner cousin of Call-to-Put Reversal. Needs an explicit weekly-trigger definition and a baseline comparison before it earns a slot beside the keepers.
+        </div>
+      </a>
+    </div>
+
+    <!-- FAILED -->
+    <div class="section section-failed" id="failed">
+      <div class="section-label">
+        <span>Failed Studies &mdash; No Edge Found</span>
+        <span class="count">3 studies</span>
+      </div>
+      <div class="section-intro">
+        These were tested and didn&rsquo;t hold up. They should be ignored as playbook material. If you want to revisit any of them, expect to redo from scratch with a different framing &mdash; the current versions don&rsquo;t carry tradable edge.
+      </div>
+
+      <a class="study-card" href="/tenam-traffic.html">
+        <div class="head">
+          <span class="name">TenAM Traffic PO Divergence</span>
+          <span class="arrow">&rarr;</span>
+        </div>
+        <div class="reason">
+          <strong>Honest negative finding.</strong> n=36,829 PO divergences with regular signals <em>under-performing</em> baseline. Hidden divergences carry only a marginal, time-window-conditional edge. Don&rsquo;t trade off this page.
+        </div>
+      </a>
+
+      <a class="study-card" href="/bilbo-10m.html">
+        <div class="head">
+          <span class="name">10m vs 60m PO</span>
+          <span class="arrow">&rarr;</span>
+        </div>
+        <div class="reason">
+          <strong>Redundant + unreproducible.</strong> 10m column can&rsquo;t be regenerated from current code, and the surviving conclusion (&ldquo;60m more predictive&rdquo;) is already covered inside Bilbo Golden Gate. Standalone page adds nothing.
+        </div>
+      </a>
+
+      <a class="study-card" href="/4h-po-opex.html">
+        <div class="head">
+          <span class="name">4h PO &times; OpEx Pin Release</span>
+          <span class="arrow">&rarr;</span>
+        </div>
+        <div class="reason">
+          <strong>Over-claiming.</strong> Headline cohort n=13. Either deepen the sample dramatically or retire the page. Current version sells more confidence than the data supports.
+        </div>
+      </a>
+    </div>
+
+    <a class="back-home" href="/">&larr; back to core playbook</a>
+
+    <div class="footer">
+      ATR Levels &amp; Phase Oscillator by <a href="https://satyland.com" target="_blank">Saty Mahajan</a><br>
+      Editorial audit: 2026-04-26
+    </div>
+  </div>
+
+</body>
+</html>

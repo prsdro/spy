@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Bilbo Golden Gate | Milkman Trades</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥛</text></svg>">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0c0e12;--card:#11131a;--card2:#161922;--border:#1c1f2a;--border2:#252938;
+  --t:#e4e5e9;--t2:#b0b3c0;--t3:#7a7e90;
+  --bull:#1cd48a;--bullD:#0e5c3c;--bear:#ef6c00;--bearD:#6e3200;
+  --acc:#fbbf24;--accD:#5c4500;--red:#ef4444;--blue:#60a5fa;
+}
+html{font-size:14px}
+body{background:#060709;color:var(--t);font-family:'DM Sans',system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;padding:2rem 1rem 4rem}
+
+.save-bar{width:1200px;display:flex;justify-content:flex-end;margin-bottom:.75rem}
+.save-btn{
+  padding:.5rem 1.2rem;background:var(--acc);color:#000;border:none;border-radius:4px;
+  font-family:'JetBrains Mono',monospace;font-size:.75rem;font-weight:600;cursor:pointer;
+  letter-spacing:.03em;transition:opacity .15s;
+}
+.save-btn:hover{opacity:.85}
+.save-btn:active{transform:scale(.97)}
+
+.poster{
+  width:1200px;background:var(--bg);border:1px solid var(--border);border-radius:8px;
+  overflow:hidden;position:relative;
+}
+
+.hdr{
+  padding:1.8rem 2rem 1.4rem;
+  background:linear-gradient(135deg,#0e1018 0%,#12151f 100%);
+  border-bottom:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:flex-end;
+}
+.hdr-left h1{
+  font-family:'JetBrains Mono',monospace;font-size:1.5rem;font-weight:700;
+  letter-spacing:-.01em;line-height:1;margin-bottom:.35rem;
+}
+.hdr-left h1 span{color:var(--acc)}
+.hdr-left .sub{font-size:.8rem;color:var(--t3);font-weight:300}
+.hdr-right{text-align:right}
+.hdr-right .draft{
+  font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:500;
+  color:#a08000;background:#1a1600;padding:.2em .5em;border-radius:3px;
+  letter-spacing:.06em;text-transform:uppercase;margin-bottom:.3rem;display:inline-block;
+}
+.hdr-right .url{font-size:.75rem;color:var(--t3)}
+.hdr-right .back{font-size:.65rem;color:var(--blue);text-decoration:none;margin-right:.8rem}
+.hdr-right .back:hover{text-decoration:underline}
+
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.sec{border-right:1px solid var(--border);border-bottom:1px solid var(--border);padding:1.4rem 1.6rem}
+.sec:nth-child(even){border-right:none}
+.sec.full{grid-column:1/-1;border-right:none}
+.sec-num{
+  font-family:'JetBrains Mono',monospace;font-size:.6rem;font-weight:600;
+  color:var(--acc);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.6rem;
+}
+.sec-title{font-size:1rem;font-weight:700;margin-bottom:.8rem;line-height:1.2}
+
+.stats{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:.8rem}
+.stat{
+  flex:1;min-width:100px;background:var(--card);border:1px solid var(--border);
+  border-radius:5px;padding:.6rem .7rem;
+}
+.stat-val{font-family:'JetBrains Mono',monospace;font-size:1.4rem;font-weight:700;line-height:1}
+.stat-label{font-size:.75rem;color:var(--t3);margin-top:.2rem;line-height:1.3}
+.bull{color:var(--bull)}.bear{color:var(--bear)}.acc{color:var(--acc)}.red{color:var(--red)}
+
+.mtable{width:100%;border-collapse:collapse;font-size:.7rem;margin:.5rem 0}
+.mtable th{
+  font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:500;
+  color:var(--t3);text-align:right;padding:.3rem .4rem;border-bottom:1px solid var(--border);
+  letter-spacing:.04em;text-transform:uppercase;
+}
+.mtable th:first-child{text-align:left}
+.mtable td{
+  padding:.3rem .4rem;border-bottom:1px solid #13151d;text-align:right;
+  font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--t2);
+}
+.mtable td:first-child{text-align:left;font-family:'DM Sans',sans-serif;color:var(--t);font-weight:400}
+.mtable tr.hi td{font-weight:600}
+.mtable tr.hi .bull{color:var(--bull)}
+.mtable tr.hi .bear{color:var(--bear)}
+
+.pogrid{display:grid;grid-template-columns:auto 1fr 1fr;gap:0;font-size:.7rem;margin:.5rem 0}
+.pogrid .corner{background:var(--card);border:1px solid var(--border);padding:.25rem .4rem}
+.pogrid .colhdr{
+  background:var(--card);border:1px solid var(--border);padding:.25rem .4rem;text-align:center;
+  font-family:'JetBrains Mono',monospace;font-size:.6rem;font-weight:600;color:var(--t3);
+  text-transform:uppercase;letter-spacing:.04em;
+}
+.pogrid .rowhdr{
+  background:var(--card);border:1px solid var(--border);padding:.25rem .5rem;
+  font-weight:500;color:var(--t2);
+}
+.pogrid .cell{
+  border:1px solid var(--border);padding:.3rem .4rem;text-align:center;
+  font-family:'JetBrains Mono',monospace;font-weight:600;
+}
+.pogrid .cell.hot{background:rgba(28,212,138,.08)}
+.pogrid .cell.cold{background:rgba(239,68,68,.05);color:var(--t3)}
+
+.blist{list-style:none;font-size:.85rem;color:var(--t2);line-height:1.7}
+.blist li::before{content:'›';color:var(--acc);font-weight:700;margin-right:.4rem}
+.blist .key{color:var(--t);font-weight:500}
+.blist .val{font-family:'JetBrains Mono',monospace;font-weight:600}
+
+.ftr{
+  padding:.8rem 2rem;border-top:1px solid var(--border);
+  font-size:.6rem;color:var(--t3);display:flex;justify-content:space-between;
+  font-family:'JetBrains Mono',monospace;
+}
+
+.divlbl{
+  font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--t3);
+  letter-spacing:.08em;text-transform:uppercase;margin:.6rem 0 .3rem;
+}
+
+/* ── Mobile ── */
+@media(max-width:767px){
+  body{padding:1rem .5rem 3rem}
+  .save-bar{width:100%;flex-wrap:wrap;gap:.4rem}
+  .poster{width:100%}
+  .hdr{flex-direction:column;align-items:flex-start;gap:.6rem;padding:1.2rem 1rem 1rem}
+  .hdr-left h1{font-size:1.1rem}
+  .hdr-left .sub{font-size:.72rem}
+  .hdr-right{text-align:left}
+  .grid{grid-template-columns:1fr}
+  .sec{border-right:none !important;padding:1.1rem 1rem}
+  .sec-title{font-size:.95rem}
+  .stats{flex-direction:column}
+  .stat{min-width:0}
+  .stat-val{font-size:1.2rem}
+  .pogrid{font-size:.65rem}
+  .pogrid .cell{font-size:.75rem}
+  .mtable{font-size:.68rem}
+  .mtable th,.mtable td{padding:.25rem .35rem}
+  .ftr{flex-direction:column;gap:.4rem;text-align:center;font-size:.55rem;padding:.7rem 1rem}
+}
+</style>
+<script src="/nav.js"></script>
+<script src="/mobile-png.js"></script>
+</head>
+<body>
+
+<div class="save-bar">
+  <button class="save-btn save-mobile-btn" onclick="saveMobilePNG()" style="background:#60a5fa;margin-right:.5rem">📱 Mobile PNG</button>
+  <button class="save-btn" onclick="savePNG()">&#11015; Save as PNG</button>
+</div>
+
+<div class="poster" id="poster">
+
+<div class="hdr">
+  <div class="hdr-left">
+    <h1>Milkman Trades &mdash; <span>The Bilbo Golden Gate</span></h1>
+    <div class="sub">1-hour Phase Oscillator filter &mdash; 25 years of SPY (2000&ndash;2025)</div>
+  </div>
+  <div class="hdr-right">
+    <div class="draft">Draft &mdash; Not Verified</div><br>
+    <a class="back" href="cheatsheet.html">&larr; Master Sheet</a>
+    <span class="url">milkmantrades.com</span>
+  </div>
+</div>
+
+<div class="grid">
+
+<!-- Key stats -->
+<div class="sec full">
+  <div class="sec-num">01 &mdash; Bilbo Key Stats</div>
+  <div class="sec-title">1h Phase Oscillator transforms the Golden Gate</div>
+
+  <div class="stats">
+    <div class="stat"><div class="stat-val bull">77.7%</div><div class="stat-label">Bull GG when<br>PO High+Rising</div></div>
+    <div class="stat"><div class="stat-val bear">90.2%</div><div class="stat-label">Bear GG when<br>PO Low+Falling</div></div>
+    <div class="stat"><div class="stat-val bear">66%</div><div class="stat-label">Bear Bilbo<br>&rarr; full ATR</div></div>
+    <div class="stat"><div class="stat-val acc">63%</div><div class="stat-label">Bull baseline<br>(no filter)</div></div>
+    <div class="stat"><div class="stat-val acc">65%</div><div class="stat-label">Bear baseline<br>(no filter)</div></div>
+  </div>
+
+  <ul class="blist">
+    <li><span class="key">Use 60-minute PO</span> &mdash; the 10m PO gives <span class="val">5&ndash;12x</span> less edge</li>
+    <li>Bearish Bilbo reaches full ATR <span class="val bear">66%</span> vs <span class="val">31%</span> baseline</li>
+  </ul>
+</div>
+
+<!-- Bull PO grid -->
+<div class="sec">
+  <div class="sec-num">02 &mdash; Bullish PO Grid</div>
+  <div class="sec-title">Bull GG% by 1h PO zone &times; slope</div>
+
+  <div class="pogrid">
+    <div class="corner"></div><div class="colhdr">Rising</div><div class="colhdr">Falling</div>
+    <div class="rowhdr">High</div><div class="cell hot"><span class="bull">77.7%</span></div><div class="cell hot"><span class="bull">77.6%</span></div>
+    <div class="rowhdr">Mid</div><div class="cell">63.3%</div><div class="cell cold">51.5%</div>
+  </div>
+
+  <ul class="blist" style="margin-top:.5rem">
+    <li><span class="key">High zone</span> = strong regardless of slope (<span class="val bull">77.7%</span>)</li>
+    <li><span class="key">Mid+Falling</span> is a warning &mdash; only <span class="val" style="color:var(--t3)">51.5%</span></li>
+  </ul>
+</div>
+
+<!-- Bear PO grid -->
+<div class="sec">
+  <div class="sec-num">03 &mdash; Bearish PO Grid</div>
+  <div class="sec-title">Bear GG% by 1h PO zone &times; slope</div>
+
+  <div class="pogrid">
+    <div class="corner"></div><div class="colhdr">Rising</div><div class="colhdr">Falling</div>
+    <div class="rowhdr">Low</div><div class="cell hot"><span class="bear">88.5%</span></div><div class="cell hot"><span class="bear">90.2%</span></div>
+    <div class="rowhdr">Mid</div><div class="cell cold">54.2%</div><div class="cell">64.0%</div>
+  </div>
+
+  <ul class="blist" style="margin-top:.5rem">
+    <li><span class="key">Low zone</span> = devastating regardless of slope (<span class="val bear">88&ndash;90%</span>)</li>
+    <li><span class="key">Mid+Rising</span> kills the bear trade &mdash; only <span class="val" style="color:var(--t3)">54.2%</span></li>
+  </ul>
+</div>
+
+<!-- Bull continuation -->
+<div class="sec">
+  <div class="sec-num">04 &mdash; Bullish Continuation</div>
+  <div class="sec-title">Bilbo bull vs baseline at each level</div>
+
+  <table class="mtable">
+    <thead><tr><th>ATR Level</th><th>Bilbo</th><th>Baseline</th><th>Edge</th></tr></thead>
+    <tbody>
+      <tr class="hi"><td>61.8%</td><td class="bull">77.7%</td><td>63%</td><td class="bull">+14.7%</td></tr>
+      <tr class="hi"><td>78.6%</td><td class="bull">58.9%</td><td>43%</td><td class="bull">+15.9%</td></tr>
+      <tr><td>100%</td><td>39.2%</td><td>26%</td><td class="bull">+13.2%</td></tr>
+      <tr><td>123.6%</td><td>23.7%</td><td>13%</td><td class="bull">+10.7%</td></tr>
+    </tbody>
+  </table>
+
+  <ul class="blist" style="margin-top:.5rem">
+    <li>Bilbo adds <span class="val bull">+13&ndash;16%</span> edge at every continuation level</li>
+    <li>Even 123.6% extension is nearly <span class="val">2x</span> baseline</li>
+  </ul>
+</div>
+
+<!-- Bear continuation -->
+<div class="sec">
+  <div class="sec-num">05 &mdash; Bearish Continuation</div>
+  <div class="sec-title">Bilbo bear vs baseline at each level</div>
+
+  <table class="mtable">
+    <thead><tr><th>ATR Level</th><th>Bilbo</th><th>Baseline</th><th>Edge</th></tr></thead>
+    <tbody>
+      <tr class="hi"><td>61.8%</td><td class="bear">90.2%</td><td>65%</td><td class="bear">+25.2%</td></tr>
+      <tr class="hi"><td>78.6%</td><td class="bear">80.0%</td><td>48%</td><td class="bear">+32.0%</td></tr>
+      <tr class="hi"><td>100%</td><td class="bear">66.0%</td><td>31%</td><td class="bear">+35.0%</td></tr>
+      <tr><td>123.6%</td><td>43.8%</td><td>18%</td><td class="bear">+25.8%</td></tr>
+    </tbody>
+  </table>
+
+  <ul class="blist" style="margin-top:.5rem">
+    <li>Bear Bilbo edge is <span class="val bear">massive</span> &mdash; up to <span class="val bear">+35%</span> at 100% ATR</li>
+    <li>Full ATR reached <span class="val bear">66%</span> vs <span class="val">31%</span> baseline (more than 2x)</li>
+    <li>Even 123.6% extension: <span class="val bear">43.8%</span> vs <span class="val">18%</span></li>
+  </ul>
+</div>
+
+</div><!-- /grid -->
+
+<div class="sec full" style="background:linear-gradient(135deg,#0f1118,#131620);border-bottom:none">
+  <div class="sec-num" style="color:var(--acc)">&#9733; Bottom Line</div>
+  <div class="sec-title">How to use the Bilbo</div>
+  <ul class="blist">
+    <li><span class="key">Check the 1-hour Phase Oscillator before entering any Golden Gate.</span> If it confirms direction (high+rising for calls, low+falling for puts), you have a 78&ndash;90% setup. If it doesn't, you have a coin flip.</li>
+    <li><span class="key">Consider letting Bilbo winners run.</span> A bearish Bilbo has 66% odds of reaching the full ATR and 44% of hitting 123.6%. Trail your stop instead of taking profit at 61.8%.</li>
+    <li><span class="key">Ignore the 10-minute PO for this.</span> It gives 5&ndash;12x less edge. Only the 60-minute timeframe captures the sustained momentum that drives Golden Gate completions.</li>
+    <li><span class="key">Counter-trend Golden Gates are the worst trade.</span> Bull GG with PO mid+falling: 51.5%. Bear GG with PO mid+rising: 54.2%. These setups have below-average odds.</li>
+  </ul>
+</div>
+
+<div class="ftr">
+  <span>milkmantrades.com &middot; ATR Levels &amp; Phase Oscillator by Saty Mahajan</span>
+  <span>@tesrak &middot; @todor &middot; Draft &mdash; not independently verified</span>
+</div>
+
+</div><!-- /poster -->
+
+<script>
+function savePNG() {
+  const btn = document.querySelector('.save-btn');
+  btn.textContent = 'Rendering...';
+  html2canvas(document.getElementById('poster'), {
+    scale: 2,
+    backgroundColor: '#0c0e12',
+    useCORS: true,
+  }).then(canvas => {
+    const a = document.createElement('a');
+    a.download = 'golden-gate-bilbo.png';
+    a.href = canvas.toDataURL('image/png');
+    a.click();
+    btn.textContent = '\u2713 Saved';
+    setTimeout(() => btn.textContent = '\u2b07 Save as PNG', 2000);
+  });
+}
+</script>
+</body>
+</html>

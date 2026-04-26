@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The 3-Minute Close — Call Trigger Confirmation | Milkman Trades</title>
+<meta name="description" content="When SPY opens inside the trigger box and gets a confirmed 3-minute close above the call trigger, there's a 73.6% chance of hitting the 38.2% ATR level. But clean runs — without closing back below — hit 97.0%.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥛</text></svg>">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,300;1,9..40,400&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --bg:#0c0e12;
+  --surface:#13161c;
+  --surface-2:#181c24;
+  --border:#1e2230;
+  --text:#e8eaed;
+  --text-dim:#6b7280;
+  --text-mid:#9ca3af;
+  --bull:#1cd48a;
+  --bull-dim:#0d5738;
+  --bull-bg:#0a1f15;
+  --bear:#ef6c00;
+  --bear-dim:#7c3600;
+  --bear-bg:#1f1208;
+  --accent:#fbbf24;
+  --clean:#22d3ee;
+  --clean-dim:#0e7490;
+  --clean-bg:#0c2a33;
+  --invalid:#f87171;
+  --invalid-dim:#991b1b;
+  --invalid-bg:#1f0c0c;
+}
+
+html{font-size:15px;scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'DM Sans',system-ui,sans-serif;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+
+.page{max-width:760px;margin:0 auto;padding:3rem 1.5rem 5rem}
+
+/* ── Hero ── */
+.hero{margin-bottom:3.5rem}
+.hero .kicker{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.7rem;
+  font-weight:500;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--accent);
+  margin-bottom:.75rem;
+}
+.hero h1{
+  font-size:2.2rem;
+  font-weight:700;
+  letter-spacing:-.03em;
+  line-height:1.15;
+  margin-bottom:1rem;
+}
+.hero h1 em{
+  font-style:normal;
+  background:linear-gradient(135deg,var(--clean),var(--bull));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.hero .lede{
+  font-size:1rem;
+  color:var(--text-mid);
+  font-weight:300;
+  max-width:600px;
+  line-height:1.65;
+}
+
+/* ── Sections ── */
+.section{margin-bottom:3.5rem}
+.section-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.65rem;
+  font-weight:500;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--text-dim);
+  padding-bottom:.6rem;
+  border-bottom:1px solid var(--border);
+  margin-bottom:1.5rem;
+}
+
+.prose{
+  font-size:.92rem;
+  color:var(--text-mid);
+  font-weight:300;
+  line-height:1.7;
+  margin-bottom:1.5rem;
+}
+.prose strong{color:var(--text);font-weight:500}
+
+/* ── Big Stats ── */
+.bigstat{
+  display:flex;
+  gap:1.25rem;
+  margin:2rem 0;
+  flex-wrap:wrap;
+}
+.bigstat-item{
+  flex:1;
+  min-width:130px;
+  padding:1.25rem;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:8px;
+  position:relative;
+  overflow:hidden;
+}
+.bigstat-item::before{
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;
+  height:2px;
+}
+.bigstat-item.clean-card::before{background:linear-gradient(90deg,var(--clean),transparent)}
+.bigstat-item.invalid-card::before{background:linear-gradient(90deg,var(--invalid),transparent)}
+.bigstat-item.bull-card::before{background:linear-gradient(90deg,var(--bull),transparent)}
+.bigstat-item.neutral-card::before{background:linear-gradient(90deg,var(--text-dim),transparent);opacity:.4}
+.bigstat-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:2rem;
+  font-weight:700;
+  line-height:1;
+  margin-bottom:.35rem;
+}
+.bigstat-num.clean{color:var(--clean)}
+.bigstat-num.invalid{color:var(--invalid)}
+.bigstat-num.bull{color:var(--bull)}
+.bigstat-num.dim{color:var(--text-dim)}
+.bigstat-label{
+  font-size:.72rem;
+  color:var(--text-dim);
+  line-height:1.4;
+}
+
+/* ── Funnel ── */
+.funnel{
+  display:flex;
+  flex-direction:column;
+  gap:0;
+  margin:2rem 0;
+}
+.funnel-step{
+  display:flex;
+  align-items:center;
+  gap:1rem;
+  padding:.9rem 1.25rem;
+  background:var(--surface);
+  border:1px solid var(--border);
+  position:relative;
+}
+.funnel-step:first-child{border-radius:8px 8px 0 0}
+.funnel-step:last-child{border-radius:0 0 8px 8px}
+.funnel-step + .funnel-step{border-top:none}
+.funnel-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:1.6rem;
+  font-weight:700;
+  color:var(--bull);
+  min-width:90px;
+  text-align:right;
+}
+.funnel-desc{
+  font-size:.82rem;
+  color:var(--text-mid);
+  flex:1;
+}
+.funnel-pct{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.75rem;
+  color:var(--text-dim);
+  min-width:70px;
+  text-align:right;
+}
+.funnel-bar{
+  position:absolute;
+  bottom:0;left:0;
+  height:2px;
+  background:var(--bull);
+  opacity:.2;
+  transition:width 1s cubic-bezier(.22,1,.36,1);
+}
+
+/* ── Table ── */
+.data-table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:.78rem;
+  margin:1.5rem 0;
+}
+.data-table th{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.62rem;
+  font-weight:500;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:var(--text-dim);
+  text-align:right;
+  padding:.6rem .5rem;
+  border-bottom:1px solid var(--border);
+  white-space:nowrap;
+}
+.data-table th:first-child{text-align:left}
+.data-table th.col-clean{color:var(--clean-dim)}
+.data-table th.col-invalid{color:var(--invalid-dim)}
+.data-table td{
+  padding:.55rem .5rem;
+  border-bottom:1px solid #151820;
+  text-align:right;
+  font-family:'JetBrains Mono',monospace;
+  font-size:.78rem;
+  font-weight:400;
+  color:var(--text-mid);
+}
+.data-table td:first-child{
+  text-align:left;
+  font-family:'DM Sans',sans-serif;
+  font-weight:500;
+  color:var(--text);
+}
+.data-table .n-col{
+  font-size:.65rem;
+  color:var(--text-dim);
+  font-weight:400;
+}
+.data-table .pct-clean{color:var(--clean)}
+.data-table .pct-invalid{color:var(--invalid)}
+.data-table .pct-overall{color:var(--bull)}
+.data-table .edge-col{
+  font-weight:600;
+}
+.data-table .edge-pos{color:var(--accent)}
+.data-table tr.row-warn td{opacity:.6}
+.data-table tr:hover td{background:#151820}
+
+.data-table .bar-cell{
+  width:100px;
+  padding-right:.75rem;
+}
+.mini-bar{
+  height:6px;
+  border-radius:3px;
+  background:var(--surface-2);
+  overflow:hidden;
+  position:relative;
+}
+.mini-bar-fill{
+  height:100%;
+  border-radius:3px;
+  transition:width .8s cubic-bezier(.22,1,.36,1);
+}
+
+/* ── Comparison Block ── */
+.compare{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:1.5rem;
+  margin:2rem 0;
+}
+.compare-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:1.25rem;
+  position:relative;
+  overflow:hidden;
+}
+.compare-card::before{
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;
+  height:2px;
+}
+.compare-card.clean::before{background:linear-gradient(90deg,var(--clean),transparent)}
+.compare-card.invalid::before{background:linear-gradient(90deg,var(--invalid),transparent)}
+.compare-card .card-title{
+  font-size:.8rem;
+  font-weight:600;
+  margin-bottom:.1rem;
+}
+.compare-card .card-sub{
+  font-size:.7rem;
+  color:var(--text-dim);
+  font-family:'JetBrains Mono',monospace;
+  margin-bottom:1rem;
+}
+.compare-card .big-pct{
+  font-family:'JetBrains Mono',monospace;
+  font-size:2.8rem;
+  font-weight:700;
+  line-height:1;
+  margin-bottom:.35rem;
+}
+.compare-card.clean .big-pct{color:var(--clean)}
+.compare-card.invalid .big-pct{color:var(--invalid)}
+.compare-card .sub-stat{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.72rem;
+  color:var(--text-dim);
+}
+
+/* ── Speed section ── */
+.speed-row{
+  display:flex;
+  align-items:center;
+  gap:.5rem;
+  margin-bottom:.35rem;
+}
+.speed-label{
+  flex:0 0 60px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:.65rem;
+  color:var(--text-dim);
+  text-align:right;
+}
+.speed-bar-bg{
+  flex:1;
+  height:14px;
+  background:var(--surface-2);
+  border-radius:3px;
+  overflow:hidden;
+}
+.speed-bar-fill{
+  height:100%;
+  border-radius:3px;
+  transition:width 1s cubic-bezier(.22,1,.36,1);
+}
+.speed-pct{
+  flex:0 0 44px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:.7rem;
+  font-weight:500;
+  text-align:right;
+  color:var(--bull);
+}
+
+/* ── Callout ── */
+.callout{
+  background:var(--surface);
+  border-left:3px solid var(--accent);
+  padding:1rem 1.25rem;
+  margin:2rem 0;
+  border-radius:0 6px 6px 0;
+}
+.callout p{
+  font-size:.85rem;
+  color:var(--text-mid);
+  font-weight:300;
+  line-height:1.6;
+}
+.callout strong{color:var(--accent);font-weight:500}
+
+/* ── Edge badge ── */
+.edge-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:.35rem;
+  padding:.4rem .85rem;
+  background:#2a2000;
+  border:1px solid #4a3600;
+  border-radius:20px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:.85rem;
+  font-weight:700;
+  color:var(--accent);
+  margin:1rem 0;
+}
+
+/* ── Footer ── */
+.footer{
+  text-align:center;
+  padding-top:2.5rem;
+  border-top:1px solid var(--border);
+  color:var(--text-dim);
+  font-size:.72rem;
+  font-weight:300;
+  line-height:1.8;
+}
+.footer a{color:var(--text-dim);text-decoration:underline;text-underline-offset:2px}
+
+/* ── Animations ── */
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease}
+.reveal.visible{opacity:1;transform:none}
+
+/* ── Study links ── */
+.study-links{
+  display:flex;
+  flex-wrap:wrap;
+  gap:.5rem;
+  justify-content:center;
+  margin:2rem 0 3rem;
+}
+.study-link{
+  display:inline-flex;
+  align-items:center;
+  gap:.4rem;
+  padding:.6rem 1.1rem;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:6px;
+  color:var(--text);
+  text-decoration:none;
+  font-size:.82rem;
+  font-weight:500;
+  transition:border-color .2s,background .2s;
+}
+.study-link:hover{border-color:#fbbf24;background:var(--surface-2)}
+.study-link svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2}
+
+/* ── Mobile ── */
+@media(max-width:767px){
+  .hero h1{font-size:1.5rem}
+  .bigstat{flex-direction:column;gap:.75rem}
+  .bigstat-item{min-width:0}
+  .bigstat-num{font-size:1.6rem}
+  .compare{grid-template-columns:1fr}
+  .compare-card .big-pct{font-size:2rem}
+  .data-table{font-size:.72rem;display:block;overflow-x:auto}
+  .data-table th,.data-table td{padding:.4rem .35rem;white-space:nowrap}
+  .funnel-num{font-size:1.2rem;min-width:60px}
+}
+.cheatsheet-banner{display:block;text-align:center;padding:1.5rem 1rem;margin:2rem 0 0;background:var(--surface);border:1px solid var(--border);border-radius:8px;text-decoration:none;transition:border-color .2s,background .2s}
+.cheatsheet-banner:hover{border-color:#fbbf24;background:var(--surface-2)}
+.cheatsheet-banner span{font-size:.95rem;color:var(--text);font-weight:500}
+
+/* ── Clickable N cells ── */
+.n-clickable{
+  cursor:pointer;
+  text-decoration:underline;
+  text-decoration-style:dotted;
+  text-underline-offset:2px;
+  transition:color .15s;
+}
+.n-clickable:hover{color:var(--accent) !important}
+.n-yes{color:var(--bull)}
+.n-no{color:var(--text-dim)}
+
+/* ── Date Drawer ── */
+.date-drawer-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.55);
+  z-index:1000;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .25s ease;
+}
+.date-drawer-overlay.open{opacity:1;pointer-events:auto}
+
+.date-drawer{
+  position:fixed;
+  top:0;right:0;bottom:0;
+  width:380px;
+  max-width:90vw;
+  background:var(--bg);
+  border-left:1px solid var(--border);
+  z-index:1001;
+  transform:translateX(100%);
+  transition:transform .3s cubic-bezier(.22,1,.36,1);
+  display:flex;
+  flex-direction:column;
+}
+.date-drawer.open{transform:translateX(0)}
+
+.drawer-header{
+  padding:1.25rem 1.25rem .75rem;
+  border-bottom:1px solid var(--border);
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:.75rem;
+  flex-shrink:0;
+}
+.drawer-title{
+  font-size:.95rem;
+  font-weight:600;
+  line-height:1.3;
+}
+.drawer-subtitle{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.68rem;
+  color:var(--text-dim);
+  margin-top:.2rem;
+}
+.drawer-close{
+  background:none;
+  border:1px solid var(--border);
+  border-radius:4px;
+  color:var(--text-dim);
+  cursor:pointer;
+  padding:.25rem .5rem;
+  font-size:.75rem;
+  line-height:1;
+  transition:color .15s,border-color .15s;
+  flex-shrink:0;
+}
+.drawer-close:hover{color:var(--text);border-color:var(--text-dim)}
+
+.drawer-filters{
+  padding:.75rem 1.25rem;
+  display:flex;
+  gap:.4rem;
+  border-bottom:1px solid var(--border);
+  flex-shrink:0;
+}
+.drawer-filter{
+  padding:.3rem .65rem;
+  font-family:'JetBrains Mono',monospace;
+  font-size:.68rem;
+  border:1px solid var(--border);
+  border-radius:4px;
+  background:none;
+  color:var(--text-dim);
+  cursor:pointer;
+  transition:all .15s;
+}
+.drawer-filter:hover{color:var(--text);border-color:var(--text-dim)}
+.drawer-filter.active{color:var(--accent);border-color:var(--accent);background:#1a1800}
+
+.drawer-list{
+  flex:1;
+  overflow-y:auto;
+  padding:.5rem 0;
+}
+.drawer-list::-webkit-scrollbar{width:4px}
+.drawer-list::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+
+.date-row{
+  display:flex;
+  align-items:center;
+  padding:.4rem 1.25rem;
+  gap:.75rem;
+  cursor:pointer;
+  transition:background .12s;
+  text-decoration:none;
+  color:var(--text);
+}
+.date-row:hover{background:var(--surface)}
+.date-row .date-val{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.78rem;
+  font-weight:500;
+  flex:1;
+}
+.date-row .date-tag{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.62rem;
+  padding:.15rem .4rem;
+  border-radius:3px;
+  font-weight:500;
+}
+.date-tag.hit-clean{background:#0e3326;color:var(--clean)}
+.date-tag.hit-inv{background:#1f1f08;color:var(--accent)}
+.date-tag.miss-clean{background:#1a1a1a;color:var(--text-dim)}
+.date-tag.miss-inv{background:#1f0c0c;color:var(--invalid)}
+.date-row .chart-arrow{
+  color:var(--text-dim);
+  font-size:.7rem;
+  transition:color .12s;
+}
+.date-row:hover .chart-arrow{color:var(--accent)}
+.drawer-count{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.65rem;
+  color:var(--text-dim);
+  padding:.5rem 1.25rem;
+  border-top:1px solid var(--border);
+  flex-shrink:0;
+}
+</style>
+<script src="/nav.js"></script>
+</head>
+<body>
+<div class="page">
+
+<div style="background:#1a1400;border:1px solid #3d3200;border-radius:6px;padding:.6rem 1rem;margin-bottom:1.5rem;font-size:.75rem;color:#d4a800;font-weight:400;line-height:1.5">
+  <strong style="color:#fbbf24">Draft &mdash;</strong> These backtests have not yet been independently verified. Do not trade based on this data.
+</div>
+
+<header class="hero reveal">
+  <div class="kicker">Study &mdash; Call Trigger Confirmation</div>
+  <h1>The 3-Minute Close:<br>clean runs above the trigger<br>hit 38.2% <em>97% of the time.</em></h1>
+  <p class="lede">When SPY opens inside the trigger box and gets a confirmed 3-minute close above the call trigger, there&rsquo;s a 73.6% chance of hitting the next ATR level. But if price never closes back below the trigger, that number jumps to 97.0%. Across 2,027 qualifying days over 25 years, the invalidation filter is the single strongest edge in this setup.</p>
+</header>
+
+<!-- ── Section 1: The Setup ── -->
+<div class="section reveal">
+  <div class="section-label">01 &mdash; The Setup</div>
+
+  <p class="prose">
+    The <strong>trigger box</strong> is the zone between the lower trigger (&minus;23.6%) and upper trigger (+23.6%) of the daily ATR levels. When SPY opens inside this box, it starts the day in a neutral zone &mdash; no gap through either trigger. Then we wait for a <strong>3-minute candle to close above the upper trigger</strong>. That&rsquo;s the confirmation. The question: does price then reach the <strong>38.2% ATR level</strong>?
+  </p>
+
+  <div class="funnel">
+    <div class="funnel-step">
+      <div class="funnel-num">6,582</div>
+      <div class="funnel-desc">Total trading days (Jan 2000 &ndash; Oct 2025)</div>
+      <div class="funnel-pct">100%</div>
+      <div class="funnel-bar" data-w="100"></div>
+    </div>
+    <div class="funnel-step">
+      <div class="funnel-num">3,254</div>
+      <div class="funnel-desc">Opened inside the trigger box</div>
+      <div class="funnel-pct">49.4%</div>
+      <div class="funnel-bar" data-w="49.4"></div>
+    </div>
+    <div class="funnel-step">
+      <div class="funnel-num">2,027</div>
+      <div class="funnel-desc">Got a 3-minute close above the call trigger</div>
+      <div class="funnel-pct">62.3% of box</div>
+      <div class="funnel-bar" data-w="30.8"></div>
+    </div>
+    <div class="funnel-step">
+      <div class="funnel-num" style="color:var(--accent)">1,492</div>
+      <div class="funnel-desc">Hit the 38.2% ATR level same day</div>
+      <div class="funnel-pct" style="color:var(--accent);font-weight:600">73.6%</div>
+      <div class="funnel-bar" data-w="22.7" style="background:var(--accent)"></div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <p><strong>Reading this:</strong> On roughly half of all trading days, SPY opens inside the trigger box. Of those, about 62% get a confirmed 3-minute close above the call trigger. And 73.6% of those go on to hit the 38.2% level &mdash; the entry to the Golden Gate.</p>
+  </div>
+</div>
+
+<!-- ── Section 2: Time of Day ── -->
+<div class="section reveal">
+  <div class="section-label">02 &mdash; Time of Day</div>
+
+  <p class="prose">
+    Probability decays with time. The first hour after the open is highest conviction. After 15:00, the setup barely works. The table shows the overall hit rate, plus the breakdown between <strong style="color:var(--clean)">clean runs</strong> (price never closes a 3m bar back below the trigger) and <strong style="color:var(--invalid)">invalidated</strong> trades (price closes back below the trigger at some point before hitting 38.2%).
+  </p>
+
+  <table class="data-table" id="time-table">
+    <thead>
+      <tr>
+        <th>Trigger Time</th>
+        <th>Overall</th>
+        <th>Yes</th>
+        <th>No</th>
+        <th class="bar-cell"></th>
+        <th class="col-clean">Clean</th>
+        <th class="col-clean">Yes</th>
+        <th class="col-clean">No</th>
+        <th class="col-invalid">Back Below</th>
+        <th class="col-invalid">Yes</th>
+        <th class="col-invalid">No</th>
+        <th>Edge</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <div class="callout">
+    <p><strong>Yes / No:</strong> <strong style="color:var(--bull)">Yes</strong> = hit the 38.2% level that day. <span style="color:var(--text-dim)">No</span> = did not. Click any number to see the specific dates and open them in the chart. &ldquo;Clean&rdquo; = price never closed a 3m bar back below the trigger. &ldquo;Back Below&rdquo; = it did.</p>
+  </div>
+</div>
+
+<!-- ── Section 3: The Invalidation Filter ── -->
+<div class="section reveal">
+  <div class="section-label">03 &mdash; The Invalidation Filter</div>
+
+  <p class="prose">
+    This is the core finding. A 3-minute close back below the call trigger &mdash; after the initial confirmation &mdash; is a <strong>powerful invalidation signal</strong>. It cuts the hit rate nearly in half. Avoiding invalidated trades gives you a <strong>+37.3 percentage point edge</strong>.
+  </p>
+
+  <div class="compare">
+    <div class="compare-card clean">
+      <div class="card-title" style="color:var(--clean)">Clean Run</div>
+      <div class="card-sub">No 3m close back below trigger</div>
+      <div class="big-pct">97.0%</div>
+      <div class="sub-stat">734 / 757 days hit 38.2%</div>
+    </div>
+    <div class="compare-card invalid">
+      <div class="card-title" style="color:var(--invalid)">Invalidated</div>
+      <div class="card-sub">Closed back below trigger</div>
+      <div class="big-pct">59.7%</div>
+      <div class="sub-stat">758 / 1,270 days hit 38.2%</div>
+    </div>
+  </div>
+
+  <div style="text-align:center">
+    <div class="edge-badge">+37.3pp edge from the invalidation filter</div>
+  </div>
+
+  <div class="bigstat">
+    <div class="bigstat-item neutral-card">
+      <div class="bigstat-num dim">62.7%</div>
+      <div class="bigstat-label">of trigger days see a close<br>back below at some point</div>
+    </div>
+    <div class="bigstat-item clean-card">
+      <div class="bigstat-num clean">37.3%</div>
+      <div class="bigstat-label">are clean runs &mdash; and they<br>almost always hit the target</div>
+    </div>
+  </div>
+
+  <p class="prose">
+    The hourly breakdown makes it even clearer. <strong>Clean trades triggered before 14:00 have a near-perfect hit rate</strong> &mdash; effectively 100%. Even invalidated morning trades still hit about 70%. But by afternoon, invalidated trades drop below 50%, and by the last half hour they&rsquo;re barely above chance.
+  </p>
+
+  <table class="data-table" id="invalidation-table">
+    <thead>
+      <tr>
+        <th>Trigger Hour</th>
+        <th class="col-clean">Clean Hit%</th>
+        <th class="col-clean">Yes</th>
+        <th class="col-clean">No</th>
+        <th class="col-invalid">Inval Hit%</th>
+        <th class="col-invalid">Yes</th>
+        <th class="col-invalid">No</th>
+        <th>Edge</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+<!-- ── Section 4: The Speed ── -->
+<div class="section reveal">
+  <div class="section-label">04 &mdash; Time to Target</div>
+
+  <p class="prose">
+    When the setup works, it&rsquo;s fast. Median time from confirmed trigger to hitting 38.2% is just <strong>18 minutes</strong> (6 three-minute bars). Three-quarters of winners arrive within an hour.
+  </p>
+
+  <div class="bigstat">
+    <div class="bigstat-item bull-card">
+      <div class="bigstat-num bull">18<span style="font-size:.45em;opacity:.6">min</span></div>
+      <div class="bigstat-label">Median time to target<br>6 three-minute bars</div>
+    </div>
+    <div class="bigstat-item bull-card">
+      <div class="bigstat-num bull">60<span style="font-size:.45em;opacity:.6">min</span></div>
+      <div class="bigstat-label">75th percentile<br>Most winners arrive within 1 hour</div>
+    </div>
+    <div class="bigstat-item neutral-card">
+      <div class="bigstat-num dim">0</div>
+      <div class="bigstat-label">Times the trigger bar itself<br>hit 38.2% (instant fill)</div>
+    </div>
+  </div>
+
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1.5rem 0;position:relative;overflow:hidden">
+    <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--bull),transparent)"></div>
+    <div style="font-size:.8rem;font-weight:600;margin-bottom:.15rem">Cumulative completion by time</div>
+    <div style="font-size:.7rem;color:var(--text-dim);font-family:'JetBrains Mono',monospace;margin-bottom:1rem">n=1,492 winners</div>
+    <div id="speed-bars"></div>
+  </div>
+</div>
+
+<!-- ── Links ── -->
+<div class="study-links">
+  <a href="/golden-gate.html" class="study-link">
+    Subway Stats
+    <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+  </a>
+  <a href="/bilbo-golden-gate.html" class="study-link">
+    Bilbo Golden Gate
+    <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+  </a>
+  <a href="/gg-entries.html" class="study-link">
+    GG Entry Study
+    <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+  </a>
+</div>
+
+<a href="/cheatsheet.html" class="cheatsheet-banner"><span>&#x1F4CB; View the complete Golden Gate Cheat Sheet &rarr;</span></a>
+
+<footer class="footer">
+  ATR Levels indicator by <a href="https://satyland.com" target="_blank" rel="noopener">Saty Mahajan</a><br>
+  Analysis inspired by <a href="https://x.com/tesrak" target="_blank" rel="noopener">@tesrak</a> &middot; With thanks to <a href="https://x.com/todaborrego" target="_blank" rel="noopener">@todor</a> for the data<br>
+  25 years of SPY data (2000&ndash;2025) &middot; 3-minute bars &middot; <a href="https://milkmantrades.com">Milkman Trades</a>
+</footer>
+
+</div>
+
+<!-- Date Drawer -->
+<div class="date-drawer-overlay" id="drawer-overlay"></div>
+<div class="date-drawer" id="date-drawer">
+  <div class="drawer-header">
+    <div>
+      <div class="drawer-title" id="drawer-title">Dates</div>
+      <div class="drawer-subtitle" id="drawer-subtitle"></div>
+    </div>
+    <button class="drawer-close" id="drawer-close">ESC</button>
+  </div>
+  <div class="drawer-filters">
+    <button class="drawer-filter active" data-filter="all">All</button>
+    <button class="drawer-filter" data-filter="hit-clean">Hit + Clean</button>
+    <button class="drawer-filter" data-filter="hit-inv">Hit + Back Below</button>
+    <button class="drawer-filter" data-filter="miss">Miss</button>
+  </div>
+  <div class="drawer-list" id="drawer-list"></div>
+  <div class="drawer-count" id="drawer-count"></div>
+</div>
+
+<script>
+// ── Time-of-day table data ──
+const timeData = [
+  {time:'09:30',   n:834,  hit:677, hitPct:81.2, cleanN:320, cleanHit:320, cleanPct:100.0, invN:514, invHit:357, invPct:69.5, edge:30.5},
+  {time:'10:00',   n:328,  hit:249, hitPct:75.9, cleanN:122, cleanHit:122, cleanPct:100.0, invN:206, invHit:127, invPct:61.7, edge:38.3},
+  {time:'10:30',   n:189,  hit:138, hitPct:73.0, cleanN:69,  cleanHit:69,  cleanPct:100.0, invN:120, invHit:69,  invPct:57.5, edge:42.5},
+  {time:'11:00',   n:131,  hit:96,  hitPct:73.3, cleanN:44,  cleanHit:44,  cleanPct:100.0, invN:87,  invHit:52,  invPct:59.8, edge:40.2},
+  {time:'11:30',   n:78,   hit:54,  hitPct:69.2, cleanN:29,  cleanHit:29,  cleanPct:100.0, invN:49,  invHit:25,  invPct:51.0, edge:49.0},
+  {time:'12:00',   n:63,   hit:49,  hitPct:77.8, cleanN:16,  cleanHit:16,  cleanPct:100.0, invN:47,  invHit:33,  invPct:70.2, edge:29.8},
+  {time:'12:30',   n:45,   hit:23,  hitPct:51.1, cleanN:12,  cleanHit:12,  cleanPct:100.0, invN:33,  invHit:11,  invPct:33.3, edge:66.7, warn:true},
+  {time:'13:00',   n:55,   hit:37,  hitPct:67.3, cleanN:17,  cleanHit:17,  cleanPct:100.0, invN:38,  invHit:20,  invPct:52.6, edge:47.4},
+  {time:'13:30',   n:49,   hit:31,  hitPct:63.3, cleanN:16,  cleanHit:16,  cleanPct:100.0, invN:33,  invHit:15,  invPct:45.5, edge:54.5, warn:true},
+  {time:'14:00',   n:77,   hit:57,  hitPct:74.0, cleanN:39,  cleanHit:39,  cleanPct:100.0, invN:38,  invHit:18,  invPct:47.4, edge:52.6},
+  {time:'14:30',   n:75,   hit:42,  hitPct:56.0, cleanN:25,  cleanHit:24,  cleanPct:96.0,  invN:50,  invHit:18,  invPct:36.0, edge:60.0},
+  {time:'15:00',   n:48,   hit:24,  hitPct:50.0, cleanN:18,  cleanHit:14,  cleanPct:77.8,  invN:30,  invHit:10,  invPct:33.3, edge:44.4, warn:true},
+  {time:'15:30',   n:55,   hit:15,  hitPct:27.3, cleanN:30,  cleanHit:12,  cleanPct:40.0,  invN:25,  invHit:3,   invPct:12.0, edge:28.0},
+];
+
+// ── Invalidation table by hour ──
+const invalData = [
+  {hour:'09:00', cleanPct:100.0, cleanN:320, cleanHit:320, invPct:69.5, invN:514, invHit:357, edge:'+30.5pp'},
+  {hour:'10:00', cleanPct:100.0, cleanN:191, cleanHit:191, invPct:60.1, invN:326, invHit:196, edge:'+39.9pp'},
+  {hour:'11:00', cleanPct:100.0, cleanN:73,  cleanHit:73,  invPct:56.6, invN:136, invHit:77,  edge:'+43.4pp'},
+  {hour:'12:00', cleanPct:100.0, cleanN:28,  cleanHit:28,  invPct:55.0, invN:80,  invHit:44,  edge:'+45.0pp'},
+  {hour:'13:00', cleanPct:100.0, cleanN:33,  cleanHit:33,  invPct:49.3, invN:71,  invHit:35,  edge:'+50.7pp'},
+  {hour:'14:00', cleanPct:98.4,  cleanN:64,  cleanHit:63,  invPct:40.9, invN:88,  invHit:36,  edge:'+57.5pp'},
+  {hour:'15:00', cleanPct:54.2,  cleanN:48,  cleanHit:26,  invPct:23.6, invN:55,  invHit:13,  edge:'+30.5pp'},
+];
+
+// ── Speed data ──
+const speedRows = [
+  {label:'Same bar', pct:0.0},
+  {label:'≤ 3 min', pct:12.5},
+  {label:'≤ 9 min', pct:28.0},
+  {label:'≤ 18 min', pct:50.0},
+  {label:'≤ 30 min', pct:61.1},
+  {label:'≤ 60 min', pct:75.0},
+  {label:'≤ 90 min', pct:82.3},
+  {label:'≤ 2.5 hr', pct:89.7},
+];
+
+// ── Date data (loaded async) ──
+let DATE_DATA = null;
+
+// ── Build time table (with clickable Yes/No cells) ──
+(function(){
+  const tbody = document.querySelector('#time-table tbody');
+  timeData.forEach(r => {
+    const tr = document.createElement('tr');
+    if(r.warn) tr.className = 'row-warn';
+    const totalNo = r.n - r.hit;
+    const cleanNo = r.cleanN - r.cleanHit;
+    const invNo = r.invN - r.invHit;
+    tr.innerHTML = `
+      <td>${r.time}${r.warn ? ' *' : ''}</td>
+      <td class="pct-overall">${r.hitPct.toFixed(1)}%</td>
+      <td class="n-col n-clickable n-yes" data-hh="${r.time}" data-outcome="hit" data-slice="all">${r.hit}</td>
+      <td class="n-col n-clickable n-no" data-hh="${r.time}" data-outcome="miss" data-slice="all">${totalNo}</td>
+      <td class="bar-cell"><div class="mini-bar"><div class="mini-bar-fill" style="width:0%;background:var(--bull)" data-w="${r.hitPct}"></div></div></td>
+      <td class="pct-clean">${r.cleanPct.toFixed(1)}%</td>
+      <td class="n-col n-clickable n-yes" data-hh="${r.time}" data-outcome="hit" data-slice="clean">${r.cleanHit}</td>
+      <td class="n-col n-clickable n-no" data-hh="${r.time}" data-outcome="miss" data-slice="clean">${cleanNo}</td>
+      <td class="pct-invalid">${r.invPct.toFixed(1)}%</td>
+      <td class="n-col n-clickable n-yes" data-hh="${r.time}" data-outcome="hit" data-slice="inv">${r.invHit}</td>
+      <td class="n-col n-clickable n-no" data-hh="${r.time}" data-outcome="miss" data-slice="inv">${invNo}</td>
+      <td class="edge-col edge-pos">+${r.edge.toFixed(1)}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+})();
+
+// ── Build invalidation table (with clickable Yes/No cells) ──
+(function(){
+  const tbody = document.querySelector('#invalidation-table tbody');
+  invalData.forEach(r => {
+    const tr = document.createElement('tr');
+    const hourNum = r.hour.slice(0,2);
+    const cleanNo = r.cleanN - r.cleanHit;
+    const invNo = r.invN - r.invHit;
+    tr.innerHTML = `
+      <td>${r.hour}</td>
+      <td class="pct-clean">${r.cleanPct.toFixed(1)}%</td>
+      <td class="n-col n-clickable n-yes" data-hour="${hourNum}" data-outcome="hit" data-slice="clean">${r.cleanHit}</td>
+      <td class="n-col n-clickable n-no" data-hour="${hourNum}" data-outcome="miss" data-slice="clean">${cleanNo}</td>
+      <td class="pct-invalid">${r.invPct.toFixed(1)}%</td>
+      <td class="n-col n-clickable n-yes" data-hour="${hourNum}" data-outcome="hit" data-slice="inv">${r.invHit}</td>
+      <td class="n-col n-clickable n-no" data-hour="${hourNum}" data-outcome="miss" data-slice="inv">${invNo}</td>
+      <td class="edge-col edge-pos">${r.edge}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+})();
+
+// ── Build speed bars ──
+(function(){
+  const container = document.getElementById('speed-bars');
+  speedRows.forEach(r => {
+    const row = document.createElement('div');
+    row.className = 'speed-row';
+    row.innerHTML = `
+      <div class="speed-label">${r.label}</div>
+      <div class="speed-bar-bg"><div class="speed-bar-fill" style="width:0%;background:var(--bull)" data-w="${r.pct}"></div></div>
+      <div class="speed-pct">${r.pct}%</div>
+    `;
+    container.appendChild(row);
+  });
+})();
+
+// ══════════════════════════════════════
+// Date Drawer Logic
+// ══════════════════════════════════════
+
+const drawerOverlay = document.getElementById('drawer-overlay');
+const drawerEl = document.getElementById('date-drawer');
+const drawerTitle = document.getElementById('drawer-title');
+const drawerSubtitle = document.getElementById('drawer-subtitle');
+const drawerList = document.getElementById('drawer-list');
+const drawerCount = document.getElementById('drawer-count');
+const drawerClose = document.getElementById('drawer-close');
+
+let drawerDates = [];       // current full list
+let drawerFilter = 'all';   // current filter
+
+function classifyDate(d) {
+  if (d.h && d.c) return 'hit-clean';
+  if (d.h && !d.c) return 'hit-inv';
+  if (!d.h && d.c) return 'miss-clean';
+  return 'miss-inv';
+}
+
+function tagLabel(cls) {
+  switch(cls) {
+    case 'hit-clean':  return 'Hit · Clean';
+    case 'hit-inv':    return 'Hit · Back Below';
+    case 'miss-clean': return 'Miss · Clean';
+    case 'miss-inv':   return 'Miss · Back Below';
+  }
+}
+
+function renderDrawerList() {
+  let filtered = drawerDates;
+  if (drawerFilter === 'hit-clean') filtered = drawerDates.filter(d => d.h && d.c);
+  else if (drawerFilter === 'hit-inv') filtered = drawerDates.filter(d => d.h && !d.c);
+  else if (drawerFilter === 'miss') filtered = drawerDates.filter(d => !d.h);
+
+  drawerList.innerHTML = filtered.map(d => {
+    const cls = classifyDate(d);
+    return `<a class="date-row" href="/charts/?mode=day&range=1&date=${encodeURIComponent(d.d)}" target="_blank" rel="noopener">
+      <span class="date-val">${d.d}</span>
+      <span class="date-tag ${cls}">${tagLabel(cls)}</span>
+      <span class="chart-arrow">chart →</span>
+    </a>`;
+  }).join('');
+
+  drawerCount.textContent = `Showing ${filtered.length} of ${drawerDates.length} dates`;
+}
+
+function openDrawer(dates, title, subtitle) {
+  drawerDates = dates;
+  drawerFilter = 'all';
+  drawerTitle.textContent = title;
+  drawerSubtitle.textContent = subtitle;
+
+  // Reset filter buttons
+  document.querySelectorAll('.drawer-filter').forEach(b => b.classList.remove('active'));
+  document.querySelector('.drawer-filter[data-filter="all"]').classList.add('active');
+
+  renderDrawerList();
+  drawerEl.classList.add('open');
+  drawerOverlay.classList.add('open');
+}
+
+function closeDrawer() {
+  drawerEl.classList.remove('open');
+  drawerOverlay.classList.remove('open');
+}
+
+drawerClose.addEventListener('click', closeDrawer);
+drawerOverlay.addEventListener('click', closeDrawer);
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
+
+// Filter buttons
+document.querySelectorAll('.drawer-filter').forEach(btn => {
+  btn.addEventListener('click', () => {
+    drawerFilter = btn.dataset.filter;
+    document.querySelectorAll('.drawer-filter').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderDrawerList();
+  });
+});
+
+// Click handlers on N cells
+document.addEventListener('click', e => {
+  const cell = e.target.closest('.n-clickable');
+  if (!cell || !DATE_DATA) return;
+
+  const hh = cell.dataset.hh;           // half-hour key (e.g. "09:30")
+  const hour = cell.dataset.hour;        // hour key from invalidation table (e.g. "09")
+  const outcome = cell.dataset.outcome;  // "hit" or "miss"
+  const slice = cell.dataset.slice;      // "all", "clean", or "inv"
+
+  let dates = [];
+  let title = '';
+
+  if (hh) {
+    dates = DATE_DATA[hh] || [];
+    title = `Trigger at ${hh}`;
+  } else if (hour) {
+    const hh1 = `${hour}:00`;
+    const hh2 = `${hour}:30`;
+    dates = [...(DATE_DATA[hh1] || []), ...(DATE_DATA[hh2] || [])];
+    dates.sort((a,b) => a.d.localeCompare(b.d));
+    title = `Trigger at ${hour}:00`;
+  }
+
+  // Filter by slice (clean vs invalidated)
+  if (slice === 'clean') {
+    dates = dates.filter(d => d.c);
+  } else if (slice === 'inv') {
+    dates = dates.filter(d => !d.c);
+  }
+
+  // Filter by outcome (hit vs miss)
+  if (outcome === 'hit') {
+    dates = dates.filter(d => d.h);
+  } else if (outcome === 'miss') {
+    dates = dates.filter(d => !d.h);
+  }
+
+  // Build subtitle
+  const sliceLabel = slice === 'clean' ? 'Clean' : slice === 'inv' ? 'Back Below' : 'All';
+  const outcomeLabel = outcome === 'hit' ? 'Hit 38.2%' : 'Missed 38.2%';
+  const subtitle = `${sliceLabel} · ${outcomeLabel} · ${dates.length} days`;
+
+  // Map to the right drawer filter preset
+  let autoFilter = 'all';
+  if (outcome === 'hit' && slice === 'clean') autoFilter = 'hit-clean';
+  else if (outcome === 'hit' && slice === 'inv') autoFilter = 'hit-inv';
+  else if (outcome === 'miss') autoFilter = 'miss';
+
+  drawerDates = dates;
+  drawerFilter = 'all'; // show all since we already pre-filtered
+  drawerTitle.textContent = title;
+  drawerSubtitle.textContent = subtitle;
+
+  // Reset filter buttons — set "All" active since data is already filtered
+  document.querySelectorAll('.drawer-filter').forEach(b => b.classList.remove('active'));
+  document.querySelector('.drawer-filter[data-filter="all"]').classList.add('active');
+
+  renderDrawerList();
+  drawerEl.classList.add('open');
+  drawerOverlay.classList.add('open');
+});
+
+// ── Load date data ──
+fetch('/data/call-trigger-dates.json')
+  .then(r => r.json())
+  .then(data => { DATE_DATA = data; })
+  .catch(err => console.warn('Could not load date data:', err));
+
+// ── Scroll reveal + animate bars ──
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if(e.isIntersecting){
+      e.target.classList.add('visible');
+      setTimeout(() => {
+        e.target.querySelectorAll('[data-w]').forEach(bar => {
+          bar.style.width = bar.dataset.w + '%';
+        });
+      }, 200);
+      observer.unobserve(e.target);
+    }
+  });
+}, {threshold:0.1});
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+document.querySelector('.hero').classList.add('visible');
+</script>
+</body>
+</html>

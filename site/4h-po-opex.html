@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4h PO Rollover + OpEx — The Pin Release | Milkman Trades</title>
+<meta name="description" content="When a 4-hour Phase Oscillator rollover fires inside the OpEx Friday + post-OpEx 1-5d window under extended ATR, drops accelerate as dealer gamma unwinds. 25 years of SPY data.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥛</text></svg>">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,300&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --bg:#0c0e12; --surface:#13161c; --surface-2:#181c24; --border:#1e2230;
+  --text:#e8eaed; --text-dim:#6b7280; --text-mid:#9ca3af;
+  --bull:#1cd48a; --bear:#ef6c00; --accent:#fbbf24;
+  --danger:#ef4444; --danger-dim:#7f1d1d; --danger-bg:#1c0a0a;
+  --safe:#22d3ee; --dist:#a78bfa;
+}
+
+html{font-size:15px;scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
+
+.page{max-width:780px;margin:0 auto;padding:3rem 1.5rem 5rem}
+
+.hero{margin-bottom:3.5rem}
+.hero .kicker{font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--dist);margin-bottom:.75rem}
+.hero h1{font-size:2.1rem;font-weight:700;letter-spacing:-.03em;line-height:1.15;margin-bottom:1rem}
+.hero h1 em{font-style:normal;background:linear-gradient(135deg,var(--dist),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero .lede{font-size:1.02rem;color:var(--text-mid);font-weight:300;max-width:640px;line-height:1.65}
+.draft{background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.25);color:var(--accent);padding:.5rem .85rem;border-radius:6px;font-size:.78rem;margin-bottom:1.2rem}
+
+.section{margin-bottom:3.5rem}
+.section-label{font-family:'JetBrains Mono',monospace;font-size:.65rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim);padding-bottom:.6rem;border-bottom:1px solid var(--border);margin-bottom:1.5rem}
+
+.prose{font-size:.95rem;color:var(--text-mid);font-weight:300;line-height:1.7;margin-bottom:1.5rem}
+.prose strong{color:var(--text);font-weight:500}
+
+.bigstat{display:flex;gap:1.5rem;margin:2rem 0;flex-wrap:wrap}
+.bigstat-item{flex:1;min-width:150px;padding:1.25rem;background:var(--surface);border:1px solid var(--border);border-radius:8px}
+.bigstat-num{font-family:'JetBrains Mono',monospace;font-size:2rem;font-weight:700;line-height:1;margin-bottom:.3rem}
+.bigstat-num.danger{color:var(--danger)} .bigstat-num.accent{color:var(--accent)} .bigstat-num.dist{color:var(--dist)} .bigstat-num.safe{color:var(--safe)}
+.bigstat-label{font-size:.72rem;color:var(--text-dim);line-height:1.4}
+
+.callout{background:var(--surface);border-left:3px solid var(--accent);padding:1rem 1.25rem;margin:2rem 0;border-radius:0 6px 6px 0}
+.callout.danger{border-left-color:var(--danger)}
+.callout.safe{border-left-color:var(--safe)}
+.callout.dist{border-left-color:var(--dist)}
+.callout p{font-size:.88rem;color:var(--text-mid);font-weight:300;line-height:1.65}
+.callout strong{color:var(--accent);font-weight:500}
+.callout.danger strong{color:var(--danger)}
+.callout.safe strong{color:var(--safe)}
+.callout.dist strong{color:var(--dist)}
+
+.data-table{width:100%;border-collapse:collapse;font-size:.8rem;margin:1rem 0}
+.data-table th{font-family:'JetBrains Mono',monospace;font-size:.63rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--text-dim);text-align:right;padding:.55rem .5rem;border-bottom:1px solid var(--border)}
+.data-table th:first-child{text-align:left}
+.data-table td{padding:.5rem .5rem;border-bottom:1px solid #151820;text-align:right;font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--text-mid)}
+.data-table td:first-child{text-align:left;font-family:'DM Sans',sans-serif;color:var(--text);font-size:.82rem}
+.data-table tr.hl td{font-weight:700;color:var(--text)}
+.data-table .v-danger{color:var(--danger)}
+.data-table .v-bull{color:var(--bull)}
+.data-table .v-dist{color:var(--dist)}
+.data-table .v-dim{color:var(--text-dim)}
+.data-table .v-accent{color:var(--accent)}
+.scroll-x{overflow-x:auto}
+
+.methodology{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:1rem 1.25rem;font-size:.85rem;color:var(--text-mid);line-height:1.7;margin-top:.75rem}
+.methodology strong{color:var(--text);font-size:.9rem}
+.methodology ul{list-style:none;margin-top:.4rem}
+.methodology li{margin-bottom:.35rem}
+.methodology li::before{content:'›';color:var(--accent);font-weight:700;margin-right:.4rem}
+.methodology code{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--accent)}
+
+.home-link{display:inline-flex;align-items:center;gap:.4rem;font-size:.8rem;color:var(--text-dim);text-decoration:none;margin-bottom:.5rem;transition:color .2s}
+.home-link:hover{color:var(--text)}
+.home-link svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2}
+
+.footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--border);font-size:.75rem;color:var(--text-dim);text-align:center;line-height:1.7}
+.footer a{color:var(--text-mid);text-decoration:none}
+.footer a:hover{color:var(--accent)}
+</style>
+<script src="/nav.js"></script>
+</head>
+<body>
+<div class="page">
+
+<div class="draft"><strong>Draft —</strong> These backtests have not yet been independently verified. Do not trade based on this data.</div>
+
+<a href="/" class="home-link">
+  <svg viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0h4"/></svg>
+  Home
+</a>
+
+<header class="hero">
+  <div class="kicker">Study — 4h PO Rollover × OpEx × Extended</div>
+  <h1>The <em>pin</em> holds.<br>Then it <em>releases.</em></h1>
+  <p class="lede">When a 4-hour Phase Oscillator rolls over from the distribution zone during the OpEx Friday → post-OpEx 1-5d window, and price is already extended on the weekly or monthly ATR, dealer gamma unwinds in the trading days that follow. 25 years of SPY: 62% of these signals produce a ≥1% intraday drop within 10 trading days, 46% produce a ≥1.5% drop, 38% a ≥2% drop. Median drawdown −1.16%. The tail prints big: May 2001 (−4.83%), Oct 2011 (−5.11%).</p>
+</header>
+
+<div class="section">
+  <div class="section-label">Methodology</div>
+  <div class="methodology">
+    <strong>Signal (V2 rollover)</strong>
+    <ul>
+      <li><strong>Peak threshold:</strong> 4h PO reaches ≥ 80 (distribution zone entered)</li>
+      <li><strong>Trigger:</strong> 4h PO crosses below 80 on the next bar (leaving distribution)</li>
+      <li><strong>Sample:</strong> 81 signals over Jan 2000 → Apr 2026 on SPY (post-audit methodology)</li>
+    </ul>
+    <strong style="margin-top:1rem;display:block">OpEx Window</strong>
+    <ul>
+      <li><strong>OpEx Friday:</strong> 3rd Friday of each month (monthly options expiration)</li>
+      <li><strong>Qualifying window:</strong> signal fires on OpEx Friday itself or within the next 1–5 trading days</li>
+    </ul>
+    <strong style="margin-top:1rem;display:block">Extended Filter</strong>
+    <ul>
+      <li><strong>Weekly ATR position:</strong> <code>(signal_close − prev_week_close) / weekly_ATR_14 ≥ 0.618</code></li>
+      <li><strong>OR Monthly ATR position:</strong> <code>(signal_close − prev_month_close) / monthly_ATR_14 ≥ 0.618</code></li>
+      <li><strong>Deep extension:</strong> same math but threshold ≥ 1.0 (past full weekly/monthly ATR)</li>
+    </ul>
+    <strong style="margin-top:1rem;display:block">Forward Measurement</strong>
+    <ul>
+      <li><strong>Max drawdown from signal close:</strong> for each horizon, we find the <em>lowest low</em> across all bars in the window (may occur on any day within the window, not just day N). Drop % = (min_low − signal_close) / signal_close. This is a cumulative running drawdown — if day 7 prints the low, the 10d drawdown captures that day-7 move even though the window started on day 0.</li>
+      <li><strong>Hit threshold = drawdown reaches target:</strong> for a ≥1% hit, we ask "did the running min-low reach −1% from signal close at any point in the window?" Close-to-close is not required.</li>
+      <li><strong>Horizons:</strong> 1, 3, 5, 10 trading days post-signal (rolling max-drawdown up through end of day N)</li>
+    </ul>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-label">Key Finding</div>
+  <div class="bigstat">
+    <div class="bigstat-item">
+      <div class="bigstat-num dist">62%</div>
+      <div class="bigstat-label">Extended signals hit<br>≥1.0% drop in 10 days<br><span style="color:var(--text-dim)">(n=13, baseline 53%)</span></div>
+    </div>
+    <div class="bigstat-item">
+      <div class="bigstat-num danger">46%</div>
+      <div class="bigstat-label">Extended signals hit<br>≥1.5% drop in 10 days<br><span style="color:var(--text-dim)">(baseline 40%)</span></div>
+    </div>
+    <div class="bigstat-item">
+      <div class="bigstat-num accent">−1.16%</div>
+      <div class="bigstat-label">Median 10d intraday<br>drawdown from signal close<br><span style="color:var(--text-dim)">(25th pct: −2.34%)</span></div>
+    </div>
+  </div>
+  <div class="callout dist">
+    <p><strong>The edge is tail expansion, not hit rate.</strong> The 5-day window under extension only hits 1% 46% of the time — roughly baseline. What changes materially is the 10-day window: hit rates climb sharply and the 25th-percentile drawdown extends further. The pin suppresses action around OpEx; dealer unwinds play out over the following 1-2 weeks.</p>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-label">Horizon Curves Under Extension (n=13)</div>
+  <p class="prose"><strong>Max drawdown from signal close</strong> measured across the N-day window (the worst point reached at any time from signal fire through end of day N). A "≥1.0% 10d" hit means the drawdown touched −1% at some point in the 10 days, regardless of which day produced the low. Note how 1d and 3d windows underdeliver, while 10d captures the delayed release:</p>
+  <div class="scroll-x">
+    <table class="data-table">
+      <thead><tr><th>Horizon</th><th>N</th><th>≥0.5%</th><th>≥1.0%</th><th>≥1.5%</th><th>≥2.0%</th><th>Median</th><th>25th pct</th><th>Worst</th></tr></thead>
+      <tbody>
+        <tr><td>1 day</td><td>13</td><td>54%</td><td>31%</td><td>23%</td><td>8%</td><td>−0.76%</td><td>−1.01%</td><td>−2.11%</td></tr>
+        <tr><td>3 days</td><td>13</td><td>69%</td><td>46%</td><td>31%</td><td>23%</td><td>−0.97%</td><td>−1.55%</td><td>−5.11%</td></tr>
+        <tr><td>5 days</td><td>13</td><td>69%</td><td>46%</td><td>31%</td><td>31%</td><td>−0.97%</td><td>−2.04%</td><td>−5.11%</td></tr>
+        <tr class="hl"><td>10 days</td><td>13</td><td class="v-bull">69%</td><td class="v-dist">62%</td><td class="v-danger">46%</td><td class="v-danger">38%</td><td class="v-accent">−1.16%</td><td class="v-danger">−2.34%</td><td class="v-danger">−5.11%</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-label">Extension Tiers — The Curious Crossover</div>
+  <p class="prose">Deep extension (weekly or monthly ATR ≥ 1.0) actually underperforms moderate extension at 5 days — strong trends resist a quick break. But at 10 days, deep extension catches up on tail risk.</p>
+  <div class="scroll-x">
+    <table class="data-table">
+      <thead><tr><th>Filter</th><th>N</th><th>≥1.0% 5d</th><th>≥1.0% 10d</th><th>≥1.5% 10d</th><th>≥2.0% 10d</th><th>Med 10d</th><th>Worst 10d</th></tr></thead>
+      <tbody>
+        <tr><td>Unfiltered baseline (full sample)</td><td>81</td><td>53%</td><td>67%</td><td>40%</td><td>28%</td><td>−1.35%</td><td>−12.87%</td></tr>
+        <tr><td>OpEx window (no ext filter)</td><td>15</td><td>53%</td><td>67%</td><td>53%</td><td>40%</td><td>−1.54%</td><td>−5.11%</td></tr>
+        <tr class="hl"><td>OpEx window + Extended (≥0.618)</td><td>13</td><td class="v-dist">46%</td><td class="v-dist">62%</td><td class="v-danger">46%</td><td class="v-danger">38%</td><td>−1.16%</td><td>−5.11%</td></tr>
+        <tr><td>OpEx window + Deep Ext (≥1.0)</td><td>6</td><td>50%</td><td>50%</td><td>33%</td><td>33%</td><td>−1.06%</td><td class="v-danger">−5.11%</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-label">By OpEx Offset (unfiltered, 5d horizon)</div>
+  <p class="prose">Two pockets of strength: OpEx Friday itself (67% hit rate, n=3) and the Monday immediately following OpEx (75%, n=4). Tuesday–Thursday of post-OpEx week weaken as the suppression fades. Post-OpEx Friday shows a second bump (67%).</p>
+  <div class="scroll-x">
+    <table class="data-table">
+      <thead><tr><th>Bucket</th><th>N</th><th>≥0.5%</th><th>≥1.0%</th><th>≥1.5%</th><th>Med 5d</th></tr></thead>
+      <tbody>
+        <tr><td>OpEx Friday (day 0)</td><td>3</td><td>67%</td><td class="v-dist">67%</td><td>67%</td><td>−2.34%</td></tr>
+        <tr><td>Post-OpEx day 1 (Mon)</td><td>4</td><td>100%</td><td class="v-dist">75%</td><td>25%</td><td>−1.08%</td></tr>
+        <tr><td>Post-OpEx day 2 (Tue)</td><td>3</td><td>67%</td><td>33%</td><td>33%</td><td>−0.76%</td></tr>
+        <tr><td>Post-OpEx day 3 (Wed)</td><td>0</td><td colspan="4" style="text-align:left;color:var(--text-dim)">(no events)</td></tr>
+        <tr><td>Post-OpEx day 4 (Thu)</td><td>2</td><td>50%</td><td>0%</td><td>0%</td><td>−0.47%</td></tr>
+        <tr><td>Post-OpEx day 5 (Fri)</td><td>3</td><td>67%</td><td>67%</td><td>67%</td><td>−2.04%</td></tr>
+        <tr class="hl"><td>Non-OpEx baseline</td><td>66</td><td>74%</td><td>45%</td><td>32%</td><td>−0.93%</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-label">Every Extended Event (n=13)</div>
+  <p class="prose">Ranked chronologically. Each drop column shows the <strong>max drawdown from the signal close</strong> over that horizon — the worst point reached at any time within the window, not a single-day move. <strong>Hit</strong> = drawdown reached ≥1% within 10 days. Signal close = the 4h bar that crossed below 80. "P+N" = N trading days after OpEx.</p>
+  <div class="scroll-x">
+    <table class="data-table">
+      <thead><tr><th>Signal Date</th><th>Peak PO</th><th>OpEx</th><th>Wk ATR</th><th>Mo ATR</th><th>1d</th><th>3d</th><th>5d</th><th>10d</th><th>Hit?</th></tr></thead>
+      <tbody>
+        <tr><td>2000-03-20</td><td>100</td><td>OpEx−1</td><td>0.67</td><td>0.49</td><td>−1.01%</td><td>−1.01%</td><td>−1.01%</td><td class="v-danger">−1.01%</td><td class="v-bull">YES</td></tr>
+        <tr><td>2001-04-20</td><td>100</td><td>OpEx</td><td>0.81</td><td>−0.02</td><td>−1.57%</td><td>−2.34%</td><td>−2.34%</td><td class="v-danger">−2.34%</td><td class="v-bull">YES</td></tr>
+        <tr><td>2001-05-22</td><td>83</td><td>P+2</td><td>1.05</td><td>1.11</td><td>−1.56%</td><td>−2.54%</td><td>−4.83%</td><td class="v-danger">−4.83%</td><td class="v-bull">YES</td></tr>
+        <tr><td>2005-05-20</td><td>89</td><td>OpEx</td><td>1.29</td><td>0.18</td><td>+0.09%</td><td>−0.21%</td><td>−0.21%</td><td>−0.21%</td><td class="v-dim">no</td></tr>
+        <tr><td>2005-11-22</td><td>88</td><td>P+2</td><td>0.79</td><td>0.51</td><td>+0.42%</td><td>+0.29%</td><td>−0.31%</td><td>−0.31%</td><td class="v-dim">no</td></tr>
+        <tr><td>2007-03-23</td><td>93</td><td>P+5</td><td>1.69</td><td>−0.06</td><td>−0.98%</td><td>−1.55%</td><td>−2.04%</td><td class="v-danger">−2.04%</td><td class="v-bull">YES</td></tr>
+        <tr><td>2011-10-28</td><td>83</td><td>P+5</td><td>0.65</td><td>0.63</td><td>−2.11%</td><td>−5.11%</td><td>−5.11%</td><td class="v-danger">−5.11%</td><td class="v-bull">YES</td></tr>
+        <tr><td>2015-10-23</td><td>83</td><td>P+5</td><td>0.52</td><td>0.85</td><td>+0.03%</td><td>−0.34%</td><td>−0.34%</td><td>−0.34%</td><td class="v-dim">no</td></tr>
+        <tr><td>2017-10-23</td><td>81</td><td>OpEx−1</td><td>0.61</td><td>1.02</td><td>−0.32%</td><td>−1.16%</td><td>−1.16%</td><td class="v-danger">−1.16%</td><td class="v-bull">YES</td></tr>
+        <tr><td>2019-04-24</td><td>81</td><td>P+2</td><td>0.35</td><td>0.85</td><td>−0.76%</td><td>−0.76%</td><td>−0.76%</td><td class="v-danger">−2.44%</td><td class="v-bull">YES</td></tr>
+        <tr><td>2019-11-18</td><td>80</td><td>OpEx−1</td><td>0.41</td><td>0.92</td><td>−0.23%</td><td>−0.92%</td><td>−0.92%</td><td class="v-danger">−1.54%</td><td class="v-bull">YES</td></tr>
+        <tr><td>2019-12-27</td><td>92</td><td>P+4</td><td>0.36</td><td>1.20</td><td>−0.84%</td><td>−0.97%</td><td>−0.97%</td><td>−0.97%</td><td class="v-dim">no</td></tr>
+        <tr><td>2021-10-21</td><td>94</td><td>P+4</td><td>1.26</td><td>−0.03</td><td>+0.02%</td><td>+0.02%</td><td>+0.02%</td><td>+0.02%</td><td class="v-dim">no</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-label">Practical Takeaways</div>
+
+  <div class="callout dist">
+    <p><strong>The 4h rollover is a watch signal, not an immediate trigger.</strong> At 1 day, only 31% of extended events hit 1%. The dealer pin suppresses breakouts in both directions while the monthly chain is alive. Sizing into weeklies expiring within 3 days of the signal is fighting the same flows that caused the pin.</p>
+  </div>
+
+  <div class="callout danger">
+    <p><strong>Plan for 10-day expiries minimum.</strong> The 25th-percentile 10d drawdown is −2.34% and the worst printed −5.11% (Oct 2011). Long-dated puts — not weeklies — capture the release.</p>
+  </div>
+
+  <div class="callout safe">
+    <p><strong>OpEx Friday + Post-OpEx Monday are the clean triggers.</strong> Those two buckets hit 67% and 75% at just 5 days (unfiltered). If the 4h rollover fires on the OpEx close or the following Monday, the setup is at its cleanest. Post-OpEx Tue/Wed/Thu weaken rapidly — by then, the pin is already gone and the information is stale.</p>
+  </div>
+
+  <div class="callout">
+    <p><strong>Deep extension ≠ better edge at 5 days.</strong> Signals at weekly or monthly ATR ≥1.0 hit 1% at 5 days at 50% vs moderate extension (46%) — roughly matched. Strong momentum can resist a fast break. At 10 days, deep extension converges with moderate. Size for the tail, not the median.</p>
+  </div>
+
+  <div class="callout danger">
+    <p><strong>Nulls concentrate in 2019–2021.</strong> Several "no drop" events came from the 2019–2021 stimulus era. If regime is unusually pinned (zero-rates, dealer long gamma), discount the signal. Hit years in the current sample (2000, 2001, 2007, 2011, 2017, 2019) were tighter liquidity environments where dealer unwinds actually produced vacuum effects.</p>
+  </div>
+</div>
+
+<footer class="footer">
+  ATR Levels &amp; Phase Oscillator by <a href="https://satyland.com" target="_blank" rel="noopener">Saty Mahajan</a><br>
+  Analysis inspired by <a href="https://x.com/tesrak" target="_blank" rel="noopener">@tesrak</a> · Data from <a href="https://x.com/todaborrego" target="_blank" rel="noopener">@todor</a><br>
+  25 years of SPY data (2000–2026) · <a href="https://milkmantrades.com">Milkman Trades</a>
+</footer>
+
+</div>
+</body>
+</html>

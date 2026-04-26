@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPY Golden Gate — Trigger to Completion Statistics | Milkman Trades</title>
+<meta name="description" content="SPY Golden Gate timing statistics computed from 25 years of historical data. Bullish and bearish trigger-to-completion probability maps.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥛</text></svg>">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,500;0,9..40,700;1,9..40,300&family=JetBrains+Mono:wght@400;600&display=swap');
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --bg:#0c0e12;
+  --surface:#13161c;
+  --border:#1e2230;
+  --text:#e8eaed;
+  --text-dim:#7a8194;
+  --bull-1:#0a3d2a;--bull-2:#0d6b47;--bull-3:#12a168;--bull-4:#1cd48a;--bull-5:#4aeaaa;--bull-6:#8af5cc;--bull-7:#c4fce6;--bull-8:#e0fff2;
+  --bear-1:#5c1010;--bear-2:#9b1c1c;--bear-3:#d32f2f;--bear-4:#ef6c00;--bear-5:#f9a825;--bear-6:#fdd835;--bear-7:#fff176;--bear-8:#fff9c4;
+}
+
+html{font-size:14px}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'DM Sans',system-ui,sans-serif;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+.page{
+  max-width:1200px;
+  margin:0 auto;
+  padding:2rem 1.5rem 4rem;
+}
+
+.masthead{
+  text-align:center;
+  margin-bottom:3rem;
+  padding-bottom:2rem;
+  border-bottom:1px solid var(--border);
+}
+.masthead h1{
+  font-size:1.1rem;
+  font-weight:500;
+  letter-spacing:.15em;
+  text-transform:uppercase;
+  color:var(--text-dim);
+  margin-bottom:.5rem;
+}
+.masthead p.tagline{
+  font-size:.85rem;
+  color:var(--text-dim);
+  font-weight:300;
+  font-style:italic;
+}
+
+/* ── Chart Section ── */
+.chart-section{
+  margin-bottom:4rem;
+}
+
+.chart-header{
+  margin-bottom:1.5rem;
+}
+.chart-header h2{
+  font-size:1.6rem;
+  font-weight:700;
+  letter-spacing:-.02em;
+  margin-bottom:.25rem;
+}
+.chart-header h2 .dir{
+  display:inline-block;
+  padding:.1em .45em;
+  border-radius:4px;
+  font-size:.9em;
+}
+.chart-header h2 .dir.bull{background:var(--bull-3);color:#fff}
+.chart-header h2 .dir.bear{background:var(--bear-3);color:#fff}
+.chart-header .subtitle{
+  font-size:.85rem;
+  color:var(--text-dim);
+  font-weight:300;
+}
+
+/* ── Subway Grid ── */
+.subway{
+  position:relative;
+  overflow-x:auto;
+  padding:1rem 0;
+}
+.subway-inner{
+  min-width:820px;
+  position:relative;
+}
+
+/* X-axis labels */
+.x-axis{
+  display:flex;
+  align-items:center;
+  padding-left:70px;
+  margin-bottom:.5rem;
+}
+.x-label{
+  flex:1;
+  text-align:center;
+  font-family:'JetBrains Mono',monospace;
+  font-size:.75rem;
+  color:var(--text-dim);
+  font-weight:600;
+}
+.x-label:last-child{
+  flex:0 0 120px;
+  text-align:center;
+}
+
+/* Row */
+.subway-row{
+  display:flex;
+  align-items:center;
+  height:62px;
+  position:relative;
+}
+.row-label{
+  flex:0 0 70px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:.8rem;
+  font-weight:600;
+  color:var(--text-dim);
+  text-align:right;
+  padding-right:12px;
+}
+
+.row-track{
+  flex:1;
+  display:flex;
+  align-items:center;
+  position:relative;
+  height:100%;
+}
+
+.track-cell{
+  flex:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  height:100%;
+}
+
+/* Subway line */
+.track-line{
+  position:absolute;
+  height:2px;
+  top:50%;
+  transform:translateY(-50%);
+  z-index:1;
+  opacity:.5;
+}
+
+/* Station circle */
+.station{
+  position:relative;
+  z-index:2;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:default;
+  transition:transform .15s ease, box-shadow .15s ease;
+}
+.station:hover{
+  transform:scale(1.15);
+}
+.station .pct-label{
+  position:absolute;
+  top:-18px;
+  left:50%;
+  transform:translateX(-50%);
+  font-family:'JetBrains Mono',monospace;
+  font-size:.65rem;
+  font-weight:600;
+  white-space:nowrap;
+  pointer-events:none;
+  opacity:.85;
+}
+
+/* Summary column */
+.summary-cell{
+  flex:0 0 120px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:2px;
+}
+.summary-badge{
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:transform .15s ease;
+  cursor:default;
+}
+.summary-badge:hover{transform:scale(1.08)}
+.summary-text{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.65rem;
+  line-height:1.2;
+  text-align:center;
+}
+.summary-text .done{font-weight:700}
+.summary-text .didnt{color:var(--text-dim);font-weight:400}
+
+/* Tooltip */
+.tooltip{
+  display:none;
+  position:fixed;
+  z-index:100;
+  background:#1a1d25;
+  border:1px solid var(--border);
+  border-radius:6px;
+  padding:.5rem .7rem;
+  font-family:'JetBrains Mono',monospace;
+  font-size:.7rem;
+  color:var(--text);
+  pointer-events:none;
+  box-shadow:0 8px 24px rgba(0,0,0,.5);
+  max-width:200px;
+  line-height:1.5;
+}
+
+/* X-axis arrow */
+.x-arrow{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:1rem 0 0;
+  padding-left:70px;
+}
+.x-arrow span{
+  font-size:.75rem;
+  color:var(--text-dim);
+  font-weight:300;
+  font-style:italic;
+  display:flex;
+  align-items:center;
+  gap:.5rem;
+}
+.x-arrow span::after{
+  content:'';
+  display:inline-block;
+  width:60px;
+  height:1px;
+  background:var(--text-dim);
+  position:relative;
+}
+.x-arrow span::after{
+  background:linear-gradient(to right, var(--text-dim), transparent);
+}
+
+/* Footer */
+.footer{
+  text-align:center;
+  padding-top:2rem;
+  border-top:1px solid var(--border);
+  color:var(--text-dim);
+  font-size:.75rem;
+  font-weight:300;
+  line-height:1.7;
+}
+.footer a{color:var(--text-dim);text-decoration:underline;text-underline-offset:2px}
+
+/* Legend */
+.legend{
+  display:flex;
+  gap:2rem;
+  flex-wrap:wrap;
+  margin:1rem 0 .5rem 70px;
+  font-size:.72rem;
+  color:var(--text-dim);
+}
+.legend-item{
+  display:flex;
+  align-items:center;
+  gap:.4rem;
+}
+.legend-dot{
+  width:10px;height:10px;border-radius:50%;
+}
+
+@media(max-width:900px){
+  .page{padding:1rem .75rem 3rem}
+  .subway-inner{min-width:700px}
+  .masthead h1{font-size:.95rem}
+}
+@media(max-width:767px){
+  .masthead h1{font-size:.85rem;letter-spacing:.1em}
+  .chart-header h2{font-size:1.2rem}
+  .legend{margin-left:0;gap:1rem}
+  .subway{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .bigstat{flex-direction:column}
+}
+.cheatsheet-banner{display:block;text-align:center;padding:1.5rem 1rem;margin:2rem 0 0;background:var(--surface);border:1px solid var(--border);border-radius:8px;text-decoration:none;transition:border-color .2s,background .2s}
+.cheatsheet-banner:hover{border-color:#fbbf24;background:#181c24}
+.cheatsheet-banner span{font-size:.95rem;color:var(--text);font-weight:500}
+</style>
+<script src="/nav.js"></script>
+</head>
+<body>
+
+<div class="page">
+  <div style="background:#1a1400;border:1px solid #3d3200;border-radius:6px;padding:.6rem 1rem;margin-bottom:1.5rem;font-size:.75rem;color:#d4a800;font-weight:400;line-height:1.5;text-align:center">
+    <strong style="color:#fbbf24">Draft &mdash;</strong> These backtests have not yet been independently verified. Do not trade based on this data.
+  </div>
+  <header class="masthead">
+    <h1>Saty ATR Levels &mdash; Day Mode</h1>
+    <p class="tagline">SPY Golden Gate &mdash; Trigger to Completion Timing Statistics Map</p>
+  </header>
+
+  <div id="bull-chart" class="chart-section"></div>
+  <div id="bear-chart" class="chart-section"></div>
+
+  <div style="text-align:center;margin:2rem 0 3rem">
+    <a href="/bilbo-golden-gate.html" style="display:inline-flex;align-items:center;gap:.5rem;padding:.7rem 1.4rem;background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text);text-decoration:none;font-size:.85rem;font-weight:500;transition:border-color .2s,background .2s" onmouseover="this.style.borderColor='#fbbf24';this.style.background='#181c24'" onmouseout="this.style.borderColor='';this.style.background=''">
+      The Bilbo Golden Gate
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+    <a href="/gg-invalidation.html" style="display:inline-flex;align-items:center;gap:.5rem;padding:.7rem 1.4rem;background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text);text-decoration:none;font-size:.85rem;font-weight:500;transition:border-color .2s,background .2s" onmouseover="this.style.borderColor='#ef4444';this.style.background='#181c24'" onmouseout="this.style.borderColor='';this.style.background=''">
+      GG Pullback Study
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+    <a href="/gg-entries.html" style="display:inline-flex;align-items:center;gap:.5rem;padding:.7rem 1.4rem;background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text);text-decoration:none;font-size:.85rem;font-weight:500;transition:border-color .2s,background .2s" onmouseover="this.style.borderColor='#22c55e';this.style.background='#181c24'" onmouseout="this.style.borderColor='';this.style.background=''">
+      GG Entry Study
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+  </div>
+
+  <a href="/cheatsheet.html" class="cheatsheet-banner"><span>&#x1F4CB; View the complete Golden Gate Cheat Sheet &rarr;</span></a>
+
+  <footer class="footer">
+    Statistics computed using 25 years of SPY data (2000&ndash;2025) &middot; 6,582 trading days<br>
+    ATR Levels indicator by <a href="https://satyland.com" target="_blank" rel="noopener">Saty Mahajan</a> &middot;
+    Analysis by <a href="https://milkmantrades.com">Milkman Trades</a><br>
+    Analysis inspired by <a href="https://x.com/tesrak" target="_blank" rel="noopener">@tesrak</a> &middot; With thanks to <a href="https://x.com/todaborrego" target="_blank" rel="noopener">@todor</a> for the data
+  </footer>
+</div>
+
+<div class="tooltip" id="tooltip"></div>
+
+<script>
+const DATA = {
+  bullish: {
+    rows: [
+      { label:"Open", total:1864, comp:[1609,80,30,13,7,11,6] },
+      { label:"0930", total:1102, comp:[298,314,71,40,24,41,24] },
+      { label:"1000", total:598,  comp:[0,184,109,39,22,33,19] },
+      { label:"1100", total:231,  comp:[0,0,56,50,20,16,10] },
+      { label:"1200", total:144,  comp:[0,0,0,27,27,20,8] },
+      { label:"1300", total:138,  comp:[0,0,0,0,26,32,21] },
+      { label:"1400", total:204,  comp:[0,0,0,0,0,71,43] },
+      { label:"1500", total:148,  comp:[0,0,0,0,0,0,39] },
+    ],
+    colors:['#082e1f','#0d5738','#109456','#15c274','#2ee895','#62f0b0','#99f6cd','#ccfbe6'],
+    lineColor:'#15c274',
+    labelColor:'#4aeaaa',
+  },
+  bearish: {
+    rows: [
+      { label:"Open", total:1464, comp:[1297,61,12,7,4,6,10] },
+      { label:"0930", total:1059, comp:[300,299,68,26,30,29,29] },
+      { label:"1000", total:691,  comp:[0,261,105,37,18,29,20] },
+      { label:"1100", total:291,  comp:[0,0,99,52,28,13,13] },
+      { label:"1200", total:154,  comp:[0,0,0,39,27,16,13] },
+      { label:"1300", total:145,  comp:[0,0,0,0,36,37,14] },
+      { label:"1400", total:182,  comp:[0,0,0,0,0,62,44] },
+      { label:"1500", total:139,  comp:[0,0,0,0,0,0,66] },
+    ],
+    colors:['#4a0e0e','#7c1818','#b52626','#d94e0e','#ef8c00','#f5b800','#f9d534','#fce97a'],
+    lineColor:'#d94e0e',
+    labelColor:'#f9a825',
+  }
+};
+
+const HOURS = ['0930','1000','1100','1200','1300','1400','1500'];
+const X_LABELS = ['Open','0930','1000','1100','1200','1300','1400','1500','Close'];
+
+function pct(n, total){ return total>0 ? (n/total*100) : 0; }
+
+function circleSize(p, isOpen){
+  // Scale: 0% -> 8px, 100% -> 52px
+  const min = 8, max = isOpen ? 52 : 46;
+  return min + (max - min) * Math.min(p / 100, 1);
+}
+
+function getColor(colors, rowIdx){
+  return colors[Math.min(rowIdx, colors.length - 1)];
+}
+
+function buildChart(containerId, key, direction){
+  const d = DATA[key];
+  const container = document.getElementById(containerId);
+  const isBull = key === 'bullish';
+
+  // Header
+  const header = document.createElement('div');
+  header.className = 'chart-header';
+  header.innerHTML = `
+    <h2><span class="dir ${isBull?'bull':'bear'}">${isBull?'Bullish':'Bearish'}</span> Golden Gate</h2>
+    <div class="subtitle">${isBull?'+':'&minus;'}38.2% &rarr; ${isBull?'+':'&minus;'}61.8% ATR Completion &middot; Completion % during hour when triggered at start of line</div>
+  `;
+  container.appendChild(header);
+
+  // Legend
+  const legend = document.createElement('div');
+  legend.className = 'legend';
+  legend.innerHTML = `
+    <div class="legend-item"><div class="legend-dot" style="background:${d.colors[0]}"></div> Trigger at Open</div>
+    <div class="legend-item"><div class="legend-dot" style="background:${d.colors[3]}"></div> Midday trigger</div>
+    <div class="legend-item"><div class="legend-dot" style="background:${d.colors[7]}"></div> Late trigger</div>
+    <div class="legend-item" style="color:var(--text)">Circle size = % completed in that hour</div>
+  `;
+  container.appendChild(legend);
+
+  const subway = document.createElement('div');
+  subway.className = 'subway';
+  const inner = document.createElement('div');
+  inner.className = 'subway-inner';
+
+  // X-axis
+  const xAxis = document.createElement('div');
+  xAxis.className = 'x-axis';
+  X_LABELS.forEach(l => {
+    const xl = document.createElement('div');
+    xl.className = 'x-label';
+    xl.textContent = l;
+    xAxis.appendChild(xl);
+  });
+  inner.appendChild(xAxis);
+
+  // Rows — bottom-up: Open at bottom, 1500 at top
+  const reversedRows = [...d.rows].reverse();
+
+  reversedRows.forEach((row, ri) => {
+    const origIdx = d.rows.length - 1 - ri;
+    const rowEl = document.createElement('div');
+    rowEl.className = 'subway-row';
+
+    const label = document.createElement('div');
+    label.className = 'row-label';
+    label.textContent = row.label;
+    rowEl.appendChild(label);
+
+    const track = document.createElement('div');
+    track.className = 'track-track';
+    track.style.cssText = 'flex:1;display:flex;align-items:center;height:100%;position:relative';
+
+    // Determine which columns have non-zero values
+    const totalCompleted = row.comp.reduce((a,b)=>a+b, 0);
+    const donePct = pct(totalCompleted, row.total);
+    const didntPct = 100 - donePct;
+
+    // Start column index (Open starts at 0, 0930 starts at 0, 1000 at 1, etc.)
+    const startCol = row.label === 'Open' ? 0 : HOURS.indexOf(row.label);
+
+    // Draw cells for columns 0-6 (the 7 hour slots)
+    const cells = [];
+    for(let ci = 0; ci < 7; ci++){
+      const cell = document.createElement('div');
+      cell.className = 'track-cell';
+      cell.style.flex = '1';
+
+      const val = row.comp[ci];
+      const p = pct(val, row.total);
+
+      if(val > 0 || (ci === startCol && row.label !== 'Open')){
+        const size = val > 0 ? circleSize(p, row.label==='Open') : 10;
+        const color = getColor(d.colors, origIdx);
+        const station = document.createElement('div');
+        station.className = 'station';
+        station.style.width = size + 'px';
+        station.style.height = size + 'px';
+        station.style.background = color;
+
+        if(val > 0){
+          station.style.boxShadow = `0 0 ${size/2}px ${color}44`;
+          const pctLabel = document.createElement('div');
+          pctLabel.className = 'pct-label';
+          pctLabel.style.color = d.labelColor;
+          pctLabel.textContent = p.toFixed(p >= 10 ? 1 : 2) + '%';
+          station.appendChild(pctLabel);
+        } else {
+          station.style.opacity = '.4';
+        }
+
+        station.dataset.tooltip = val > 0
+          ? `Triggered: ${row.label}\nCompleted: ${HOURS[ci]} hour\n${val} of ${row.total} days (${p.toFixed(1)}%)`
+          : `Trigger point: ${row.label}`;
+        station.addEventListener('mouseenter', showTooltip);
+        station.addEventListener('mouseleave', hideTooltip);
+
+        cell.appendChild(station);
+      }
+
+      cells.push(cell);
+      track.appendChild(cell);
+    }
+
+    // Summary cell (Close column)
+    const summary = document.createElement('div');
+    summary.className = 'summary-cell';
+
+    const badgeSize = 36 + donePct * 0.2;
+    const badge = document.createElement('div');
+    badge.className = 'summary-badge';
+    const summaryColor = getColor(d.colors, origIdx);
+    badge.style.width = badgeSize + 'px';
+    badge.style.height = badgeSize + 'px';
+    badge.style.background = summaryColor;
+    badge.style.boxShadow = `0 0 16px ${summaryColor}55`;
+    badge.dataset.tooltip = `${row.label} triggers:\n${totalCompleted} of ${row.total} completed (${donePct.toFixed(1)}%)\n${row.total - totalCompleted} didn't complete (${didntPct.toFixed(1)}%)`;
+    badge.addEventListener('mouseenter', showTooltip);
+    badge.addEventListener('mouseleave', hideTooltip);
+    summary.appendChild(badge);
+
+    const txt = document.createElement('div');
+    txt.className = 'summary-text';
+    const dirPrefix = isBull ? 'bull' : 'bear';
+    // Map row labels to export keys: "Open"→"open", "0930"→"0900", "1000"→"1000", etc.
+    const labelToKey = {'Open':'open','0930':'0900','1000':'1000','1100':'1100','1200':'1200','1300':'1300','1400':'1400','1500':'1500'};
+    const rowKey = dirPrefix + '_' + (labelToKey[row.label] || row.label);
+    txt.innerHTML = `<span class="done n-clickable n-yes" data-row="${rowKey}" data-outcome="hit" data-title="${row.label} triggers (${isBull?'Bull':'Bear'})" style="color:${d.labelColor}">${totalCompleted}</span> <span class="didnt n-clickable n-no" data-row="${rowKey}" data-outcome="miss" data-title="${row.label} triggers (${isBull?'Bull':'Bear'})">${row.total - totalCompleted}</span>`;
+    summary.appendChild(txt);
+
+    track.appendChild(summary);
+    rowEl.appendChild(track);
+
+    // Draw subway line connecting non-zero stations
+    const nonZero = row.comp.map((v,i) => v > 0 ? i : -1).filter(i => i >= 0);
+    if(nonZero.length > 1){
+      // We'll add the line via SVG overlay after rendering
+      rowEl.dataset.lineStart = nonZero[0];
+      rowEl.dataset.lineEnd = nonZero[nonZero.length - 1];
+      rowEl.dataset.lineColor = d.lineColor;
+      rowEl.dataset.origIdx = origIdx;
+    }
+
+    inner.appendChild(rowEl);
+  });
+
+  // X-axis arrow
+  const arrow = document.createElement('div');
+  arrow.className = 'x-arrow';
+  arrow.innerHTML = '<span>Completion % during hour when triggered at start of line</span>';
+  inner.appendChild(arrow);
+
+  subway.appendChild(inner);
+  container.appendChild(subway);
+
+  // Draw lines after layout
+  requestAnimationFrame(() => drawLines(inner, d));
+}
+
+function drawLines(inner, d){
+  const rows = inner.querySelectorAll('.subway-row');
+  rows.forEach(row => {
+    const start = parseInt(row.dataset.lineStart);
+    const end = parseInt(row.dataset.lineEnd);
+    const origIdx = parseInt(row.dataset.origIdx);
+    if(isNaN(start) || isNaN(end)) return;
+
+    const cells = row.querySelectorAll('.track-cell');
+    if(cells.length < end + 1) return;
+
+    const trackEl = row.children[1]; // the track container
+    const trackRect = trackEl.getBoundingClientRect();
+
+    const startCell = cells[start];
+    const endCell = cells[end];
+    const startRect = startCell.getBoundingClientRect();
+    const endRect = endCell.getBoundingClientRect();
+
+    const line = document.createElement('div');
+    line.style.position = 'absolute';
+    line.style.height = '2px';
+    line.style.top = '50%';
+    line.style.transform = 'translateY(-50%)';
+    line.style.left = (startRect.left + startRect.width/2 - trackRect.left) + 'px';
+    line.style.width = (endRect.left + endRect.width/2 - startRect.left - startRect.width/2) + 'px';
+    const color = getColor(d.colors, origIdx);
+    line.style.background = color;
+    line.style.opacity = '.3';
+    line.style.zIndex = '0';
+    line.style.borderRadius = '1px';
+    trackEl.appendChild(line);
+  });
+}
+
+// Tooltip
+const tooltipEl = document.getElementById('tooltip');
+function showTooltip(e){
+  const text = e.currentTarget.dataset.tooltip;
+  if(!text) return;
+  tooltipEl.innerHTML = text.replace(/\n/g,'<br>');
+  tooltipEl.style.display = 'block';
+  positionTooltip(e);
+}
+function positionTooltip(e){
+  const x = e.clientX + 14;
+  const y = e.clientY - 10;
+  tooltipEl.style.left = x + 'px';
+  tooltipEl.style.top = y + 'px';
+}
+function hideTooltip(){
+  tooltipEl.style.display = 'none';
+}
+document.addEventListener('mousemove', e => {
+  if(tooltipEl.style.display === 'block') positionTooltip(e);
+});
+
+// Build
+buildChart('bull-chart', 'bullish', 'Bullish');
+buildChart('bear-chart', 'bearish', 'Bearish');
+
+// Entrance animation
+document.querySelectorAll('.station, .summary-badge').forEach((el, i) => {
+  el.style.opacity = '0';
+  el.style.transform = 'scale(0)';
+  el.style.transition = `opacity .3s ease ${i * 12}ms, transform .3s cubic-bezier(.34,1.56,.64,1) ${i * 12}ms`;
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    el.style.opacity = '';
+    el.style.transform = '';
+  }));
+});
+</script>
+<script src="/study-drawer.js"></script>
+<script>StudyDrawer.loadData('/data/golden-gate-dates.json');</script>
+</body>
+</html>

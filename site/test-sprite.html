@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"></head>
+<body style="background:#0a0b0f;margin:0;min-height:100vh">
+
+<p style="color:white;padding:20px">If you see a pixel character below, the sprite engine works:</p>
+
+<canvas id="c" width="16" height="24" style="width:160px;height:240px;image-rendering:pixelated;border:1px solid red"></canvas>
+
+<script>
+const ctx = document.getElementById('c').getContext('2d');
+const P = {
+  1:'#3a2010', 2:'#f0c8a0', 3:'#1a1a2e', 4:'#6b3a1a',
+  5:'#ffffff', 6:'#d0d0d0', 7:'#c9f76f', 8:'#2a2a50',
+  9:'#5a3a20', 10:'#e06060'
+};
+const s = [
+  [0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0],
+  [0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0],
+  [0,0,0,0,2,2,2,2,2,2,2,2,0,0,0,0],
+  [0,0,0,0,2,3,2,2,2,3,2,2,0,0,0,0],
+  [0,0,0,0,2,2,4,4,4,4,2,2,0,0,0,0],
+  [0,0,0,0,0,2,2,10,10,2,2,0,0,0,0,0],
+  [0,0,0,0,0,0,2,2,2,2,0,0,0,0,0,0],
+  [0,0,0,0,5,5,5,5,5,5,5,5,0,0,0,0],
+  [0,0,0,5,5,5,5,5,5,5,5,5,5,0,0,0],
+  [0,0,2,5,5,5,5,7,5,5,5,5,5,2,0,0],
+  [0,0,2,5,5,5,5,5,5,5,5,5,5,2,0,0],
+  [0,0,0,5,5,5,5,5,5,5,5,5,5,0,0,0],
+  [0,0,0,5,5,5,5,5,5,5,5,5,5,0,0,0],
+  [0,0,0,6,5,5,5,5,5,5,5,5,6,0,0,0],
+  [0,0,0,0,5,5,5,5,5,5,5,5,0,0,0,0],
+  [0,0,0,0,0,8,8,8,8,8,8,0,0,0,0,0],
+  [0,0,0,0,0,8,8,0,0,8,8,0,0,0,0,0],
+  [0,0,0,0,8,8,0,0,0,0,8,8,0,0,0,0],
+  [0,0,0,0,8,8,0,0,0,0,8,8,0,0,0,0],
+  [0,0,0,8,8,0,0,0,0,0,0,8,8,0,0,0],
+  [0,0,0,8,8,0,0,0,0,0,0,0,8,8,0,0],
+  [0,0,0,9,9,0,0,0,0,0,0,0,9,9,0,0],
+  [0,0,9,9,9,9,0,0,0,0,0,9,9,9,9,0],
+  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+];
+console.log('Drawing sprite, rows:', s.length);
+let drawn = 0;
+for (let y = 0; y < s.length; y++) {
+  for (let x = 0; x < s[y].length; x++) {
+    const c = s[y][x];
+    if (c === 0) continue;
+    const color = P[c];
+    if (!color) { console.log('Missing color for:', c); continue; }
+    ctx.fillStyle = color;
+    ctx.fillRect(x, y, 1, 1);
+    drawn++;
+  }
+}
+console.log('Pixels drawn:', drawn);
+document.body.insertAdjacentHTML('beforeend', '<p style="color:lime;padding:20px">Script ran. Drew ' + drawn + ' pixels.</p>');
+</script>
+</body></html>

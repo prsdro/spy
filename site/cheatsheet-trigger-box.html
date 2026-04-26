@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trigger Box Study | Milkman Trades</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥛</text></svg>">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0c0e12;--card:#11131a;--card2:#161922;--border:#1c1f2a;--border2:#252938;
+  --t:#e4e5e9;--t2:#b0b3c0;--t3:#7a7e90;
+  --bull:#1cd48a;--bullD:#0e5c3c;--bear:#ef6c00;--bearD:#6e3200;
+  --acc:#fbbf24;--accD:#5c4500;--red:#ef4444;--blue:#60a5fa;
+}
+html{font-size:14px}
+body{background:#060709;color:var(--t);font-family:'DM Sans',system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;padding:2rem 1rem 4rem}
+
+.save-bar{width:1200px;display:flex;justify-content:flex-end;margin-bottom:.75rem}
+.save-btn{
+  padding:.5rem 1.2rem;background:var(--acc);color:#000;border:none;border-radius:4px;
+  font-family:'JetBrains Mono',monospace;font-size:.75rem;font-weight:600;cursor:pointer;
+  letter-spacing:.03em;transition:opacity .15s;
+}
+.save-btn:hover{opacity:.85}
+.save-btn:active{transform:scale(.97)}
+
+.poster{
+  width:1200px;background:var(--bg);border:1px solid var(--border);border-radius:8px;
+  overflow:hidden;position:relative;
+}
+
+.hdr{
+  padding:1.8rem 2rem 1.4rem;
+  background:linear-gradient(135deg,#0e1018 0%,#12151f 100%);
+  border-bottom:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:flex-end;
+}
+.hdr-left h1{
+  font-family:'JetBrains Mono',monospace;font-size:1.5rem;font-weight:700;
+  letter-spacing:-.01em;line-height:1;margin-bottom:.35rem;
+}
+.hdr-left h1 span{color:var(--acc)}
+.hdr-left .sub{font-size:.8rem;color:var(--t3);font-weight:300}
+.hdr-right{text-align:right}
+.hdr-right .draft{
+  font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:500;
+  color:#a08000;background:#1a1600;padding:.2em .5em;border-radius:3px;
+  letter-spacing:.06em;text-transform:uppercase;margin-bottom:.3rem;display:inline-block;
+}
+.hdr-right .url{font-size:.75rem;color:var(--t3)}
+.hdr-right .back{font-size:.65rem;color:var(--blue);text-decoration:none;margin-right:.8rem}
+.hdr-right .back:hover{text-decoration:underline}
+
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.sec{border-right:1px solid var(--border);border-bottom:1px solid var(--border);padding:1.4rem 1.6rem}
+.sec:nth-child(even){border-right:none}
+.sec.full{grid-column:1/-1;border-right:none}
+.sec-num{
+  font-family:'JetBrains Mono',monospace;font-size:.6rem;font-weight:600;
+  color:var(--acc);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.6rem;
+}
+.sec-title{font-size:1rem;font-weight:700;margin-bottom:.8rem;line-height:1.2}
+
+.stats{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:.8rem}
+.stat{
+  flex:1;min-width:100px;background:var(--card);border:1px solid var(--border);
+  border-radius:5px;padding:.6rem .7rem;
+}
+.stat-val{font-family:'JetBrains Mono',monospace;font-size:1.4rem;font-weight:700;line-height:1}
+.stat-label{font-size:.75rem;color:var(--t3);margin-top:.2rem;line-height:1.3}
+.bull{color:var(--bull)}.bear{color:var(--bear)}.acc{color:var(--acc)}.red{color:var(--red)}
+
+.mtable{width:100%;border-collapse:collapse;font-size:.7rem;margin:.5rem 0}
+.mtable th{
+  font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:500;
+  color:var(--t3);text-align:right;padding:.3rem .4rem;border-bottom:1px solid var(--border);
+  letter-spacing:.04em;text-transform:uppercase;
+}
+.mtable th:first-child{text-align:left}
+.mtable td{
+  padding:.3rem .4rem;border-bottom:1px solid #13151d;text-align:right;
+  font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--t2);
+}
+.mtable td:first-child{text-align:left;font-family:'DM Sans',sans-serif;color:var(--t);font-weight:400}
+.mtable tr.hi td{font-weight:600}
+.mtable tr.hi .bull{color:var(--bull)}
+.mtable tr.hi .bear{color:var(--bear)}
+
+.blist{list-style:none;font-size:.85rem;color:var(--t2);line-height:1.7}
+.blist li::before{content:'>';color:var(--acc);font-weight:700;margin-right:.4rem}
+.blist .key{color:var(--t);font-weight:500}
+.blist .val{font-family:'JetBrains Mono',monospace;font-weight:600}
+
+.ftr{
+  padding:.8rem 2rem;border-top:1px solid var(--border);
+  font-size:.6rem;color:var(--t3);display:flex;justify-content:space-between;
+  font-family:'JetBrains Mono',monospace;
+}
+
+.divlbl{
+  font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--t3);
+  letter-spacing:.08em;text-transform:uppercase;margin:.6rem 0 .3rem;
+}
+
+.desc{font-size:.85rem;color:var(--t2);line-height:1.6;margin-bottom:.8rem}
+
+/* ── Mobile ── */
+@media(max-width:767px){
+  body{padding:1rem .5rem 3rem}
+  .save-bar{width:100%;flex-wrap:wrap;gap:.4rem}
+  .poster{width:100%}
+  .hdr{flex-direction:column;align-items:flex-start;gap:.6rem;padding:1.2rem 1rem 1rem}
+  .hdr-left h1{font-size:1.1rem}
+  .hdr-left .sub{font-size:.72rem}
+  .hdr-right{text-align:left}
+  .grid{grid-template-columns:1fr}
+  .sec{border-right:none !important;padding:1.1rem 1rem}
+  .sec-title{font-size:.95rem}
+  .stats{flex-direction:column}
+  .stat{min-width:0}
+  .stat-val{font-size:1.2rem}
+  .mtable{font-size:.68rem}
+  .mtable th,.mtable td{padding:.25rem .35rem}
+  .ftr{flex-direction:column;gap:.4rem;text-align:center;font-size:.55rem;padding:.7rem 1rem}
+}
+</style>
+<script src="/nav.js"></script>
+<script src="/mobile-png.js"></script>
+</head>
+<body>
+
+<div class="save-bar">
+  <button class="save-btn save-mobile-btn" onclick="saveMobilePNG()" style="background:#60a5fa;margin-right:.5rem">&#128241; Mobile PNG</button>
+  <button class="save-btn" onclick="savePNG()">&#11015; Save as PNG</button>
+</div>
+
+<div class="poster" id="poster">
+
+<div class="hdr">
+  <div class="hdr-left">
+    <h1>Milkman Trades &mdash; <span>Trigger Box Study</span></h1>
+    <div class="sub">25 years of SPY (2000&ndash;2025)</div>
+  </div>
+  <div class="hdr-right">
+    <div class="draft">Draft &mdash; Not Verified</div><br>
+    <a class="back" href="cheatsheet.html">&larr; Master Sheet</a>
+    <span class="url">milkmantrades.com</span>
+  </div>
+</div>
+
+<div class="grid">
+
+<!-- 1. What Is the Trigger Box -->
+<div class="sec full">
+  <div class="sec-num">01 &mdash; What Is the Trigger Box</div>
+  <div class="sec-title">The zone between PDC and the trigger level</div>
+
+  <div class="desc">
+    <strong style="color:var(--bear)">Bearish box:</strong> open below PDC but above the put trigger (&minus;23.6%). Happens <strong>22.6%</strong> of all days (1,462 days).<br>
+    <strong style="color:var(--bull)">Bullish box:</strong> open above PDC but below the call trigger (+23.6%). Happens <strong>26.3%</strong> of all days (1,698 days).
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="stat-val bear">22.6%</div><div class="stat-label">Bear box days<br>1,462 days</div></div>
+    <div class="stat"><div class="stat-val bull">26.3%</div><div class="stat-label">Bull box days<br>1,698 days</div></div>
+    <div class="stat"><div class="stat-val acc">~49%</div><div class="stat-label">Combined<br>nearly half of all trading days</div></div>
+  </div>
+</div>
+
+<!-- 2. Full-Day Outcomes by Hold Filter -->
+<div class="sec">
+  <div class="sec-num">02 &mdash; Full-Day Outcomes</div>
+  <div class="sec-title">Bearish box &mdash; % of days where GG opened by close</div>
+
+  <div class="divlbl" style="margin-top:0">Filter: only count days where price held below PDC for at least X time</div>
+  <table class="mtable">
+    <thead><tr><th>Day filter</th><th>Days</th><th>GG opened<br>by close</th><th>GG completed<br>by close</th></tr></thead>
+    <tbody>
+      <tr><td>All bear box days (no filter)</td><td>1,462</td><td>59.0%</td><td>32.4%</td></tr>
+      <tr><td>Days that held box &ge;30 min</td><td>866</td><td class="bear">71.6%</td><td class="bear">40.6%</td></tr>
+      <tr class="hi"><td>Days that held box &ge;1 hour</td><td>667</td><td class="bear">80.2%</td><td class="bear">47.8%</td></tr>
+    </tbody>
+  </table>
+  <div style="font-size:.7rem;color:var(--t3);margin-top:.3rem;font-style:italic">Note: 70% of GGs on &ldquo;held 1hr&rdquo; days triggered during that first hour itself. The hold time filters for higher-quality days, not what happens after.</div>
+</div>
+
+<div class="sec">
+  <div class="sec-num">02 &mdash; Full-Day Outcomes</div>
+  <div class="sec-title">Bullish box &mdash; % of days where GG opened by close</div>
+
+  <div class="divlbl" style="margin-top:0">Filter: only count days where price held above PDC for at least X time</div>
+  <table class="mtable">
+    <thead><tr><th>Day filter</th><th>Days</th><th>GG opened<br>by close</th><th>GG completed<br>by close</th></tr></thead>
+    <tbody>
+      <tr><td>All bull box days (no filter)</td><td>1,698</td><td>57.3%</td><td>29.4%</td></tr>
+      <tr><td>Days that held box &ge;30 min</td><td>988</td><td class="bull">72.6%</td><td class="bull">39.2%</td></tr>
+      <tr class="hi"><td>Days that held box &ge;1 hour</td><td>763</td><td class="bull">82.2%</td><td class="bull">45.3%</td></tr>
+    </tbody>
+  </table>
+  <div style="font-size:.7rem;color:var(--t3);margin-top:.3rem;font-style:italic">Note: 67% of GGs on &ldquo;held 1hr&rdquo; days triggered during that first hour itself.</div>
+</div>
+
+<!-- 3. Reversals & Patience -->
+<div class="sec">
+  <div class="sec-num">03 &mdash; Reversals</div>
+  <div class="sec-title">When PDC is reclaimed in the first hour</div>
+
+  <ul class="blist">
+    <li><span class="key">Bear &rarr; Bull reversal:</span> <span class="val bull">73.2%</span> reach call trigger, <span class="val bull">49.4%</span> reach bull GG <span style="color:var(--t3)">(n=795)</span></li>
+    <li><span class="key">Bull &rarr; Bear reversal:</span> <span class="val bear">72.7%</span> reach put trigger, <span class="val bear">49.6%</span> reach bear GG <span style="color:var(--t3)">(n=935)</span></li>
+  </ul>
+</div>
+
+<div class="sec">
+  <div class="sec-num">03 &mdash; Patience</div>
+  <div class="sec-title">If GG hasn&rsquo;t triggered after 1h hold</div>
+
+  <ul class="blist">
+    <li><span class="key">Bear box:</span> <span class="val bear">54.9%</span> still triggers later <span style="color:var(--t3)">(n=293)</span></li>
+    <li><span class="key">Bull box:</span> <span class="val bull">60.3%</span> still triggers later <span style="color:var(--t3)">(n=343)</span></li>
+  </ul>
+</div>
+
+</div><!-- /grid -->
+
+<div class="sec full" style="background:linear-gradient(135deg,#0f1118,#131620);border-bottom:none">
+  <div class="sec-num" style="color:var(--acc)">&#9733; Bottom Line</div>
+  <div class="sec-title">How to trade the trigger box</div>
+  <ul class="blist">
+    <li><span class="key">Days that hold the trigger box for 1 hour see a GG open <span class="val bull">80%+</span> of the time.</span> Note: most of those GGs trigger <em>during</em> the first hour itself (70%). The hold time is a quality filter on the full day&rsquo;s outcome, not a &ldquo;what happens next&rdquo; prediction.</li>
+    <li><span class="key">Longer hold = higher quality filter.</span> 30 min filter = <span class="val acc">~72%</span> GG rate, 1 hour = <span class="val acc">~80%</span>. Each 30 minutes of holding is associated with ~10 more percentage points.</li>
+    <li><span class="key">When PDC is reclaimed in the first hour, the reversal tends to have legs</span> &mdash; <span class="val acc">73%</span> reach the opposite trigger historically.</li>
+    <li><span class="key">If GG hasn&rsquo;t triggered after 1 hour of holding,</span> there&rsquo;s still a <span class="val bull">55&ndash;60%</span> historical chance it triggers later. Below 50% by ~2.5 hours. Effectively over by 5 hours (2:30 PM).</li>
+  </ul>
+</div>
+
+<div class="ftr">
+  <span>milkmantrades.com &middot; ATR Levels &amp; Phase Oscillator by Saty Mahajan</span>
+  <span>@tesrak &middot; @todor &middot; Draft &mdash; not independently verified</span>
+</div>
+
+</div><!-- /poster -->
+
+<script>
+function savePNG() {
+  const btn = document.querySelector('.save-btn');
+  btn.textContent = 'Rendering...';
+  html2canvas(document.getElementById('poster'), {
+    scale: 2,
+    backgroundColor: '#0c0e12',
+    useCORS: true,
+  }).then(canvas => {
+    const a = document.createElement('a');
+    a.download = 'trigger-box-study.png';
+    a.href = canvas.toDataURL('image/png');
+    a.click();
+    btn.textContent = '\u2713 Saved';
+    setTimeout(() => btn.textContent = '\u2b07 Save as PNG', 2000);
+  });
+}
+</script>
+</body>
+</html>
