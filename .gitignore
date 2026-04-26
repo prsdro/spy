@@ -51,3 +51,7 @@ site/data/scripts.zip
 analyst/server.py
 analyst/extension/
 site/analyst.html
+
+# Weekly plan charts (keep)
+!weekly-plans/*.jpg
+!weekly-plans/*.png
