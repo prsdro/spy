@@ -455,6 +455,22 @@ Outcomes measured from the second gate's open through the RTH close:
 - In both orderings PDC reversion stays a minority outcome and the day closes in the
   direction of the **second** move — reinforcing the rejection of the original hypothesis.
 
+**Completion & continuation timing**:
+- Up→down completes **~2× faster** than down→up: median **25 min** (p25–p75 10–59) from
+  the downside gate opening to −61.8%, vs **50 min** (14–94) for the upside case. Selling
+  resolves faster than buying.
+- Once a gate completes, the continuation to ±78.6% is **quick and symmetric**: median
+  **14 min** in both directions — when it runs, it runs immediately.
+
+**Greatest edge — morning up→down** (2nd/downside gate opens before noon CT, n=142):
+- Completes **66.2%**; of those, **76.6%** continue to −78.6% → **~51%** of these setups
+  both complete *and* continue.
+- Timing: median **30 min** (p25–p75 11–81) to −61.8%, then a further median **16 min**
+  to −78.6%.
+- Although every setup is *valid* before noon CT, the actual −61.8% completion **clusters
+  10:30–13:00 ET** (late-morning/lunch); few complete in the first 30 min and the tail
+  past 14:00 is thin. Surfaced as the headline "edge" card on `/spx-double-gg.html`.
+
 ---
 
 ## Analysis TODO

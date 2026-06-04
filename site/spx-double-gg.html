@@ -64,6 +64,27 @@ details.def .body code{font-family:'JetBrains Mono',monospace;font-size:11.5px;b
 .verdict p+p{margin-top:8px}
 .verdict b{color:var(--text)}
 
+/* edge card */
+.edge{background:linear-gradient(155deg,#0e1f17,#13161c 60%);border:1px solid var(--bull);border-radius:16px;padding:18px;margin:10px 0;box-shadow:0 0 0 1px rgba(28,212,138,.08),0 8px 30px rgba(28,212,138,.06)}
+.edge .etag{display:inline-flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:#0c0e12;background:var(--bull);padding:3px 9px;border-radius:6px;margin-bottom:11px}
+.edge h2{font-size:15px;font-weight:700;line-height:1.35;margin-bottom:4px}
+.edge h2 .dnx{color:var(--bear)}
+.edge .lead{font-size:13px;color:var(--text-mid);line-height:1.55;margin-bottom:13px}
+.edge .lead b{color:var(--text)}
+.edge .bigstat{display:flex;align-items:baseline;gap:10px;margin-bottom:13px;flex-wrap:wrap}
+.edge .bigstat .num{font-family:'JetBrains Mono',monospace;font-size:38px;font-weight:700;letter-spacing:-0.03em;color:var(--bull);line-height:1}
+.edge .bigstat .cap{font-size:12px;color:var(--text-mid);line-height:1.4;max-width:230px}
+.edge .erow{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.edge .ecell{background:rgba(12,14,18,.5);border:1px solid var(--border-strong);border-radius:11px;padding:11px 12px}
+.edge .ecell .k{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px}
+.edge .ecell .val{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:700;color:#f1f5f9}
+.edge .ecell .val small{font-size:11px;color:var(--text-mid);font-weight:500}
+.edge .seq{margin-top:13px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-mid)}
+.edge .seq .node{background:rgba(12,14,18,.6);border:1px solid var(--border-strong);border-radius:7px;padding:5px 8px;color:#e8eaed}
+.edge .seq .node b{color:var(--bear)}
+.edge .seq .lag{color:var(--bull);font-weight:700}
+.edge .seq .ar{color:var(--text-dim)}
+
 /* case toggle */
 .toggle{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:8px 0 4px}
 .toggle button{font-family:inherit;cursor:pointer;border-radius:12px;padding:13px 12px;text-align:left;background:var(--surface);border:1px solid var(--border);color:var(--text);transition:border-color .14s,background .14s;-webkit-tap-highlight-color:transparent}
@@ -169,6 +190,9 @@ table.kv tr:last-child td{border-bottom:none}
     <p>The effect is <b>asymmetric and time-sensitive</b>: the down→up case is the weaker, choppier one; the up→down case completes more often and continues harder. And both decay sharply the later in the day the second gate opens — explore it below.</p>
   </div>
 
+  <div class="section-title">⚡ The greatest edge</div>
+  <div class="edge" id="edge"></div>
+
   <div class="section-title">Pick the ordering</div>
   <div class="toggle" id="toggle">
     <button data-case="down_first" data-on="1">
@@ -222,6 +246,20 @@ table.kv tr:last-child td{border-bottom:none}
     <div class="callout" id="todnote"></div>
   </div>
 
+  <div class="section-title">How fast does it complete &amp; continue?</div>
+  <div class="card">
+    <h3>Completion &amp; continuation speed</h3>
+    <div class="ck">Minutes from each milestone. Completion = 2nd gate reaches ±61.8%; continuation = the further push to ±78.6% measured <em>after</em> completion.</div>
+    <table class="kv" id="speedtab"></table>
+    <div class="callout" id="speednote"></div>
+  </div>
+  <div class="card">
+    <h3>When the morning up→down edge actually completes</h3>
+    <div class="ck">Clock time the <span class="dnx">−61.8%</span> completion lands, for up→down setups whose 2nd gate opened before noon CT (n=<span id="edge-comp-n"></span> completions). Bars = count.</div>
+    <div id="compclock"></div>
+    <div class="callout" id="compclocknote"></div>
+  </div>
+
   <div class="section-title">When do these days happen?</div>
   <div class="card">
     <h3>Occurrence by time the 2nd gate opens</h3>
@@ -251,7 +289,7 @@ table.kv tr:last-child td{border-bottom:none}
 
 </div>
 
-<script id="data" type="application/json">{"meta":{"ticker":"SPX","source":"FirstRateData SPX index, 1-minute RTH","date_start":"2008-01-02","date_end":"2026-05-01","n_sessions":4612,"n_double_gate":504,"n_down_first":209,"n_up_first":295,"tz_note":"Timestamps ET; 12pm Central = 1:00pm ET"},"down_first":{"overall":{"n":209,"neither_close_ever":35.4,"second_completes":45.5,"pdc_revert":29.2,"trig_revert":55.0,"first_recompletes":3.8,"second_ext":22.0,"second_full":10.0,"first_res_second":45.5,"first_res_first":1.4,"first_res_neither":53.1,"close_atr_median":0.411,"reversal_min_median":198.0,"after_complete":{"n":94,"continuation":48.9,"sideways":31.9,"mean_reversion":19.1}},"by_time":[{"bucket":"09:30","n":2,"second_completes":50.0,"pdc_revert":100.0,"neither_close_ever":50.0,"first_recompletes":50.0},{"bucket":"10:00","n":9,"second_completes":88.9,"pdc_revert":55.6,"neither_close_ever":11.1,"first_recompletes":22.2},{"bucket":"10:30","n":7,"second_completes":42.9,"pdc_revert":57.1,"neither_close_ever":57.1,"first_recompletes":14.3},{"bucket":"11:00","n":23,"second_completes":65.2,"pdc_revert":52.2,"neither_close_ever":26.1,"first_recompletes":8.7},{"bucket":"11:30","n":15,"second_completes":60.0,"pdc_revert":46.7,"neither_close_ever":26.7,"first_recompletes":6.7},{"bucket":"12:00","n":16,"second_completes":68.8,"pdc_revert":37.5,"neither_close_ever":31.2,"first_recompletes":0.0},{"bucket":"12:30","n":17,"second_completes":47.1,"pdc_revert":41.2,"neither_close_ever":35.3,"first_recompletes":0.0},{"bucket":"13:00","n":16,"second_completes":31.2,"pdc_revert":18.8,"neither_close_ever":56.2,"first_recompletes":0.0},{"bucket":"13:30","n":16,"second_completes":37.5,"pdc_revert":37.5,"neither_close_ever":31.2,"first_recompletes":0.0},{"bucket":"14:00","n":19,"second_completes":42.1,"pdc_revert":15.8,"neither_close_ever":26.3,"first_recompletes":5.3},{"bucket":"14:30","n":20,"second_completes":50.0,"pdc_revert":20.0,"neither_close_ever":40.0,"first_recompletes":0.0},{"bucket":"15:00","n":23,"second_completes":34.8,"pdc_revert":4.3,"neither_close_ever":39.1,"first_recompletes":0.0},{"bucket":"15:30","n":26,"second_completes":11.5,"pdc_revert":3.8,"neither_close_ever":42.3,"first_recompletes":0.0}],"morning_subset":{"n":89,"neither_close_ever":30.3,"second_completes":61.8,"pdc_revert":48.3,"trig_revert":73.0,"first_recompletes":7.9,"second_ext":29.2,"second_full":14.6,"first_res_second":61.8,"first_res_first":2.2,"first_res_neither":36.0,"close_atr_median":0.407,"reversal_min_median":108.0,"after_complete":{"n":55,"continuation":47.3,"sideways":29.1,"mean_reversion":23.6}}},"up_first":{"overall":{"n":295,"neither_close_ever":25.8,"second_completes":58.6,"pdc_revert":41.0,"trig_revert":69.5,"first_recompletes":6.8,"second_ext":40.0,"second_full":25.1,"first_res_second":58.3,"first_res_first":3.7,"first_res_neither":38.0,"close_atr_median":-0.392,"reversal_min_median":182.0,"after_complete":{"n":173,"continuation":68.2,"sideways":11.6,"mean_reversion":20.2}},"by_time":[{"bucket":"09:30","n":4,"second_completes":100.0,"pdc_revert":75.0,"neither_close_ever":0.0,"first_recompletes":50.0},{"bucket":"10:00","n":29,"second_completes":62.1,"pdc_revert":58.6,"neither_close_ever":20.7,"first_recompletes":20.7},{"bucket":"10:30","n":18,"second_completes":61.1,"pdc_revert":66.7,"neither_close_ever":22.2,"first_recompletes":16.7},{"bucket":"11:00","n":28,"second_completes":67.9,"pdc_revert":53.6,"neither_close_ever":21.4,"first_recompletes":3.6},{"bucket":"11:30","n":29,"second_completes":69.0,"pdc_revert":44.8,"neither_close_ever":27.6,"first_recompletes":3.4},{"bucket":"12:00","n":16,"second_completes":68.8,"pdc_revert":43.8,"neither_close_ever":31.2,"first_recompletes":6.2},{"bucket":"12:30","n":18,"second_completes":61.1,"pdc_revert":44.4,"neither_close_ever":27.8,"first_recompletes":11.1},{"bucket":"13:00","n":19,"second_completes":63.2,"pdc_revert":52.6,"neither_close_ever":15.8,"first_recompletes":0.0},{"bucket":"13:30","n":19,"second_completes":52.6,"pdc_revert":36.8,"neither_close_ever":26.3,"first_recompletes":0.0},{"bucket":"14:00","n":25,"second_completes":56.0,"pdc_revert":56.0,"neither_close_ever":32.0,"first_recompletes":12.0},{"bucket":"14:30","n":31,"second_completes":54.8,"pdc_revert":29.0,"neither_close_ever":22.6,"first_recompletes":3.2},{"bucket":"15:00","n":32,"second_completes":53.1,"pdc_revert":15.6,"neither_close_ever":31.2,"first_recompletes":0.0},{"bucket":"15:30","n":27,"second_completes":33.3,"pdc_revert":3.7,"neither_close_ever":33.3,"first_recompletes":0.0}],"morning_subset":{"n":142,"neither_close_ever":23.9,"second_completes":66.2,"pdc_revert":52.8,"trig_revert":81.7,"first_recompletes":11.3,"second_ext":50.7,"second_full":35.2,"first_res_second":66.2,"first_res_first":5.6,"first_res_neither":28.2,"close_atr_median":-0.327,"reversal_min_median":100.0,"after_complete":{"n":94,"continuation":76.6,"sideways":2.1,"mean_reversion":21.3}}},"occurrence_by_time":[{"bucket":"09:30","down_first":2,"up_first":4},{"bucket":"10:00","down_first":9,"up_first":29},{"bucket":"10:30","down_first":7,"up_first":18},{"bucket":"11:00","down_first":23,"up_first":28},{"bucket":"11:30","down_first":15,"up_first":29},{"bucket":"12:00","down_first":16,"up_first":16},{"bucket":"12:30","down_first":17,"up_first":18},{"bucket":"13:00","down_first":16,"up_first":19},{"bucket":"13:30","down_first":16,"up_first":19},{"bucket":"14:00","down_first":19,"up_first":25},{"bucket":"14:30","down_first":20,"up_first":31},{"bucket":"15:00","down_first":23,"up_first":32},{"bucket":"15:30","down_first":26,"up_first":27}]}</script>
+<script id="data" type="application/json">{"meta":{"ticker":"SPX","source":"FirstRateData SPX index, 1-minute RTH","date_start":"2008-01-02","date_end":"2026-05-01","n_sessions":4612,"n_double_gate":504,"n_down_first":209,"n_up_first":295,"tz_note":"Timestamps ET; 12pm Central = 1:00pm ET"},"down_first":{"overall":{"n":209,"neither_close_ever":35.4,"second_completes":45.5,"pdc_revert":29.2,"trig_revert":55.0,"first_recompletes":3.8,"second_ext":22.0,"second_full":10.0,"first_res_second":45.5,"first_res_first":1.4,"first_res_neither":53.1,"close_atr_median":0.411,"reversal_min_median":198.0,"after_complete":{"n":94,"continuation":48.9,"sideways":31.9,"mean_reversion":19.1},"timing":{"n_completed":95,"complete_min_p25":14.0,"complete_min_median":50.0,"complete_min_p75":94.0,"n_continued":46,"cont_min_p25":4.0,"cont_min_median":14.0,"cont_min_p75":30.0}},"by_time":[{"bucket":"09:30","n":2,"second_completes":50.0,"pdc_revert":100.0,"neither_close_ever":50.0,"first_recompletes":50.0,"complete_min_median":3.0},{"bucket":"10:00","n":9,"second_completes":88.9,"pdc_revert":55.6,"neither_close_ever":11.1,"first_recompletes":22.2,"complete_min_median":11.0},{"bucket":"10:30","n":7,"second_completes":42.9,"pdc_revert":57.1,"neither_close_ever":57.1,"first_recompletes":14.3,"complete_min_median":31.0},{"bucket":"11:00","n":23,"second_completes":65.2,"pdc_revert":52.2,"neither_close_ever":26.1,"first_recompletes":8.7,"complete_min_median":41.0},{"bucket":"11:30","n":15,"second_completes":60.0,"pdc_revert":46.7,"neither_close_ever":26.7,"first_recompletes":6.7,"complete_min_median":118.0},{"bucket":"12:00","n":16,"second_completes":68.8,"pdc_revert":37.5,"neither_close_ever":31.2,"first_recompletes":0.0,"complete_min_median":82.0},{"bucket":"12:30","n":17,"second_completes":47.1,"pdc_revert":41.2,"neither_close_ever":35.3,"first_recompletes":0.0,"complete_min_median":124.0},{"bucket":"13:00","n":16,"second_completes":31.2,"pdc_revert":18.8,"neither_close_ever":56.2,"first_recompletes":0.0,"complete_min_median":52.0},{"bucket":"13:30","n":16,"second_completes":37.5,"pdc_revert":37.5,"neither_close_ever":31.2,"first_recompletes":0.0,"complete_min_median":76.0},{"bucket":"14:00","n":19,"second_completes":42.1,"pdc_revert":15.8,"neither_close_ever":26.3,"first_recompletes":5.3,"complete_min_median":36.0},{"bucket":"14:30","n":20,"second_completes":50.0,"pdc_revert":20.0,"neither_close_ever":40.0,"first_recompletes":0.0,"complete_min_median":50.0},{"bucket":"15:00","n":23,"second_completes":34.8,"pdc_revert":4.3,"neither_close_ever":39.1,"first_recompletes":0.0,"complete_min_median":20.0},{"bucket":"15:30","n":26,"second_completes":11.5,"pdc_revert":3.8,"neither_close_ever":42.3,"first_recompletes":0.0,"complete_min_median":10.0}],"morning_subset":{"n":89,"neither_close_ever":30.3,"second_completes":61.8,"pdc_revert":48.3,"trig_revert":73.0,"first_recompletes":7.9,"second_ext":29.2,"second_full":14.6,"first_res_second":61.8,"first_res_first":2.2,"first_res_neither":36.0,"close_atr_median":0.407,"reversal_min_median":108.0,"after_complete":{"n":55,"continuation":47.3,"sideways":29.1,"mean_reversion":23.6},"timing":{"n_completed":55,"complete_min_p25":20.0,"complete_min_median":54.0,"complete_min_p75":152.0,"n_continued":26,"cont_min_p25":3.0,"cont_min_median":16.0,"cont_min_p75":31.0}}},"up_first":{"overall":{"n":295,"neither_close_ever":25.8,"second_completes":58.6,"pdc_revert":41.0,"trig_revert":69.5,"first_recompletes":6.8,"second_ext":40.0,"second_full":25.1,"first_res_second":58.3,"first_res_first":3.7,"first_res_neither":38.0,"close_atr_median":-0.392,"reversal_min_median":182.0,"after_complete":{"n":173,"continuation":68.2,"sideways":11.6,"mean_reversion":20.2},"timing":{"n_completed":173,"complete_min_p25":10.0,"complete_min_median":25.0,"complete_min_p75":59.0,"n_continued":118,"cont_min_p25":6.0,"cont_min_median":14.0,"cont_min_p75":35.0}},"by_time":[{"bucket":"09:30","n":4,"second_completes":100.0,"pdc_revert":75.0,"neither_close_ever":0.0,"first_recompletes":50.0,"complete_min_median":18.0},{"bucket":"10:00","n":29,"second_completes":62.1,"pdc_revert":58.6,"neither_close_ever":20.7,"first_recompletes":20.7,"complete_min_median":28.0},{"bucket":"10:30","n":18,"second_completes":61.1,"pdc_revert":66.7,"neither_close_ever":22.2,"first_recompletes":16.7,"complete_min_median":16.0},{"bucket":"11:00","n":28,"second_completes":67.9,"pdc_revert":53.6,"neither_close_ever":21.4,"first_recompletes":3.6,"complete_min_median":39.0},{"bucket":"11:30","n":29,"second_completes":69.0,"pdc_revert":44.8,"neither_close_ever":27.6,"first_recompletes":3.4,"complete_min_median":40.0},{"bucket":"12:00","n":16,"second_completes":68.8,"pdc_revert":43.8,"neither_close_ever":31.2,"first_recompletes":6.2,"complete_min_median":28.0},{"bucket":"12:30","n":18,"second_completes":61.1,"pdc_revert":44.4,"neither_close_ever":27.8,"first_recompletes":11.1,"complete_min_median":24.0},{"bucket":"13:00","n":19,"second_completes":63.2,"pdc_revert":52.6,"neither_close_ever":15.8,"first_recompletes":0.0,"complete_min_median":32.0},{"bucket":"13:30","n":19,"second_completes":52.6,"pdc_revert":36.8,"neither_close_ever":26.3,"first_recompletes":0.0,"complete_min_median":34.0},{"bucket":"14:00","n":25,"second_completes":56.0,"pdc_revert":56.0,"neither_close_ever":32.0,"first_recompletes":12.0,"complete_min_median":23.0},{"bucket":"14:30","n":31,"second_completes":54.8,"pdc_revert":29.0,"neither_close_ever":22.6,"first_recompletes":3.2,"complete_min_median":31.0},{"bucket":"15:00","n":32,"second_completes":53.1,"pdc_revert":15.6,"neither_close_ever":31.2,"first_recompletes":0.0,"complete_min_median":17.0},{"bucket":"15:30","n":27,"second_completes":33.3,"pdc_revert":3.7,"neither_close_ever":33.3,"first_recompletes":0.0,"complete_min_median":9.0}],"morning_subset":{"n":142,"neither_close_ever":23.9,"second_completes":66.2,"pdc_revert":52.8,"trig_revert":81.7,"first_recompletes":11.3,"second_ext":50.7,"second_full":35.2,"first_res_second":66.2,"first_res_first":5.6,"first_res_neither":28.2,"close_atr_median":-0.327,"reversal_min_median":100.0,"after_complete":{"n":94,"continuation":76.6,"sideways":2.1,"mean_reversion":21.3},"timing":{"n_completed":94,"complete_min_p25":11.0,"complete_min_median":30.0,"complete_min_p75":81.0,"n_continued":72,"cont_min_p25":8.0,"cont_min_median":16.0,"cont_min_p75":44.0}}},"edge":{"label":"Up\u2192Down, 2nd gate opens before noon CT","summary":{"n":142,"neither_close_ever":23.9,"second_completes":66.2,"pdc_revert":52.8,"trig_revert":81.7,"first_recompletes":11.3,"second_ext":50.7,"second_full":35.2,"first_res_second":66.2,"first_res_first":5.6,"first_res_neither":28.2,"close_atr_median":-0.327,"reversal_min_median":100.0,"after_complete":{"n":94,"continuation":76.6,"sideways":2.1,"mean_reversion":21.3},"timing":{"n_completed":94,"complete_min_p25":11.0,"complete_min_median":30.0,"complete_min_p75":81.0,"n_continued":72,"cont_min_p25":8.0,"cont_min_median":16.0,"cont_min_p75":44.0}},"complete_clock":[{"bucket":"09:30","n":1},{"bucket":"10:00","n":6},{"bucket":"10:30","n":11},{"bucket":"11:00","n":11},{"bucket":"11:30","n":14},{"bucket":"12:00","n":10},{"bucket":"12:30","n":14},{"bucket":"13:00","n":11},{"bucket":"13:30","n":6},{"bucket":"14:00","n":3},{"bucket":"14:30","n":2},{"bucket":"15:00","n":3},{"bucket":"15:30","n":2}],"cont_clock":[{"bucket":"09:30","n":0},{"bucket":"10:00","n":2},{"bucket":"10:30","n":7},{"bucket":"11:00","n":6},{"bucket":"11:30","n":14},{"bucket":"12:00","n":6},{"bucket":"12:30","n":6},{"bucket":"13:00","n":9},{"bucket":"13:30","n":5},{"bucket":"14:00","n":5},{"bucket":"14:30","n":4},{"bucket":"15:00","n":4},{"bucket":"15:30","n":4}]},"occurrence_by_time":[{"bucket":"09:30","down_first":2,"up_first":4},{"bucket":"10:00","down_first":9,"up_first":29},{"bucket":"10:30","down_first":7,"up_first":18},{"bucket":"11:00","down_first":23,"up_first":28},{"bucket":"11:30","down_first":15,"up_first":29},{"bucket":"12:00","down_first":16,"up_first":16},{"bucket":"12:30","down_first":17,"up_first":18},{"bucket":"13:00","down_first":16,"up_first":19},{"bucket":"13:30","down_first":16,"up_first":19},{"bucket":"14:00","down_first":19,"up_first":25},{"bucket":"14:30","down_first":20,"up_first":31},{"bucket":"15:00","down_first":23,"up_first":32},{"bucket":"15:30","down_first":26,"up_first":27}]}</script>
 <script>
 const DATA = JSON.parse(document.getElementById('data').textContent);
 let state = { case: 'down_first', scope: 'overall' };
@@ -299,7 +337,9 @@ function render(){
     <tr><td>Pulls back to the ±23.6% trigger</td><td>${pf(block.trig_revert)}</td></tr>
     <tr><td>2nd gate extends to 78.6%</td><td>${pf(block.second_ext)}</td></tr>
     <tr><td>2nd gate runs a full ATR (100%)</td><td>${pf(block.second_full)}</td></tr>
-    <tr><td>Reversal speed (1st→2nd open), median</td><td>${block.reversal_min_median} min</td></tr>`;
+    <tr><td>Reversal speed (1st→2nd open), median</td><td>${block.reversal_min_median} min</td></tr>
+    <tr><td>Time to <b style="color:${accentSide}">complete</b> (median, p25–p75)</td><td>${block.timing.complete_min_median} min <small style="color:var(--text-dim)">(${block.timing.complete_min_p25}–${block.timing.complete_min_p75})</small></td></tr>
+    <tr><td>Then to <b style="color:var(--bull)">continue</b> → 78.6% (median)</td><td>${block.timing.cont_min_median} min</td></tr>`;
 
   // after-complete stack
   const ac = block.after_complete;
@@ -338,6 +378,66 @@ function render(){
     ? 'Down→up completions are strongest <b>late morning (10:00–12:00, ~60–89%)</b> and collapse after lunch — a 15:30 second-open completes the upside gate only <b>11%</b> of the time. PDC reversion fades even faster: near-zero (3–4%) once the second gate opens after 15:00.'
     : 'Up→down completions hold a steadier <b>~55–69% through midday</b> before fading into the close (33% at 15:30). PDC reversion is strong in the morning (53–67% at 10:00–13:00) but evaporates late — a late-day downside open just keeps falling.';
 }
+
+// ---- edge card (static) ----
+(function(){
+  const e = DATA.edge, s = e.summary, t = s.timing, comp = e.summary.after_complete;
+  const both = Math.round(s.second_completes * comp.continuation) / 100; // % that complete AND continue
+  document.getElementById('edge').innerHTML = `
+    <span class="etag">★ Highest-conviction setup</span>
+    <h2>An <span class="dnx">up→down</span> whipsaw that becomes valid in the morning completes — and keeps going.</h2>
+    <div class="lead">When the upside gate opens first and the <b>downside</b> gate then opens before noon CT (n=${s.n}), the downside gate not only completes more often than any other slice — most of those completions <b>continue</b> past the gate.</div>
+    <div class="bigstat">
+      <span class="num">${both.toFixed(0)}%</span>
+      <span class="cap">of these setups both <b>complete</b> the downside gate (−61.8%) <b>and continue</b> to −78.6%.</span>
+    </div>
+    <div class="erow">
+      <div class="ecell"><div class="k">Gate completes</div><div class="val">${pf(s.second_completes)} <small>n=${s.n}</small></div></div>
+      <div class="ecell"><div class="k">Of those, continue</div><div class="val">${pf(comp.continuation)} <small>to −78.6%</small></div></div>
+      <div class="ecell"><div class="k">Time to complete</div><div class="val">${t.complete_min_median}m <small>median · ${t.complete_min_p25}–${t.complete_min_p75}</small></div></div>
+      <div class="ecell"><div class="k">Then to continue</div><div class="val">+${t.cont_min_median}m <small>median · n=${t.n_continued}</small></div></div>
+    </div>
+    <div class="seq">
+      <span class="node"><b>↓</b> gate opens<br>(before noon CT)</span>
+      <span class="ar">→</span><span class="lag">~${t.complete_min_median}m</span><span class="ar">→</span>
+      <span class="node"><b>−61.8%</b> completes</span>
+      <span class="ar">→</span><span class="lag">~${t.cont_min_median}m</span><span class="ar">→</span>
+      <span class="node"><b>−78.6%</b> continuation</span>
+    </div>`;
+})();
+
+// ---- completion & continuation speed table (static, both cases) ----
+(function(){
+  const du = DATA.down_first.overall.timing, ud = DATA.up_first.overall.timing;
+  const r = (a,b)=>`<tr><td>${a}</td><td>${b}</td></tr>`;
+  document.getElementById('speedtab').innerHTML =
+    `<tr><td style="color:var(--text-dim);font-size:11px">&nbsp;</td><td style="text-align:right;color:var(--text-dim);font-size:11px;font-family:'JetBrains Mono',monospace">Down→Up&nbsp;&nbsp;·&nbsp;&nbsp;Up→Down</td></tr>` +
+    r('Completions analyzed', `${du.n_completed} · ${ud.n_completed}`) +
+    r('Open → complete (median)', `${du.complete_min_median}m · <b style="color:var(--bull)">${ud.complete_min_median}m</b>`) +
+    r('Open → complete (p25–p75)', `${du.complete_min_p25}–${du.complete_min_p75} · ${ud.complete_min_p25}–${ud.complete_min_p75}`) +
+    r('Complete → continue 78.6% (median)', `${du.cont_min_median}m · ${ud.cont_min_median}m`);
+  document.getElementById('speednote').innerHTML =
+    `<b>Up→down completes about twice as fast</b> as down→up — a median of <b>${ud.complete_min_median} minutes</b> from the downside gate opening to −61.8%, versus ${du.complete_min_median} minutes for the upside case. Selling resolves faster than buying. Once either gate completes, the continuation to ±78.6% is quick and similar in both directions (~${ud.cont_min_median} min) — when it runs, it runs right away.`;
+})();
+
+// ---- completion clock-time chart for the morning edge (static) ----
+(function(){
+  const cc = DATA.edge.complete_clock;
+  const total = cc.reduce((a,o)=>a+o.n,0);
+  document.getElementById('edge-comp-n').textContent = total;
+  const maxv = Math.max(...cc.map(o=>o.n),1);
+  document.getElementById('compclock').innerHTML = cc.map(o=>{
+    const w = o.n/maxv*100;
+    return `<div class="occ-row">
+      <div class="t">${o.bucket}</div>
+      <div class="occ-bar" style="width:${Math.max(w,2)}%;background:var(--surface-3)">
+        <div class="d lab" style="width:100%;background:var(--bear);opacity:.85">${o.n>=2?o.n:''}</div>
+      </div>
+    </div>`;
+  }).join('');
+  document.getElementById('compclocknote').innerHTML =
+    `Even though every setup here is <em>valid</em> before noon CT, the actual <b>−61.8% completion clusters 10:30–13:00 ET</b> — the late-morning / lunch window. Few complete in the first 30 minutes (the reversal needs time to set up) and the tail past 14:00 is thin. Practically: if you're in by late morning, the move usually finishes around midday.`;
+})();
 
 // occurrence chart (static, both cases)
 (function(){

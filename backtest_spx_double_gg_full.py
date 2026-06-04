@@ -114,14 +114,17 @@ def analyze_day(g):
 
     # After-completion behavior (only meaningful if the 2nd gate completes).
     after_complete_label = None
+    ext_after_t = None     # time the 78.6% extension is hit after completion
     if s_complete_after_t is not None:
         ac = g[g.index > s_complete_after_t]
         if len(ac):
             if case == "down_first":
-                cont = bool((ac["high"] >= s_ext).any()) or (g.iloc[-1]["close"] >= s_ext)
+                ext_after_t = first_time(ac, ac["high"] >= s_ext)
+                cont = (ext_after_t is not None) or (g.iloc[-1]["close"] >= s_ext)
                 gave_back = bool((ac["low"] <= s_open).any())
             else:
-                cont = bool((ac["low"] <= s_ext).any()) or (g.iloc[-1]["close"] <= s_ext)
+                ext_after_t = first_time(ac, ac["low"] <= s_ext)
+                cont = (ext_after_t is not None) or (g.iloc[-1]["close"] <= s_ext)
                 gave_back = bool((ac["high"] >= s_open).any())
             if cont:
                 after_complete_label = "continuation"
@@ -132,6 +135,15 @@ def analyze_day(g):
 
     close_price = g.iloc[-1]["close"]
     close_atr = (close_price - pdc) / atr
+
+    # Timing: minutes from the 2nd gate opening to completion, and from
+    # completion to the 78.6% continuation; plus the clock time each lands.
+    complete_min = ((s_complete_after_t - t_second).total_seconds() / 60.0
+                    if s_complete_after_t is not None else None)
+    complete_hhmm = hhmm(s_complete_after_t) if s_complete_after_t is not None else None
+    cont_min = ((ext_after_t - s_complete_after_t).total_seconds() / 60.0
+                if ext_after_t is not None else None)
+    cont_hhmm = hhmm(ext_after_t) if ext_after_t is not None else None
 
     return {
         "date": str(g.index[0].date()),
@@ -154,6 +166,10 @@ def analyze_day(g):
         "after_complete": after_complete_label,
         "close_atr": close_atr,
         "reversal_min": (t_second - t_first).total_seconds() / 60.0,
+        "complete_min": complete_min,
+        "complete_hhmm": complete_hhmm,
+        "cont_min": cont_min,
+        "cont_hhmm": cont_hhmm,
     }
 
 
@@ -187,7 +203,29 @@ def summarize(ev):
         "sideways": round(float((comp["after_complete"] == "sideways").mean()) * 100, 1) if nc else None,
         "mean_reversion": round(float((comp["after_complete"] == "mean_reversion").mean()) * 100, 1) if nc else None,
     }
+    # Timing: how long the second gate takes to complete, and (when it
+    # continues) how long the 78.6% extension takes after completion.
+    cm = ev.loc[ev["second_completes"], "complete_min"].dropna()
+    xm = ev["cont_min"].dropna()
+    def q(s, p):
+        return round(float(s.quantile(p)), 0) if len(s) else None
+    out["timing"] = {
+        "n_completed": int(len(cm)),
+        "complete_min_p25": q(cm, 0.25),
+        "complete_min_median": q(cm, 0.50),
+        "complete_min_p75": q(cm, 0.75),
+        "n_continued": int(len(xm)),
+        "cont_min_p25": q(xm, 0.25),
+        "cont_min_median": q(xm, 0.50),
+        "cont_min_p75": q(xm, 0.75),
+    }
     return out
+
+
+def time_hist(ev, col):
+    """Distribution of a clock-time column (hh:mm) over the half-hour grid."""
+    vc = ev[col].dropna().value_counts()
+    return [{"bucket": b, "n": int(vc.get(b, 0))} for b in HALF_HOURS]
 
 
 def by_time(ev):
@@ -196,6 +234,7 @@ def by_time(ev):
         sub = ev[ev["t_second"] == b]
         if len(sub) == 0:
             continue
+        cm = sub.loc[sub["second_completes"], "complete_min"].dropna()
         rows.append({
             "bucket": b,
             "n": int(len(sub)),
@@ -203,6 +242,7 @@ def by_time(ev):
             "pdc_revert": rate(sub, "pdc_revert"),
             "neither_close_ever": rate(sub, "neither_close_ever"),
             "first_recompletes": rate(sub, "first_recompletes"),
+            "complete_min_median": round(float(cm.median()), 0) if len(cm) else None,
         })
     return rows
 
@@ -239,6 +279,13 @@ def main():
             "overall": summarize(up),
             "by_time": by_time(up),
             "morning_subset": summarize(up[up["both_before_noon_ct"]]),
+        },
+        # The headline edge: up->down setup that becomes valid in the morning.
+        "edge": {
+            "label": "Up→Down, 2nd gate opens before noon CT",
+            "summary": summarize(up[up["both_before_noon_ct"]]),
+            "complete_clock": time_hist(up[up["both_before_noon_ct"]], "complete_hhmm"),
+            "cont_clock": time_hist(up[up["both_before_noon_ct"]], "cont_hhmm"),
         },
         # Occurrence distribution by second-gate-open half hour (both cases).
         "occurrence_by_time": [
