@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPX Double Golden Gate | Milkman Trades</title>
+<meta name="description" content="When SPX opens both Golden Gates in one session (downside then upside, or upside then downside), what happens next? Both orderings, segmented by time of day. 18 years of 1-minute SPX data.">
+<meta name="robots" content="noindex,follow">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥛</text></svg>">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --bg:#0c0e12;
+  --surface:#13161c;
+  --surface-2:#181c24;
+  --surface-3:#1d2230;
+  --border:#1e2230;
+  --border-strong:#2a3045;
+  --text:#e8eaed;
+  --text-dim:#6b7280;
+  --text-mid:#9ca3af;
+  --accent:#fbbf24;
+  --bull:#1cd48a;
+  --bull-bg:#0a1f15;
+  --bear:#ef6c00;
+  --bear-bg:#1f1208;
+  --blue:#38bdf8;
+  --amb:#c084fc;
+}
+
+html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif;font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+body{min-height:100dvh;padding-bottom:90px}
+.app{max-width:560px;margin:0 auto;padding:0 14px}
+
+header.topbar{padding:20px 0 8px}
+header h1{font-size:20px;font-weight:700;letter-spacing:-0.015em}
+header h1 .dn{color:var(--bear)}
+header h1 .up{color:var(--bull)}
+header .sub{color:#aab4c5;font-size:12.5px;margin-top:4px;font-family:'JetBrains Mono',monospace;line-height:1.5}
+header .meta{margin-top:8px;font-size:11px;color:var(--text-dim);font-family:'JetBrains Mono',monospace;display:flex;flex-wrap:wrap;gap:5px}
+header .meta span{background:var(--surface-2);border:1px solid var(--border);padding:3px 8px;border-radius:6px}
+
+.section-title{font-size:11px;text-transform:uppercase;letter-spacing:0.09em;color:var(--text-dim);font-weight:600;margin:24px 4px 9px;font-family:'JetBrains Mono',monospace}
+
+details.def{background:var(--surface);border:1px solid var(--border);border-radius:12px;margin:12px 0;overflow:hidden}
+details.def summary{padding:13px 15px;font-size:13px;font-weight:600;cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;color:var(--text-mid)}
+details.def summary::after{content:"▾";color:var(--text-dim);font-size:12px;transition:transform .15s}
+details.def[open] summary::after{transform:rotate(180deg)}
+details.def .body{padding:0 15px 15px;font-size:13px;color:var(--text-mid);line-height:1.55}
+details.def .body p{margin-bottom:9px}
+details.def .body strong{color:var(--text)}
+details.def .body code{font-family:'JetBrains Mono',monospace;font-size:11.5px;background:var(--surface-3);padding:1px 5px;border-radius:4px;color:var(--accent)}
+.upx{color:var(--bull);font-weight:700}
+.dnx{color:var(--bear);font-weight:700}
+
+/* hero verdict */
+.verdict{background:linear-gradient(160deg,#16131c,#13161c);border:1px solid var(--border-strong);border-radius:16px;padding:18px;margin:14px 0}
+.verdict .tag{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#1a1a1a;background:var(--accent);padding:3px 9px;border-radius:6px;margin-bottom:10px}
+.verdict h2{font-size:16px;font-weight:700;line-height:1.35;margin-bottom:8px}
+.verdict p{font-size:13.5px;color:var(--text-mid);line-height:1.6}
+.verdict p+p{margin-top:8px}
+.verdict b{color:var(--text)}
+
+/* case toggle */
+.toggle{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:8px 0 4px}
+.toggle button{font-family:inherit;cursor:pointer;border-radius:12px;padding:13px 12px;text-align:left;background:var(--surface);border:1px solid var(--border);color:var(--text);transition:border-color .14s,background .14s;-webkit-tap-highlight-color:transparent}
+.toggle button .k{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-dim);letter-spacing:0.03em;display:block;margin-bottom:3px}
+.toggle button .v{font-size:14px;font-weight:700;line-height:1.25}
+.toggle button .n{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-mid);margin-top:4px;display:block}
+.toggle button[data-on="1"][data-case="down_first"]{border-color:var(--bear);background:var(--bear-bg)}
+.toggle button[data-on="1"][data-case="up_first"]{border-color:var(--bull);background:var(--bull-bg)}
+.toggle button .arrow.dn{color:var(--bear)}
+.toggle button .arrow.up{color:var(--bull)}
+
+.scope{display:flex;gap:6px;margin:10px 0 2px}
+.scope button{flex:1;font-family:'JetBrains Mono',monospace;font-size:11px;padding:8px;border-radius:9px;background:var(--surface-2);border:1px solid var(--border);color:var(--text-mid);cursor:pointer;-webkit-tap-highlight-color:transparent}
+.scope button[data-on="1"]{background:var(--surface-3);border-color:var(--border-strong);color:var(--accent);font-weight:700}
+
+/* stat tiles */
+.tiles{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-top:10px}
+.tile{background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:13px 12px;display:flex;flex-direction:column;gap:3px;min-height:92px}
+.tile .pct{font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:700;letter-spacing:-0.02em;color:#f8fafc}
+.tile .lbl{font-size:11px;color:var(--text-mid);line-height:1.3}
+.tile.hi{border-color:var(--border-strong)}
+.tile.hi .pct{color:var(--accent)}
+.tile .foot{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-dim);margin-top:auto}
+
+/* stacked after-complete bar */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:15px;margin:10px 0}
+.card h3{font-size:13.5px;font-weight:700;margin-bottom:3px}
+.card .ck{color:var(--text-mid);font-size:12px;margin-bottom:12px;line-height:1.5}
+.card .ck code{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent)}
+.stack{display:flex;height:34px;border-radius:9px;overflow:hidden;border:1px solid var(--border-strong)}
+.stack .seg{display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:#0c0e12;min-width:0;overflow:hidden;white-space:nowrap}
+.stack .seg.cont{background:var(--bull)}
+.stack .seg.side{background:#8b93a3}
+.stack .seg.rev{background:var(--bear)}
+.legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:10px;font-size:11.5px;color:var(--text-mid)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.legend .cont{background:var(--bull)}.legend .side{background:#8b93a3}.legend .rev{background:var(--bear)}
+
+/* time-of-day chart */
+.tod-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}
+.tod-row{display:grid;grid-template-columns:42px 1fr 30px;gap:8px;align-items:center;padding:3px 0}
+.tod-row .t{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-mid);text-align:right}
+.tod-row.lown .t,.tod-row.lown .n{opacity:.5}
+.tod-row .n{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-dim);text-align:left}
+.bar-wrap{position:relative;height:18px;background:var(--surface-3);border-radius:5px;overflow:hidden}
+.bar-fill{position:absolute;left:0;top:0;bottom:0;border-radius:5px;transition:width .4s cubic-bezier(.2,.7,.3,1)}
+.bar-fill.comp{background:linear-gradient(90deg,#b8860b,var(--accent))}
+.bar-pct{position:absolute;right:5px;top:0;bottom:0;display:flex;align-items:center;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;color:#0c0e12}
+.bar-pct.out{color:var(--text-mid);right:auto;left:calc(100% + 5px)}
+.pdc-tick{position:absolute;top:-2px;bottom:-2px;width:2px;background:var(--blue);z-index:2}
+.tod-legend{display:flex;gap:14px;margin-top:10px;font-size:11px;color:var(--text-mid);flex-wrap:wrap}
+.tod-legend i{display:inline-block;width:12px;height:8px;border-radius:2px;margin-right:5px;vertical-align:0px}
+.tod-legend i.comp{background:var(--accent)}
+.tod-legend i.pdc{width:2px;height:12px;background:var(--blue);vertical-align:-2px}
+
+/* occurrence */
+.occ-row{display:grid;grid-template-columns:42px 1fr;gap:8px;align-items:center;padding:2px 0}
+.occ-row .t{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-mid);text-align:right}
+.occ-bar{display:flex;height:16px;border-radius:4px;overflow:hidden;background:var(--surface-3)}
+.occ-bar .d{background:var(--bear);opacity:.85}
+.occ-bar .u{background:var(--bull);opacity:.85}
+.occ-bar .lab{font-family:'JetBrains Mono',monospace;font-size:9px;color:#0c0e12;font-weight:700;display:flex;align-items:center;justify-content:center;min-width:0}
+
+table.kv{width:100%;border-collapse:collapse;margin-top:4px}
+table.kv td{padding:7px 4px;border-bottom:1px solid var(--border);font-size:13px;vertical-align:top}
+table.kv td:first-child{color:var(--text-mid)}
+table.kv td:last-child{text-align:right;font-family:'JetBrains Mono',monospace;font-weight:600;white-space:nowrap}
+table.kv tr:last-child td{border-bottom:none}
+
+.callout{background:var(--surface-2);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:12px 14px;margin:12px 0;font-size:13px;color:var(--text-mid);line-height:1.55}
+.callout b{color:var(--text)}
+
+.footer{margin:28px 0 10px;padding-top:16px;border-top:1px solid var(--border);font-size:11.5px;color:var(--text-dim);line-height:1.6}
+.footer code{font-family:'JetBrains Mono',monospace;color:var(--text-mid)}
+.footer a{color:var(--text-dim);text-decoration:underline;text-underline-offset:2px}
+</style>
+<script src="/nav.js"></script>
+</head>
+<body>
+<div class="app">
+
+  <header class="topbar">
+    <h1>SPX <span class="dn">Double</span> <span class="up">Golden Gate</span></h1>
+    <div class="sub">Both gates open in one session — which way does it resolve?</div>
+    <div class="meta" id="meta"></div>
+  </header>
+
+  <details class="def">
+    <summary>What counts as a "double Golden Gate" day</summary>
+    <div class="body">
+      <p>The ATR Golden Gate is the zone from <strong>±38.2%</strong> to <strong>±61.8%</strong> of the daily ATR away from the prior close (PDC). A gate <strong>opens</strong> when price reaches 38.2%; it <strong>completes</strong> when price reaches 61.8%.</p>
+      <p>A double-gate session opens <em>both</em> gates during regular hours. The ordering splits into two cases:</p>
+      <p><span class="dnx">Down-first</span> — the <code>−38.2%</code> downside gate opens, then later the <code>+38.2%</code> upside gate opens. A down-then-up whipsaw; the <b>second</b> gate is the upside one.</p>
+      <p><span class="upx">Up-first</span> — the <code>+38.2%</code> upside gate opens, then the <code>−38.2%</code> downside gate opens. An up-then-down whipsaw; the <b>second</b> gate is the downside one.</p>
+      <p>Everything below is measured from the moment the <strong>second</strong> gate opens (when the setup is in place) through the RTH close. Times are bucketed by when that second gate opens. <strong>Timezone:</strong> stamps are ET — noon Central = 1:00 pm ET.</p>
+    </div>
+  </details>
+
+  <div class="verdict">
+    <span class="tag">Headline</span>
+    <h2>The hypothesis — "neither gate completes, revert to PDC" — doesn't hold. The second move usually wins.</h2>
+    <p>Once price whipsaws to one gate and then opens the <b>opposite</b> gate, the path tends to <b>follow that second move</b> to completion, not chop back to PDC. PDC reversion is a minority outcome in both directions.</p>
+    <p>The effect is <b>asymmetric and time-sensitive</b>: the down→up case is the weaker, choppier one; the up→down case completes more often and continues harder. And both decay sharply the later in the day the second gate opens — explore it below.</p>
+  </div>
+
+  <div class="section-title">Pick the ordering</div>
+  <div class="toggle" id="toggle">
+    <button data-case="down_first" data-on="1">
+      <span class="k">CASE A</span>
+      <span class="v"><span class="arrow dn">↓</span> Down-first <span style="color:var(--text-dim)">→</span> <span class="arrow up">↑</span></span>
+      <span class="n" id="tg-dn-n"></span>
+    </button>
+    <button data-case="up_first" data-on="0">
+      <span class="k">CASE B</span>
+      <span class="v"><span class="arrow up">↑</span> Up-first <span style="color:var(--text-dim)">→</span> <span class="arrow dn">↓</span></span>
+      <span class="n" id="tg-up-n"></span>
+    </button>
+  </div>
+
+  <div class="scope" id="scope">
+    <button data-scope="overall" data-on="1">All sessions (any time)</button>
+    <button data-scope="morning_subset" data-on="0">Both gates before noon CT</button>
+  </div>
+
+  <div class="tiles" id="tiles"></div>
+
+  <div class="card">
+    <h3 id="reslead">After the second gate opens</h3>
+    <div class="ck" id="resck"></div>
+    <table class="kv" id="restab"></table>
+  </div>
+
+  <div class="section-title">When the second gate completes, what then?</div>
+  <div class="card">
+    <h3 id="aclead">Path after the 61.8% completion</h3>
+    <div class="ck" id="acck"></div>
+    <div class="stack" id="acstack"></div>
+    <div class="legend">
+      <span><i class="cont"></i>Continuation (pushes to 78.6%+)</span>
+      <span><i class="side"></i>Sideways (holds the gate)</span>
+      <span><i class="rev"></i>Mean reversion (gives the gate back)</span>
+    </div>
+  </div>
+
+  <div class="section-title">Outcome by time the 2nd gate opens</div>
+  <div class="card">
+    <div class="tod-head">
+      <h3 style="margin:0">Second-gate completion rate</h3>
+    </div>
+    <div class="ck">Amber bar = the second gate <b>completes</b> (±61.8%). Blue tick = share that <b>reverts to PDC</b>. Faded rows are n&lt;20.</div>
+    <div id="tod"></div>
+    <div class="tod-legend">
+      <span><i class="comp"></i>2nd gate completes</span>
+      <span><i class="pdc"></i>reverts to PDC</span>
+    </div>
+    <div class="callout" id="todnote"></div>
+  </div>
+
+  <div class="section-title">When do these days happen?</div>
+  <div class="card">
+    <h3>Occurrence by time the 2nd gate opens</h3>
+    <div class="ck">All 504 double-gate sessions, split by ordering. Bar length = count of events in that half-hour.</div>
+    <div id="occ"></div>
+    <div class="legend">
+      <span><i class="rev" style="background:var(--bear)"></i>Down-first (n=209)</span>
+      <span><i class="cont" style="background:var(--bull)"></i>Up-first (n=295)</span>
+    </div>
+    <div class="callout">Double-gate days cluster in <b>two regimes</b>: a late-morning whipsaw burst (10:00–11:30, when the reversal still has time to complete) and a late-afternoon tail (14:30–15:30, when the second gate opens but rarely completes — it just opens and the day closes). Up-first days outnumber down-first roughly 3:2 across the board.</div>
+  </div>
+
+  <details class="def">
+    <summary>Method &amp; caveats</summary>
+    <div class="body">
+      <p><strong>Data:</strong> FirstRateData SPX index, 1-minute RTH bars, 2008-01-02 → 2026-05-01 (4,612 sessions). Path order resolved on 1-minute bars.</p>
+      <p><strong>Levels:</strong> prior daily close + one-session-lagged daily Wilder ATR(14), matching this site's SPX ATR-cascade loader.</p>
+      <p><strong>Definitions:</strong> gate "opens" at 38.2%, "completes" at 61.8%. After-completion split: <em>continuation</em> reaches 78.6%+ (or closes there), <em>mean reversion</em> gives the gate back to 38.2%, otherwise <em>sideways</em>.</p>
+      <p><strong>Caveats:</strong> 504 qualifying days over 18 years — robust in aggregate, but individual half-hour buckets are thin (many n&lt;20, flagged). Events spread evenly across years; no single-year clustering. SPX is the cash index (no overnight gap inside the session), so results won't map 1:1 onto SPY/ES.</p>
+    </div>
+  </details>
+
+  <footer class="footer">
+    SPX Double Golden Gate study · generated from <code>backtest_spx_double_gg_full.py</code> ·
+    data <code>spx-double-gg.json</code> · <a href="/">milkman trades</a>
+  </footer>
+
+</div>
+
+<script id="data" type="application/json">{"meta":{"ticker":"SPX","source":"FirstRateData SPX index, 1-minute RTH","date_start":"2008-01-02","date_end":"2026-05-01","n_sessions":4612,"n_double_gate":504,"n_down_first":209,"n_up_first":295,"tz_note":"Timestamps ET; 12pm Central = 1:00pm ET"},"down_first":{"overall":{"n":209,"neither_close_ever":35.4,"second_completes":45.5,"pdc_revert":29.2,"trig_revert":55.0,"first_recompletes":3.8,"second_ext":22.0,"second_full":10.0,"first_res_second":45.5,"first_res_first":1.4,"first_res_neither":53.1,"close_atr_median":0.411,"reversal_min_median":198.0,"after_complete":{"n":94,"continuation":48.9,"sideways":31.9,"mean_reversion":19.1}},"by_time":[{"bucket":"09:30","n":2,"second_completes":50.0,"pdc_revert":100.0,"neither_close_ever":50.0,"first_recompletes":50.0},{"bucket":"10:00","n":9,"second_completes":88.9,"pdc_revert":55.6,"neither_close_ever":11.1,"first_recompletes":22.2},{"bucket":"10:30","n":7,"second_completes":42.9,"pdc_revert":57.1,"neither_close_ever":57.1,"first_recompletes":14.3},{"bucket":"11:00","n":23,"second_completes":65.2,"pdc_revert":52.2,"neither_close_ever":26.1,"first_recompletes":8.7},{"bucket":"11:30","n":15,"second_completes":60.0,"pdc_revert":46.7,"neither_close_ever":26.7,"first_recompletes":6.7},{"bucket":"12:00","n":16,"second_completes":68.8,"pdc_revert":37.5,"neither_close_ever":31.2,"first_recompletes":0.0},{"bucket":"12:30","n":17,"second_completes":47.1,"pdc_revert":41.2,"neither_close_ever":35.3,"first_recompletes":0.0},{"bucket":"13:00","n":16,"second_completes":31.2,"pdc_revert":18.8,"neither_close_ever":56.2,"first_recompletes":0.0},{"bucket":"13:30","n":16,"second_completes":37.5,"pdc_revert":37.5,"neither_close_ever":31.2,"first_recompletes":0.0},{"bucket":"14:00","n":19,"second_completes":42.1,"pdc_revert":15.8,"neither_close_ever":26.3,"first_recompletes":5.3},{"bucket":"14:30","n":20,"second_completes":50.0,"pdc_revert":20.0,"neither_close_ever":40.0,"first_recompletes":0.0},{"bucket":"15:00","n":23,"second_completes":34.8,"pdc_revert":4.3,"neither_close_ever":39.1,"first_recompletes":0.0},{"bucket":"15:30","n":26,"second_completes":11.5,"pdc_revert":3.8,"neither_close_ever":42.3,"first_recompletes":0.0}],"morning_subset":{"n":89,"neither_close_ever":30.3,"second_completes":61.8,"pdc_revert":48.3,"trig_revert":73.0,"first_recompletes":7.9,"second_ext":29.2,"second_full":14.6,"first_res_second":61.8,"first_res_first":2.2,"first_res_neither":36.0,"close_atr_median":0.407,"reversal_min_median":108.0,"after_complete":{"n":55,"continuation":47.3,"sideways":29.1,"mean_reversion":23.6}}},"up_first":{"overall":{"n":295,"neither_close_ever":25.8,"second_completes":58.6,"pdc_revert":41.0,"trig_revert":69.5,"first_recompletes":6.8,"second_ext":40.0,"second_full":25.1,"first_res_second":58.3,"first_res_first":3.7,"first_res_neither":38.0,"close_atr_median":-0.392,"reversal_min_median":182.0,"after_complete":{"n":173,"continuation":68.2,"sideways":11.6,"mean_reversion":20.2}},"by_time":[{"bucket":"09:30","n":4,"second_completes":100.0,"pdc_revert":75.0,"neither_close_ever":0.0,"first_recompletes":50.0},{"bucket":"10:00","n":29,"second_completes":62.1,"pdc_revert":58.6,"neither_close_ever":20.7,"first_recompletes":20.7},{"bucket":"10:30","n":18,"second_completes":61.1,"pdc_revert":66.7,"neither_close_ever":22.2,"first_recompletes":16.7},{"bucket":"11:00","n":28,"second_completes":67.9,"pdc_revert":53.6,"neither_close_ever":21.4,"first_recompletes":3.6},{"bucket":"11:30","n":29,"second_completes":69.0,"pdc_revert":44.8,"neither_close_ever":27.6,"first_recompletes":3.4},{"bucket":"12:00","n":16,"second_completes":68.8,"pdc_revert":43.8,"neither_close_ever":31.2,"first_recompletes":6.2},{"bucket":"12:30","n":18,"second_completes":61.1,"pdc_revert":44.4,"neither_close_ever":27.8,"first_recompletes":11.1},{"bucket":"13:00","n":19,"second_completes":63.2,"pdc_revert":52.6,"neither_close_ever":15.8,"first_recompletes":0.0},{"bucket":"13:30","n":19,"second_completes":52.6,"pdc_revert":36.8,"neither_close_ever":26.3,"first_recompletes":0.0},{"bucket":"14:00","n":25,"second_completes":56.0,"pdc_revert":56.0,"neither_close_ever":32.0,"first_recompletes":12.0},{"bucket":"14:30","n":31,"second_completes":54.8,"pdc_revert":29.0,"neither_close_ever":22.6,"first_recompletes":3.2},{"bucket":"15:00","n":32,"second_completes":53.1,"pdc_revert":15.6,"neither_close_ever":31.2,"first_recompletes":0.0},{"bucket":"15:30","n":27,"second_completes":33.3,"pdc_revert":3.7,"neither_close_ever":33.3,"first_recompletes":0.0}],"morning_subset":{"n":142,"neither_close_ever":23.9,"second_completes":66.2,"pdc_revert":52.8,"trig_revert":81.7,"first_recompletes":11.3,"second_ext":50.7,"second_full":35.2,"first_res_second":66.2,"first_res_first":5.6,"first_res_neither":28.2,"close_atr_median":-0.327,"reversal_min_median":100.0,"after_complete":{"n":94,"continuation":76.6,"sideways":2.1,"mean_reversion":21.3}}},"occurrence_by_time":[{"bucket":"09:30","down_first":2,"up_first":4},{"bucket":"10:00","down_first":9,"up_first":29},{"bucket":"10:30","down_first":7,"up_first":18},{"bucket":"11:00","down_first":23,"up_first":28},{"bucket":"11:30","down_first":15,"up_first":29},{"bucket":"12:00","down_first":16,"up_first":16},{"bucket":"12:30","down_first":17,"up_first":18},{"bucket":"13:00","down_first":16,"up_first":19},{"bucket":"13:30","down_first":16,"up_first":19},{"bucket":"14:00","down_first":19,"up_first":25},{"bucket":"14:30","down_first":20,"up_first":31},{"bucket":"15:00","down_first":23,"up_first":32},{"bucket":"15:30","down_first":26,"up_first":27}]}</script>
+<script>
+const DATA = JSON.parse(document.getElementById('data').textContent);
+let state = { case: 'down_first', scope: 'overall' };
+
+const meta = DATA.meta;
+document.getElementById('meta').innerHTML =
+  `<span>${meta.ticker}</span><span>${meta.date_start} → ${meta.date_end}</span>` +
+  `<span>${meta.n_sessions.toLocaleString()} sessions</span>` +
+  `<span>${meta.n_double_gate} double-gate days</span>`;
+document.getElementById('tg-dn-n').textContent = `n=${DATA.down_first.overall.n} · 2nd = upside gate`;
+document.getElementById('tg-up-n').textContent = `n=${DATA.up_first.overall.n} · 2nd = downside gate`;
+
+const pf = v => (v==null?'—':v.toFixed(1)+'%');
+const isDown = () => state.case === 'down_first';
+
+function curBlock(){ return DATA[state.case][state.scope]; }
+
+function render(){
+  const block = curBlock();
+  const dn = isDown();
+  const secLbl = dn ? 'upside gate (+61.8%)' : 'downside gate (−61.8%)';
+  const secShort = dn ? '+61.8%' : '−61.8%';
+  const accentSide = dn ? 'var(--bull)' : 'var(--bear)';
+
+  // toggle visual state
+  document.querySelectorAll('#toggle button').forEach(b=>b.dataset.on = (b.dataset.case===state.case)?'1':'0');
+  document.querySelectorAll('#scope button').forEach(b=>b.dataset.on = (b.dataset.scope===state.scope)?'1':'0');
+
+  // tiles
+  document.getElementById('tiles').innerHTML = `
+    <div class="tile hi"><div class="pct">${pf(block.second_completes)}</div><div class="lbl">2nd gate <b>completes</b> (${secShort})</div><div class="foot">n=${block.n}</div></div>
+    <div class="tile"><div class="pct">${pf(block.pdc_revert)}</div><div class="lbl">reverts to <b>PDC</b></div><div class="foot">the hypothesis</div></div>
+    <div class="tile"><div class="pct">${pf(block.neither_close_ever)}</div><div class="lbl"><b>neither</b> gate ever completes</div><div class="foot">whole day</div></div>`;
+
+  // resolution table
+  document.getElementById('reslead').textContent = dn
+    ? 'After the upside gate opens (down→up)'
+    : 'After the downside gate opens (up→down)';
+  document.getElementById('resck').innerHTML =
+    `Measured from the 2nd open to the RTH close. The day closes a median of <b style="color:var(--text)">${block.close_atr_median>0?'+':''}${block.close_atr_median} ATR</b> from PDC — ${block.close_atr_median>0?'above':'below'} it, the direction of the second move.`;
+  document.getElementById('restab').innerHTML = `
+    <tr><td>2nd gate completes first (${secShort})</td><td style="color:${accentSide}">${pf(block.first_res_second)}</td></tr>
+    <tr><td>1st (opposite) gate completes first</td><td>${pf(block.first_res_first)}</td></tr>
+    <tr><td>Neither completes by close</td><td>${pf(block.first_res_neither)}</td></tr>
+    <tr><td>Pulls back to the ±23.6% trigger</td><td>${pf(block.trig_revert)}</td></tr>
+    <tr><td>2nd gate extends to 78.6%</td><td>${pf(block.second_ext)}</td></tr>
+    <tr><td>2nd gate runs a full ATR (100%)</td><td>${pf(block.second_full)}</td></tr>
+    <tr><td>Reversal speed (1st→2nd open), median</td><td>${block.reversal_min_median} min</td></tr>`;
+
+  // after-complete stack
+  const ac = block.after_complete;
+  document.getElementById('aclead').textContent = `Path after the ${secShort} completion`;
+  document.getElementById('acck').innerHTML = `Subset where the 2nd gate completed (n=${ac.n}). ` +
+    (dn ? 'Continuation is a coin-flip and a third just hold the gate.' : 'Downside completions continue hard — momentum keeps going.');
+  const stk = document.getElementById('acstack');
+  stk.innerHTML = '';
+  [['cont','continuation',ac.continuation],['side','sideways',ac.sideways],['rev','mean_reversion',ac.mean_reversion]]
+    .forEach(([cls,_,v])=>{
+      const d=document.createElement('div');
+      d.className='seg '+cls; d.style.width=(v||0)+'%';
+      d.textContent=(v>=10? (v.toFixed(0)+'%') : '');
+      stk.appendChild(d);
+    });
+
+  // time-of-day chart
+  const tod = DATA[state.case].by_time;
+  const maxv = Math.max(...tod.map(r=>r.second_completes||0), 1);
+  document.getElementById('tod').innerHTML = tod.map(r=>{
+    const w = (r.second_completes||0);
+    const low = r.n < 20 ? ' lown' : '';
+    const inside = w > 22;
+    const pdc = Math.min(r.pdc_revert||0, 100);
+    return `<div class="tod-row${low}">
+      <div class="t">${r.bucket}</div>
+      <div class="bar-wrap">
+        <div class="bar-fill comp" style="width:${w}%"></div>
+        <div class="pdc-tick" style="left:${pdc}%"></div>
+        <div class="bar-pct ${inside?'':'out'}" style="${inside?'':'left:calc('+w+'% + 5px)'}">${w.toFixed(0)}%</div>
+      </div>
+      <div class="n">${r.n}</div>
+    </div>`;
+  }).join('');
+  document.getElementById('todnote').innerHTML = dn
+    ? 'Down→up completions are strongest <b>late morning (10:00–12:00, ~60–89%)</b> and collapse after lunch — a 15:30 second-open completes the upside gate only <b>11%</b> of the time. PDC reversion fades even faster: near-zero (3–4%) once the second gate opens after 15:00.'
+    : 'Up→down completions hold a steadier <b>~55–69% through midday</b> before fading into the close (33% at 15:30). PDC reversion is strong in the morning (53–67% at 10:00–13:00) but evaporates late — a late-day downside open just keeps falling.';
+}
+
+// occurrence chart (static, both cases)
+(function(){
+  const occ = DATA.occurrence_by_time;
+  const maxTot = Math.max(...occ.map(o=>o.down_first+o.up_first),1);
+  document.getElementById('occ').innerHTML = occ.map(o=>{
+    const tot=o.down_first+o.up_first;
+    const scale = (tot/maxTot)*100;
+    const dW = tot? (o.down_first/tot*100):0;
+    const uW = tot? (o.up_first/tot*100):0;
+    return `<div class="occ-row">
+      <div class="t">${o.bucket}</div>
+      <div class="occ-bar" style="width:${Math.max(scale,3)}%">
+        <div class="d lab" style="width:${dW}%">${o.down_first>=4?o.down_first:''}</div>
+        <div class="u lab" style="width:${uW}%">${o.up_first>=4?o.up_first:''}</div>
+      </div>
+    </div>`;
+  }).join('');
+})();
+
+document.getElementById('toggle').addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b)return;
+  state.case=b.dataset.case; render();
+});
+document.getElementById('scope').addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b)return;
+  state.scope=b.dataset.scope; render();
+});
+
+render();
+</script>
+</body>
+</html>

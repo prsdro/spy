@@ -1,6 +1,7 @@
 // Shared navigation bar injected into all study pages
 // Include with: <script src="/nav.js"></script>
 (function(){
+  function injectNav(){
   const NAV = [
     {label:'Home', href:'/'},
     {label:'Subway Stats', href:'/golden-gate.html'},
@@ -10,9 +11,13 @@
     {label:'Pullbacks', href:'/gg-invalidation.html'},
     {label:'Entries', href:'/gg-entries.html'},
     {label:'Gap Fills', href:'/gap-fills.html'},
+    {label:'SPX Live', href:'/spx-live-cascade.html'},
+    {label:'Open Band', href:'/spx-open-band-path.html'},
+    {label:'SPX Cascade', href:'/atr-cascade-spx.html'},
     {label:'4h PO × OpEx', href:'/4h-po-opex.html'},
     {label:'3m Close', href:'/call-trigger.html'},
     {label:'Call→Put', href:'/call-to-put-reversal.html'},
+    {label:'Double GG', href:'/spx-double-gg.html'},
     {label:'Trigger Box', href:'/trigger-box.html'},
     {label:'Spreads', href:'/trigger-box-spreads.html'},
     {label:'Multi-Day', href:'/multiday-gg.html'},
@@ -57,5 +62,12 @@
     fab.href = '/cheatsheet.html';
     fab.textContent = '\uD83D\uDCCB Cheat Sheet';
     document.body.appendChild(fab);
+  }
+
+  }
+  if (document.body) {
+    injectNav();
+  } else {
+    document.addEventListener('DOMContentLoaded', injectNav, {once:true});
   }
 })();

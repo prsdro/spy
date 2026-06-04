@@ -386,6 +386,75 @@ touch through the RTH close.
 - Bullish hourly expansion suppresses downside follow-through: GG completion drops to
   **32.4%** and -1 ATR drops to **14.2%**.
 
+### 7. SPX Double Golden Gate — "both gates open, neither closes" (HYPOTHESIS REJECTED)
+
+Source: `backtest_spx_double_gg_revert.py` — FirstRateData **SPX index** 1-minute RTH bars,
+2008-01 → 2026-05 (4,612 sessions). Levels from prior daily close + one-session-lagged
+Wilder ATR(14). Timezone: cutoff is **12pm Central = 1:00pm ET**.
+
+**Setup**: SPX opens the downside Golden Gate (low reaches −38.2% ATR) before noon CT,
+then *later* opens the upside Golden Gate (high reaches +38.2%) — also before noon CT.
+Reaching +38.2% from −38.2% means a full reversal back up through PDC.
+
+**Hypothesis**: neither gate completes (no ±61.8%); price reverts to PDC.
+
+**Result — rejected.** The down→up reversal tends to *keep going up*, not revert:
+
+| Outcome (n = 102 setups) | Rate |
+|--------------------------|------|
+| Upside gate **closes** (+61.8%) after 2nd open | **63.7%** |
+| Neither gate ever closes (no ±61.8% all day) | 29.4% |
+| Pulls back to PDC after 2nd open | 46.1% |
+| Both (neither close **and** PDC revert) | 20.6% |
+| First resolution = upside closes first | **63.7%** |
+| First resolution = downside closes first | 2.0% |
+| RTH close above PDC | ~71% (median close **+0.44 ATR** above PDC) |
+
+**Clean subset** (downside only *poked* −38.2% without closing to −61.8% before reversing,
+n=75): upside still closes **57.3%**, neither-closes 40.0%, PDC revert 42.7%, median close
+**+0.45 ATR** above PDC. Same conclusion.
+
+**Key insights**:
+- The setup is **rare**: 40.5% of days open the downside gate before noon CT, but only
+  **5.5% of those** (2.2% of all days, n=102) then reopen the upside gate before noon CT.
+- The **second move wins**. Once price whipsaws down then reclaims +38.2%, the upside
+  gate completes ~58–64% of the time and the downside gate completing first is almost
+  never the outcome (2.0%).
+- "Revert to PDC" is a **minority** outcome (~46%) and is dominated by upside continuation;
+  the day closes *above* PDC ~71% of the time.
+- **Caveat**: n=102 over 18 years (modest), but events are well-distributed across years
+  (no single-year clustering); all time-of-day buckets are n<30.
+
+#### 7b. Generalized: both orderings, full session, time-segmented
+
+Source: `backtest_spx_double_gg_full.py` → published page `/spx-double-gg.html`
+(data `site/data/spx-double-gg.json`). Drops the noon cutoff and detects **both
+orderings** of the first two opposite-gate opens anywhere in RTH, segmented by the
+half-hour the **second** gate opens. 504 double-gate days (209 down-first, 295 up-first).
+
+Outcomes measured from the second gate's open through the RTH close:
+
+| Case (2nd gate) | n | 2nd completes | Reverts PDC | Neither closes | Close vs PDC | After completion |
+|-----------------|---|---------------|-------------|----------------|--------------|------------------|
+| **Down→Up** (upside is 2nd) | 209 | 45.5% | 29.2% | 35.4% | **+0.41 ATR** | cont 49% / side 32% / rev 19% |
+| **Up→Down** (downside is 2nd) | 295 | **58.6%** | 41.0% | 25.8% | **−0.39 ATR** | **cont 68%** / side 12% / rev 20% |
+
+**Key insights (extend 7)**:
+- **Asymmetry**: the up→down whipsaw completes its second (downside) gate more often
+  (58.6% vs 45.5%) and continues much harder once it does (68% vs 49% continuation) —
+  consistent with selling pressure being faster than buying (see Study #3).
+- **Up-first is more common** (295 vs 209) — an early pop that later flushes is the more
+  frequent SPX pattern than an early flush that later rips.
+- **Time-of-day is the dominant control.** Both cases complete best when the second gate
+  opens late-morning (10:00–12:00, ~60–89%) and decay sharply into the close (down→up
+  drops to 11% at 15:30; up→down to 33%). PDC reversion fades even faster — near-zero
+  (3–4%) once the second gate opens after 15:00 (price just keeps going where it broke).
+- **Occurrence is bimodal**: a late-morning whipsaw burst (10:00–11:30) plus a
+  late-afternoon tail (14:30–15:30) where the gate opens but the day closes before it
+  resolves.
+- In both orderings PDC reversion stays a minority outcome and the day closes in the
+  direction of the **second** move — reinforcing the rejection of the original hypothesis.
+
 ---
 
 ## Analysis TODO
