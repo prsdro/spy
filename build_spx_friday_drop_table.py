@@ -117,6 +117,16 @@ def build_event(df, i, n_prev, n_fwd, thresh, dow, r2, live=False):
     rets = df["ret"].to_numpy()
     ts = df["timestamp"]
     fri_close = closes[i]
+    # daily 21 EMA on the drop day: slope direction + close's distance from it
+    ema_slope, ema_pct = None, None
+    if "ema21" in df.columns:
+        ema = df["ema21"].to_numpy()
+        if not pd.isna(ema[i]):
+            ema_pct = r2((closes[i] / ema[i] - 1.0) * 100.0)   # close vs 21-EMA on the dump day
+            # slope = EMA's direction heading INTO the day (i-1 vs i-2), so the
+            # dump's own close doesn't mechanically flip it red.
+            if i > 1 and not pd.isna(ema[i - 2]):
+                ema_slope = "up" if ema[i - 1] >= ema[i - 2] else "down"
     # trailing 1/3/6-month returns INTO this Friday close
     trail = {}
     for key, nd in TRAIL.items():
@@ -148,6 +158,7 @@ def build_event(df, i, n_prev, n_fwd, thresh, dow, r2, live=False):
         "date": ts[i].strftime("%Y-%m-%d"), "dow": dow[ts[i].weekday()],
         "dow_idx": int(ts[i].weekday()),
         "fri_ret": r2(rets[i]), "trail": trail, "prev": prev, "fwd": fwd,
+        "ema_slope": ema_slope, "ema_pct": ema_pct,
         "live": live, "n_fwd_avail": n_avail,
     }
 
@@ -155,6 +166,7 @@ def build_event(df, i, n_prev, n_fwd, thresh, dow, r2, live=False):
 def main():
     d = read_firstrate_zip(find_one("SPX_full_1day_*.zip"), intraday=False).reset_index(drop=True)
     d["ret"] = d["close"].pct_change() * 100.0
+    d["ema21"] = d["close"].ewm(span=21, adjust=False).mean()   # daily 21 EMA
     closes = d["close"].to_numpy()
     rets = d["ret"].to_numpy()
     ts = d["timestamp"]
@@ -175,6 +187,7 @@ def main():
     y = fetch_yahoo_gspc()
     if y is not None and len(y):
         y["ret"] = y["close"].pct_change() * 100.0
+        y["ema21"] = y["close"].ewm(span=21, adjust=False).mean()  # ~1y of closes = ample warmup
         yts = y["timestamp"]
         live_idx = y.index[(yts > zip_last) & (y["ret"] <= THRESH)].tolist()
         for i in live_idx:
