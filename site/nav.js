@@ -48,24 +48,9 @@
     .mn-link.mn-active{color:#fbbf24;background:#1a1800;font-weight:600}
     .mn-link.mn-home{color:#eaebef;font-weight:600;border-right:1px solid #252938;margin-right:.25rem;padding-right:.75rem}
     @media(max-width:640px){.mn-link{font-size:.68rem;padding:.3rem .5rem}}
-    #mn-mobile-cta{display:none;position:fixed;bottom:1.2rem;right:1.2rem;z-index:950;padding:.65rem 1rem;background:#fbbf24;color:#000;border:none;border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:.75rem;font-weight:700;text-decoration:none;box-shadow:0 4px 16px rgba(251,191,36,.35);letter-spacing:.02em;transition:transform .15s,box-shadow .15s}
-    #mn-mobile-cta:active{transform:scale(.95)}
-    @media(max-width:767px){#mn-mobile-cta{display:block}}
   `;
   document.head.appendChild(style);
   document.body.prepend(bar);
-
-  // Floating "Cheat Sheet" CTA on mobile — hidden on cheatsheet pages
-  const path = window.location.pathname;
-  const isCheatsheet = path.indexOf('cheatsheet') !== -1;
-  if (!isCheatsheet) {
-    const fab = document.createElement('a');
-    fab.id = 'mn-mobile-cta';
-    fab.href = '/cheatsheet.html';
-    fab.textContent = '\uD83D\uDCCB Cheat Sheet';
-    document.body.appendChild(fab);
-  }
-
   }
   if (document.body) {
     injectNav();
