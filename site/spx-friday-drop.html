@@ -258,7 +258,7 @@ function vixChg(v){
   const rgb = v>0 ? '255,92,92' : '28,212,138';
   return `color:${col};background:rgba(${rgb},${a.toFixed(3)})`;
 }
-function vixBucket(v){ return v==null?null : v<20?'lo' : v<30?'mid' : v<45?'hi' : 'panic'; }
+function vixBucket(v){ return v==null?null : v<20?'b0' : v<25?'b1' : v<30?'b2' : v<35?'b3' : v<40?'b4' : v<50?'b5' : 'b6'; }
 
 const TRAIL = [['1m','1M'],['3m','3M'],['6m','6M']];
 
@@ -402,11 +402,12 @@ const DOW_NAMES = ['Mon','Tue','Wed','Thu','Fri'];
 const DEF_DOW = (M.default_dow!=null ? M.default_dow : 4);
 // day-of-week filter: set of included weekday indices (default = Friday only)
 const state = { sort:'date', excl:new Set(), dow:new Set([DEF_DOW]),
-  vix:new Set(['lo','mid','hi','panic']),
+  vix:new Set(['b0','b1','b2','b3','b4','b5','b6']),
   cols:{trail:true, prev:true, drop:true, d21:true, vix:true, es:true, fwd:true} };
 const COLDEFS = [['trail','Trailing 1M/3M/6M'],['prev','Prior 3 days'],['drop','Drop %'],
   ['d21','21-EMA (slope, %D21)'],['vix','CBOE VIX'],['es','ES 4–5pm'],['fwd','Next 10 days']];
-const VIXBUCKETS = [['lo','<20'],['mid','20–30'],['hi','30–45'],['panic','45+']];
+const VIXBUCKETS = [['b0','<20'],['b1','20–25'],['b2','25–30'],['b3','30–35'],
+  ['b4','35–40'],['b5','40–50'],['b6','50+']];
 
 function compare(a,b){
   if(state.sort==='sim'){
