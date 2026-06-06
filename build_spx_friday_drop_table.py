@@ -118,15 +118,17 @@ def build_event(df, i, n_prev, n_fwd, thresh, dow, r2, live=False):
     ts = df["timestamp"]
     fri_close = closes[i]
     # daily 21 EMA on the drop day: slope direction + close's distance from it
-    ema_slope, ema_pct = None, None
+    ema_slope, ema_pct, ema_slope_pct = None, None, None
     if "ema21" in df.columns:
         ema = df["ema21"].to_numpy()
         if not pd.isna(ema[i]):
             ema_pct = r2((closes[i] / ema[i] - 1.0) * 100.0)   # close vs 21-EMA on the dump day
-            # slope = EMA's direction heading INTO the day (i-1 vs i-2), so the
-            # dump's own close doesn't mechanically flip it red.
+            # slope = the EMA's actual daily % change heading INTO the day
+            # (i-1 vs i-2), so the dump's own close doesn't distort it. The
+            # arrow on the page is tilted proportionally to this value.
             if i > 1 and not pd.isna(ema[i - 2]):
-                ema_slope = "up" if ema[i - 1] >= ema[i - 2] else "down"
+                ema_slope_pct = round((ema[i - 1] / ema[i - 2] - 1.0) * 100.0, 3)
+                ema_slope = "up" if ema_slope_pct >= 0 else "down"
     # trailing 1/3/6-month returns INTO this Friday close
     trail = {}
     for key, nd in TRAIL.items():
@@ -158,7 +160,7 @@ def build_event(df, i, n_prev, n_fwd, thresh, dow, r2, live=False):
         "date": ts[i].strftime("%Y-%m-%d"), "dow": dow[ts[i].weekday()],
         "dow_idx": int(ts[i].weekday()),
         "fri_ret": r2(rets[i]), "trail": trail, "prev": prev, "fwd": fwd,
-        "ema_slope": ema_slope, "ema_pct": ema_pct,
+        "ema_slope": ema_slope, "ema_slope_pct": ema_slope_pct, "ema_pct": ema_pct,
         "live": live, "n_fwd_avail": n_avail,
     }
 
