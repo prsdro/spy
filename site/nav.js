@@ -18,6 +18,7 @@
     {label:'3m Close', href:'/call-trigger.html'},
     {label:'Call→Put', href:'/call-to-put-reversal.html'},
     {label:'Double GG', href:'/spx-double-gg.html'},
+    {label:'−2% Days', href:'/spx-friday-drop.html'},
     {label:'Trigger Box', href:'/trigger-box.html'},
     {label:'Spreads', href:'/trigger-box-spreads.html'},
     {label:'Multi-Day', href:'/multiday-gg.html'},
