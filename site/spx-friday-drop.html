@@ -67,6 +67,9 @@ details.def .body code{font-family:'JetBrains Mono',monospace;font-size:11.5px;b
 .card .ck code{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent)}
 
 .scrollx{overflow-x:auto;-webkit-overflow-scrolling:touch}
+/* floating header clone that takes over the top (replacing the nav) on scroll */
+.stickhead{position:fixed;top:0;z-index:1000;overflow:hidden;background:var(--bg);border-bottom:1px solid var(--border-strong);box-shadow:0 6px 18px rgba(0,0,0,.55);display:none}
+.stickhead table{margin:0}
 table.rt{border-collapse:separate;border-spacing:0;font-family:'JetBrains Mono',monospace;font-size:11px;white-space:nowrap}
 table.rt th,table.rt td{padding:5px 6px;text-align:right;border-bottom:1px solid var(--border)}
 table.rt thead th{position:sticky;top:0;background:var(--surface-2);color:var(--text-dim);font-weight:600;font-size:10px;letter-spacing:.02em;z-index:3}
@@ -493,7 +496,43 @@ function render(){
     : ` · VIX ${VIXBUCKETS.filter(b=>state.vix.has(b[0])).map(b=>b[1]).join('/')}`;
   document.getElementById('status').innerHTML =
     `<b>${list.length}</b> shown · ${days}${vixNote}` + (dropped?` · ${dropped} year${dropped>1?'s':''} excluded`:'');
+  syncURL();
+  sticks.forEach(refreshStick);
+  onScrollRaf();
 }
+
+// ---- URL state (shareable / survives refresh) ----
+function parseURL(){
+  const p = new URLSearchParams(location.search);
+  if(p.has('sort') && SORTS.some(s=>s.key===p.get('sort'))) state.sort=p.get('sort');
+  if(p.has('dow')){
+    const v=p.get('dow');
+    const s = v==='all' ? new Set([0,1,2,3,4]) : new Set(v.split(',').map(Number).filter(n=>n>=0&&n<=4));
+    if(s.size) state.dow=s;
+  }
+  if(p.has('excl')) state.excl=new Set(p.get('excl').split(',').filter(y=>/^\d{4}$/.test(y)));
+  if(p.has('vix')){
+    const keys=p.get('vix').split(',').filter(k=>VIXBUCKETS.some(b=>b[0]===k));
+    if(keys.length) state.vix=new Set(keys);
+  }
+  if(p.has('hide')){
+    p.get('hide').split(',').forEach(k=>{ if(k in state.cols) state.cols[k]=false; });
+    if(!Object.values(state.cols).some(Boolean)) state.cols.fwd=true;   // keep ≥1 visible
+  }
+}
+function syncURL(){
+  const p=new URLSearchParams();
+  if(state.sort!=='date') p.set('sort',state.sort);
+  if(!(state.dow.size===1 && state.dow.has(DEF_DOW)))
+    p.set('dow', state.dow.size===5 ? 'all' : [...state.dow].sort().join(','));
+  if(state.excl.size) p.set('excl',[...state.excl].sort().join(','));
+  if(state.vix.size!==VIXBUCKETS.length) p.set('vix',[...state.vix].join(','));
+  const hidden=Object.entries(state.cols).filter(([,v])=>!v).map(([k])=>k);
+  if(hidden.length) p.set('hide',hidden.join(','));
+  const qs=p.toString();
+  history.replaceState(null,'', qs ? location.pathname+'?'+qs : location.pathname);
+}
+parseURL();
 
 // build day-of-week chips (default Friday)
 document.getElementById('dowbar').insertAdjacentHTML('beforeend',
@@ -510,9 +549,10 @@ document.getElementById('dowbar').addEventListener('click',e=>{
 
 // build VIX-regime chips (multi-select include, default all)
 document.getElementById('vixbar').insertAdjacentHTML('beforeend',
-  VIXBUCKETS.map(([k,lab])=>`<span class="chip sort vixb" data-vix="${k}" data-on="1">${lab}</span>`).join('')
+  VIXBUCKETS.map(([k,lab])=>`<span class="chip sort vixb" data-vix="${k}" data-on="${state.vix.has(k)?1:0}">${lab}</span>`).join('')
   + `<span class="chip mini" id="vix-all">all VIX</span>`);
 function syncVix(){ document.querySelectorAll('#vixbar .chip.vixb').forEach(x=>x.dataset.on=state.vix.has(x.dataset.vix)?1:0); }
+syncVix();   // reflect any URL-loaded VIX filter
 document.getElementById('vixbar').addEventListener('click',e=>{
   const c=e.target.closest('.chip'); if(!c)return;
   if(c.id==='vix-all'){ state.vix=new Set(VIXBUCKETS.map(b=>b[0])); }
@@ -538,6 +578,7 @@ document.getElementById('sortbar').addEventListener('click',e=>{
 document.getElementById('yearbar').insertAdjacentHTML('beforeend',
   YEARS.map(y=>`<span class="chip yr" data-yr="${y}" data-ex="0">${y}</span>`).join(''));
 function syncYears(){ document.querySelectorAll('#yearbar .chip').forEach(x=>x.dataset.ex=state.excl.has(x.dataset.yr)?1:0); }
+syncYears();   // reflect any URL-loaded exclusions
 document.getElementById('yearbar').addEventListener('click',e=>{
   const c=e.target.closest('.chip'); if(!c)return;
   const y=c.dataset.yr;
@@ -580,6 +621,49 @@ document.querySelectorAll('.colbtn').forEach(btn=>{
   });
 });
 document.addEventListener('click',()=>document.querySelectorAll('.colmenu').forEach(x=>x.classList.remove('open')));
+
+// ---- sticky table header: clones the table head into a fixed bar that takes
+// over the top (hiding the nav) once you scroll past a table's header ----
+const sticks = [];
+function makeStick(tableId){
+  const tbl = document.getElementById(tableId);
+  const wrap = tbl.closest('.scrollx');
+  const f = document.createElement('div'); f.className='stickhead';
+  document.body.appendChild(f);
+  wrap.addEventListener('scroll',()=>{ f.scrollLeft = wrap.scrollLeft; }, {passive:true});
+  sticks.push({tbl, wrap, f});
+}
+function refreshStick(s){
+  // full-table clone (same column widths) clipped to the header height
+  const clone = s.tbl.cloneNode(true);
+  clone.removeAttribute('id');
+  s.f.innerHTML=''; s.f.appendChild(clone);
+}
+let ticking=false;
+function onScroll(){
+  let anyShown=false;
+  for(const s of sticks){
+    const r = s.tbl.getBoundingClientRect();
+    const hh = s.tbl.querySelector('thead').offsetHeight;
+    if(r.top < 0 && r.bottom > hh+6){
+      const wr = s.wrap.getBoundingClientRect();
+      s.f.style.left = wr.left+'px';
+      s.f.style.width = wr.width+'px';
+      s.f.style.height = hh+'px';
+      s.f.scrollLeft = s.wrap.scrollLeft;
+      s.f.style.display='block';
+      anyShown=true;
+    } else {
+      s.f.style.display='none';
+    }
+  }
+  const navEl = document.getElementById('milknav');   // nav.js injects on DOMContentLoaded
+  if(navEl) navEl.style.visibility = anyShown ? 'hidden' : '';
+}
+function onScrollRaf(){ if(!ticking){ ticking=true; requestAnimationFrame(()=>{ onScroll(); ticking=false; }); } }
+['tbl-daily','tbl-cum'].forEach(makeStick);
+window.addEventListener('scroll', onScrollRaf, {passive:true});
+window.addEventListener('resize', onScrollRaf);
 
 render();
 </script>
