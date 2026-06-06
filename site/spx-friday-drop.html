@@ -50,7 +50,18 @@ details.def .body p{margin-bottom:9px}
 details.def .body strong{color:var(--text)}
 details.def .body code{font-family:'JetBrains Mono',monospace;font-size:11.5px;background:var(--surface-3);padding:1px 5px;border-radius:4px;color:var(--accent)}
 
-.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:13px;margin:10px 0}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:13px;margin:10px 0;position:relative}
+.colwrap{position:absolute;top:11px;right:12px;z-index:6}
+.colbtn{font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:700;color:var(--text-mid);background:var(--surface-2);border:1px solid var(--border-strong);border-radius:8px;padding:4px 9px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.colbtn:hover{border-color:var(--blue);color:var(--text)}
+.colmenu{display:none;position:absolute;top:calc(100% + 5px);right:0;min-width:172px;background:var(--surface-2);border:1px solid var(--border-strong);border-radius:10px;padding:5px;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+.colmenu.open{display:block}
+.colmenu .ci{display:flex;align-items:center;gap:8px;padding:7px 9px;border-radius:7px;font-size:12px;color:var(--text);cursor:pointer;white-space:nowrap}
+.colmenu .ci:hover{background:var(--surface-3)}
+.colmenu .ci .box{width:14px;height:14px;border-radius:4px;border:1.5px solid var(--border-strong);display:inline-flex;align-items:center;justify-content:center;font-size:10px;color:#0c0e12}
+.colmenu .ci[data-on="1"] .box{background:var(--accent);border-color:var(--accent)}
+.colmenu .sep{height:1px;background:var(--border);margin:4px 6px}
+.colmenu .ci.mini{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-dim);justify-content:center}
 .card .ck{color:var(--text-mid);font-size:12px;margin-bottom:10px;line-height:1.5;padding:0 2px}
 .card .ck b{color:var(--text)}
 .card .ck code{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent)}
@@ -146,12 +157,14 @@ table.rt tr.liverow td.dcol{background:#10202c}
 
   <div class="section-title">Table 1 — daily returns each day</div>
   <div class="card">
+    <div class="colwrap"><button class="colbtn" data-menu="colmenu-daily">⚙ Columns ▾</button><div class="colmenu" id="colmenu-daily"></div></div>
     <div class="ck">Each cell = that single day's close-to-close % return. <b>+1</b> (blue edge) is the next session after the drop.</div>
     <div class="scrollx"><table class="rt" id="tbl-daily"></table></div>
   </div>
 
   <div class="section-title">Table 2 — cumulative return since that drop day's close</div>
   <div class="card">
+    <div class="colwrap"><button class="colbtn" data-menu="colmenu-cum">⚙ Columns ▾</button><div class="colmenu" id="colmenu-cum"></div></div>
     <div class="ck"><b>+1…+10</b> cells = cumulative % from the drop day's <b>close</b> to that day's close (so <b>+10</b> is the total 2-week move off the selloff). The 3 prior days remain daily returns for context.</div>
     <div class="scrollx"><table class="rt" id="tbl-cum"></table></div>
   </div>
@@ -264,26 +277,28 @@ function build(tblId, mode, list){    // mode: 'daily' | 'cum'; list: events to 
   const fwdCols  = EV[0].fwd.map(f=>f.label);    // +1 … +10
   const EVT = list;
 
+  const C = state.cols;   // which column groups are visible
+
   // header (two rows: group + columns)
   let head = '<thead>';
   head += '<tr>'
         + `<th class="dcol grp"></th>`
-        + `<th class="grp trail" colspan="${TRAIL.length}">trailing return to Fri</th>`
-        + `<th class="grp prev" colspan="${prevCols.length}">prior 3 days (daily)</th>`
-        + `<th class="grp trig">trig</th>`
-        + `<th class="grp d21" colspan="2">21-EMA @ dump</th>`
-        + `<th class="grp es">post-cls</th>`
-        + `<th class="grp fwd" colspan="${fwdCols.length}">next 10 trading days · ${mode==='cum'?'cumulative since Fri':'daily'}</th>`
+        + (C.trail?`<th class="grp trail" colspan="${TRAIL.length}">trailing return to Fri</th>`:'')
+        + (C.prev?`<th class="grp prev" colspan="${prevCols.length}">prior 3 days (daily)</th>`:'')
+        + (C.drop?`<th class="grp trig">trig</th>`:'')
+        + (C.d21?`<th class="grp d21" colspan="2">21-EMA @ dump</th>`:'')
+        + (C.es?`<th class="grp es">post-cls</th>`:'')
+        + (C.fwd?`<th class="grp fwd" colspan="${fwdCols.length}">next 10 trading days · ${mode==='cum'?'cumulative since Fri':'daily'}</th>`:'')
         + '</tr>';
   head += '<tr>'
         + `<th class="dcol">Drop day</th>`
-        + TRAIL.map(c=>`<th>${c[1]}</th>`).join('')
-        + prevCols.map(c=>`<th>${c}</th>`).join('')
-        + `<th>drop</th>`
-        + `<th title="daily 21-EMA slope heading into the day">slope</th>`
-        + `<th title="close as % above/below the daily 21-EMA">%D21</th>`
-        + `<th title="ES futures 4:00pm→5:00pm ET">ES 4–5p</th>`
-        + fwdCols.map(c=>`<th>${c}</th>`).join('')
+        + (C.trail?TRAIL.map(c=>`<th>${c[1]}</th>`).join(''):'')
+        + (C.prev?prevCols.map(c=>`<th>${c}</th>`).join(''):'')
+        + (C.drop?`<th>drop</th>`:'')
+        + (C.d21?`<th title="daily 21-EMA slope heading into the day">slope</th>`
+               + `<th title="close as % above/below the daily 21-EMA">%D21</th>`:'')
+        + (C.es?`<th title="ES futures 4:00pm→5:00pm ET">ES 4–5p</th>`:'')
+        + (C.fwd?fwdCols.map(c=>`<th>${c}</th>`).join(''):'')
         + '</tr></thead>';
 
   // body
@@ -292,13 +307,15 @@ function build(tblId, mode, list){    // mode: 'daily' | 'cum'; list: events to 
     let r = `<tr${e.live?' class="liverow"':''}>`;
     const badge = e.live ? `<span class="live">LIVE</span>` : '';
     r += `<td class="dcol"><span class="dt">${e.date}</span><span class="dw">${e.dow}</span>${badge}</td>`;
-    for(const c of TRAIL) r += `<td class="trail" style="${paint(e.trail[c[0]],capTrail)}">${fmt(e.trail[c[0]])}</td>`;
-    for(const p of e.prev) r += `<td class="prev" style="${paint(p.daily,capPrev)}">${fmt(p.daily)}</td>`;
-    r += `<td class="trig" style="${paint(e.fri_ret,capFri)}">${fmt(e.fri_ret)}</td>`;
-    r += `<td class="d21 arr">${emaArrow(e.ema_slope_pct)}</td>`;
-    r += `<td class="d21" style="${paint(e.ema_pct,5)}">${e.ema_pct==null?'·':(e.ema_pct>0?'+':'')+e.ema_pct.toFixed(1)+'%'}</td>`;
-    r += `<td class="es" style="${paint(e.es45,0.8)}">${e.es45==null?'·':(e.es45>0?'+':'')+e.es45.toFixed(2)+'%'}</td>`;
-    e.fwd.forEach((f,i)=>{
+    if(C.trail) for(const c of TRAIL) r += `<td class="trail" style="${paint(e.trail[c[0]],capTrail)}">${fmt(e.trail[c[0]])}</td>`;
+    if(C.prev) for(const p of e.prev) r += `<td class="prev" style="${paint(p.daily,capPrev)}">${fmt(p.daily)}</td>`;
+    if(C.drop) r += `<td class="trig" style="${paint(e.fri_ret,capFri)}">${fmt(e.fri_ret)}</td>`;
+    if(C.d21){
+      r += `<td class="d21 arr">${emaArrow(e.ema_slope_pct)}</td>`;
+      r += `<td class="d21" style="${paint(e.ema_pct,5)}">${e.ema_pct==null?'·':(e.ema_pct>0?'+':'')+e.ema_pct.toFixed(1)+'%'}</td>`;
+    }
+    if(C.es) r += `<td class="es" style="${paint(e.es45,0.8)}">${e.es45==null?'·':(e.es45>0?'+':'')+e.es45.toFixed(2)+'%'}</td>`;
+    if(C.fwd) e.fwd.forEach((f,i)=>{
       const v = mode==='cum' ? f.cum : f.daily;
       r += `<td class="${i===0?'mon':''}" style="${paint(v,capFwd)}">${fmt(v)}</td>`;
     });
@@ -315,16 +332,20 @@ function build(tblId, mode, list){    // mode: 'daily' | 'cum'; list: events to 
   const medFwd  = fwdCols.map((_,k)=>median(EVT.map(e=>mode==='cum'?e.fwd[k].cum:e.fwd[k].daily)));
   let foot = '<tfoot><tr>';
   foot += `<td class="dcol">median (n=${EVT.length})</td>`;
-  foot += medTrail.map(v=>`<td style="${paint(v,capTrail)}">${fmt(v)}</td>`).join('');
-  foot += medPrev.map(v=>`<td style="${paint(v,capPrev)}">${fmt(v)}</td>`).join('');
-  foot += `<td style="${paint(medFri,capFri)}">${fmt(medFri)}</td>`;
-  const slN = EVT.filter(e=>e.ema_slope).length, slUp = EVT.filter(e=>e.ema_slope==='up').length;
-  foot += `<td class="d21 arr" style="color:var(--text-dim);font-size:10px">${slN?('↗'+Math.round(100*slUp/slN)+'%'):'·'}</td>`;
-  const medD21 = median(EVT.map(e=>e.ema_pct));
-  foot += `<td class="d21" style="${paint(medD21,5)}">${medD21==null?'·':(medD21>0?'+':'')+medD21.toFixed(1)+'%'}</td>`;
-  const medES = median(EVT.map(e=>e.es45));
-  foot += `<td style="${paint(medES,0.8)}">${medES==null?'·':(medES>0?'+':'')+medES.toFixed(2)+'%'}</td>`;
-  foot += medFwd.map((v,i)=>`<td class="${i===0?'mon':''}" style="${paint(v,capFwd)}">${fmt(v)}</td>`).join('');
+  if(C.trail) foot += medTrail.map(v=>`<td style="${paint(v,capTrail)}">${fmt(v)}</td>`).join('');
+  if(C.prev) foot += medPrev.map(v=>`<td style="${paint(v,capPrev)}">${fmt(v)}</td>`).join('');
+  if(C.drop) foot += `<td style="${paint(medFri,capFri)}">${fmt(medFri)}</td>`;
+  if(C.d21){
+    const slN = EVT.filter(e=>e.ema_slope).length, slUp = EVT.filter(e=>e.ema_slope==='up').length;
+    foot += `<td class="d21 arr" style="color:var(--text-dim);font-size:10px">${slN?('↗'+Math.round(100*slUp/slN)+'%'):'·'}</td>`;
+    const medD21 = median(EVT.map(e=>e.ema_pct));
+    foot += `<td class="d21" style="${paint(medD21,5)}">${medD21==null?'·':(medD21>0?'+':'')+medD21.toFixed(1)+'%'}</td>`;
+  }
+  if(C.es){
+    const medES = median(EVT.map(e=>e.es45));
+    foot += `<td style="${paint(medES,0.8)}">${medES==null?'·':(medES>0?'+':'')+medES.toFixed(2)+'%'}</td>`;
+  }
+  if(C.fwd) foot += medFwd.map((v,i)=>`<td class="${i===0?'mon':''}" style="${paint(v,capFwd)}">${fmt(v)}</td>`).join('');
   foot += '</tr></tfoot>';
 
   document.getElementById(tblId).innerHTML = head + body + foot;
@@ -344,7 +365,10 @@ const YEARS = [...new Set(EV.map(e=>e.date.slice(0,4)))].sort();
 const DOW_NAMES = ['Mon','Tue','Wed','Thu','Fri'];
 const DEF_DOW = (M.default_dow!=null ? M.default_dow : 4);
 // day-of-week filter: set of included weekday indices (default = Friday only)
-const state = { sort:'date', excl:new Set(), dow:new Set([DEF_DOW]) };
+const state = { sort:'date', excl:new Set(), dow:new Set([DEF_DOW]),
+  cols:{trail:true, prev:true, drop:true, d21:true, es:true, fwd:true} };
+const COLDEFS = [['trail','Trailing 1M/3M/6M'],['prev','Prior 3 days'],['drop','Drop %'],
+  ['d21','21-EMA (slope, %D21)'],['es','ES 4–5pm'],['fwd','Next 10 days']];
 
 function compare(a,b){
   if(state.sort==='sim'){
@@ -452,6 +476,40 @@ document.getElementById('yearbar').addEventListener('click',e=>{
 });
 document.getElementById('yr-all').addEventListener('click',()=>{ state.excl.clear(); syncYears(); render(); });
 document.getElementById('yr-none').addEventListener('click',()=>{ YEARS.forEach(y=>state.excl.add(y)); syncYears(); render(); });
+
+// ---- column hide/show menu (one per table, shared state) ----
+const colMenus = [...document.querySelectorAll('.colmenu')];
+function paintMenu(menu){
+  menu.innerHTML = COLDEFS.map(([k,lab])=>
+    `<div class="ci" data-col="${k}" data-on="${state.cols[k]?1:0}"><span class="box">✓</span>${lab}</div>`).join('')
+    + `<div class="sep"></div><div class="ci mini" data-all="1">show all</div>`;
+}
+function syncCols(){ colMenus.forEach(paintMenu); }
+syncCols();
+colMenus.forEach(menu=>{
+  menu.addEventListener('click',e=>{
+    const it=e.target.closest('.ci'); if(!it)return;
+    if(it.dataset.all){ COLDEFS.forEach(([k])=>state.cols[k]=true); }
+    else {
+      const k=it.dataset.col;
+      const on=Object.entries(state.cols).filter(([,v])=>v).map(([kk])=>kk);
+      if(state.cols[k] && on.length===1) return;   // keep at least one group visible
+      state.cols[k]=!state.cols[k];
+    }
+    syncCols(); render();
+  });
+});
+// open/close the dropdown; close others / on outside click
+document.querySelectorAll('.colbtn').forEach(btn=>{
+  btn.addEventListener('click',e=>{
+    e.stopPropagation();
+    const m=document.getElementById(btn.dataset.menu);
+    const wasOpen=m.classList.contains('open');
+    document.querySelectorAll('.colmenu').forEach(x=>x.classList.remove('open'));
+    if(!wasOpen) m.classList.add('open');
+  });
+});
+document.addEventListener('click',()=>document.querySelectorAll('.colmenu').forEach(x=>x.classList.remove('open')));
 
 render();
 </script>
