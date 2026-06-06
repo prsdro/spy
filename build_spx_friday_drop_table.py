@@ -41,6 +41,34 @@ TRAIL = {"1m": 21, "3m": 63, "6m": 126}
 
 
 ES_45_CSV = BASE_DIR / "analyst" / "es_post_close_45.csv"
+VIX_CSV = BASE_DIR / "data" / "VIX_yahoo_daily.csv"
+
+
+def load_vix():
+    """date 'YYYY-MM-DD' -> CBOE VIX daily close (Yahoo ^VIX, 2008 ->)."""
+    if not VIX_CSV.exists():
+        print(f"  (VIX file missing: {VIX_CSV}; VIX columns blank)")
+        return {}
+    v = pd.read_csv(VIX_CSV, dtype={"date": str})
+    return dict(zip(v["date"], v["close"]))
+
+
+def fetch_yahoo_vix():
+    """Best-effort recent ^VIX daily closes (date -> close) for the live row."""
+    url = "https://query1.finance.yahoo.com/v8/finance/chart/%5EVIX?range=1mo&interval=1d"
+    out = {}
+    try:
+        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+        with urllib.request.urlopen(req, timeout=25) as r:
+            res = json.load(r)["chart"]["result"][0]
+        ts = res["timestamp"]
+        c = res["indicators"]["quote"][0]["close"]
+        for t, cc in zip(ts, c):
+            if cc is not None:
+                out[pd.Timestamp(t, unit="s").strftime("%Y-%m-%d")] = float(cc)
+    except Exception as e:
+        print(f"  (live ^VIX fetch skipped: {e})")
+    return out
 
 
 def load_es_45():
@@ -129,6 +157,17 @@ def build_event(df, i, n_prev, n_fwd, thresh, dow, r2, live=False):
             if i > 1 and not pd.isna(ema[i - 2]):
                 ema_slope_pct = round((ema[i - 1] / ema[i - 2] - 1.0) * 100.0, 3)
                 ema_slope = "up" if ema_slope_pct >= 0 else "down"
+    # CBOE VIX: close the day before the dump, close on the dump, and the
+    # dump-day % change.
+    vix_pre = vix_post = vix_chg = None
+    if "vix" in df.columns:
+        vx = df["vix"].to_numpy()
+        if not pd.isna(vx[i]):
+            vix_post = round(float(vx[i]), 2)
+        if i > 0 and not pd.isna(vx[i - 1]):
+            vix_pre = round(float(vx[i - 1]), 2)
+        if vix_pre and vix_post:
+            vix_chg = round((vix_post / vix_pre - 1.0) * 100.0, 1)
     # trailing 1/3/6-month returns INTO this Friday close
     trail = {}
     for key, nd in TRAIL.items():
@@ -161,6 +200,7 @@ def build_event(df, i, n_prev, n_fwd, thresh, dow, r2, live=False):
         "dow_idx": int(ts[i].weekday()),
         "fri_ret": r2(rets[i]), "trail": trail, "prev": prev, "fwd": fwd,
         "ema_slope": ema_slope, "ema_slope_pct": ema_slope_pct, "ema_pct": ema_pct,
+        "vix_pre": vix_pre, "vix_post": vix_post, "vix_chg": vix_chg,
         "live": live, "n_fwd_avail": n_avail,
     }
 
@@ -169,6 +209,8 @@ def main():
     d = read_firstrate_zip(find_one("SPX_full_1day_*.zip"), intraday=False).reset_index(drop=True)
     d["ret"] = d["close"].pct_change() * 100.0
     d["ema21"] = d["close"].ewm(span=21, adjust=False).mean()   # daily 21 EMA
+    vixmap = load_vix()
+    d["vix"] = d["timestamp"].dt.strftime("%Y-%m-%d").map(vixmap)
     closes = d["close"].to_numpy()
     rets = d["ret"].to_numpy()
     ts = d["timestamp"]
@@ -190,6 +232,8 @@ def main():
     if y is not None and len(y):
         y["ret"] = y["close"].pct_change() * 100.0
         y["ema21"] = y["close"].ewm(span=21, adjust=False).mean()  # ~1y of closes = ample warmup
+        vixmap.update(fetch_yahoo_vix())                           # extend VIX past the csv's end
+        y["vix"] = y["timestamp"].dt.strftime("%Y-%m-%d").map(vixmap)
         yts = y["timestamp"]
         live_idx = y.index[(yts > zip_last) & (y["ret"] <= THRESH)].tolist()
         for i in live_idx:
