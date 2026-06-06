@@ -1,0 +1,145 @@
+{
+  "meta": {
+    "ticker": "SPX",
+    "mode": "Multiday (weekly ATR)",
+    "source": "FirstRateData SPX index daily",
+    "date_start": "2000-11-27",
+    "date_end": "2026-05-01",
+    "n_weeks": 1313,
+    "weeks_up_gate_opens": 711,
+    "weeks_dn_gate_opens": 652,
+    "weeks_both_open": 183
+  },
+  "up": {
+    "overall": {
+      "n": 711,
+      "completes": 60.2,
+      "same_day_complete": 21.5,
+      "cont_786_given_complete": 64.0,
+      "cont_100_given_complete": 32.7
+    },
+    "by_dow": [
+      {
+        "dow": 0,
+        "dow_name": "Mon",
+        "n": 206,
+        "median_remaining": 5,
+        "completes": 78.2,
+        "same_day_complete": 24.3,
+        "cont_786_given_complete": 75.8,
+        "cont_100_given_complete": 46.0,
+        "median_days_to_complete": 1
+      },
+      {
+        "dow": 1,
+        "dow_name": "Tue",
+        "n": 211,
+        "median_remaining": 4,
+        "completes": 64.9,
+        "same_day_complete": 20.9,
+        "cont_786_given_complete": 65.0,
+        "cont_100_given_complete": 33.6,
+        "median_days_to_complete": 1
+      },
+      {
+        "dow": 2,
+        "dow_name": "Wed",
+        "n": 126,
+        "median_remaining": 3,
+        "completes": 62.7,
+        "same_day_complete": 24.6,
+        "cont_786_given_complete": 54.4,
+        "cont_100_given_complete": 22.8,
+        "median_days_to_complete": 1
+      },
+      {
+        "dow": 3,
+        "dow_name": "Thu",
+        "n": 97,
+        "median_remaining": 2,
+        "completes": 41.2,
+        "same_day_complete": 17.5,
+        "cont_786_given_complete": 45.0,
+        "cont_100_given_complete": 5.0,
+        "median_days_to_complete": 1
+      },
+      {
+        "dow": 4,
+        "dow_name": "Fri",
+        "n": 71,
+        "median_remaining": 1,
+        "completes": 15.5,
+        "same_day_complete": 15.5,
+        "cont_786_given_complete": 18.2,
+        "cont_100_given_complete": 0.0,
+        "median_days_to_complete": 0
+      }
+    ]
+  },
+  "down": {
+    "overall": {
+      "n": 652,
+      "completes": 65.2,
+      "same_day_complete": 35.0,
+      "cont_786_given_complete": 70.6,
+      "cont_100_given_complete": 41.4
+    },
+    "by_dow": [
+      {
+        "dow": 0,
+        "dow_name": "Mon",
+        "n": 205,
+        "median_remaining": 5,
+        "completes": 73.7,
+        "same_day_complete": 38.0,
+        "cont_786_given_complete": 78.8,
+        "cont_100_given_complete": 53.6,
+        "median_days_to_complete": 0
+      },
+      {
+        "dow": 1,
+        "dow_name": "Tue",
+        "n": 189,
+        "median_remaining": 4,
+        "completes": 66.7,
+        "same_day_complete": 28.6,
+        "cont_786_given_complete": 69.0,
+        "cont_100_given_complete": 36.5,
+        "median_days_to_complete": 1
+      },
+      {
+        "dow": 2,
+        "dow_name": "Wed",
+        "n": 120,
+        "median_remaining": 3,
+        "completes": 66.7,
+        "same_day_complete": 36.7,
+        "cont_786_given_complete": 72.5,
+        "cont_100_given_complete": 37.5,
+        "median_days_to_complete": 0
+      },
+      {
+        "dow": 3,
+        "dow_name": "Thu",
+        "n": 89,
+        "median_remaining": 2,
+        "completes": 55.1,
+        "same_day_complete": 37.1,
+        "cont_786_given_complete": 57.1,
+        "cont_100_given_complete": 34.7,
+        "median_days_to_complete": 0
+      },
+      {
+        "dow": 4,
+        "dow_name": "Fri",
+        "n": 49,
+        "median_remaining": 1,
+        "completes": 38.8,
+        "same_day_complete": 38.8,
+        "cont_786_given_complete": 42.1,
+        "cont_100_given_complete": 10.5,
+        "median_days_to_complete": 0
+      }
+    ]
+  }
+}

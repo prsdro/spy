@@ -21,6 +21,7 @@
     {label:'Trigger Box', href:'/trigger-box.html'},
     {label:'Spreads', href:'/trigger-box-spreads.html'},
     {label:'Multi-Day', href:'/multiday-gg.html'},
+    {label:'MGG×Weekday', href:'/spx-multiday-gg-dow.html'},
     {label:'Swing', href:'/swing-gg.html'},
     {label:'Cheat Sheet', href:'/cheatsheet.html'},
     {label:'Data', href:'/data/'},

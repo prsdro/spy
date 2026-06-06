@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Multi-Day GG by Day of Week | Milkman Trades</title>
+<meta name="description" content="When SPX opens a weekly-ATR Golden Gate, how does the chance it completes (38.2% → 61.8%) depend on which weekday it opens? Upside vs downside symmetry and continuation past the gate. 25 years of SPX daily data.">
+<meta name="robots" content="noindex,follow">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥛</text></svg>">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --bg:#0c0e12;
+  --surface:#13161c;
+  --surface-2:#181c24;
+  --surface-3:#1d2230;
+  --border:#1e2230;
+  --border-strong:#2a3045;
+  --text:#e8eaed;
+  --text-dim:#6b7280;
+  --text-mid:#9ca3af;
+  --accent:#fbbf24;
+  --bull:#1cd48a;
+  --bull-bg:#0a1f15;
+  --bear:#ef6c00;
+  --bear-bg:#1f1208;
+  --blue:#38bdf8;
+}
+
+html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif;font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+body{min-height:100dvh;padding-bottom:90px}
+.app{max-width:560px;margin:0 auto;padding:0 14px}
+
+header.topbar{padding:20px 0 8px}
+header h1{font-size:20px;font-weight:700;letter-spacing:-0.015em}
+header h1 .up{color:var(--bull)}
+header h1 .dn{color:var(--bear)}
+header .sub{color:#aab4c5;font-size:12.5px;margin-top:4px;font-family:'JetBrains Mono',monospace;line-height:1.5}
+header .meta{margin-top:8px;font-size:11px;color:var(--text-dim);font-family:'JetBrains Mono',monospace;display:flex;flex-wrap:wrap;gap:5px}
+header .meta span{background:var(--surface-2);border:1px solid var(--border);padding:3px 8px;border-radius:6px}
+
+.section-title{font-size:11px;text-transform:uppercase;letter-spacing:0.09em;color:var(--text-dim);font-weight:600;margin:24px 4px 9px;font-family:'JetBrains Mono',monospace}
+
+details.def{background:var(--surface);border:1px solid var(--border);border-radius:12px;margin:12px 0;overflow:hidden}
+details.def summary{padding:13px 15px;font-size:13px;font-weight:600;cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;color:var(--text-mid)}
+details.def summary::after{content:"▾";color:var(--text-dim);font-size:12px;transition:transform .15s}
+details.def[open] summary::after{transform:rotate(180deg)}
+details.def .body{padding:0 15px 15px;font-size:13px;color:var(--text-mid);line-height:1.55}
+details.def .body p{margin-bottom:9px}
+details.def .body strong{color:var(--text)}
+details.def .body code{font-family:'JetBrains Mono',monospace;font-size:11.5px;background:var(--surface-3);padding:1px 5px;border-radius:4px;color:var(--accent)}
+.upx{color:var(--bull);font-weight:700}
+.dnx{color:var(--bear);font-weight:700}
+
+/* hero verdict */
+.verdict{background:linear-gradient(160deg,#16131c,#13161c);border:1px solid var(--border-strong);border-radius:16px;padding:18px;margin:14px 0}
+.verdict .tag{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#1a1a1a;background:var(--accent);padding:3px 9px;border-radius:6px;margin-bottom:10px}
+.verdict h2{font-size:16px;font-weight:700;line-height:1.35;margin-bottom:8px}
+.verdict p{font-size:13.5px;color:var(--text-mid);line-height:1.6}
+.verdict p+p{margin-top:8px}
+.verdict b{color:var(--text)}
+
+/* direction toggle */
+.toggle{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:8px 0 4px}
+.toggle button{font-family:inherit;cursor:pointer;border-radius:12px;padding:13px 12px;text-align:left;background:var(--surface);border:1px solid var(--border);color:var(--text);transition:border-color .14s,background .14s;-webkit-tap-highlight-color:transparent}
+.toggle button .k{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-dim);letter-spacing:0.03em;display:block;margin-bottom:3px}
+.toggle button .v{font-size:14px;font-weight:700;line-height:1.25}
+.toggle button .n{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-mid);margin-top:4px;display:block}
+.toggle button[data-on="1"][data-dir="up"]{border-color:var(--bull);background:var(--bull-bg)}
+.toggle button[data-on="1"][data-dir="down"]{border-color:var(--bear);background:var(--bear-bg)}
+.toggle button .arrow.up{color:var(--bull)}
+.toggle button .arrow.dn{color:var(--bear)}
+
+/* stat tiles */
+.tiles{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-top:10px}
+.tile{background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:13px 12px;display:flex;flex-direction:column;gap:3px;min-height:92px}
+.tile .pct{font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:700;letter-spacing:-0.02em;color:#f8fafc}
+.tile .lbl{font-size:11px;color:var(--text-mid);line-height:1.3}
+.tile.hi{border-color:var(--border-strong)}
+.tile.hi .pct{color:var(--accent)}
+.tile .foot{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-dim);margin-top:auto}
+
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:15px;margin:10px 0}
+.card h3{font-size:13.5px;font-weight:700;margin-bottom:3px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.dirpill{display:inline-flex;align-items:center;gap:4px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:3px 9px;border-radius:999px;border:1px solid}
+.dirpill.up{color:var(--bull);background:var(--bull-bg);border-color:var(--bull)}
+.dirpill.down{color:var(--bear);background:var(--bear-bg);border-color:var(--bear)}
+.card .ck{color:var(--text-mid);font-size:12px;margin-bottom:12px;line-height:1.5}
+.card .ck code{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent)}
+
+/* day-of-week bar chart */
+.dow-row{display:grid;grid-template-columns:34px 1fr 54px;gap:8px;align-items:center;padding:4px 0}
+.dow-row .t{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text-mid);text-align:right;font-weight:600}
+.dow-row.lown .t,.dow-row.lown .n{opacity:.5}
+.dow-row .n{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-dim);text-align:left;line-height:1.25}
+.bar-wrap{position:relative;height:22px;background:var(--surface-3);border-radius:5px;overflow:hidden}
+.bar-fill{position:absolute;left:0;top:0;bottom:0;border-radius:5px;transition:width .4s cubic-bezier(.2,.7,.3,1)}
+.bar-fill.up{background:linear-gradient(90deg,#0e7a4f,var(--bull))}
+.bar-fill.dn{background:linear-gradient(90deg,#9c4700,var(--bear))}
+.bar-fill.amb{background:linear-gradient(90deg,#b8860b,var(--accent))}
+.same-tick{position:absolute;top:-2px;bottom:-2px;width:2px;background:var(--blue);z-index:2}
+.bar-pct{position:absolute;top:0;bottom:0;display:flex;align-items:center;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:#0c0e12}
+.bar-pct.out{color:var(--text-mid)}
+.dow-legend{display:flex;gap:14px;margin-top:11px;font-size:11px;color:var(--text-mid);flex-wrap:wrap}
+.dow-legend i{display:inline-block;width:12px;height:8px;border-radius:2px;margin-right:5px;vertical-align:0}
+.dow-legend i.same{width:2px;height:12px;background:var(--blue);vertical-align:-2px}
+
+/* symmetry grouped */
+.sym-row{display:grid;grid-template-columns:34px 1fr;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid var(--border)}
+.sym-row:last-child{border-bottom:none}
+.sym-row .t{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text-mid);text-align:right;font-weight:600}
+.sym-bars{display:flex;flex-direction:column;gap:4px}
+.sym-bar{position:relative;height:16px;background:var(--surface-3);border-radius:4px;overflow:hidden}
+.sym-bar .f{position:absolute;left:0;top:0;bottom:0;border-radius:4px}
+.sym-bar .f.up{background:var(--bull)}
+.sym-bar .f.dn{background:var(--bear)}
+.sym-bar .lab{position:absolute;top:0;bottom:0;display:flex;align-items:center;font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:700;color:#0c0e12;left:6px}
+.sym-bar .lab.out{color:var(--text-mid);left:auto}
+
+table.kv{width:100%;border-collapse:collapse;margin-top:4px}
+table.kv td,table.kv th{padding:7px 4px;border-bottom:1px solid var(--border);font-size:13px;vertical-align:middle}
+table.kv th{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:var(--text-dim);font-weight:600;text-align:right}
+table.kv th:first-child{text-align:left}
+table.kv td:first-child{color:var(--text-mid)}
+table.kv td:not(:first-child){text-align:right;font-family:'JetBrains Mono',monospace;font-weight:600;white-space:nowrap}
+table.kv tr:last-child td{border-bottom:none}
+
+.callout{background:var(--surface-2);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:12px 14px;margin:12px 0;font-size:13px;color:var(--text-mid);line-height:1.55}
+.callout b{color:var(--text)}
+
+.footer{margin:28px 0 10px;padding-top:16px;border-top:1px solid var(--border);font-size:11.5px;color:var(--text-dim);line-height:1.6}
+.footer code{font-family:'JetBrains Mono',monospace;color:var(--text-mid)}
+.footer a{color:var(--text-dim);text-decoration:underline;text-underline-offset:2px}
+</style>
+<script src="/nav.js"></script>
+</head>
+<body>
+<div class="app">
+
+  <header class="topbar">
+    <h1>Multi-Day GG <span class="up">by</span> <span class="dn">Weekday</span></h1>
+    <div class="sub">When the weekly Golden Gate opens, does the weekday it opens on change the odds it completes?</div>
+    <div class="meta" id="meta"></div>
+  </header>
+
+  <details class="def">
+    <summary>What a "multi-day Golden Gate" is</summary>
+    <div class="body">
+      <p>In Saty <strong>Multiday mode</strong>, the ATR levels are built from the <strong>weekly</strong> 14-period Wilder ATR and the <strong>prior week's close</strong> (PWC) — so they reset every Monday and apply all week.</p>
+      <p>The Golden Gate is the zone from <strong>±38.2%</strong> to <strong>±61.8%</strong> of that weekly ATR away from PWC. A gate <strong>opens</strong> when price reaches <code>±38.2%</code>; it <strong>completes</strong> when price reaches <code>±61.8%</code>. Beyond that, <code>±78.6%</code> and a full weekly ATR (<code>±100%</code>) are the continuation marks.</p>
+      <p>For each week and each direction we find the <strong>first weekday</strong> price reaches the 38.2% open level, then ask whether the gate <strong>completes</strong> (reaches 61.8%) on any day through that week's Friday, and how far it continues. The two directions are scored independently — a single week can open an upside gate, a downside gate, or both.</p>
+    </div>
+  </details>
+
+  <div class="verdict">
+    <span class="tag">Headline</span>
+    <h2>Completion is mostly a race against the clock — open early in the week and the gate usually completes; open Thursday or Friday and it usually doesn't.</h2>
+    <p>An open with the whole week ahead of it (Monday) completes the 61.8% gate <b>~74–78%</b> of the time. By Friday only <b>1 session</b> remains and completion collapses to <b>16% (up)</b> / <b>39% (down)</b>. When it does complete, it's fast — a median of <b>~1 session</b> from open to completion.</p>
+    <p>It is <b>not symmetric.</b> The downside gate completes faster and more reliably late in the week, slams to 61.8% the <b>same day</b> it opens ~35–38% of the time (vs ~21% for the upside), and <b>continues harder</b> past the gate. Stairs up, elevator down — even on the weekly frame.</p>
+  </div>
+
+  <div class="section-title">Pick the direction</div>
+  <div class="toggle" id="toggle">
+    <button data-dir="up" data-on="1">
+      <span class="k">UPSIDE GATE</span>
+      <span class="v"><span class="arrow up">↑</span> +38.2% → +61.8%</span>
+      <span class="n" id="tg-up-n"></span>
+    </button>
+    <button data-dir="down" data-on="0">
+      <span class="k">DOWNSIDE GATE</span>
+      <span class="v"><span class="arrow dn">↓</span> −38.2% → −61.8%</span>
+      <span class="n" id="tg-dn-n"></span>
+    </button>
+  </div>
+
+  <div class="tiles" id="tiles"></div>
+
+  <div class="section-title">Completion by the weekday the gate opens</div>
+  <div class="card">
+    <h3 id="dowlead">Chance the gate completes (±61.8%) that same week</h3>
+    <div class="ck">Bar = share of opens on that weekday that <b>complete</b> the gate by Friday. Blue tick = share that <b>open & complete the same day</b>. Right column: n opens · median sessions left in the week.</div>
+    <div id="dowchart"></div>
+    <div class="dow-legend">
+      <span><i style="background:var(--accent)"></i>completes by Friday</span>
+      <span><i class="same"></i>opens &amp; completes same day</span>
+    </div>
+    <div class="callout" id="downote"></div>
+  </div>
+
+  <div class="section-title">Upside vs downside — is it symmetric?</div>
+  <div class="card">
+    <h3>Completion rate, side by side</h3>
+    <div class="ck">Green = <span class="upx">upside</span> gate completes, orange = <span class="dnx">downside</span> gate completes, by the weekday each opens. The gap that opens up at <b>Thu/Fri</b> is the asymmetry.</div>
+    <div id="symchart"></div>
+    <div class="callout">Early in the week the two sides track each other (Mon/Tue within a few points). The split appears <b>late</b>: a Thursday downside gate still completes 55% of the time vs 41% for the upside, and Friday is 39% vs 16%. Down-moves don't need the whole week — they get there faster.</div>
+  </div>
+
+  <div class="section-title">Continuation — once it completes, how far does it run?</div>
+  <div class="card">
+    <h3 id="contlead">Continuation past the gate, given it completed</h3>
+    <div class="ck">Of the opens that completed (±61.8%), how many pushed on to ±78.6% and to a full weekly ATR (±100%) — by the weekday the gate opened. Raw <code>x/n</code> shown: these are <b>conditional on completion</b>, so late-week cells are tiny (n in the teens). A <code>0.0%</code> there means "none of a handful," <b>not</b> "impossible."</div>
+    <table class="kv" id="conttab"></table>
+    <div class="callout" id="contnote"></div>
+  </div>
+
+  <details class="def">
+    <summary>Method &amp; caveats</summary>
+    <div class="body">
+      <p><strong>Data:</strong> FirstRateData SPX cash index, daily bars, 2000-11-27 → 2026-05-01 (1,313 weeks). Levels from the prior weekly close + one-week-lagged weekly Wilder ATR(14), matching the day-mode lag convention used elsewhere on this site.</p>
+      <p><strong>Open / complete detection</strong> uses daily highs and lows, so a gate can open and complete on the same session (counted as "same-day"). Each direction is evaluated independently per week.</p>
+      <p><strong>The clock confound:</strong> weekday-of-open and sessions-left-in-week are nearly the same axis (Mon≈5 left, Fri=1). Most of the completion decay is mechanical — fewer sessions to reach 61.8%. The <em>interesting</em> signal is the up-vs-down gap at equal weekdays, and the same-day completion rate, which is time-independent.</p>
+      <p><strong>Caveats:</strong> continuation rates are conditional on completion, so Thursday/Friday cells run small (n&lt;50, flagged faded). SPX is the cash index (no overnight gap inside the week's range the way a tradable would gap), so map onto SPY/ES with care.</p>
+    </div>
+  </details>
+
+  <footer class="footer">
+    Multi-Day GG by weekday · generated from <code>backtest_spx_multiday_gg_dow.py</code> ·
+    data <code>spx-multiday-gg-dow.json</code> · <a href="/">milkman trades</a>
+  </footer>
+
+</div>
+
+<script id="data" type="application/json">{"meta":{"ticker":"SPX","mode":"Multiday (weekly ATR)","source":"FirstRateData SPX index daily","date_start":"2000-11-27","date_end":"2026-05-01","n_weeks":1313,"weeks_up_gate_opens":711,"weeks_dn_gate_opens":652,"weeks_both_open":183},"up":{"overall":{"n":711,"completes":60.2,"same_day_complete":21.5,"cont_786_given_complete":64.0,"cont_100_given_complete":32.7},"by_dow":[{"dow":0,"dow_name":"Mon","n":206,"median_remaining":5,"completes":78.2,"same_day_complete":24.3,"cont_786_given_complete":75.8,"cont_100_given_complete":46.0,"median_days_to_complete":1},{"dow":1,"dow_name":"Tue","n":211,"median_remaining":4,"completes":64.9,"same_day_complete":20.9,"cont_786_given_complete":65.0,"cont_100_given_complete":33.6,"median_days_to_complete":1},{"dow":2,"dow_name":"Wed","n":126,"median_remaining":3,"completes":62.7,"same_day_complete":24.6,"cont_786_given_complete":54.4,"cont_100_given_complete":22.8,"median_days_to_complete":1},{"dow":3,"dow_name":"Thu","n":97,"median_remaining":2,"completes":41.2,"same_day_complete":17.5,"cont_786_given_complete":45.0,"cont_100_given_complete":5.0,"median_days_to_complete":1},{"dow":4,"dow_name":"Fri","n":71,"median_remaining":1,"completes":15.5,"same_day_complete":15.5,"cont_786_given_complete":18.2,"cont_100_given_complete":0.0,"median_days_to_complete":0}]},"down":{"overall":{"n":652,"completes":65.2,"same_day_complete":35.0,"cont_786_given_complete":70.6,"cont_100_given_complete":41.4},"by_dow":[{"dow":0,"dow_name":"Mon","n":205,"median_remaining":5,"completes":73.7,"same_day_complete":38.0,"cont_786_given_complete":78.8,"cont_100_given_complete":53.6,"median_days_to_complete":0},{"dow":1,"dow_name":"Tue","n":189,"median_remaining":4,"completes":66.7,"same_day_complete":28.6,"cont_786_given_complete":69.0,"cont_100_given_complete":36.5,"median_days_to_complete":1},{"dow":2,"dow_name":"Wed","n":120,"median_remaining":3,"completes":66.7,"same_day_complete":36.7,"cont_786_given_complete":72.5,"cont_100_given_complete":37.5,"median_days_to_complete":0},{"dow":3,"dow_name":"Thu","n":89,"median_remaining":2,"completes":55.1,"same_day_complete":37.1,"cont_786_given_complete":57.1,"cont_100_given_complete":34.7,"median_days_to_complete":0},{"dow":4,"dow_name":"Fri","n":49,"median_remaining":1,"completes":38.8,"same_day_complete":38.8,"cont_786_given_complete":42.1,"cont_100_given_complete":10.5,"median_days_to_complete":0}]}}</script>
+<script>
+const DATA = JSON.parse(document.getElementById('data').textContent);
+let state = { dir: 'up' };
+
+const meta = DATA.meta;
+document.getElementById('meta').innerHTML =
+  `<span>${meta.ticker}</span><span>${meta.date_start} → ${meta.date_end}</span>` +
+  `<span>${meta.n_weeks.toLocaleString()} weeks</span>` +
+  `<span>weekly ATR</span>`;
+document.getElementById('tg-up-n').textContent =
+  `opens in ${(meta.weeks_up_gate_opens/meta.n_weeks*100).toFixed(0)}% of weeks · n=${DATA.up.overall.n}`;
+document.getElementById('tg-dn-n').textContent =
+  `opens in ${(meta.weeks_dn_gate_opens/meta.n_weeks*100).toFixed(0)}% of weeks · n=${DATA.down.overall.n}`;
+
+const pf = v => (v==null?'—':v.toFixed(1)+'%');
+const block = () => DATA[state.dir];
+
+const NOTE_DOW = {
+  up: 'A Monday upside open completes <b>78%</b> of the time; the same gate opening Friday completes just <b>16%</b>. Note the same-day tick barely moves (15–25% across the week) — the upside gate rarely slams through in one session, so it leans on having days in reserve.',
+  down: 'A Monday downside open completes <b>74%</b> of the time, fading to <b>39%</b> by Friday — but look at the same-day tick: it sits at <b>~37%</b> every weekday. Roughly a third of downside opens complete the <em>same session</em> regardless of weekday. That is the elevator.'
+};
+const NOTE_CONT = {
+  up: 'Continuation echoes the same early-week strength: of upside gates that complete after a <b>Monday</b> open, 46% run a full weekly ATR; by Thursday almost none do. Early opens are the genuine trends.',
+  down: 'Downside completions run harder than upside at every weekday — a Monday downside completion reaches a full weekly ATR <b>54%</b> of the time (vs 46% up), and the edge holds midweek. When selling completes the gate, it tends to keep going. Even a <b>Friday</b> downside open can run a full ATR same-session — it has happened twice (most recently the week of <b>Oct 10, 2025</b>), 2 of 19 completions.'
+};
+
+function render(){
+  const b = block();
+  const o = b.overall;
+  const cls = state.dir === 'up' ? 'up' : 'dn';
+  const accent = state.dir === 'up' ? 'var(--bull)' : 'var(--bear)';
+
+  document.querySelectorAll('#toggle button').forEach(x=>x.dataset.on=(x.dataset.dir===state.dir)?'1':'0');
+
+  // direction pill injected into the dynamic card titles
+  const pill = state.dir==='up'
+    ? '<span class="dirpill up">↑ Upside</span>'
+    : '<span class="dirpill down">↓ Downside</span>';
+
+  // tiles
+  document.getElementById('tiles').innerHTML = `
+    <div class="tile hi"><div class="pct">${pf(o.completes)}</div><div class="lbl"><b>completes</b> 61.8% same week</div><div class="foot">n=${o.n}</div></div>
+    <div class="tile"><div class="pct">${pf(o.same_day_complete)}</div><div class="lbl">opens &amp; <b>completes same day</b></div><div class="foot">time-independent</div></div>
+    <div class="tile"><div class="pct">${pf(o.cont_786_given_complete)}</div><div class="lbl">of completions <b>continue</b> → 78.6%</div><div class="foot">given complete</div></div>`;
+
+  // day-of-week completion chart
+  const rows = b.by_dow;
+  document.getElementById('dowchart').innerHTML = rows.map(r=>{
+    const w = r.completes||0;
+    const low = r.n < 50 ? ' lown' : '';
+    const inside = w > 18;
+    const same = Math.min(r.same_day_complete||0, 100);
+    return `<div class="dow-row${low}">
+      <div class="t">${r.dow_name}</div>
+      <div class="bar-wrap">
+        <div class="bar-fill ${cls}" style="width:${w}%"></div>
+        <div class="same-tick" style="left:${same}%"></div>
+        <div class="bar-pct ${inside?'':'out'}" style="${inside?'left:7px':'left:calc('+w+'% + 6px)'}">${w.toFixed(0)}%</div>
+      </div>
+      <div class="n">n=${r.n}<br>${r.median_remaining}d left</div>
+    </div>`;
+  }).join('');
+  document.getElementById('dowlead').innerHTML = pill + 'Chance the gate completes that same week';
+  document.getElementById('downote').innerHTML = NOTE_DOW[state.dir];
+
+  // continuation table — show raw x/n counts so thin late-week cells read honestly
+  // (a "0.0%" on n=11 means "0 of 11", not "impossible").
+  const tab = document.getElementById('conttab');
+  const hdr = `<tr><th>Opens</th><th>n cmpl</th><th>→78.6%</th><th>→full ATR</th></tr>`;
+  document.getElementById('contlead').innerHTML =
+    pill + `Continuation past the ${state.dir==='up'?'+':'−'}61.8% gate, given it completed`;
+  const cnt = `<span style="color:var(--text-dim);font-weight:400;font-size:11px">`;
+  const cell = (pct, ncmpl, col)=>{
+    const x = Math.round((ncmpl*(pct||0))/100);
+    return `<td${col?` style="color:${col}"`:''}>${pf(pct)} ${cnt}${x}/${ncmpl}</span></td>`;
+  };
+  tab.innerHTML = hdr + rows.map(r=>{
+    const ncmpl = Math.round((r.n * (r.completes||0))/100);
+    const faint = ncmpl < 30 ? ' style="opacity:.55"' : '';
+    return `<tr${faint}><td>${r.dow_name}</td><td>${ncmpl}</td>` +
+      cell(r.cont_786_given_complete, ncmpl, accent) +
+      cell(r.cont_100_given_complete, ncmpl) + `</tr>`;
+  }).join('') + (()=>{
+    const nc = Math.round((o.n*(o.completes||0))/100);
+    return `<tr><td><b>All</b></td><td><b>${nc}</b></td>` +
+      `<td style="color:${accent}"><b>${pf(o.cont_786_given_complete)}</b> ${cnt}${Math.round(nc*(o.cont_786_given_complete||0)/100)}/${nc}</span></td>` +
+      `<td><b>${pf(o.cont_100_given_complete)}</b> ${cnt}${Math.round(nc*(o.cont_100_given_complete||0)/100)}/${nc}</span></td></tr>`;
+  })();
+  document.getElementById('contnote').innerHTML = NOTE_CONT[state.dir];
+}
+
+// symmetry chart (static, both directions)
+(function(){
+  const up = DATA.up.by_dow, dn = DATA.down.by_dow;
+  const byDow = {};
+  up.forEach(r=>{byDow[r.dow_name]=byDow[r.dow_name]||{};byDow[r.dow_name].up=r;});
+  dn.forEach(r=>{byDow[r.dow_name]=byDow[r.dow_name]||{};byDow[r.dow_name].dn=r;});
+  const order = ['Mon','Tue','Wed','Thu','Fri'];
+  const seg = (v,kind)=>{
+    const w = v||0; const inside = w>20;
+    return `<div class="sym-bar"><div class="f ${kind}" style="width:${w}%"></div>` +
+      `<div class="lab ${inside?'':'out'}" style="${inside?'':'left:calc('+w+'% + 5px)'}">${w.toFixed(0)}%</div></div>`;
+  };
+  document.getElementById('symchart').innerHTML = order.map(d=>{
+    const u=byDow[d].up, n=byDow[d].dn;
+    return `<div class="sym-row"><div class="t">${d}</div><div class="sym-bars">${seg(u.completes,'up')}${seg(n.completes,'dn')}</div></div>`;
+  }).join('');
+})();
+
+document.getElementById('toggle').addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b)return;
+  state.dir=b.dataset.dir; render();
+});
+
+render();
+</script>
+</body>
+</html>

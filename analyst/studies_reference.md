@@ -244,3 +244,93 @@ the suppression fades and dealers unwind delta.
    has fatter left tails at 10d (worst case -8.65%, Feb 2018).
 5. The non-OpEx-window baseline (n=92) at 5d = 51% hit 1% — same as the full baseline.
    The OpEx-proximate edge isn't hit rate at 5d, it's tail expansion at 10d.
+
+## 15. ATR LEVEL CASCADE (DRAFT)
+Source: backtest_atr_cascade.py, 3-min RTH bars, 25y SPY (6,582 days, 33,153 first-hit events)
+
+For each first-touch of an ATR level, classify the next adjacent move: continuation (one
+level further from PDC), retrace (one level closer to PDC), or last (no further adjacent
+level reached before close). Filterable by hour-of-day of the first hit. Ladder: full
+Saty fib set from -2 ATR through PDC to +2 ATR (25 rungs incl. ±0.236, ±0.382, ±0.50,
+±0.618, ±0.786, ±1.00, ±1.236, ±1.382, ±1.50, ±1.618, ±1.786, ±2.00).
+
+### Headline (all hours)
+- Continue to next level: 52.0%
+- Retrace to prior level: 41.4%
+- No further adjacent move: 5.0%
+- Median time to next adjacent level: 21 min
+
+### Inner triggers (call & put)
+- +0.236 (call trigger), n=4,400: 68% beyond, 27% behind, 4% last
+- -0.236 (put trigger),  n=4,090: 67% beyond, 30% behind, 2% last
+
+### Time-of-day shape (call trigger example)
+- 09:30-10:00 (n=2,939): 78% beyond, 22% behind, 0% last
+- 10:00-11:00 (n=  592): 52% beyond, 45% behind, 1% last
+- 14:00-15:00 (n=  195): 43% beyond, 36% behind, 17% last
+- 15:00-16:00 (n=  158): 26% beyond, 13% behind, 61% last
+
+### Sticky vs magnet rungs
+- ±0.382 GG-entry: retrace > continuation overall (call: 37% behind vs 59% beyond when
+  next rung is +0.50; put: 42% behind vs 55% beyond)
+- ±0.618 GG-completion: retrace > continuation on both sides (call: 52% behind vs 41%;
+  put: 59% behind vs 37%)
+
+### Extension behavior
+- ±1.50 to ±1.786: median time to retrace 2-5 minutes — extension tags rarely hold
+- ±2.00: 0% beyond (capped), 66-79% behind, 21-34% last (n=38 / 123)
+
+### Path-dependent (chronological prefix conditioning)
+The page also exposes a path explorer. For each day, the chronological sequence of
+first-hit level indices (incl. PDC) is captured. Conditioning on a user-built prefix:
+- "PDC → +0.236" (n=868):       64% next-up (+0.382), 20% next-down (-0.236), 17% end
+- "PDC → +0.236 → +0.382" (n=553): 67% next-up,         10% next-down,           23% end
+- "PDC → ... → +1.00" 7-step monotonic (n=74): 45% next-up (+1.236), 1% next-down, 54% end
+- "PDC → ... → -1.00" 7-step monotonic (n=71): 52% next-down (-1.236), 0% next-up, 48% end
+KEY: A retrace in path-language means a NEW first-hit on the opposite frontier (one
+level beyond the path's outermost-toward-PDC rung), not a re-touch of an already-
+visited level. Re-touches don't register as new events.
+
+### Output files
+- analyst/atr_cascade_table.csv  — per (level, hour_bucket) summary
+- site/data/atr-cascade.json     — page payload incl. time-to-next histograms + per-day paths
+- site/atr-cascade.html          — interactive explorer (heatmap + path builder)
+- site/cheatsheet-atr-cascade.html
+
+### TODO before promoting
+1. Stratify by ATR-environment (low/normal/high daily ATR vs 21d-avg)
+2. Stratify by gap-size (gap up/down/flat) — gap days behave differently at the open
+3. FOMC/CPI day exclusion
+4. Cross-check first-hit detection at gap-over levels (touch vs directional rule)
+5. Add a "given prior path" version (e.g., conditional on having hit -trigger first)
+
+## 16. MULTI-DAY GG BY WEEKDAY (SPX, weekly ATR — published 2026-06-06)
+Question: when the weekly-ATR GG first OPENS (±38.2%) on a given weekday, how does the
+chance it COMPLETES (±61.8%) by Friday evolve? Symmetric up vs down? Continuation?
+Data: FirstRateData SPX cash daily, 2000-11→2026-05, 1,313 weeks. Levels = prior weekly
+close + 1-week-lagged weekly Wilder ATR(14). Each direction scored independently per week.
+Upside gate opens in 54% of weeks, downside 50%, both 14%.
+
+Completion (±61.8% same week) decays with later open — mostly the clock confound
+(Mon≈5 sessions left, Fri=1). Completion is fast: median ~1 session open→complete.
+| Open day | Up completes | Down completes | Up same-day | Down same-day |
+|----------|-------------|----------------|-------------|---------------|
+| Mon | 78.2% | 73.7% | 24.3% | 38.0% |
+| Tue | 64.9% | 66.7% | 20.9% | 28.6% |
+| Wed | 62.7% | 66.7% | 24.6% | 36.7% |
+| Thu | 41.2% | 55.1% | 17.5% | 37.1% |
+| Fri | 15.5% | 38.8% | 15.5% | 38.8% |
+Overall: up 60.2% / down 65.2% complete.
+
+NOT symmetric — downside is faster & harder:
+- Same-day completion (time-independent): down ~35-38% EVERY weekday vs up ~15-25%.
+- Late-week survival: Thu/Fri down completes 55%/39% vs up 41%/16%.
+- Continuation given completion: down 70.6%→78.6% & 41.4%→full ATR vs up 64.0% & 32.7%.
+  Continuation strongest for early-week opens (Mon up→full ATR 46%, down 54%; Thu+ ~none).
+"Stairs up, elevator down" holds on the weekly frame.
+
+### Output files
+- backtest_spx_multiday_gg_dow.py
+- analyst/spx_multiday_gg_dow_events.csv  — one row per (week, direction) opened event
+- analyst/spx_multiday_gg_dow_summary.json
+- site/data/spx-multiday-gg-dow.json + site/spx-multiday-gg-dow.html (interactive, direction toggle)

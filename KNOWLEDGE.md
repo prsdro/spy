@@ -473,6 +473,28 @@ Outcomes measured from the second gate's open through the RTH close:
 
 ---
 
+### 8. Multi-Day GG by weekday (SPX, weekly ATR) — completion & continuation by open day
+
+`backtest_spx_multiday_gg_dow.py` · FirstRateData SPX cash daily, 2000-11→2026-05,
+**1,313 weeks**. Multiday-mode levels = prior weekly close + 1-week-lagged weekly Wilder
+ATR(14). For each week and each direction independently: find the first weekday the gate
+**opens** (±38.2%), then whether it **completes** (±61.8%) by that week's Friday, and how
+far it continues (±78.6%, full weekly ATR). Upside gate opens in 54% of weeks, downside
+50%, both 14%.
+
+- **Completion decays with later open day** — largely the clock confound (Mon≈5 sessions
+  left, Fri=1). Completion is fast when it happens (median ~1 session open→complete):
+  Up Mon **78%** → Fri **16%**; Down Mon **74%** → Fri **39%**. Overall up 60.2% / down 65.2%.
+- **NOT symmetric — downside is faster and harder.** Same-day completion (time-independent)
+  is **~35–38% on every weekday** for the downside vs **~15–25%** upside. Late-week the down
+  gate survives better (Thu/Fri 55%/39% vs up 41%/16%).
+- **Continuation, given completion:** down **70.6%** push to ±78.6% and **41.4%** to a full
+  weekly ATR, vs up **64.0%** / **32.7%**. Continuation is strongest for early-week opens
+  (Mon up→full ATR 46%, down 54%; by Thursday almost none). "Stairs up, elevator down" holds
+  on the weekly frame. Published interactive at `/spx-multiday-gg-dow.html`.
+
+---
+
 ## Analysis TODO
 - [ ] Validate level-to-level probabilities against our SPY data
 - [ ] Validate gap fill probabilities
