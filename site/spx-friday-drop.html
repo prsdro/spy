@@ -329,6 +329,8 @@ const SORTS = [
   {key:'fri',   label:'Biggest drop'},
   {key:'run6',  label:'Strongest 6M run-in'},
   {key:'es',    label:'ES 4–5pm (bounce → sell)'},
+  {key:'d21slope', label:'21-EMA slope (↗ first)'},
+  {key:'d21dist',  label:'Distance vs 21-EMA (above → below)'},
 ];
 const YEARS = [...new Set(EV.map(e=>e.date.slice(0,4)))].sort();
 const DOW_NAMES = ['Mon','Tue','Wed','Thu','Fri'];
@@ -351,6 +353,16 @@ function compare(a,b){
     const av=a.es45, bv=b.es45;
     if(av==null) return 1; if(bv==null) return -1;
     return bv-av;                                               // biggest post-close bounce first
+  }
+  if(state.sort==='d21slope'){
+    const rank=x=> x.ema_slope==='up'?0 : x.ema_slope==='down'?1 : 2;  // rising, then falling, then n/a
+    const d=rank(a)-rank(b);
+    return d!==0 ? d : (a.date<b.date?1:-1);
+  }
+  if(state.sort==='d21dist'){
+    const av=a.ema_pct, bv=b.ema_pct;
+    if(av==null) return 1; if(bv==null) return -1;
+    return bv-av;                                               // most above EMA first -> most below last
   }
   return a.date<b.date?1:-1;                                    // date desc
 }
