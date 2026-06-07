@@ -47,6 +47,16 @@ header .meta span{background:var(--surface-2);border:1px solid var(--border);pad
 .tile .foot{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-dim);margin-top:auto}
 .tile.hi{border-color:var(--bear)} .tile.hi .pct{color:var(--bear)}
 
+/* completion timeline (cumulative bars) */
+.tl{display:grid;grid-template-columns:104px 1fr 92px;gap:10px;align-items:center;padding:5px 0}
+.tl .d{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text-mid);font-weight:600}
+.tl .d small{display:block;color:var(--text-dim);font-weight:400;font-size:10px}
+.tl .track{position:relative;height:20px;background:var(--surface-3);border-radius:5px;overflow:hidden}
+.tl .fill{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,#9c4700,var(--bear));border-radius:5px;transition:width .4s cubic-bezier(.2,.7,.3,1)}
+.tl.ever .fill{background:linear-gradient(90deg,#7a3a00,#b5560f);opacity:.65}
+.tl .v{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-dim);text-align:left;line-height:1.2}
+.tl .v b{color:var(--text);font-size:13px}
+
 .card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:15px;margin:10px 0}
 .card h3{font-size:13.5px;font-weight:700;margin-bottom:4px}
 .card .ck{color:var(--text-mid);font-size:12px;margin-bottom:12px;line-height:1.5}
@@ -141,6 +151,18 @@ details.def .body code{font-family:'JetBrains Mono',monospace;font-size:11px;col
       <span class="lbl">Closest analog: <b>week 1 + midrange tagged same day</b></span>
       <span class="foot">26 of 28 · +27</span>
     </div>
+  </div>
+
+  <div class="section-title">If it completes — how soon</div>
+  <div class="card">
+    <h3>Time to completion, from Friday's open</h3>
+    <div class="ck">When setups like this complete, they finish <b>fast</b> — the median is <b>1 session</b> from the open. June already tagged the −0.5 midrange on the open day but didn't complete it, so the matching history is downside gates that reached the midrange on their open day and were <em>still open</em> at that close (<b>n=29</b>). Bars = the share of those that had completed (−61.8% = 7,347.10) by each forward session.</div>
+    <div class="tl"><span class="d">Mon Jun 8<small>+1 session</small></span><div class="track"><div class="fill" style="width:41%"></div></div><span class="v"><b>41%</b> · 12/29</span></div>
+    <div class="tl"><span class="d">Tue Jun 9<small>+2 sessions</small></span><div class="track"><div class="fill" style="width:52%"></div></div><span class="v"><b>52%</b> · 15/29</span></div>
+    <div class="tl"><span class="d">Wed Jun 10<small>+3 sessions</small></span><div class="track"><div class="fill" style="width:59%"></div></div><span class="v"><b>59%</b> · 17/29</span></div>
+    <div class="tl"><span class="d">Fri Jun 12<small>+5 sessions</small></span><div class="track"><div class="fill" style="width:69%"></div></div><span class="v"><b>69%</b> · 20/29</span></div>
+    <div class="tl ever"><span class="d">By month-end<small>eventually</small></span><div class="track"><div class="fill" style="width:79%"></div></div><span class="v"><b>79%</b> · 23/29</span></div>
+    <div class="callout dn"><b>The read.</b> Completion sits just 21 points (~0.5%) below Friday's low, and matching setups finish fast — so the base case is a quick resolution: a roughly <b>coin-flip-plus by mid-next-week</b> (Jun 12, ~69%) with a real <b>~41% chance as soon as Monday</b>. The ~21% that never complete are the tail where Friday's low marks a near-term bottom and price grinds back toward the pivot. <span style="color:var(--text-dim);font-size:12px">n=29 — indicative; median-of-1-session is partly the mechanical proximity to the line.</span></div>
   </div>
 
   <div class="section-title">The June Saty ladder &amp; where price sits</div>
