@@ -334,3 +334,73 @@ NOT symmetric — downside is faster & harder:
 - analyst/spx_multiday_gg_dow_events.csv  — one row per (week, direction) opened event
 - analyst/spx_multiday_gg_dow_summary.json
 - site/data/spx-multiday-gg-dow.json + site/spx-multiday-gg-dow.html (interactive, direction toggle)
+
+## 17. SWING GG BY WEEK-OF-MONTH + TRIGGER/PIVOT RETRACEMENT (SPX, monthly ATR — built 2026-06-07)
+Question A (week-of-month): when the monthly-ATR (Swing) GG first OPENS (±38.2%) in week
+1/2/3/4 of the calendar month, how does the chance it COMPLETES (±61.8%) by month end evolve?
+Question B (retracement = the headline): once a gate opens, price often bounces back toward
+the pivot. Does retracing to the same-side trigger (±23.6%) or the monthly pivot (0-ATR line
+= prior month close, PMC) INVALIDATE the gate, or is it merely a good re-entry? (Downside
+gate → put trigger; upside gate → call trigger, per request.)
+Data: FirstRateData SPX cash daily; 293 months analyzed (2002-01→2026-04). Levels = prior-month
+close + 1-month-lagged monthly Wilder ATR(14). Each direction scored independently per month.
+Daily bars (no intraday tie-break; same-day open+complete events broken out separately).
+CLOCK-TRUNCATED EXCLUSION (added 2026-06-07): a gate opening with < 5 trading sessions left in
+the month can't fairly reach 61.8% before the level resets, so those opens are dropped from ALL
+reported rates — 11 upside, 13 downside (every week-4/5 open). Counted gates: up 166, down 126.
+
+A) WEEK-OF-MONTH — fair-window gates only (clock-truncated dropped). The late-month collapse is
+gone; what remains is a mild early-month edge plus a real upside week-3 dip:
+| Open week | Up completes (medRem) | Down completes (medRem) |
+|-----------|-----------------------|-------------------------|
+| Week 1 | 41 of 55 (74.5%, 19) | 51 of 68 (75.0%, 19) |
+| Week 2 | 44 of 60 (73.3%, 15) | 20 of 37 (54.1%, 15)* |
+| Week 3 | 13 of 42 (31.0%, 9)* | 10 of 16 (62.5%, 9)* |
+| Week 4 | 3 of 9 (33.3%, 7)*  | 2 of 5 (40.0%, 6)* |
+Overall completion by month end: up 101 of 166 (60.8%) / down 83 of 126 (65.9%). Continuation
+given completion: down 65 of 83 (78.3%) to 78.6% & 41 of 83 (49.4%) to full ATR vs up 58 of 101
+(57.4%) & 26 of 101 (25.7%) — same "stairs up, elevator down" downside dominance. (* n<50)
+
+Fixed-horizon control — completes within 5 trading sessions of the open (open session + next 4):
+up 56 of 166 (33.7%) / down 60 of 126 (47.6%). Among the kept (fair-window) gates this sits at or
+below the by-month-end bar by construction. The clock-truncated opens we removed are exactly the
+ones whose 5-day rate exceeded their by-month-end rate (e.g. removed downside week-4 opens
+completed 9% by month end but ~36–62% within 5 sessions) — confirming their non-completion was
+the calendar, not the setup. (Replaced the earlier same-day-completion metric per request.)
+
+B) RETRACEMENT — read as LIFT vs each side's baseline (up 60.8% / down 65.9%), NOT raw rate:
+| Retrace depth before completion | Up: completes (lift) | Down: completes (lift) |
+|---------------------------------|----------------------|------------------------|
+| No bounce to trigger | 50 of 56 (89.3%, +29) | 10 of 10 (100.0%, +34) |
+| Bounced to trigger (±23.6%) | 32 of 60 (53.3%, −8) | 39 of 45 (86.7%, +21) |
+| Bounced to pivot (0 line / PMC) | 6 of 22 (27.3%, −34)* | 15 of 23 (65.2%, −1)* |
+| Crossed to OPPOSITE trigger | 3 of 18 (16.7%, −44)* | 3 of 32 (9.4%, −57)* |
+- The ROBUST findings (hold under sensitivity, see caveat): (1) the same-side **trigger** is
+  ASYMMETRIC — a shallow pullback to the put trigger is *tolerated* on the downside (+21 lift,
+  87%) but *damaging* on the upside (−8 lift, and worse under the stricter window); (2) crossing
+  past the pivot to the OPPOSITE trigger ≈ death both ways (9–17%).
+- The downside-pivot "good entry" reading is NOT supported: 65.2% is ~baseline (−1 lift) and goes
+  NEGATIVE when the open day is excluded from the retrace window. By the time price is back at the
+  pivot the edge is gone in BOTH directions — the pivot is the invalidation boundary, not a
+  re-entry. Only the same-side *trigger* differs by direction.
+- ⚠ Daily-bar caveat: the retrace window includes the OPEN day, whose intraday high/low may
+  predate the open — contaminating the bucketing. Excluding the open day (oi+1) reclassifies
+  54/292 fair-window events and moves the thin buckets (up-trigger 53→35%, up-pivot 27→11%,
+  down-trigger 87→76%, down-pivot 65→56%); the trigger asymmetry and opposite-trigger-death
+  survive. pivot/opposite buckets are n<50. **Question B's exact rates are not robust on daily
+  bars — the definitive test needs intraday (1-min SPX, 2008+) ordering.**
+
+SPEED PREDICTOR (downside, fair-window set; backtest_swing_gg_wom_predictors.py): how fast price
+traverses put-trigger(−23.6%)→gate(−38.2%) modestly predicts completion. Base 83 of 126 (65.9%).
+Fast (≤1 session) 55 of 79 (69.6%, +4) vs slow (≥2) 28 of 47 (59.6%, −6). Survives holding
+days-left fixed (>10 left: fast 54 of 77 = 70% vs slow 20 of 32 = 63%) and mirrors on the upside
+(fast 40 of 55 = 73% vs slow 61 of 111 = 55%). Smaller edge than the trigger-retrace asymmetry;
+EMA slope / price-vs-EMA were within a few points of base.
+
+### Output files
+- backtest_swing_gg_wom.py
+- analyst/swing_gg_wom_events.csv  — one row per (month, direction) opened gate
+- analyst/swing_gg_wom_summary.json
+- site/data/swing-gg-wom.json + site/spx-swing-gg-wom.html (published, linked from home)
+- Reviewed by Codex 2026-06-07: Question A sound (clock + travel-speed confound); Question B
+  headline downgraded — see lift framing + daily-bar caveat above.
