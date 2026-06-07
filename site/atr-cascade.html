@@ -1,0 +1,1613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ATR Level Cascade | Milkman Trades</title>
+<meta name="description" content="When SPY first hits an ATR level during RTH, what's the next level it hits? Continuation, retrace, or last? 25 years of SPY 3-min bars, sliced by time of day.">
+<meta name="robots" content="noindex,follow">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥛</text></svg>">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --bg:#0c0e12;
+  --surface:#13161c;
+  --surface-2:#181c24;
+  --surface-3:#1d2230;
+  --border:#1e2230;
+  --border-strong:#2a3045;
+  --text:#e8eaed;
+  --text-dim:#6b7280;
+  --text-mid:#9ca3af;
+  --accent:#fbbf24;
+  --bull:#1cd48a;
+  --bull-bg:#0a1f15;
+  --bear:#ef6c00;
+  --bear-bg:#1f1208;
+  --blue:#38bdf8;
+  --blue-bg:#082331;
+  --violet:#a78bfa;
+  --violet-bg:#171126;
+}
+html{font-size:15px;scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'DM Sans',system-ui,sans-serif;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+body::before{
+  content:'';position:fixed;inset:0;z-index:-1;
+  background:
+    radial-gradient(ellipse at 20% 10%, rgba(28,212,138,.04) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 90%, rgba(239,108,0,.03) 0%, transparent 50%),
+    linear-gradient(180deg, rgba(255,255,255,.018), transparent 46%);
+  pointer-events:none;
+}
+
+.page{max-width:1180px;margin:0 auto;padding:3rem 1.5rem 5rem}
+
+.draft{
+  background:#1a1400;border:1px solid #3d3200;border-radius:6px;
+  padding:.6rem 1rem;margin-bottom:1.5rem;
+  font-size:.75rem;color:#d4a800;line-height:1.5;
+}
+.draft strong{color:var(--accent)}
+
+.hero{margin-bottom:3rem;max-width:780px}
+.kicker{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.7rem;font-weight:500;
+  letter-spacing:.12em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:.75rem;
+}
+h1{font-size:2.4rem;font-weight:700;line-height:1.12;margin-bottom:1rem;text-wrap:balance}
+h1 em{
+  font-style:normal;
+  background:linear-gradient(135deg,var(--bull),var(--accent));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.lede{font-size:1.02rem;color:var(--text-mid);font-weight:300;line-height:1.7;text-wrap:pretty}
+
+.section{margin-bottom:3rem}
+.section-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.65rem;font-weight:500;
+  letter-spacing:.14em;text-transform:uppercase;
+  color:var(--text-dim);padding-bottom:.6rem;
+  border-bottom:1px solid var(--border);margin-bottom:1.4rem;
+  display:flex;justify-content:space-between;align-items:flex-end;gap:1rem;
+}
+.section-label .right{font-size:.62rem;color:var(--text-dim);font-weight:400}
+.prose{font-size:.92rem;color:var(--text-mid);font-weight:300;line-height:1.75;margin-bottom:1.2rem;text-wrap:pretty}
+.prose strong{color:var(--text);font-weight:500}
+.prose code{
+  font-family:'JetBrains Mono',monospace;font-size:.82rem;
+  background:var(--surface);padding:.04rem .35rem;border-radius:3px;
+  color:var(--text);
+}
+
+.bigstat{display:grid;grid-template-columns:repeat(4,1fr);gap:.65rem;margin:1.5rem 0 2.2rem}
+.bigstat-item{
+  background:var(--surface);border:1px solid var(--border);border-radius:8px;
+  padding:1.15rem;position:relative;overflow:hidden;
+}
+.bigstat-item::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.bigstat-item.bull::before{background:linear-gradient(90deg,var(--bull),transparent)}
+.bigstat-item.bear::before{background:linear-gradient(90deg,var(--bear),transparent)}
+.bigstat-item.blue::before{background:linear-gradient(90deg,var(--blue),transparent)}
+.bigstat-item.accent::before{background:linear-gradient(90deg,var(--accent),transparent)}
+.bigstat-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:1.85rem;font-weight:700;line-height:1;
+  margin-bottom:.4rem;font-variant-numeric:tabular-nums;
+}
+.bigstat-num.bull{color:var(--bull)}
+.bigstat-num.bear{color:var(--bear)}
+.bigstat-num.blue{color:var(--blue)}
+.bigstat-num.accent{color:var(--accent)}
+.bigstat-label{font-size:.72rem;color:var(--text-dim);line-height:1.35}
+
+/* setup steps */
+.setup-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem;margin:1.5rem 0 .5rem}
+.setup-step{
+  background:var(--surface);border:1px solid var(--border);border-radius:8px;
+  padding:1rem;min-height:130px;position:relative;overflow:hidden;
+}
+.setup-step::before{content:'';position:absolute;left:0;top:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--bull),transparent)}
+.setup-num{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--text-dim);margin-bottom:.5rem}
+.setup-title{font-size:.85rem;font-weight:600;color:var(--text);margin-bottom:.4rem;line-height:1.3}
+.setup-desc{font-size:.72rem;color:var(--text-dim);line-height:1.5}
+
+/* explore controls */
+.controls{
+  display:flex;flex-wrap:wrap;align-items:center;gap:.5rem;
+  margin-bottom:1rem;
+}
+.control-label{
+  font-family:'JetBrains Mono',monospace;font-size:.62rem;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);
+  margin-right:.4rem;
+}
+.toggle{
+  display:inline-flex;background:var(--surface);border:1px solid var(--border);
+  border-radius:6px;overflow:hidden;
+}
+.toggle button{
+  font-family:'JetBrains Mono',monospace;
+  background:transparent;border:none;color:var(--text-mid);
+  padding:.45rem .85rem;font-size:.72rem;font-weight:500;
+  cursor:pointer;transition:background .12s,color .12s;
+  border-right:1px solid var(--border);
+}
+.toggle button:last-child{border-right:none}
+.toggle button:hover{color:var(--text);background:var(--surface-2)}
+.toggle button.active{background:var(--surface-3);color:var(--text)}
+.toggle button.active.beyond{color:var(--bull)}
+.toggle button.active.behind{color:var(--blue)}
+.toggle button.active.last{color:var(--bear)}
+
+/* heatmap grid */
+.explore-shell{display:grid;grid-template-columns:1.4fr 1fr;gap:1rem;align-items:start}
+@media(max-width:960px){.explore-shell{grid-template-columns:1fr}}
+.heatmap-wrap{
+  background:var(--surface);border:1px solid var(--border);border-radius:8px;
+  padding:.85rem;overflow:auto;
+}
+.heatmap{
+  display:grid;
+  grid-template-columns:64px repeat(8, minmax(56px, 1fr));
+  gap:2px;
+  font-variant-numeric:tabular-nums;
+  min-width:600px;
+}
+.heatmap .col-head{
+  font-family:'JetBrains Mono',monospace;font-size:.6rem;
+  color:var(--text-dim);letter-spacing:.04em;
+  padding:.45rem 0;text-align:center;text-transform:uppercase;
+}
+.heatmap .row-head{
+  font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:600;
+  color:var(--text-mid);padding:0 .4rem;display:flex;align-items:center;justify-content:flex-end;
+  letter-spacing:.02em;
+}
+.heatmap .row-head.pdc-side{color:var(--text-dim)}
+.heatmap .row-head.upper{color:#d7ffe9}
+.heatmap .row-head.lower{color:#ffb4b4}
+.heatmap .cell{
+  position:relative;
+  font-family:'JetBrains Mono',monospace;font-size:.66rem;font-weight:600;
+  height:26px;display:flex;align-items:center;justify-content:center;
+  border-radius:3px;cursor:pointer;
+  background:#0c0e15;color:var(--text-dim);
+  transition:transform .1s, box-shadow .1s;
+  user-select:none;
+}
+.heatmap .cell:hover{transform:scale(1.06);box-shadow:0 0 0 1px var(--accent), 0 4px 14px rgba(0,0,0,.6);z-index:2}
+.heatmap .cell.empty{background:#0a0c11;color:#3a4055;cursor:default;font-size:.6rem}
+.heatmap .cell.empty:hover{transform:none;box-shadow:none}
+.heatmap .cell.selected{box-shadow:0 0 0 2px var(--accent);transform:scale(1.04);z-index:3}
+.heatmap .cell.lown::after{
+  content:'';position:absolute;inset:0;border-radius:3px;
+  background:repeating-linear-gradient(45deg, rgba(0,0,0,.3) 0 2px, transparent 2px 5px);
+  pointer-events:none;
+}
+.heatmap .cell.all{background:#1a1f30;color:var(--text-mid);font-weight:700;border:1px dashed var(--border-strong)}
+.legend{
+  display:flex;align-items:center;gap:.55rem;
+  font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--text-dim);
+  margin-top:.7rem;padding-left:64px;
+}
+.legend .gradient{
+  flex-grow:0;width:160px;height:8px;border-radius:3px;
+  background:linear-gradient(90deg,#0c0e15 0%, var(--cur,var(--bull)) 100%);
+}
+.legend .lo,.legend .hi{font-weight:600}
+
+/* detail panel */
+.detail{
+  background:var(--surface);border:1px solid var(--border);border-radius:8px;
+  padding:1.1rem 1.15rem;position:sticky;top:1rem;
+}
+.detail-empty{color:var(--text-dim);font-size:.84rem;line-height:1.6;text-align:center;padding:2rem .5rem}
+.detail-empty strong{color:var(--text);font-weight:500;display:block;margin-bottom:.4rem}
+.detail-head{
+  display:flex;align-items:flex-end;justify-content:space-between;gap:1rem;
+  padding-bottom:.85rem;margin-bottom:.85rem;border-bottom:1px solid var(--border);
+}
+.detail-title{
+  font-family:'JetBrains Mono',monospace;font-size:.95rem;font-weight:700;
+  color:var(--text);letter-spacing:.02em;
+}
+.detail-sub{font-size:.7rem;color:var(--text-dim);margin-top:.2rem}
+.detail-n{
+  font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--text-mid);
+  background:var(--surface-2);padding:.25rem .55rem;border-radius:4px;
+  letter-spacing:.04em;white-space:nowrap;
+}
+.outcome-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.5rem;margin-bottom:1rem}
+.outcome-card{
+  background:var(--surface-2);border:1px solid var(--border);border-radius:6px;padding:.7rem .8rem;
+  position:relative;overflow:hidden;
+}
+.outcome-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--text-dim)}
+.outcome-card.beyond::before{background:var(--bull)}
+.outcome-card.behind::before{background:var(--blue)}
+.outcome-card.last::before{background:var(--bear)}
+.outcome-card.ambig::before{background:var(--violet)}
+.outcome-pct{
+  font-family:'JetBrains Mono',monospace;font-size:1.4rem;font-weight:700;
+  font-variant-numeric:tabular-nums;line-height:1;margin-bottom:.3rem;
+}
+.outcome-pct.beyond{color:var(--bull)}
+.outcome-pct.behind{color:var(--blue)}
+.outcome-pct.last{color:var(--bear)}
+.outcome-pct.ambig{color:var(--violet)}
+.outcome-label{font-size:.7rem;font-weight:600;color:var(--text);letter-spacing:.02em}
+.outcome-sub{font-size:.66rem;color:var(--text-dim);margin-top:.2rem;line-height:1.4}
+
+.tt-row{
+  display:grid;grid-template-columns:1fr auto auto;gap:.6rem;
+  font-family:'JetBrains Mono',monospace;font-size:.72rem;
+  padding:.4rem .25rem;border-bottom:1px dashed var(--border);
+  color:var(--text-mid);
+}
+.tt-row:last-child{border-bottom:none}
+.tt-row .lab{color:var(--text-dim);text-align:left;font-weight:500;letter-spacing:.04em;text-transform:uppercase;font-size:.65rem;align-self:center}
+.tt-row .v{color:var(--text);font-weight:600}
+
+.detail h4{
+  font-family:'JetBrains Mono',monospace;font-size:.62rem;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);
+  margin:1.1rem 0 .55rem;
+}
+
+/* histogram */
+.hist-panel{background:var(--surface-2);border:1px solid var(--border);border-radius:6px;padding:.65rem .65rem .55rem}
+.hist-title-row{display:flex;align-items:center;justify-content:space-between;gap:.75rem;margin:1.1rem 0 .55rem}
+.hist-title-row h4{margin:0}
+.hist-toggle{display:inline-flex;background:var(--surface);border:1px solid var(--border);border-radius:5px;overflow:hidden}
+.hist-toggle button{font-family:'JetBrains Mono',monospace;background:transparent;border:none;color:var(--text-dim);padding:.28rem .48rem;font-size:.55rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;cursor:pointer;border-right:1px solid var(--border)}
+.hist-toggle button:last-child{border-right:none}
+.hist-toggle button.active{background:var(--surface-3);color:#fff}
+.hist-scale-note{font-family:'JetBrains Mono',monospace;font-size:.55rem;color:var(--text-dim);margin-bottom:.3rem;text-align:right}
+.hist-frame{display:grid;grid-template-columns:34px minmax(0,1fr);gap:6px;align-items:stretch}
+.hist-y-axis{position:relative;height:112px;font-family:'JetBrains Mono',monospace;font-size:.5rem;color:var(--text-dim)}
+.hist-y-axis span{position:absolute;right:0;white-space:nowrap}
+.hist-y-axis .top{top:0;transform:translateY(-10%)}
+.hist-y-axis .mid{top:50%;transform:translateY(-50%)}
+.hist-y-axis .bottom{bottom:0;transform:translateY(50%)}
+.hist{
+  display:grid;
+  grid-template-columns:repeat(9,1fr);
+  gap:5px;align-items:end;
+  height:112px;padding:.25rem 0 0;
+  border-left:1px solid rgba(255,255,255,.10);
+  border-bottom:1px solid rgba(255,255,255,.10);
+  background:linear-gradient(to top, rgba(255,255,255,.08) 0 1px, transparent 1px 50%, rgba(255,255,255,.05) 50% calc(50% + 1px), transparent calc(50% + 1px));
+}
+.hist-bin{position:relative;display:flex;align-items:flex-end;justify-content:center;gap:2px;height:100%}
+.hist-bin .bar{width:42%;min-height:2px;border-radius:2px 2px 0 0;position:relative}
+.hist-bin .bar.beyond{background:var(--bull)}
+.hist-bin .bar.behind{background:var(--blue)}
+.hist-bin .bar .num{position:absolute;left:50%;bottom:calc(100% + 2px);transform:translateX(-50%);font-family:'JetBrains Mono',monospace;font-size:.5rem;color:var(--text-dim);white-space:nowrap}
+.hist-axis{
+  grid-column:2;
+  display:grid;grid-template-columns:repeat(9,1fr);gap:5px;
+  font-family:'JetBrains Mono',monospace;font-size:.55rem;color:var(--text-dim);
+  margin-top:.35rem;text-align:center;letter-spacing:.02em;
+}
+.hist-axis-title{font-family:'JetBrains Mono',monospace;font-size:.55rem;color:var(--text-dim);text-align:center;margin-top:.28rem;text-transform:uppercase;letter-spacing:.08em}
+.hist-values{display:grid;grid-template-columns:repeat(9,1fr);gap:5px;margin:.35rem 0 0 40px;font-family:'JetBrains Mono',monospace;font-size:.5rem;color:var(--text-dim);text-align:center}
+.hist-values span{display:block;line-height:1.35}.hist-values .g{color:var(--bull)}.hist-values .b{color:var(--blue)}
+.cum-frame{align-items:start}
+.cum-frame .hist-y-axis{height:142px}
+.cum-plot-col{min-width:0}
+.cum-chart{height:142px;border-left:1px solid rgba(255,255,255,.10);border-top:1px solid rgba(255,255,255,.10);border-bottom:1px solid rgba(255,255,255,.10);background:linear-gradient(to top, rgba(255,255,255,.08) 0 1px, transparent 1px 25%, rgba(255,255,255,.05) 25% calc(25% + 1px), transparent calc(25% + 1px) 50%, rgba(255,255,255,.05) 50% calc(50% + 1px), transparent calc(50% + 1px) 75%, rgba(255,255,255,.05) 75% calc(75% + 1px), transparent calc(75% + 1px));position:relative;overflow:hidden;box-sizing:border-box}
+@media(max-width:760px){.cum-chart{height:284px}.cum-frame .hist-y-axis{height:284px}}
+.cum-chart svg{display:block;width:100%;height:100%}
+.cum-line{fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke}
+.cum-line.beyond{stroke:var(--bull)}
+.cum-line.behind{stroke:var(--blue)}
+.cum-axis{position:relative;height:22px;margin:.35rem 0 0;font-family:'JetBrains Mono',monospace;font-size:.48rem;color:var(--text-dim);letter-spacing:.02em}
+.cum-tick{position:absolute;top:0;transform:translateX(-50%);white-space:nowrap;text-align:center}
+.cum-tick::before{content:'';display:block;width:1px;height:5px;background:rgba(255,255,255,.22);margin:0 auto 2px}
+.cum-slider-wrap{grid-column:2;margin:.55rem 0 0;font-family:'JetBrains Mono',monospace;color:var(--text-dim)}
+.cum-slider-head{display:flex;justify-content:space-between;gap:.75rem;align-items:baseline;font-size:.56rem;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.25rem}
+.cum-slider-val{color:#fff;font-weight:700;min-width:3.2rem;text-align:right}
+.cum-slider-range{padding:0 9px;box-sizing:border-box}
+.cum-slider-track{width:100%;margin:0;accent-color:var(--accent);appearance:none;background:transparent}
+.cum-slider-track::-webkit-slider-runnable-track{height:6px;border-radius:999px;background:linear-gradient(90deg,var(--accent) 0%,var(--accent) var(--slider-pct,0%),rgba(255,255,255,.28) var(--slider-pct,0%),rgba(255,255,255,.28) 100%);border:1px solid rgba(255,255,255,.35)}
+.cum-slider-track::-webkit-slider-thumb{appearance:none;width:18px;height:18px;border-radius:50%;background:var(--accent);border:none;margin-top:-7px;box-shadow:0 0 0 2px rgba(251,191,36,.20)}
+.cum-slider-track::-moz-range-track{height:6px;border-radius:999px;background:rgba(255,255,255,.28);border:1px solid rgba(255,255,255,.35)}
+.cum-slider-track::-moz-range-progress{height:6px;border-radius:999px;background:var(--accent)}
+.cum-slider-track::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--accent);border:none;box-shadow:0 0 0 2px rgba(251,191,36,.20)}
+.cum-slider-ticks{position:relative;height:14px;margin-top:.1rem;padding:0 9px;box-sizing:border-box;font-family:'JetBrains Mono',monospace;font-size:.46rem;color:var(--text-dim)}
+.cum-slider-tick{position:absolute;top:0;transform:translateX(-50%);white-space:nowrap}
+.cum-slider-tick::before{content:'';display:block;width:1px;height:4px;background:rgba(255,255,255,.18);margin:0 auto 1px}
+.cum-slider-help{font-size:.55rem;line-height:1.4;margin-top:.25rem;color:var(--text-dim);text-transform:none;letter-spacing:0}
+.hist-key{
+  display:flex;gap:.85rem;font-family:'JetBrains Mono',monospace;font-size:.62rem;
+  color:var(--text-dim);margin-top:.5rem;
+}
+.hist-key .swatch{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:.3rem;vertical-align:-1px}
+.hist-key .swatch.b1{background:var(--bull)}
+.hist-key .swatch.b2{background:var(--blue)}
+
+/* GG retrace */
+.gg-panel{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1rem 1.1rem;margin-top:.8rem}
+.gg-panel h3{font-family:'JetBrains Mono',monospace;font-size:.9rem;margin:0 0 .35rem;color:var(--text)}
+.gg-note{font-size:.72rem;color:var(--text-dim);line-height:1.55;margin-bottom:.8rem}
+.gg-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.8rem}
+@media(max-width:760px){.gg-grid{grid-template-columns:1fr}}
+.gg-side{background:var(--surface-2);border:1px solid var(--border);border-radius:6px;padding:.8rem}
+.gg-side-title{font-family:'JetBrains Mono',monospace;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin-bottom:.55rem}
+.gg-definition{font-size:.66rem;line-height:1.45;color:var(--text-dim);background:rgba(255,255,255,.035);border:1px solid var(--border);border-radius:5px;padding:.55rem .65rem;margin-bottom:.55rem}
+.gg-definition strong{color:#fff;font-weight:700}
+.gg-row{display:grid;grid-template-columns:1fr auto;gap:.6rem;padding:.5rem 0;border-top:1px dashed var(--border)}
+.gg-row:first-of-type{border-top:none}
+.gg-label{font-size:.72rem;color:var(--text-mid);line-height:1.35}
+.gg-value{font-family:'JetBrains Mono',monospace;font-size:.82rem;font-weight:700;color:var(--text);text-align:right;white-space:nowrap}
+.gg-sub{grid-column:1/-1;font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--text-dim);margin-top:-.25rem}
+
+/* per-level small multiples */
+.smalls{
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(200px, 1fr));
+  gap:.6rem;margin-top:.5rem;
+}
+.smalls-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:8px;
+  padding:.85rem .9rem;
+  cursor:pointer;transition:border-color .15s,transform .15s;
+}
+.smalls-card:hover{border-color:var(--accent);transform:translateY(-1px)}
+.smalls-title{
+  font-family:'JetBrains Mono',monospace;font-size:.85rem;font-weight:700;
+  color:var(--text);margin-bottom:.15rem;
+}
+.smalls-sub{font-size:.66rem;color:var(--text-dim);margin-bottom:.5rem;letter-spacing:.02em}
+.smalls-bars{
+  display:grid;grid-template-columns:repeat(7,1fr);gap:2px;height:48px;align-items:end;
+}
+.smalls-bar{
+  position:relative;height:100%;display:flex;flex-direction:column;justify-content:flex-end;
+  background:var(--surface-2);border-radius:2px;overflow:hidden;
+}
+.smalls-bar .bar-beyond{background:var(--bull);width:100%}
+.smalls-bar .bar-behind{background:var(--blue);width:100%}
+.smalls-bar .bar-last{background:#36383f;width:100%;opacity:.5}
+.smalls-axis{
+  display:grid;grid-template-columns:repeat(7,1fr);gap:2px;
+  font-family:'JetBrains Mono',monospace;font-size:.5rem;color:var(--text-dim);
+  margin-top:.3rem;text-align:center;letter-spacing:.04em;
+}
+
+/* path explorer */
+.path-shell{
+  display:grid;grid-template-columns:1fr 1.05fr;gap:1rem;align-items:start;
+}
+@media(max-width:960px){.path-shell{grid-template-columns:1fr}}
+.path-ladder-wrap{
+  background:var(--surface);border:1px solid var(--border);border-radius:8px;
+  padding:1rem 1.1rem;
+}
+.path-controls{
+  display:flex;flex-wrap:wrap;align-items:center;gap:.4rem;
+  margin-bottom:.85rem;padding-bottom:.85rem;border-bottom:1px dashed var(--border);
+}
+.path-controls .lbl{
+  font-family:'JetBrains Mono',monospace;font-size:.62rem;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);margin-right:.2rem;
+}
+.path-controls button{
+  font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:500;
+  background:var(--surface-2);color:var(--text-mid);border:1px solid var(--border);
+  border-radius:4px;padding:.35rem .7rem;cursor:pointer;transition:all .12s;
+}
+.path-controls button:hover{background:var(--surface-3);color:var(--text);border-color:var(--border-strong)}
+.path-controls button:disabled{opacity:.35;cursor:not-allowed}
+.path-controls button.preset{color:var(--accent);border-color:#3d3200}
+.path-controls button.preset:hover{background:#1a1400;color:var(--accent)}
+
+.path-ladder{
+  display:grid;grid-template-rows:repeat(25, 1fr);
+  gap:1px;background:#0c0e15;border-radius:6px;overflow:hidden;
+  position:relative;
+}
+.rung{
+  display:grid;grid-template-columns:32px 64px 1fr;gap:.4rem;align-items:center;
+  padding:.18rem .55rem;height:22px;
+  background:var(--surface-2);
+  cursor:pointer;transition:background .1s,opacity .15s;
+  font-family:'JetBrains Mono',monospace;font-size:.72rem;
+  user-select:none;
+}
+.rung.pdc{background:#161a25;border-top:1px solid #2a3045;border-bottom:1px solid #2a3045}
+.rung .rung-order{
+  font-weight:700;font-size:.65rem;text-align:center;color:var(--text-dim);
+  border-radius:50%;height:18px;width:18px;display:flex;align-items:center;justify-content:center;
+}
+.rung .rung-label{color:var(--text-mid);font-weight:600;letter-spacing:.02em}
+.rung .rung-bar{
+  height:8px;border-radius:2px;
+  background:linear-gradient(90deg,transparent 0%, transparent 100%);
+  transition:background .2s;
+  position:relative;
+}
+.rung.disabled{opacity:.32;cursor:not-allowed}
+.rung.disabled:hover{background:var(--surface-2)}
+.rung.valid{cursor:pointer;background:#1a2332}
+.rung.valid:hover{background:#243046}
+.rung.valid .rung-label{color:var(--accent)}
+.rung.valid .rung-bar{background:linear-gradient(90deg,rgba(251,191,36,.15) 0%, rgba(251,191,36,0) 80%)}
+.rung.valid::after{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:var(--accent);
+  animation:pulse 1.6s ease-in-out infinite;
+}
+@keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+.rung.visited{background:#10271d}
+.rung.visited .rung-label{color:var(--bull);font-weight:700}
+.rung.visited .rung-order{background:var(--bull);color:#0a1f15}
+.rung.visited.first .rung-order{background:var(--accent);color:#1a1400}
+.rung.visited .rung-bar{background:linear-gradient(90deg,rgba(28,212,138,.5) 0%, rgba(28,212,138,0) 100%)}
+
+.path-trail{
+  display:flex;flex-wrap:wrap;align-items:center;gap:.3rem;
+  margin-top:.85rem;padding-top:.85rem;border-top:1px dashed var(--border);
+  font-family:'JetBrains Mono',monospace;font-size:.78rem;line-height:1.7;
+  min-height:1.7rem;
+}
+.path-trail .step{
+  background:var(--surface-3);color:var(--bull);font-weight:600;
+  padding:.18rem .5rem;border-radius:3px;
+}
+.path-trail .step.start{color:var(--accent);background:#1a1400;border:1px solid #3d3200}
+.path-trail .arrow{color:var(--text-dim);font-size:.7rem}
+.path-trail .empty{color:var(--text-dim);font-style:italic;font-size:.78rem}
+
+.path-stats{
+  background:var(--surface);border:1px solid var(--border);border-radius:8px;
+  padding:1.1rem 1.15rem;position:sticky;top:1rem;
+}
+.path-stats .head{
+  display:flex;align-items:flex-end;justify-content:space-between;gap:1rem;
+  padding-bottom:.85rem;margin-bottom:.85rem;border-bottom:1px solid var(--border);
+}
+.path-stats .head h3{
+  font-family:'JetBrains Mono',monospace;font-size:.95rem;font-weight:700;
+  letter-spacing:.02em;color:var(--text);
+}
+.path-stats .head .sub{font-size:.7rem;color:var(--text-dim);margin-top:.2rem}
+.path-stats .n-badge{
+  font-family:'JetBrains Mono',monospace;font-size:.75rem;
+  background:var(--surface-2);padding:.3rem .65rem;border-radius:4px;
+  color:var(--text);font-weight:600;
+}
+.path-stats .n-badge .frac{color:var(--text-dim);font-weight:400;font-size:.7rem}
+
+.next-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-bottom:1.1rem}
+.next-card{
+  background:var(--surface-2);border:1px solid var(--border);border-radius:6px;
+  padding:.85rem .9rem;position:relative;overflow:hidden;
+}
+.next-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--text-dim)}
+.next-card.up::before{background:var(--bull)}
+.next-card.down::before{background:var(--blue)}
+.next-card.end::before{background:var(--bear)}
+.next-card .pct{
+  font-family:'JetBrains Mono',monospace;font-size:1.45rem;font-weight:700;
+  font-variant-numeric:tabular-nums;line-height:1;margin-bottom:.35rem;
+}
+.next-card.up .pct{color:var(--bull)}
+.next-card.down .pct{color:var(--blue)}
+.next-card.end .pct{color:var(--bear)}
+.next-card .lbl{font-size:.7rem;font-weight:600;color:var(--text)}
+.next-card .target{
+  font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--text-dim);
+  margin-top:.3rem;letter-spacing:.02em;
+}
+.next-card .target .level{color:var(--text);font-weight:600}
+
+.path-empty{
+  color:var(--text-dim);font-size:.84rem;line-height:1.7;text-align:center;padding:2.5rem .8rem;
+}
+.path-empty strong{color:var(--text);font-weight:500;display:block;margin-bottom:.4rem}
+.path-empty .hint{
+  display:inline-block;margin-top:.7rem;padding:.3rem .6rem;
+  background:var(--surface-2);border:1px solid var(--border);border-radius:4px;
+  font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--accent);
+}
+
+.frontier-row{
+  display:grid;grid-template-columns:auto 1fr auto 1fr;gap:.5rem;align-items:center;
+  font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--text-mid);
+  padding:.45rem .25rem;border-top:1px dashed var(--border);
+}
+.frontier-row .lab{color:var(--text-dim);letter-spacing:.04em;text-transform:uppercase;font-size:.62rem;font-weight:500}
+.frontier-row .v{color:var(--text);font-weight:700;text-align:right}
+
+.path-warn{
+  background:var(--bear-bg);border:1px solid #3d2108;border-radius:6px;
+  padding:.6rem .8rem;font-size:.75rem;color:var(--bear);
+  margin-top:.85rem;
+}
+.path-warn strong{color:var(--bear);font-weight:600}
+
+/* table */
+.data-table-wrap{overflow-x:auto;background:var(--surface);border:1px solid var(--border);border-radius:8px}
+.data-table{width:100%;border-collapse:collapse;font-size:.78rem;min-width:880px}
+.data-table th{
+  font-family:'JetBrains Mono',monospace;font-size:.6rem;font-weight:500;
+  letter-spacing:.06em;text-transform:uppercase;color:var(--text-dim);text-align:right;
+  padding:.7rem .65rem;border-bottom:1px solid var(--border);white-space:nowrap;
+  background:var(--surface-2);position:sticky;top:0;z-index:1;
+}
+.data-table th:first-child{text-align:left}
+.data-table td{
+  padding:.55rem .65rem;border-bottom:1px solid #151820;
+  text-align:right;font-variant-numeric:tabular-nums;color:var(--text-mid);
+}
+.data-table td:first-child{
+  text-align:left;color:var(--text);font-weight:500;
+  font-family:'JetBrains Mono',monospace;
+}
+.data-table th:nth-child(2),.data-table td:nth-child(2){text-align:left}
+.level-name{color:var(--text-dim);font-size:.72rem;white-space:nowrap}
+.data-table tr.atr-negative td:first-child{color:#ef4444}
+.data-table tr.atr-negative td{background:rgba(239,68,68,.035)}
+.data-table tr:hover td{background:rgba(255,255,255,.02)}
+.data-table tr.atr-negative:hover td{background:rgba(239,68,68,.075)}
+.pct{font-family:'JetBrains Mono',monospace;font-weight:700}
+.pct.bull{color:var(--bull)}
+.pct.bear{color:var(--bear)}
+.pct.blue{color:var(--blue)}
+.pct.accent{color:var(--accent)}
+.pct.dim{color:var(--text-dim)}
+
+/* methodology */
+.method-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:.6rem;
+  font-size:.85rem;color:var(--text-mid);line-height:1.6;
+}
+@media(max-width:760px){.method-grid{grid-template-columns:1fr}}
+.method-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1rem 1.1rem;
+}
+.method-card strong{color:var(--text);font-weight:500;display:block;margin-bottom:.3rem}
+.method-card code{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--accent)}
+
+.footer{
+  text-align:center;font-size:.72rem;color:var(--text-dim);
+  line-height:1.7;margin-top:3rem;padding-top:1.5rem;
+  border-top:1px solid var(--border);
+}
+.footer a{color:var(--text-dim);text-decoration:underline;text-underline-offset:2px}
+.back{
+  display:inline-block;font-family:'JetBrains Mono',monospace;font-size:.7rem;
+  letter-spacing:.05em;color:var(--accent);text-decoration:none;
+  border-bottom:1px dotted var(--accent);margin-top:.6rem;
+}
+@media(max-width:760px){
+  .page{padding:2rem 1rem 4rem}
+  h1{font-size:1.85rem}
+  .bigstat,.setup-strip{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+<script src="/nav.js"></script>
+</head>
+<body>
+
+<div class="page">
+
+  <div class="draft">
+    <strong>DRAFT.</strong> First version of a level-cascade explorer. Methodology is solid (3-min RTH bars, 25-year sample, no look-ahead) but not yet stress-tested for regime-stratification or distinct ATR-environment buckets. Treat the numbers as a useful map, not a final answer.
+  </div>
+
+  <div class="hero">
+    <div class="kicker">level-to-level &middot; <span data-stat="days">loading days</span> &middot; <span data-stat="events">loading events</span></div>
+    <h1>Once you hit a level, where does <em>price go next?</em></h1>
+    <p class="lede">
+      For every first-touch of an ATR level during regular hours since 2000, we ask: was the next adjacent level reached the one <strong>further out</strong> (continuation) or the one <strong>closer to PDC</strong> (retrace)? Filterable by the hour of day the level was first hit.
+    </p>
+  </div>
+
+  <!-- BIG STATS -->
+  <div class="section">
+    <div class="bigstat">
+      <div class="bigstat-item bull">
+        <div class="bigstat-num bull" data-stat="p-beyond">--</div>
+        <div class="bigstat-label">Continue to next level (overall)<br><span data-stat="events-label">loading events</span></div>
+      </div>
+      <div class="bigstat-item blue">
+        <div class="bigstat-num blue" data-stat="p-behind">--</div>
+        <div class="bigstat-label">Retrace to prior level (overall)</div>
+      </div>
+      <div class="bigstat-item bear">
+        <div class="bigstat-num bear" data-stat="p-last">--</div>
+        <div class="bigstat-label">No further adjacent move<br>(level was day's last)</div>
+      </div>
+      <div class="bigstat-item accent">
+        <div class="bigstat-num accent" data-stat="median-next">--</div>
+        <div class="bigstat-label">Median time to next adjacent level</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SETUP -->
+  <div class="section">
+    <div class="section-label"><span>Setup</span><span class="right">25y SPY · 3-min RTH bars · ind_3m</span></div>
+    <div class="setup-strip">
+      <div class="setup-step">
+        <div class="setup-num">01</div>
+        <div class="setup-title">Watch the ladder</div>
+        <div class="setup-desc">25 public rungs from -2 ATR through PDC up to +2 ATR. Hidden ±2.236 sentinel rungs are used only to measure whether ±2.00 continues beyond the displayed ladder.</div>
+      </div>
+      <div class="setup-step">
+        <div class="setup-num">02</div>
+        <div class="setup-title">First touch only</div>
+        <div class="setup-desc">For each RTH session, mark the first 3-min bar that touches each level. Earlier hits don't count again.</div>
+      </div>
+      <div class="setup-step">
+        <div class="setup-num">03</div>
+        <div class="setup-title">Watch the next move</div>
+        <div class="setup-desc">From that first hit, look forward. Did price reach the next level out (away from PDC) or back (toward PDC) first?</div>
+      </div>
+      <div class="setup-step">
+        <div class="setup-num">04</div>
+        <div class="setup-title">Slice by hour</div>
+        <div class="setup-desc">Bucket events by the hour the first hit occurred. 09:30 triggers behave very differently from 15:00 triggers. <a href="/atr-levels-probabilities-spy.html" style="color:var(--accent);font-weight:600">Static Saty chart</a>.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INTERACTIVE -->
+  <div class="section">
+    <div class="section-label"><span>Explorer &mdash; click any cell</span><span class="right">columns = hour of first hit · rows = ATR level</span></div>
+    <p class="prose">
+      The grid below has one row per ATR level (lower at top, higher at bottom; PDC omitted as origin). Each cell is a (level, hour-bucket) cohort. Click any cell to load its full breakdown on the right: outcome distribution, time-to-next-level, and a 9-bin histogram of how fast the next level arrives. Use the toggle to color the heatmap by which outcome you care about. Striped cells have <strong>n &lt; 50</strong>.
+    </p>
+
+    <div class="controls">
+      <span class="control-label">color by</span>
+      <div class="toggle" id="metric-toggle">
+        <button class="active beyond" data-metric="p_beyond">% beyond</button>
+        <button data-metric="p_behind">% behind</button>
+        <button data-metric="p_last">% last</button>
+      </div>
+    </div>
+
+    <div class="explore-shell">
+      <div>
+        <div class="heatmap-wrap">
+          <div class="heatmap" id="heatmap"></div>
+        </div>
+        <div class="legend">
+          <span class="lo">0%</span>
+          <span class="gradient" id="legend-grad"></span>
+          <span class="hi" id="legend-hi">100%</span>
+          <span style="margin-left:1.2rem">striped = n &lt; 50</span>
+        </div>
+      </div>
+      <div class="detail" id="detail">
+        <div class="detail-empty">
+          <strong>Click any cell to inspect</strong>
+          See the outcome breakdown, average and median time to next level, and a histogram of how quickly the next level arrives.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PATH EXPLORER -->
+  <div class="section">
+    <div class="section-label"><span>Path explorer &mdash; walk adjacent levels</span><span class="right">conditional on the chronological adjacent-level path</span></div>
+    <p class="prose">
+      Click a starting level on the ladder. After each pick, the two adjacent rungs around the current level become live. This includes revisits, so a move from +1.00 back to +0.786 counts as the immediate retrace instead of requiring a full retrace through PDC. The stats panel shows the conditional probability that the next adjacent move is up vs. down vs. end-of-day, given days whose adjacent-walk prefix matches yours.
+    </p>
+    <p class="prose">
+      Try the <strong style="color:var(--accent)">Up to +1 ATR</strong> preset to load the path <code>PDC &rarr; +0.236 &rarr; +0.382 &rarr; +0.50 &rarr; +0.618 &rarr; +0.786 &rarr; +1.00</code>. From there, the down/retrace side is now <code>+0.786</code>, and you can keep walking all the way back toward call trigger, PDC, or back up to GG Open.
+    </p>
+
+    <div class="path-shell">
+      <div class="path-ladder-wrap">
+        <div class="path-controls">
+          <span class="lbl">controls</span>
+          <button id="path-undo" disabled>&larr; Undo</button>
+          <button id="path-reset" disabled>Reset</button>
+          <span class="lbl" style="margin-left:.4rem">presets</span>
+          <button class="preset" data-preset="up1">Up to +1 ATR</button>
+          <button class="preset" data-preset="down1">Down to -1 ATR</button>
+          <button class="preset" data-preset="trig-only">Just call trigger</button>
+          <button class="preset" data-preset="gg-up">GG entry up</button>
+        </div>
+        <div class="path-ladder" id="path-ladder"></div>
+        <div class="path-trail" id="path-trail"><span class="empty">No path yet &mdash; click a starting level on the ladder</span></div>
+      </div>
+
+      <div class="path-stats" id="path-stats">
+        <div class="path-empty">
+          <strong>Click a starting level to begin</strong>
+          The first level you click becomes step <span style="color:var(--accent)">①</span>. After that, only adjacent rungs light up, including revisits/retraces.
+          <span class="hint">try a preset above ↑</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GG RETRACE STUDY -->
+  <div class="section">
+    <div class="section-label"><span>Golden Gate retrace check</span><span class="right">GG open → completion, split by trigger retest</span></div>
+    <p class="prose">
+      This panel answers the retouch question directly: after price hits the trigger and then opens the GG at ±0.382, does a retrace back to the trigger before ±0.618 change the odds of completing the Golden Gate? Once a GG opens, it remains open for the rest of that RTH session.
+    </p>
+    <div class="gg-panel" id="gg-retrace-panel"></div>
+  </div>
+
+  <!-- PER-LEVEL SMALL MULTIPLES -->
+  <div class="section">
+    <div class="section-label"><span>Per-level &mdash; outcome stack by hour</span><span class="right">click a card to highlight that level above</span></div>
+    <p class="prose">
+      Each card shows a level. Bars are stacked: <span style="color:var(--bull)">green = continuation</span>, <span style="color:var(--blue)">blue = retrace</span>, gray = level was last. Reading these top-to-bottom tells you the time-of-day shape for that level. The triggers (±0.236) flip from continuation-dominant in the morning to balanced midday and last-dominant near the close.
+    </p>
+    <div class="smalls" id="smalls"></div>
+  </div>
+
+  <!-- TABLE -->
+  <div class="section">
+    <div class="section-label"><span>Full data table</span><span class="right">all (level, hour) cells &middot; sortable below by clicking a header</span></div>
+    <div class="data-table-wrap">
+      <table class="data-table" id="full-table">
+        <thead>
+          <tr>
+            <th>Level</th><th>Name</th><th>Hour</th><th>N</th>
+            <th>%Beyond</th><th>%Behind</th><th>%Last</th><th>%Ambig</th>
+            <th>Avg→Bey min</th><th>Med→Bey</th>
+            <th>Avg→Beh min</th><th>Med→Beh</th>
+          </tr>
+        </thead>
+        <tbody id="full-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- METHODOLOGY -->
+  <div class="section">
+    <div class="section-label"><span>How "next adjacent level" is defined</span></div>
+    <div class="method-grid">
+      <div class="method-card">
+        <strong>Touch rule for first-hit</strong>
+        Upper-side level <code>L</code>: first 3-min bar where <code>high &ge; L</code>. Lower-side: <code>low &le; L</code>. PDC: <code>low &le; PDC &le; high</code>. Gaps over a level still register as a hit at the opening bar.
+      </div>
+      <div class="method-card">
+        <strong>Continuation (beyond)</strong>
+        Upper-side: next bar with <code>high &ge; L<sub>i+1</sub></code>. Lower-side: <code>low &le; L<sub>i-1</sub></code>. "Beyond" always means further from PDC.
+      </div>
+      <div class="method-card">
+        <strong>Retrace (behind)</strong>
+        Upper-side: next bar with <code>low &le; L<sub>i-1</sub></code> (price retreats toward PDC). Lower-side: <code>high &ge; L<sub>i+1</sub></code>. The "behind" target may or may not have been hit earlier in the day &mdash; we only need price to revisit that level after the origin.
+      </div>
+      <div class="method-card">
+        <strong>Last / ambiguous</strong>
+        <em>Last</em> = neither adjacent level reached again before 15:59. <em>Ambiguous</em> = continuation and retrace both first occurred in the same 3-min bar (a wide whipsaw that crossed both levels in the same window).
+      </div>
+    </div>
+  </div>
+
+  <!-- READING -->
+  <div class="section">
+    <div class="section-label"><span>Reading the map</span></div>
+    <p class="prose">
+      <strong>Open hour is the cleanest.</strong> The 09:30&ndash;10:00 column is dominated by green: 76% continuation at +0.236 (call trigger), 78% at -0.236 (put trigger), 70% at -0.618. Early breaks of any level rarely retrace.
+    </p>
+    <p class="prose">
+      <strong>Late day is dominated by "last".</strong> The 15:00&ndash;16:00 column lights up red across every level. The session simply runs out of time; whatever level fired in the final hour is most likely the day's terminal level.
+    </p>
+    <p class="prose">
+      <strong>0.382 is sticky on both sides.</strong> Both +0.382 and -0.382 retrace more often than they continue overall (49% behind / 41% beyond on the call side; 42% behind / 55% beyond on the put side, slightly less sticky). The Golden-Gate <em>entry</em> rung tends to fade back to the trigger before pushing through to 0.50/0.618.
+    </p>
+    <p class="prose">
+      <strong>0.618 is a magnet.</strong> Once price reaches Golden-Gate completion, the next-out hit-rate climbs back to ~57% (on the upper side) &mdash; meaningfully higher than 0.382. If a Bilbo setup has cleared 0.618, momentum to 0.786 is more reliable than the entry hop was.
+    </p>
+    <p class="prose">
+      <strong>Extension extremes resolve fast.</strong> Time-to-retrace at &plusmn;1.50&ndash;1.786 is single-digit minutes &mdash; once price tags an extension, the snap-back to the previous level usually arrives within one or two bars. Events are rare but the tape doesn't sit still up there.
+    </p>
+  </div>
+
+  <a class="back" href="/drafts.html">&larr; back to drafts</a>
+
+  <div class="footer">
+    Data: 25 years of SPY 1-minute bars (Jan 2000 &ndash; Oct 2025) aggregated to 3-minute RTH (09:30&ndash;15:59 ET).<br>
+    Source: <code>backtest_atr_cascade.py</code>. Indicator definitions:
+    <a href="https://satyland.com" target="_blank">satyland.com</a>.
+    <br>
+    <a href="/">&larr; back to milkman</a>
+  </div>
+</div>
+
+<script>
+const DATA_URL = '/data/atr-cascade.json';
+
+const HOUR_LABELS = ['ALL', '09:30-10:00', '10:00-11:00', '11:00-12:00', '12:00-13:00', '13:00-14:00', '14:00-15:00', '15:00-16:00'];
+const HOUR_SHORT  = ['All',  '09:30',       '10:00',       '11:00',       '12:00',       '13:00',       '14:00',       '15:00'];
+
+let DATA = null;
+let CURRENT_METRIC = 'p_beyond';
+let CURRENT_KEY = null; // "level||hour"
+let HIST_MODE = 'bucket'; // bucket | cumulative
+let HIST_CUTOFF_MIN = 0;
+
+// utility
+function fmtPct(x) { return x === null || x === undefined ? '—' : (x*100).toFixed(1) + '%'; }
+function fmtMin(x) { return x === null || x === undefined ? '—' : Math.round(x) + 'm'; }
+function fmtN(n)   { return n.toLocaleString(); }
+function levelName(level) { return (DATA && DATA.metadata.level_names && DATA.metadata.level_names[level]) ? DATA.metadata.level_names[level] : ''; }
+function levelLabel(level) { const name = levelName(level); return name ? `${level} · ${name}` : level; }
+
+function heatmapHue(metric, level) {
+  // Directional coloring: upper ATR rows are green/blue/orange by metric;
+  // lower ATR rows are always red shades so downside levels cannot read as bullish green.
+  if (level && level.startsWith('-')) return 0;       // red for negative ATR rows
+  if (metric === 'p_beyond') return 154;              // green
+  if (metric === 'p_behind') return 198;              // blue
+  if (metric === 'p_last')   return 28;               // orange
+  return 0;
+}
+function heatmapIntensity(p) {
+  const x = Math.max(0, Math.min(1, p || 0));
+  // Deliberate threshold bands:
+  // <40% very dark, 40-60% muted, >60% bright, >70% super bright.
+  if (x < 0.40) return 0.08 + (x / 0.40) * 0.16;
+  if (x < 0.60) return 0.28 + ((x - 0.40) / 0.20) * 0.18;
+  if (x < 0.70) return 0.62 + ((x - 0.60) / 0.10) * 0.15;
+  return 0.86 + ((x - 0.70) / 0.30) * 0.14;
+}
+function colorFor(metric, p, level) {
+  if (p === null || p === undefined) return '#0a0c11';
+  const t = heatmapIntensity(p);
+  const hue = heatmapHue(metric, level);
+  const sat = 45 + 55 * t;
+  const light = 7 + 59 * t;
+  return `hsl(${hue} ${sat.toFixed(0)}% ${light.toFixed(0)}%)`;
+}
+function textColorFor(p) {
+  if (p === null || p === undefined) return '#7d8aa3';
+  const t = heatmapIntensity(p);
+  return t >= 0.58 ? '#050809' : (t >= 0.30 ? '#f4f7fb' : '#8b96ad');
+}
+function setLegendColor(metric) {
+  const grad = document.getElementById('legend-grad');
+  const hi = document.getElementById('legend-hi');
+  let pos = '154';
+  if (metric === 'p_behind') pos = '198';
+  else if (metric === 'p_last') pos = '28';
+  grad.style.background = `linear-gradient(90deg,#0c0e15 0%, hsl(${pos} 95% 58%) 48%, #222 50%, hsl(0 95% 58%) 100%)`;
+  hi.textContent = '100% · upper hue / lower red';
+}
+
+function indexCells(cells) {
+  const idx = {};
+  for (const c of cells) idx[c.level + '||' + c.hour_bucket] = c;
+  return idx;
+}
+
+function buildHeatmap() {
+  const grid = document.getElementById('heatmap');
+  grid.innerHTML = '';
+  const ladder = DATA.metadata.ladder;
+  const buckets = ['ALL', ...DATA.metadata.hour_buckets];
+  const cells = DATA.cellIdx;
+
+  // header row
+  grid.appendChild(elem('div', '', ''));
+  for (let i = 0; i < buckets.length; i++) {
+    grid.appendChild(elem('div', 'col-head', HOUR_SHORT[i]));
+  }
+
+  // data rows: render LADDER from high to low so upper levels are on top
+  // (skip PDC; place a divider visually with class)
+  const orderedLevels = ladder.slice().reverse();
+  for (const lvl of orderedLevels) {
+    if (lvl === 'PDC') {
+      grid.appendChild(elem('div', 'row-head pdc-side', 'PDC'));
+      for (let i = 0; i < buckets.length; i++) {
+        grid.appendChild(elem('div', 'cell empty', '—'));
+      }
+      continue;
+    }
+    const isUpper = lvl.startsWith('+');
+    grid.appendChild(elem('div', 'row-head ' + (isUpper ? 'upper' : 'lower'), lvl));
+
+    for (const hb of buckets) {
+      const c = cells[lvl + '||' + hb];
+      if (!c || c.n === 0) {
+        grid.appendChild(elem('div', 'cell empty', '·'));
+        continue;
+      }
+      const v = c[CURRENT_METRIC];
+      const cell = document.createElement('div');
+      cell.className = 'cell ' + (isUpper ? 'upper-cell' : 'lower-cell') + (c.n < 50 ? ' lown' : '') + (hb === 'ALL' ? ' all' : '');
+      cell.dataset.key = lvl + '||' + hb;
+      cell.style.background = colorFor(CURRENT_METRIC, v, lvl);
+      cell.style.color = '#ffffff';
+      cell.textContent = v === null ? '—' : Math.round(v*100);
+      cell.title = `${levelLabel(lvl)} · ${hb}\nN=${c.n}\n` +
+        `Beyond ${fmtPct(c.p_beyond)} · Behind ${fmtPct(c.p_behind)} · Last ${fmtPct(c.p_last)}`;
+      cell.addEventListener('click', () => selectCell(lvl, hb));
+      if (CURRENT_KEY === lvl + '||' + hb) cell.classList.add('selected');
+      grid.appendChild(cell);
+    }
+  }
+}
+
+function elem(tag, cls, txt) {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (txt !== undefined) e.textContent = txt;
+  return e;
+}
+
+function selectCell(level, hour) {
+  CURRENT_KEY = level + '||' + hour;
+  // Render detail first so older/mobile browsers cannot leave the panel blank if
+  // selection-ring styling hits a browser compatibility issue.
+  renderDetail(level, hour);
+  // Avoid native selector escaping: some in-app mobile browsers do not support it.
+  document.querySelectorAll('.heatmap .cell').forEach(c => {
+    c.classList.remove('selected');
+    if (c.dataset.key === CURRENT_KEY) c.classList.add('selected');
+  });
+}
+
+function setHistMode(mode) {
+  HIST_MODE = mode;
+  if (CURRENT_KEY) {
+    const [level, hour] = CURRENT_KEY.split('||');
+    renderDetail(level, hour);
+  }
+}
+
+function setHistCutoff(value) {
+  HIST_CUTOFF_MIN = Math.max(0, Math.min(360, Number(value) || 0));
+  if (CURRENT_KEY) {
+    const [level, hour] = CURRENT_KEY.split('||');
+    renderDetail(level, hour);
+  }
+}
+
+function histEdges(labels) {
+  const edges = DATA.metadata.hist_edges || [0,3,6,12,24,45,90,180,360];
+  return labels.map((_, i) => {
+    const lo = edges[i] ?? 0;
+    const hi = edges[i + 1] ?? null;
+    return {lo, hi};
+  });
+}
+
+function binShareInRange(lo, hi, start, end) {
+  if (hi === null) return start <= lo && end > lo ? 1 : 0;
+  const a = Math.max(lo, start);
+  const b = Math.min(hi, end);
+  return Math.max(0, b - a) / Math.max(1e-9, hi - lo);
+}
+
+function countBeforeMinute(counts, labels, minute) {
+  return histEdges(labels).reduce((sum, edge, i) => {
+    return sum + counts[i] * binShareInRange(edge.lo, edge.hi, 0, minute);
+  }, 0);
+}
+
+function countBetweenMinutes(counts, labels, start, end) {
+  return histEdges(labels).reduce((sum, edge, i) => {
+    return sum + counts[i] * binShareInRange(edge.lo, edge.hi, start, end);
+  }, 0);
+}
+
+function minuteTicks(maxMinute, step = 3) {
+  const ticks = [];
+  const visibleMax = Math.min(60, maxMinute);
+  for (let t = 0; t <= visibleMax; t += step) ticks.push(t);
+  if (ticks[ticks.length - 1] !== visibleMax) ticks.push(visibleMax);
+  return ticks;
+}
+
+function pctPos(value, maxValue) {
+  return maxValue ? (value / maxValue) * 100 : 0;
+}
+
+function linePoints(vals, maxY = 100) {
+  const w = 100, h = 100;
+  const n = Math.max(1, vals.length - 1);
+  const scale = Math.max(1, maxY);
+  return vals.map((v,i) => `${(i/n*w).toFixed(2)},${(h - (Math.max(0, Math.min(scale, v)) / scale) * h).toFixed(2)}`).join(' ');
+}
+
+function renderMinuteAxis(ticks, maxMinute, cls, includeFinal = false) {
+  const allTicks = includeFinal ? [...ticks, maxMinute] : ticks;
+  const n = Math.max(1, allTicks.length - 1);
+  return allTicks.map((t, i) => {
+    const showLabel = includeFinal && i === allTicks.length - 1 ? 'final' : String(t);
+    return `<span class="${cls}" style="left:${(i / n * 100).toFixed(3)}%">${showLabel}</span>`;
+  }).join('');
+}
+
+function renderCumulativeChart(labels, beyondCounts, behindCounts, cohortN) {
+  const edges = DATA.metadata.hist_edges || [0,3,6,12,24,45,90,180,360];
+  const maxMinute = edges[edges.length - 1] || 360;
+  const sliderMax = Math.min(60, maxMinute);
+  const cutoff = Math.max(0, Math.min(sliderMax, HIST_CUTOFF_MIN));
+  const ticks = minuteTicks(maxMinute, 3);
+  const chartPoints = [...ticks, maxMinute];
+  const beforeBeyond = countBeforeMinute(beyondCounts, labels, cutoff);
+  const beforeBehind = countBeforeMinute(behindCounts, labels, cutoff);
+  const survivors = Math.max(0, cohortN - beforeBeyond - beforeBehind);
+  const beyondCum = chartPoints.map(t => survivors ? (countBetweenMinutes(beyondCounts, labels, cutoff, Math.min(maxMinute, cutoff + t)) / survivors) * 100 : 0);
+  const behindCum = chartPoints.map(t => survivors ? (countBetweenMinutes(behindCounts, labels, cutoff, Math.min(maxMinute, cutoff + t)) / survivors) * 100 : 0);
+  const finalBeyond = beyondCum[beyondCum.length - 1] || 0;
+  const finalBehind = behindCum[behindCum.length - 1] || 0;
+  const maxLine = Math.max(finalBeyond, finalBehind, ...beyondCum, ...behindCum);
+  const yMax = Math.min(100, Math.max(10, Math.ceil((maxLine + 4) / 10) * 10));
+  const yMid = Math.round(yMax / 2);
+  const sliderValue = Math.round(cutoff / 3) * 3;
+  const sliderPct = sliderMax ? (sliderValue / sliderMax) * 100 : 0;
+  const axis = renderMinuteAxis(ticks, maxMinute, 'cum-tick', true);
+  const sliderTicks = renderMinuteAxis(ticks, sliderMax, 'cum-slider-tick', false);
+  return `
+    <div class="hist-scale-note">conditional cumulative from ${Math.round(cutoff)} min · y-axis 0-${yMax}% · final G ${Math.round(finalBeyond)}% / B ${Math.round(finalBehind)}%</div>
+    <div class="hist-frame cum-frame">
+      <div class="hist-y-axis"><span class="top">${yMax}%</span><span class="mid">${yMid}%</span><span class="bottom">0%</span></div>
+      <div class="cum-plot-col">
+        <div class="cum-chart">
+          <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-label="Conditional cumulative time-to-next probability lines">
+            <polyline class="cum-line beyond" points="${linePoints(beyondCum, yMax)}"></polyline>
+            <polyline class="cum-line behind" points="${linePoints(behindCum, yMax)}"></polyline>
+          </svg>
+        </div>
+        <div class="cum-axis">${axis}</div>
+      </div>
+      <div class="cum-slider-wrap">
+        <div class="cum-slider-head"><span>condition from</span><span class="cum-slider-val">${Math.round(cutoff)} min</span></div>
+        <div class="cum-slider-range"><input class="cum-slider-track" style="--slider-pct:${sliderPct.toFixed(3)}%" type="range" min="0" max="${sliderMax}" step="3" value="${sliderValue}" oninput="setHistCutoff(this.value)" aria-label="Conditional cumulative start minute"></div>
+        <div class="cum-slider-ticks">${sliderTicks}</div>
+        <div class="cum-slider-help">Given neither continuation nor retrace has occurred by the slider minute, both lines restart from x=0 / y=0. The x-axis uses 3-minute ticks through +60, then one final endpoint showing the full remaining-session cumulative probability.</div>
+      </div>
+    </div>
+    <div class="hist-axis-title">minutes forward after selected condition point</div>`;
+}
+
+function renderBucketChart(labels, bars, values, yTop) {
+  const axis = labels.map(l => `<span>${l}</span>`).join('');
+  return `
+    <div class="hist-scale-note">bucket probability, % of full cohort · scale: 0-${yTop}%</div>
+    <div class="hist-frame">
+      <div class="hist-y-axis"><span class="top">${yTop}%</span><span class="mid">${Math.round(yTop/2)}%</span><span class="bottom">0%</span></div>
+      <div class="hist">${bars}</div>
+      <div class="hist-axis">${axis}</div>
+    </div>
+    <div class="hist-axis-title">minutes to next adjacent level</div>
+    <div class="hist-values">${values}</div>`;
+}
+
+function renderDetail(level, hour) {
+  const c = DATA.cellIdx[level + '||' + hour];
+  const det = document.getElementById('detail');
+  if (!c || c.n === 0) {
+    det.innerHTML = '<div class="detail-empty"><strong>No events</strong>This (level, hour) cohort is empty.</div>';
+    return;
+  }
+  const hist = (DATA.hist[level] && DATA.hist[level][hour]) ? DATA.hist[level][hour] : null;
+  const labels = DATA.metadata.hist_labels;
+  const beyondCounts = hist ? hist.beyond : labels.map(_=>0);
+  const behindCounts = hist ? hist.behind : labels.map(_=>0);
+  const beyondTotal = beyondCounts.reduce((a,b)=>a+b,0);
+  const behindTotal = behindCounts.reduce((a,b)=>a+b,0);
+  // Bucket mode and cumulative mode must use the same denominator: the full cohort.
+  // Earlier this used separate outcome-normalized denominators, which made retraces
+  // look larger in later buckets even when raw next-level probability was still higher.
+  const beyondPct = beyondCounts.map(v => c.n ? (v / c.n) * 100 : 0);
+  const behindPct = behindCounts.map(v => c.n ? (v / c.n) * 100 : 0);
+  const maxPct = Math.max(1, ...beyondPct, ...behindPct);
+  const yTop = Math.ceil((maxPct + 1) / 5) * 5;
+
+  const isLowN = c.n < 50;
+  const lowFlag = isLowN ? `<span style="color:var(--bear);margin-left:.5rem;font-size:.65rem">⚠ low n</span>` : '';
+  const hourLabel = hour === 'ALL' ? 'all hours' : hour;
+
+  let bars = '';
+  for (let i = 0; i < labels.length; i++) {
+    const b1 = beyondCounts[i], b2 = behindCounts[i];
+    const p1 = beyondPct[i], p2 = behindPct[i];
+    const h1 = (p1 / yTop) * 100;
+    const h2 = (p2 / yTop) * 100;
+    const n1 = p1 >= 8 ? `${Math.round(p1)}%` : '';
+    const n2 = p2 >= 8 ? `${Math.round(p2)}%` : '';
+    bars += `<div class="hist-bin" title="${labels[i]} min · next ${b1} (${p1.toFixed(1)}% of cohort) · retrace ${b2} (${p2.toFixed(1)}% of cohort)"><div class="bar beyond" style="height:${h1}%"><span class="num">${n1}</span></div><div class="bar behind" style="height:${h2}%"><span class="num">${n2}</span></div></div>`;
+  }
+  const values = labels.map((l, i) => `<div><span class="g">G ${Math.round(beyondPct[i])}%</span><span class="b">B ${Math.round(behindPct[i])}%</span></div>`).join('');
+  const histBody = HIST_MODE === 'cumulative'
+    ? renderCumulativeChart(labels, beyondCounts, behindCounts, c.n)
+    : renderBucketChart(labels, bars, values, yTop);
+
+  det.innerHTML = `
+    <div class="detail-head">
+      <div>
+        <div class="detail-title">${levelLabel(level)}<span style="color:var(--text-dim);font-weight:400">  ·  </span><span style="color:var(--accent)">${hourLabel}</span></div>
+        <div class="detail-sub">first hit during ${hourLabel === 'all hours' ? 'any RTH hour' : hourLabel + ' ET'} ${lowFlag}</div>
+      </div>
+      <div class="detail-n">N = ${fmtN(c.n)}</div>
+    </div>
+
+    <div class="outcome-grid">
+      <div class="outcome-card beyond">
+        <div class="outcome-pct beyond">${fmtPct(c.p_beyond)}</div>
+        <div class="outcome-label">Beyond (continuation)</div>
+        <div class="outcome-sub">price reaches the next level further from PDC</div>
+      </div>
+      <div class="outcome-card behind">
+        <div class="outcome-pct behind">${fmtPct(c.p_behind)}</div>
+        <div class="outcome-label">Behind (retrace)</div>
+        <div class="outcome-sub">price returns to the next level toward PDC</div>
+      </div>
+      <div class="outcome-card last">
+        <div class="outcome-pct last">${fmtPct(c.p_last)}</div>
+        <div class="outcome-label">Last</div>
+        <div class="outcome-sub">no further adjacent move before close</div>
+      </div>
+      <div class="outcome-card ambig">
+        <div class="outcome-pct ambig">${fmtPct(c.p_ambig)}</div>
+        <div class="outcome-label">Ambiguous</div>
+        <div class="outcome-sub">both adjacent levels in same 3-min bar</div>
+      </div>
+    </div>
+
+    <h4>Time to next adjacent level</h4>
+    <div class="tt-row"><span class="lab">→ Beyond</span><span class="v">avg ${fmtMin(c.avg_min_to_beyond)}</span><span class="v">med ${fmtMin(c.med_min_to_beyond)}</span></div>
+    <div class="tt-row"><span class="lab">→ Behind</span><span class="v">avg ${fmtMin(c.avg_min_to_behind)}</span><span class="v">med ${fmtMin(c.med_min_to_behind)}</span></div>
+
+    <div class="hist-title-row">
+      <h4>Time-to-next distribution (minutes)</h4>
+      <div class="hist-toggle" aria-label="Time-to-next chart mode">
+        <button class="${HIST_MODE === 'bucket' ? 'active' : ''}" onclick="setHistMode('bucket')">bucket</button>
+        <button class="${HIST_MODE === 'cumulative' ? 'active' : ''}" onclick="setHistMode('cumulative')">cumulative</button>
+      </div>
+    </div>
+    <div class="hist-panel">
+      ${histBody}
+      <div class="hist-key">
+        <span><span class="swatch b1"></span>G = continuation, n=${fmtN(beyondTotal)}</span>
+        <span><span class="swatch b2"></span>B = retrace, n=${fmtN(behindTotal)}</span>
+      </div>
+    </div>
+  `;
+}
+
+function buildSmalls() {
+  const root = document.getElementById('smalls');
+  root.innerHTML = '';
+  const ladder = DATA.metadata.ladder;
+  const buckets = DATA.metadata.hour_buckets;
+
+  // High to low
+  const ordered = ladder.slice().reverse().filter(l => l !== 'PDC');
+
+  for (const lvl of ordered) {
+    const all = DATA.cellIdx[lvl + '||ALL'];
+    if (!all || all.n === 0) continue;
+
+    const card = document.createElement('div');
+    card.className = 'smalls-card';
+    card.addEventListener('click', () => selectCell(lvl, 'ALL'));
+
+    let bars = '';
+    for (const hb of buckets) {
+      const c = DATA.cellIdx[lvl + '||' + hb];
+      if (!c || c.n === 0) {
+        bars += `<div class="smalls-bar"></div>`;
+        continue;
+      }
+      const beyondPct = (c.p_beyond * 100).toFixed(1);
+      const behindPct = (c.p_behind * 100).toFixed(1);
+      const lastPct   = (c.p_last   * 100).toFixed(1);
+      bars += `<div class="smalls-bar" title="${hb} · n=${c.n}\nbeyond ${beyondPct}% · behind ${behindPct}% · last ${lastPct}%"><div class="bar-last" style="height:${lastPct}%"></div><div class="bar-behind" style="height:${behindPct}%"></div><div class="bar-beyond" style="height:${beyondPct}%"></div></div>`;
+    }
+    const axis = ['09:30','10','11','12','13','14','15'].map(t => `<span>${t}</span>`).join('');
+
+    card.innerHTML = `
+      <div class="smalls-title">${levelLabel(lvl)}</div>
+      <div class="smalls-sub">n=${fmtN(all.n)} · ${(all.p_beyond*100).toFixed(0)}% beyond overall</div>
+      <div class="smalls-bars">${bars}</div>
+      <div class="smalls-axis">${axis}</div>
+    `;
+    root.appendChild(card);
+  }
+}
+
+function buildTable() {
+  const tbody = document.getElementById('full-tbody');
+  tbody.innerHTML = '';
+  const ladder = DATA.metadata.ladder;
+  const buckets = ['ALL', ...DATA.metadata.hour_buckets];
+
+  const ordered = ladder.slice().reverse().filter(l => l !== 'PDC');
+  for (const lvl of ordered) {
+    for (const hb of buckets) {
+      const c = DATA.cellIdx[lvl + '||' + hb];
+      if (!c) continue;
+      if (c.n === 0) continue;
+      const tr = document.createElement('tr');
+      if (lvl.startsWith('-')) tr.classList.add('atr-negative');
+      tr.innerHTML = `
+        <td>${lvl}</td>
+        <td><span class="level-name">${levelName(lvl) || '—'}</span></td>
+        <td>${hb}</td>
+        <td>${fmtN(c.n)}</td>
+        <td><span class="pct ${c.p_beyond >= 0.5 ? 'bull' : 'dim'}">${fmtPct(c.p_beyond)}</span></td>
+        <td><span class="pct ${c.p_behind >= 0.5 ? 'blue' : 'dim'}">${fmtPct(c.p_behind)}</span></td>
+        <td><span class="pct ${c.p_last >= 0.2 ? 'bear' : 'dim'}">${fmtPct(c.p_last)}</span></td>
+        <td><span class="pct dim">${fmtPct(c.p_ambig)}</span></td>
+        <td>${fmtMin(c.avg_min_to_beyond)}</td>
+        <td>${fmtMin(c.med_min_to_beyond)}</td>
+        <td>${fmtMin(c.avg_min_to_behind)}</td>
+        <td>${fmtMin(c.med_min_to_behind)}</td>
+      `;
+      tr.style.cursor = 'pointer';
+      tr.addEventListener('click', () => {
+        selectCell(lvl, hb);
+        document.querySelector('.explore-shell').scrollIntoView({behavior:'smooth', block:'center'});
+      });
+      tbody.appendChild(tr);
+    }
+  }
+}
+
+function renderGGRetrace() {
+  const root = document.getElementById('gg-retrace-panel');
+  if (!root || !DATA.gg_retrace) return;
+
+  function rowFor(direction, bucket) {
+    return DATA.gg_retrace.find(r => r.direction === direction && r.bucket === bucket) || {n:0, completion_rate:null, share_of_gg_opens:null, completed:0, med_min_to_completion:null};
+  }
+  function side(direction) {
+    const isCall = direction === 'call';
+    const title = isCall ? 'Long GG: Call Trigger → GG Open → GG Closed' : 'Short GG: Put Trigger → GG Open → GG Closed';
+    const trigger = isCall ? '+0.236 Call Trigger' : '-0.236 Put Trigger';
+    const ggOpen = isCall ? '+0.382 GG Open' : '-0.382 GG Open';
+    const ggClose = isCall ? '+0.618 GG Closed' : '-0.618 GG Closed';
+    const retraced = rowFor(direction, 'retraced_to_trigger_first');
+    const direct = rowFor(direction, 'completed_before_trigger_retrace');
+    const noDecision = rowFor(direction, 'no_decision');
+    const ambiguous = rowFor(direction, 'ambiguous_same_bar');
+    const openAmbig = rowFor(direction, 'ambiguous_open_bar_both');
+    const rows = DATA.gg_retrace.filter(r => r.direction === direction);
+    const total = rows.reduce((a,r)=>a+r.n,0);
+    const completedAll = rows.reduce((a,r)=>a+(r.completed || 0),0);
+    const overallCompletion = total ? completedAll / total : null;
+    const completedNonAmbig = retraced.completed + direct.completed;
+    const completedTriggerRetestShare = completedNonAmbig ? retraced.completed / completedNonAmbig : null;
+    const directOfCompletedShare = completedAll ? direct.n / completedAll : null;
+    return `
+      <div class="gg-side">
+        <div class="gg-side-title">${title}</div>
+        <div class="gg-definition">Trigger retest here means price goes from ${ggOpen} back to ${trigger} before ${ggClose}. After ${ggOpen} is hit, the GG remains open all day. This does <strong>not</strong> measure smaller pullbacks like 50% back to 38.2% GG Open.</div>
+        <div class="gg-row"><div class="gg-label">Overall GG completion rate</div><div class="gg-value">${fmtPct(overallCompletion)}</div><div class="gg-sub">${fmtN(completedAll)} completed / ${fmtN(total)} GG opens. Includes same-bar/ambiguous 3-min cases in the overall count.</div></div>
+        <div class="gg-row"><div class="gg-label">Completion rate if trigger is retested before GG completion</div><div class="gg-value">${fmtPct(retraced.completion_rate)}</div><div class="gg-sub">${fmtN(retraced.completed)} completed later / ${fmtN(retraced.n)} trigger-retest-first cases.</div></div>
+        <div class="gg-row"><div class="gg-label">Trigger-retest-first share of GG opens</div><div class="gg-value">${fmtPct(retraced.share_of_gg_opens)}</div><div class="gg-sub">n=${fmtN(retraced.n)}. Among non-ambiguous completed GGs, ${fmtPct(completedTriggerRetestShare)} had a trigger retest before completion.</div></div>
+        <div class="gg-row"><div class="gg-label">Direct GG completion before trigger retest</div><div class="gg-value">${fmtPct(direct.share_of_gg_opens)}</div><div class="gg-sub">n=${fmtN(direct.n)}. This is ${fmtPct(directOfCompletedShare)} of all completed GGs and measures only no trigger retest, not no 50%→38.2% pullback.</div></div>
+        <div class="gg-row"><div class="gg-label">Neither completed nor trigger-retested before close</div><div class="gg-value">${fmtPct(noDecision.share_of_gg_opens)}</div><div class="gg-sub">n=${fmtN(noDecision.n)}</div></div>
+        <div class="gg-row"><div class="gg-label">Ambiguous 3-min bar cases</div><div class="gg-value">${fmtN(ambiguous.n + openAmbig.n)}</div><div class="gg-sub">same-bar OHLC cannot sequence trigger retest vs completion</div></div>
+      </div>
+    `;
+  }
+
+  root.innerHTML = `
+    <h3>GG completion rate after trigger retest</h3>
+    <div class="gg-note">This study starts after GG opens at ±0.382. It compares the overall completion rate against the lower-probability cohort where price first retests the original trigger at ±0.236 before completing at ±0.618.</div>
+    <div class="gg-grid">${side('call')}${side('put')}</div>
+  `;
+}
+
+// ─── Path Explorer ──────────────────────────────────────────────
+let USER_PATH = []; // ladder indices
+
+function pathStats(path) {
+  if (!DATA) return null;
+  const sourcePaths = DATA.adjacent_walks || DATA.paths || [];
+  let n = 0, nextUp = 0, nextDown = 0, nextEnd = 0;
+  if (path.length === 0) {
+    // distribution of starting levels
+    const startCounts = Array(DATA.metadata.ladder.length).fill(0);
+    for (const dp of sourcePaths) {
+      if (dp.length > 0) startCounts[dp[0]]++;
+      n++;
+    }
+    return { n, mode: 'start', startCounts };
+  }
+  const current = path[path.length - 1];
+  for (const dp of sourcePaths) {
+    if (dp.length < path.length) continue;
+    let match = true;
+    for (let i = 0; i < path.length; i++) {
+      if (dp[i] !== path[i]) { match = false; break; }
+    }
+    if (!match) continue;
+    n++;
+    if (dp.length === path.length) { nextEnd++; continue; }
+    const next = dp[path.length];
+    if (next === current + 1) nextUp++;
+    else if (next === current - 1) nextDown++;
+    else { /* non-adjacent should not happen in adjacent walk paths */ }
+  }
+  return { n, nextUp, nextDown, nextEnd, current, mode: 'cond' };
+}
+
+function validNextSet() {
+  const lad = DATA.metadata.ladder;
+  if (USER_PATH.length === 0) {
+    return new Set(lad.map((_, i) => i));
+  }
+  const current = USER_PATH[USER_PATH.length - 1];
+  const valid = new Set();
+  if (current + 1 < lad.length) valid.add(current + 1);
+  if (current - 1 >= 0) valid.add(current - 1);
+  return valid;
+}
+
+function renderLadder() {
+  const root = document.getElementById('path-ladder');
+  root.innerHTML = '';
+  const lad = DATA.metadata.ladder;
+  const valid = validNextSet();
+  // top-down: high index (top) to low (bottom)
+  for (let i = lad.length - 1; i >= 0; i--) {
+    const div = document.createElement('div');
+    const isPdc = lad[i] === 'PDC';
+    const visitedOrder = USER_PATH.indexOf(i);
+    const isValid = valid.has(i);
+    let cls = 'rung';
+    if (isPdc) cls += ' pdc';
+    if (visitedOrder !== -1) {
+      cls += ' visited';
+      if (visitedOrder === 0) cls += ' first';
+    } else if (isValid) {
+      cls += ' valid';
+    } else if (USER_PATH.length > 0) {
+      cls += ' disabled';
+    }
+    div.className = cls;
+    div.dataset.idx = i;
+    const orderTxt = visitedOrder !== -1 ? (visitedOrder + 1) : '';
+    div.innerHTML = `<span class="rung-order">${orderTxt}</span><span class="rung-label">${lad[i]}</span><span class="rung-bar"></span>`;
+    div.addEventListener('click', () => {
+      if (!isValid && USER_PATH.length > 0) return;
+      pushPath(i);
+    });
+    root.appendChild(div);
+  }
+}
+
+function pushPath(idx) {
+  USER_PATH.push(idx);
+  renderLadder();
+  renderPathTrail();
+  renderPathStats();
+  updatePathButtons();
+}
+function undoPath() {
+  if (USER_PATH.length === 0) return;
+  USER_PATH.pop();
+  renderLadder();
+  renderPathTrail();
+  renderPathStats();
+  updatePathButtons();
+}
+function resetPath() {
+  USER_PATH = [];
+  renderLadder();
+  renderPathTrail();
+  renderPathStats();
+  updatePathButtons();
+}
+
+function updatePathButtons() {
+  document.getElementById('path-undo').disabled = USER_PATH.length === 0;
+  document.getElementById('path-reset').disabled = USER_PATH.length === 0;
+}
+
+function renderPathTrail() {
+  const trail = document.getElementById('path-trail');
+  if (USER_PATH.length === 0) {
+    trail.innerHTML = '<span class="empty">No path yet &mdash; click a starting level on the ladder</span>';
+    return;
+  }
+  const lad = DATA.metadata.ladder;
+  let html = '';
+  USER_PATH.forEach((idx, i) => {
+    if (i > 0) html += '<span class="arrow">→</span>';
+    html += `<span class="step${i===0?' start':''}">${lad[idx]}</span>`;
+  });
+  trail.innerHTML = html;
+}
+
+function renderPathStats() {
+  const root = document.getElementById('path-stats');
+  const lad = DATA.metadata.ladder;
+  const stats = pathStats(USER_PATH);
+
+  if (!stats) {
+    root.innerHTML = '<div class="path-empty"><strong>Loading…</strong></div>';
+    return;
+  }
+
+  if (USER_PATH.length === 0) {
+    // show starting-level distribution as a quick reference
+    const total = stats.n;
+    let rows = '';
+    for (let i = lad.length - 1; i >= 0; i--) {
+      const c = stats.startCounts[i];
+      if (c === 0) continue;
+      const pct = (c / total * 100).toFixed(1);
+      rows += `<div class="frontier-row"><span class="lab">${lad[i]}</span><span class="v">${c.toLocaleString()}</span><span class="lab">${pct}%</span><span class="v" style="color:var(--text-dim);font-weight:400">first-hit at open</span></div>`;
+    }
+    root.innerHTML = `
+      <div class="head">
+        <div><h3>Starting level distribution</h3><div class="sub">which level was the day's <em>first</em> first-hit?</div></div>
+        <div class="n-badge">${total.toLocaleString()} <span class="frac">days</span></div>
+      </div>
+      ${rows}
+      <div class="path-warn" style="background:var(--surface-2);border-color:var(--border);color:var(--text-mid)">
+        <strong style="color:var(--accent)">Tip.</strong> Most days start with PDC (touched at the open). Click a level on the ladder to begin building a path.
+      </div>
+    `;
+    return;
+  }
+
+  const { n, nextUp, nextDown, nextEnd, current } = stats;
+
+  if (n === 0) {
+    root.innerHTML = `
+      <div class="head">
+        <div><h3>${USER_PATH.map(i=>lad[i]).join(' → ')}</h3><div class="sub">no matching days</div></div>
+        <div class="n-badge">N = 0</div>
+      </div>
+      <div class="path-warn"><strong>No matches.</strong> No day's chronological first-hit sequence starts with this exact prefix. Try undoing a step or starting from a more common level (PDC, ±0.236, or ±0.382).</div>
+    `;
+    return;
+  }
+
+  const upTarget = (current + 1 < lad.length) ? lad[current + 1] : '—';
+  const downTarget = (current - 1 >= 0) ? lad[current - 1] : '—';
+  const pUp = nextUp / n, pDown = nextDown / n, pEnd = nextEnd / n;
+
+  const lowN = n < 50 ? `<span style="color:var(--bear);font-size:.65rem;margin-left:.4rem">⚠ low n</span>` : '';
+
+  let body = `
+    <div class="head">
+      <div>
+        <h3>${USER_PATH.map(i=>lad[i]).join(' → ')}</h3>
+        <div class="sub">conditional on this exact ${USER_PATH.length}-step adjacent-walk prefix ${lowN}</div>
+      </div>
+      <div class="n-badge">${n.toLocaleString()} <span class="frac">/ ${fmtN(DATA.metadata.n_adjacent_walks || DATA.metadata.n_days)}</span></div>
+    </div>
+
+    <div class="next-grid">
+      <div class="next-card up">
+        <div class="pct">${(pUp*100).toFixed(1)}%</div>
+        <div class="lbl">Next ↑ continuation</div>
+        <div class="target">→ <span class="level">${upTarget}</span></div>
+      </div>
+      <div class="next-card down">
+        <div class="pct">${(pDown*100).toFixed(1)}%</div>
+        <div class="lbl">Next ↓ retrace</div>
+        <div class="target">→ <span class="level">${downTarget}</span></div>
+      </div>
+      <div class="next-card end">
+        <div class="pct">${(pEnd*100).toFixed(1)}%</div>
+        <div class="lbl">End of day</div>
+        <div class="target">no further first-hit</div>
+      </div>
+    </div>
+
+    <div class="frontier-row">
+      <span class="lab">Current rung</span><span class="v">${lad[current]}</span>
+      <span class="lab">Path length</span><span class="v">${USER_PATH.length}</span>
+    </div>
+    <div class="frontier-row">
+      <span class="lab">Next ↑ valid</span><span class="v">${(current + 1 < lad.length) ? '✓' : '— (cap)'}</span>
+      <span class="lab">Next ↓ valid</span><span class="v">${(current - 1 >= 0) ? '✓' : '— (cap)'}</span>
+    </div>
+  `;
+
+  body += `<div class="path-warn" style="background:var(--surface-2);border-color:var(--border);color:var(--text-mid)"><strong style="color:var(--accent)">Mode.</strong> This now uses an adjacent-level walk, including revisits. After ${lad[current]}, retrace means the immediately prior/down rung <span style="color:var(--blue);font-weight:600">${downTarget}</span>, not a full retrace through PDC unless that is the next selected rung.</div>`;
+
+  root.innerHTML = body;
+}
+
+const PRESETS = {
+  'up1':       ['PDC','+0.236','+0.382','+0.50','+0.618','+0.786','+1.00'],
+  'down1':     ['PDC','-0.236','-0.382','-0.50','-0.618','-0.786','-1.00'],
+  'trig-only': ['PDC','+0.236'],
+  'gg-up':     ['PDC','+0.236','+0.382'],
+};
+
+function applyPreset(key) {
+  const labels = PRESETS[key];
+  if (!labels) return;
+  const lad = DATA.metadata.ladder;
+  USER_PATH = [];
+  for (const lab of labels) {
+    const idx = lad.indexOf(lab);
+    if (idx === -1) { resetPath(); return; }
+    USER_PATH.push(idx);
+  }
+  renderLadder();
+  renderPathTrail();
+  renderPathStats();
+  updatePathButtons();
+}
+
+document.getElementById('path-undo').addEventListener('click', undoPath);
+document.getElementById('path-reset').addEventListener('click', resetPath);
+document.querySelectorAll('.path-controls button.preset').forEach(b => {
+  b.addEventListener('click', () => applyPreset(b.dataset.preset));
+});
+
+// existing heatmap toggle:
+document.getElementById('metric-toggle').addEventListener('click', e => {
+  if (e.target.tagName !== 'BUTTON') return;
+  CURRENT_METRIC = e.target.dataset.metric;
+  document.querySelectorAll('#metric-toggle button').forEach(b => {
+    b.classList.toggle('active', b === e.target);
+    b.classList.remove('beyond', 'behind', 'last');
+    if (b.dataset.metric === 'p_beyond') b.classList.add('beyond');
+    if (b.dataset.metric === 'p_behind') b.classList.add('behind');
+    if (b.dataset.metric === 'p_last') b.classList.add('last');
+  });
+  setLegendColor(CURRENT_METRIC);
+  buildHeatmap();
+});
+
+function updateHeadlineStats() {
+  const m = DATA.metadata || {};
+  const s = m.outcome_summary || {};
+  const days = fmtN(m.n_days || 0) + ' days';
+  const events = fmtN(m.n_events || s.n || 0) + ' events';
+  document.querySelectorAll('[data-stat="days"]').forEach(el => el.textContent = days);
+  document.querySelectorAll('[data-stat="events"]').forEach(el => el.textContent = events);
+  document.querySelectorAll('[data-stat="events-label"]').forEach(el => el.textContent = events);
+  const set = (name, val) => document.querySelectorAll(`[data-stat="${name}"]`).forEach(el => el.textContent = val);
+  set('p-beyond', fmtPct(s.p_beyond));
+  set('p-behind', fmtPct(s.p_behind));
+  set('p-last', fmtPct(s.p_last));
+  set('median-next', s.med_min_to_next == null ? '--' : `${Math.round(s.med_min_to_next)}min`);
+}
+
+fetch(DATA_URL).then(r => r.json()).then(d => {
+  DATA = d;
+  DATA.cellIdx = indexCells(d.cells);
+  setLegendColor(CURRENT_METRIC);
+  updateHeadlineStats();
+  // sync toggle classes
+  document.querySelectorAll('#metric-toggle button').forEach(b => {
+    if (b.dataset.metric === 'p_beyond') b.classList.add('beyond');
+    if (b.dataset.metric === 'p_behind') b.classList.add('behind');
+    if (b.dataset.metric === 'p_last') b.classList.add('last');
+  });
+  buildHeatmap();
+  buildSmalls();
+  buildTable();
+  renderGGRetrace();
+  // default selection: call trigger 10-11
+  selectCell('+0.236', '10:00-11:00');
+  // Path explorer initial render
+  renderLadder();
+  renderPathTrail();
+  renderPathStats();
+});
+</script>
+</body>
+</html>

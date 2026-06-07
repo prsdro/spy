@@ -47,7 +47,7 @@ import numpy as np
 import pandas as pd
 
 from backtest_spx_double_gg_revert import read_firstrate_zip, find_one, atr_series
-from backtest_swing_gg_wom import build_months, FIBS, week_of_month, WOM_NAMES
+from backtest_swing_gg_wom import build_months, FIBS, week_of_month, WOM_NAMES, HORIZON_DAYS
 from indicators import ema, compute_phase_oscillator
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -132,6 +132,7 @@ def build_events(daily: pd.DataFrame) -> pd.DataFrame:
             oi = int(np.argmax(open_hits))
             open_ts = ts[oi]
             open_wom = week_of_month(int(dom[oi]))
+            remaining = n - oi   # sessions from open day to month end (incl.)
 
             # Completion (same-side 61.8% on open day or later)
             arr = highs[oi:] if direction == "up" else lows[oi:]
@@ -176,6 +177,8 @@ def build_events(daily: pd.DataFrame) -> pd.DataFrame:
                 "direction": direction,
                 "open_dom": int(dom[oi]),
                 "open_wom": open_wom,
+                "remaining_sessions": int(remaining),
+                "clock_truncated": bool(remaining < HORIZON_DAYS),
                 "completes": completes,
                 "days_to_complete": comp_rel,
                 "days_trig_to_open": days_trig_to_open,
@@ -306,8 +309,15 @@ def print_dir(title: str, res: dict):
 def main():
     print("Loading FirstRateData SPX daily ...", flush=True)
     daily = read_firstrate_zip(find_one("SPX_full_1day_*.zip"), intraday=False)
-    ev = build_events(daily)
-    ev.to_csv(OUT_CSV, index=False)
+    ev_all = build_events(daily)
+    ev_all.to_csv(OUT_CSV, index=False)   # full set (incl. clock_truncated flag)
+
+    # Match the parent study: exclude clock-truncated gates (opened with fewer
+    # than HORIZON_DAYS sessions left in the month) so their calendar-forced
+    # non-completion does not bias the conditioned rates.
+    ev = ev_all[~ev_all["clock_truncated"]].copy()
+    excl_dn = int((ev_all["clock_truncated"] & (ev_all["direction"] == "down")).sum())
+    excl_up = int((ev_all["clock_truncated"] & (ev_all["direction"] == "up")).sum())
 
     down = analyze_direction(ev, "down")
     up = analyze_direction(ev, "up")
@@ -319,9 +329,13 @@ def main():
             "source": "FirstRateData SPX index daily",
             "date_start": str(daily["timestamp"].min().date()),
             "date_end": str(daily["timestamp"].max().date()),
+            "horizon_days": HORIZON_DAYS,
+            "excluded_clock_truncated_up": excl_up,
+            "excluded_clock_truncated_dn": excl_dn,
             "lookahead_note": ("daily indicators read at oi-1 (prior daily close); "
                                "weekly indicators from last weekly bar ending before open; "
-                               "speed known at open."),
+                               "speed known at open. Clock-truncated opens "
+                               "(< horizon_days sessions left in month) excluded."),
         },
         "down": down,
         "up": up,

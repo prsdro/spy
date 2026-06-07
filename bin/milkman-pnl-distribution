@@ -1,0 +1,139 @@
+#!/usr/bin/env python3
+"""Generate a PnL distribution HTML/PNG from TradeLab embedded trade-data."""
+from __future__ import annotations
+
+import argparse
+import json
+import math
+import re
+import statistics
+import subprocess
+from datetime import datetime
+from pathlib import Path
+
+
+def money(x: float) -> str:
+    sign = "+" if x >= 0 else "-"
+    return f"{sign}${abs(x):,.2f}"
+
+
+def pct(x: float) -> str:
+    return f"{x:.1f}%"
+
+
+def parse_dt(s: str) -> datetime:
+    return datetime.fromisoformat(str(s).replace("T", " ")[:19])
+
+
+def load_rows(source: Path) -> list[dict]:
+    text = source.read_text(errors="ignore")
+    m = re.search(r'<script[^>]+id=["\']trade-data["\'][^>]*>(.*?)</script>', text, re.S | re.I)
+    if not m:
+        raise SystemExit(f"trade-data script not found in {source}")
+    data = json.loads(m.group(1))
+    if isinstance(data, dict):
+        for key in ["trades", "rows", "data"]:
+            if isinstance(data.get(key), list):
+                return data[key]
+        raise SystemExit("trade-data object did not contain trades/rows/data list")
+    if not isinstance(data, list):
+        raise SystemExit("trade-data was not a list")
+    return data
+
+
+def analyze(rows: list[dict], since: str) -> dict:
+    start = datetime.fromisoformat(since)
+    filt = []
+    for r in rows:
+        dt_s = r.get("exit_dt") or r.get("entry_dt") or r.get("exit_time") or r.get("entry_time")
+        if not dt_s:
+            continue
+        if parse_dt(dt_s) >= start:
+            filt.append(r)
+    if not filt:
+        raise SystemExit(f"No rows on or after {since}")
+    pnls = [float(r.get("net_pnl") or 0) for r in filt]
+    wins = [x for x in pnls if x > 0]
+    losses = [x for x in pnls if x < 0]
+    gross_win = sum(wins)
+    gross_loss = -sum(losses)
+    net = sum(pnls)
+    gross_pnl = sum(float(r.get("gross_pnl") or 0) for r in filt)
+    fees = sum(float(r.get("total_commission", r.get("costs", r.get("fee_drag", 0))) or 0) for r in filt)
+    sorted_desc = sorted(enumerate(pnls, 1), key=lambda t: t[1], reverse=True)
+    accum = 0.0
+    min_k = None
+    for k, (_, pnl) in enumerate(sorted_desc, 1):
+        accum += pnl
+        if net > 0 and accum >= net:
+            min_k = k
+            break
+    if min_k is None:
+        min_k = len(filt)
+    bottom = sorted(pnls)[:max(1, math.ceil(len(pnls)*0.1))]
+    top = sorted(pnls, reverse=True)[:max(1, math.ceil(len(pnls)*0.1))]
+    return {
+        "trades": filt,
+        "n": len(filt),
+        "net": net,
+        "gross_pnl": gross_pnl,
+        "fees": fees,
+        "win_rate": len(wins)/len(filt)*100,
+        "pf": gross_win/gross_loss if gross_loss else float("inf"),
+        "avg": statistics.mean(pnls),
+        "median": statistics.median(pnls),
+        "min_k": min_k,
+        "min_k_sum": sum(p for _, p in sorted_desc[:min_k]),
+        "top_10pct_sum": sum(top),
+        "bottom_10pct_sum": sum(bottom),
+        "best": max(filt, key=lambda r: float(r.get("net_pnl") or 0)),
+        "worst": min(filt, key=lambda r: float(r.get("net_pnl") or 0)),
+        "pnls": pnls,
+    }
+
+
+def render_html(a: dict, since: str) -> str:
+    pnls = a["pnls"]
+    bars = []
+    max_abs = max(abs(x) for x in pnls) or 1
+    for i, x in enumerate(sorted(pnls, reverse=True), 1):
+        w = max(2, int(abs(x)/max_abs*100))
+        cls = "win" if x >= 0 else "loss"
+        bars.append(f'<div class="bar-row"><span>{i}</span><div class="track"><i class="{cls}" style="width:{w}%"></i></div><b>{money(x)}</b></div>')
+    best = a["best"]
+    worst = a["worst"]
+    def sym(r): return str(r.get("symbol") or f"{r.get('root','')} {r.get('strike','')} {r.get('right','')}").strip()
+    css = """
+    :root{color-scheme:dark}*{box-sizing:border-box}body{margin:0;background:#080b12;color:#edf4ff;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif}.wrap{max-width:1500px;margin:0 auto;padding:54px}header{display:flex;justify-content:space-between;gap:24px;align-items:flex-start;margin-bottom:30px}.brand{letter-spacing:.16em;color:#8bd7ff;font-size:20px;font-weight:900}.pill{border:1px solid #274965;border-radius:999px;padding:10px 16px;color:#b7d7f5}h1{font-size:54px;line-height:1.02;margin:12px 0 8px}p{color:#9fb0c7;font-size:21px;line-height:1.45}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}.card,.panel{background:linear-gradient(180deg,#111827,#0c111b);border:1px solid #213149;border-radius:26px;padding:24px;box-shadow:0 20px 60px #0008}.label{color:#8aa0bb;text-transform:uppercase;font-size:13px;font-weight:800;letter-spacing:.12em}.value{font-size:38px;font-weight:950;margin-top:8px}.sub{font-size:16px;color:#9fb0c7;margin-top:4px}.green{color:#58ef9a}.red{color:#ff6b8a}.panel{margin-top:20px}h2{font-size:28px;margin:0 0 14px}.split{display:grid;grid-template-columns:1.1fr .9fr;gap:20px}.bar-row{display:grid;grid-template-columns:46px 1fr 135px;gap:13px;align-items:center;margin:8px 0}.track{height:18px;background:#172132;border-radius:999px;overflow:hidden}.track i{display:block;height:100%;border-radius:999px}.track i.win{background:#58ef9a}.track i.loss{background:#ff6b8a}.bar-row b{text-align:right}table{width:100%;border-collapse:collapse;font-size:16px}th,td{padding:12px 10px;border-bottom:1px solid #1e293b;text-align:left}th{color:#90a4bd;font-size:12px;text-transform:uppercase;letter-spacing:.09em}td.num{text-align:right;font-variant-numeric:tabular-nums}.foot{font-size:15px;color:#7889a2;margin-top:18px}@media(max-width:900px){.grid,.split{grid-template-columns:1fr}h1{font-size:40px}.wrap{padding:28px}}
+    """
+    rows = []
+    for r in sorted(a["trades"], key=lambda r: float(r.get("net_pnl") or 0), reverse=True)[:20]:
+        val = float(r.get("net_pnl") or 0)
+        rows.append(f"<tr><td>{sym(r)}</td><td>{r.get('entry_dt','')}</td><td>{r.get('exit_dt','')}</td><td class='num'>{float(r.get('quantity') or 0):g}</td><td class='num'>{money(val)}</td><td class='num'>{pct(float(r.get('pnl_pct') or 0))}</td></tr>")
+    return f"""<!doctype html><html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'><title>Milkman PnL Distribution since {since}</title><style>{css}</style></head><body><main class='wrap'><header><div><div class='brand'>MILKMANTRADES</div><h1>PnL distribution</h1><p>Closed trades since {since}. Built from TradeLab embedded trade-data.</p></div><div class='pill'>SPX/SPY options</div></header><section class='grid'><div class='card'><div class='label'>Net PnL</div><div class='value green'>{money(a['net'])}</div><div class='sub'>Gross {money(a['gross_pnl'])} · fees {money(a['fees'])}</div></div><div class='card'><div class='label'>Trades</div><div class='value'>{a['n']}</div><div class='sub'>Win rate {pct(a['win_rate'])}</div></div><div class='card'><div class='label'>Profit factor</div><div class='value'>{a['pf']:.2f}</div><div class='sub'>Avg {money(a['avg'])} · median {money(a['median'])}</div></div><div class='card'><div class='label'>Pareto</div><div class='value'>{a['min_k']}</div><div class='sub'>trades cover current net</div></div></section><section class='split'><div class='panel'><h2>Ranked trade contribution</h2>{''.join(bars[:60])}</div><div class='panel'><h2>What's doing the work</h2><p>Top {a['min_k']} trades add {money(a['min_k_sum'])}, enough to cover {money(a['net'])} of current net. Top decile adds {money(a['top_10pct_sum'])}. Bottom decile subtracts {money(a['bottom_10pct_sum'])}.</p><p>Best: {sym(best)} at {money(float(best.get('net_pnl') or 0))}. Worst: {sym(worst)} at {money(float(worst.get('net_pnl') or 0))}.</p></div></section><section class='panel'><h2>Top ranked trades</h2><table><thead><tr><th>Symbol</th><th>Entry</th><th>Exit</th><th class='num'>Qty</th><th class='num'>Net</th><th class='num'>Return</th></tr></thead><tbody>{''.join(rows)}</tbody></table><div class='foot'>Generated by /root/spy/bin/milkman-pnl-distribution.</div></section></main></body></html>"""
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser(description="Generate Milkman PnL distribution artifacts from TradeLab trade-data.")
+    ap.add_argument("--since", default="2026-04-21")
+    ap.add_argument("--source", default="/var/www/tradelab/index.html")
+    ap.add_argument("--out-html", default=None)
+    ap.add_argument("--out-png", default=None)
+    ap.add_argument("--render", action="store_true")
+    args = ap.parse_args()
+    rows = load_rows(Path(args.source))
+    a = analyze(rows, args.since)
+    safe_since = args.since.replace("-", "")
+    out_html = Path(args.out_html or f"/tmp/milkman_pnl_distribution_since_{safe_since}.html").expanduser().resolve()
+    out_html.parent.mkdir(parents=True, exist_ok=True)
+    out_html.write_text(render_html(a, args.since))
+    print(json.dumps({"html": str(out_html), "trades": a["n"], "net": round(a["net"], 2), "pf": round(a["pf"], 2), "min_k": a["min_k"]}, indent=2))
+    if args.render or args.out_png:
+        out_png = Path(args.out_png or out_html.with_suffix(".png")).expanduser().resolve()
+        subprocess.run(["/root/spy/bin/milkman-render-png", str(out_html), str(out_png), "--width", "1800", "--height", "auto"], check=True)
+        print(f"png={out_png}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

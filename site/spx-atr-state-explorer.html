@@ -1,0 +1,432 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SPX ATR Zone State Probabilities | Milkman Trades</title>
+  <meta name="description" content="SPX ATR zone-state probability chart: test and accept rates for adjacent ATR boundaries by intraday window." />
+  <meta name="robots" content="noindex,follow" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥛</text></svg>" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+    *{margin:0;padding:0;box-sizing:border-box}
+    :root{color-scheme:dark;
+      --bg:#0c0e12;--surface:#13161c;--surface-2:#181c24;--surface-3:#1d2230;
+      --border:#1e2230;--border-strong:#2a3045;
+      --text:#e8eaed;--text-dim:#6b7280;--text-mid:#9ca3af;
+      --accent:#fbbf24;--bull:#1cd48a;--bear:#ef6c00;--blue:#38bdf8;}
+    html{font-size:15px}
+    body{background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
+    body::before{content:'';position:fixed;inset:0;z-index:-1;
+      background:radial-gradient(ellipse at 20% 10%,rgba(28,212,138,.04),transparent 50%),
+                 radial-gradient(ellipse at 80% 90%,rgba(239,108,0,.03),transparent 50%),
+                 linear-gradient(180deg,rgba(255,255,255,.018),transparent 46%);
+      pointer-events:none}
+    .page{max-width:1180px;margin:0 auto;padding:2rem 1.25rem 4rem}
+    .draft{background:#1a1400;border:1px solid #3d3200;border-radius:6px;padding:.6rem 1rem;margin-bottom:1.25rem;font-size:.75rem;color:#d4a800;line-height:1.5}
+    .draft strong{color:var(--accent)}
+    .hero{margin-bottom:1.25rem;max-width:880px}
+    .kicker{font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:.55rem}
+    h1{font-size:2.05rem;font-weight:700;line-height:1.12;margin-bottom:.65rem;text-wrap:balance}
+    h1 em{font-style:normal;background:linear-gradient(135deg,var(--bull),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .lede{font-size:.96rem;color:var(--text-mid);font-weight:300;line-height:1.65;text-wrap:pretty}
+
+    .controls{display:flex;flex-wrap:wrap;gap:.55rem;align-items:center;justify-content:space-between;margin:1rem 0 .75rem}
+    .window-strip{display:flex;flex-wrap:wrap;gap:.35rem}
+    .chip{font-family:'JetBrains Mono',monospace;background:var(--surface);border:1px solid var(--border-strong);color:var(--text-mid);border-radius:7px;padding:.48rem .7rem;font-size:.7rem;font-weight:700;letter-spacing:.02em;cursor:pointer;transition:background .12s,color .12s,border-color .12s}
+    .chip:hover{background:var(--surface-2);color:var(--text)}
+    .chip.active{background:#1a1400;border-color:#3d3200;color:var(--accent)}
+    .chip.range{color:var(--blue);border-color:rgba(56,189,248,.25)}
+    .chip.range:hover{border-color:rgba(56,189,248,.5)}
+
+    .chart-shell{background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.012));border:1px solid var(--border);border-radius:12px;padding:.85rem;box-shadow:0 18px 50px rgba(0,0,0,.22)}
+    .chart-frame{width:100%;aspect-ratio:16/9;border:1px solid var(--border-strong);border-radius:9px;overflow:hidden;background:#050606}
+    .chart-frame svg{display:block;width:100%;height:100%;background:#050606}
+
+    /* SVG text classes — calibrated against atr-levels-probabilities-spx.html */
+    .axis-label{fill:#f5f7fa;font-size:11.5px;font-weight:650;letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+    .axis-label.pdc{fill:#fbbf24;font-weight:800}
+    .axis-name{fill:#aebac0;font-size:10px;font-weight:600;letter-spacing:.005em}
+    .chart-title{fill:#f7fafc;font-size:24px;font-weight:820;letter-spacing:-.03em}
+    .chart-subtitle{fill:#b7c2c8;font-size:12.5px;font-weight:680;letter-spacing:-.01em}
+    .legend-title{fill:#eef5f7;font-size:12.5px;font-weight:760;letter-spacing:-.01em}
+    .legend-sub{fill:#aebac0;font-size:10.5px;font-weight:600;letter-spacing:.005em}
+    .legend-line{fill:#b7c2c8;font-size:11px;font-weight:590;font-variant-numeric:tabular-nums}
+    .legend-val{fill:#e8eaed;font-size:11px;font-weight:720;font-variant-numeric:tabular-nums}
+    .footer-svg{fill:#aebac0;font-size:9.8px;font-weight:700;text-anchor:start;paint-order:stroke;stroke:#080c0e;stroke-width:.9px;letter-spacing:-.01em}
+    .prob-label{fill:#f7fafc;font-size:12px;font-weight:720;letter-spacing:-.02em;paint-order:stroke;stroke:#121819;stroke-width:3.4px;stroke-linejoin:round;font-variant-numeric:tabular-nums}
+    .prob-tag{fill:#cfd6dc;font-size:9.5px;font-weight:680;letter-spacing:.04em;text-transform:uppercase;paint-order:stroke;stroke:#121819;stroke-width:3px;stroke-linejoin:round}
+    .bar-label{fill:#0c0f12;font-size:10.5px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+    .bar-callout{fill:#cfd6dc;font-size:10px;font-weight:680;font-variant-numeric:tabular-nums;letter-spacing:-.005em}
+    .click-zone{cursor:pointer;transition:fill-opacity .12s}
+    .click-zone:hover{fill-opacity:.10}
+    .selected-band{pointer-events:none}
+
+    .method{margin-top:1rem}
+    .method summary{cursor:pointer;list-style:none;font-family:'JetBrains Mono',monospace;font-size:.66rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.7rem .85rem}
+    .method summary::-webkit-details-marker{display:none}
+    .method[open] summary{color:var(--accent);border-color:#3d3200;background:#1a1400}
+    .method-body{border:1px solid var(--border);border-top:0;border-radius:0 0 8px 8px;background:rgba(19,22,28,.55);padding:1rem 1.1rem;color:var(--text-mid);font-size:.85rem;line-height:1.65}
+    .method-body p{margin:.45rem 0}
+    .method-body b{color:var(--text)}
+    .method-body code{font-family:'JetBrains Mono',monospace;color:#e8eaed;background:var(--surface-2);padding:.04rem .35rem;border-radius:3px;font-size:.82em}
+    .method-body .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.85rem 1.4rem;margin-top:.4rem}
+    .method-body .term{border-left:2px solid var(--border-strong);padding-left:.7rem}
+    .method-body .term b{display:block;color:var(--text);margin-bottom:.1rem;font-size:.9em}
+    .method-body .term.test b{color:var(--blue)}
+    .method-body .term.accept b{color:var(--bull)}
+    .method-body .term.reject b{color:#fb7185}
+    .method-body .term.notouch b{color:var(--text-dim)}
+
+    .page-foot{text-align:center;font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--text-dim);line-height:1.7;margin-top:1.5rem;padding-top:1.2rem;border-top:1px solid var(--border)}
+    .err{border:1px dashed rgba(248,113,113,.45);border-radius:10px;padding:1rem;color:#fecaca;background:rgba(127,29,29,.18)}
+    @media(max-width:760px){.page{padding:1.25rem .75rem 3rem}h1{font-size:1.55rem}.lede{font-size:.86rem}.chart-shell{padding:.5rem}.chip{font-size:.62rem;padding:.4rem .55rem}.method-body .grid{grid-template-columns:1fr}}
+  </style>
+  <script src="/nav.js"></script>
+</head>
+<body>
+  <div class="page">
+    <div class="draft"><strong>SPX ATR zone-state chart.</strong> Same FirstRateData SPX cash-index / 3-minute RTH dataset as the ATR Cascade study. Zones are residence states between adjacent ATR levels; the two adjacent rungs are the event boundaries.</div>
+
+    <section class="hero">
+      <div class="kicker">SPX ATR zone state explorer · <span id="session-count">loading</span> sessions</div>
+      <h1>When SPX starts inside a zone, what are the <em>next-boundary odds?</em></h1>
+      <p class="lede">Pick an intraday window, then click any ATR residence zone. The four arrows on the chart are the <em>independent</em> probabilities that price tests or accepts the adjacent upper / lower boundary within that window. The right panel splits sessions by their <em>first</em> level-touching bar — those buckets are mutually exclusive and sum to N.</p>
+    </section>
+
+    <div class="controls">
+      <div class="window-strip" id="window-strip" role="tablist" aria-label="Time window"></div>
+      <button class="chip range" id="range-btn" type="button" aria-pressed="false">Show full ±2 ATR</button>
+    </div>
+
+    <section class="chart-shell" aria-label="SPX ATR zone state probability chart">
+      <div class="chart-frame"><svg id="probability-svg" viewBox="0 0 1280 720" role="img" aria-label="SPX ATR zone state probability chart"></svg></div>
+    </section>
+
+    <details class="method">
+      <summary>Definitions, denominator, math</summary>
+      <div class="method-body">
+        <p><b>Scope: within the selected window only.</b> Every probability on the chart is computed from 3-minute bars whose timestamp falls inside the chosen window. Bars at or after the window end are ignored — if SPX accepts the upper boundary at 11:01 ET on the 10am → 11am chart, that session is still counted as "did not accept up" for that hour band. Pick a different chip to ask the same question over a different slice of the day.</p>
+        <p><b>Denominator (N).</b> All historical RTH sessions whose starting price sits inside the selected ATR residence zone at the start of the selected window. The first window (Open → 10am) uses the 09:30 RTH open; later windows use the close of the first 3-minute bar at or after the window start. Each session contributes at most one snapshot per window.</p>
+        <div class="grid">
+          <div class="term test"><b>Test ▲ / ▼</b>A 3-minute bar <em>inside the selected window</em> has a range that touches or spans an adjacent ATR boundary: <code>bar.high ≥ U</code> and <code>bar.low ≤ U</code> for the upper level (mirror for lower). The bar physically reaches the level — close-side does not matter. A test at 11:01 does <em>not</em> count for the 10am → 11am window.</div>
+          <div class="term accept"><b>Accept ▲ / ▼</b>The <em>first</em> bar inside the window that tests that boundary closes through it: <code>close &gt; U</code> for an upward accept, <code>close &lt; L</code> for a downward accept. Acceptance is a strict subset of testing. This is touch-bar acceptance, <em>not</em> sustained acceptance — price can fail back inside on the next bar and the event still counts. And, like Test, it is window-scoped: an accept that happens after the window ends is invisible on this chip.</div>
+          <div class="term reject"><b>Reject ▲ / ▼</b><code>rejected_up = tested_up − accepted_up</code>. The first up-test bar closed back inside the zone. Mirror for down.</div>
+          <div class="term notouch"><b>No touch</b>Neither boundary was tested during the window. Price stayed strictly inside the zone for the whole window.</div>
+        </div>
+        <p style="margin-top:1rem"><b>Why test and accept rates don't sum to 100%.</b> A single session can test BOTH boundaries (touch upper then lower, or both within the same bar) inside the window, so <code>tested_up + tested_down ≥ N</code> in general. And most first-test bars close back inside the zone (rejected), so <code>accepted_up + accepted_down</code> is much smaller than the fraction of sessions that left the zone. The four chart arrows are independent rates — read each in isolation against N.</p>
+        <p><b>The right-panel first-touch partition resolves this.</b> Each session is bucketed by what its <em>first</em> level-touching bar in the window did: <code>upper accept</code>, <code>upper reject</code>, <code>lower accept</code>, <code>lower reject</code>, <code>both same bar</code> (one bar touched both rungs), or <code>no touch</code>. The buckets are mutually exclusive and sum to <code>N</code> — so the partition tells you the unconditional fraction that genuinely never moved, vs. each first-event outcome.</p>
+        <p><b>Sanity checks built into the chart.</b> <code>rejected_up = tested_up − accepted_up</code> at every row; the partition strip sums to <code>N</code>; <code>tested_either ≤ N</code> and <code>tested_both ≤ min(tested_up, tested_down)</code>.</p>
+      </div>
+    </details>
+
+    <div class="page-foot" id="page-foot"></div>
+  </div>
+
+<script>
+'use strict';
+const DATA_URL='data/spx-atr-markov.json?v=atrmarkov-v3-windows';
+const $=id=>document.getElementById(id);
+const state={payload:null,windowKey:'0930_1000',expanded:false,selectedZone:null};
+
+// Geometry — calibrated to mirror /atr-levels-probabilities-spx.html
+const SVG_W=1280, SVG_H=720;
+const CHART_X0=245, CHART_X1=940;   // ladder + arrows area
+const CHART_Y0=64,  CHART_Y1=700;
+const PANEL_X0=970, PANEL_X1=1252;  // right info panel
+
+// Arrow x-positions inside the chart, picked to avoid overlap.
+// Read left→right as: Accept▲ | Test▲ | (middle gap) | Test▼ | Accept▼
+const X_ACC_UP = 410;
+const X_TST_UP = 525;
+const X_TST_DN = 660;
+const X_ACC_DN = 775;
+
+// First-touch resolution buckets, drawn in price-order top→bottom:
+// upper-accept (most bullish) → upper-reject → both-same-bar → lower-reject → lower-accept (most bearish) → no-touch
+const BUCKETS=[
+  {key:'first_upper_accept', label:'Upper accept',  color:'#75c84a'},
+  {key:'first_upper_reject', label:'Upper reject',  color:'#38bdf8'},
+  {key:'first_both_same_bar',label:'Both same bar', color:'#fbbf24'},
+  {key:'first_lower_reject', label:'Lower reject',  color:'#fb7185'},
+  {key:'first_lower_accept', label:'Lower accept',  color:'#ef6c00'},
+  {key:'no_touch',           label:'No touch',      color:'#6b7280'},
+];
+
+const fmtN=n=>Number(n||0).toLocaleString();
+const pct=(n,d)=>{ if(!d) return '—'; const v=n/d*100; return (v<1&&v>0)?v.toFixed(1)+'%':Math.round(v)+'%'; };
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+function bounds(){return state.expanded?{min:-2,max:2}:{min:-1,max:1};}
+function yFor(a){const b=bounds();return CHART_Y0+((b.max-a)/(b.max-b.min))*(CHART_Y1-CHART_Y0);}
+function ladder(){const b=bounds();return state.payload.ladder.filter(l=>l.atr>=b.min-1e-9&&l.atr<=b.max+1e-9);}
+function zones(){const b=bounds();return state.payload.zones.filter(z=>z.lower_atr>=b.min-1e-9&&z.upper_atr<=b.max+1e-9);}
+function win(){return state.payload.windows_by_zone.windows.find(w=>w.key===state.windowKey);}
+function stats(zi=state.selectedZone){const w=win();return w&&zi!=null?w.by_zone[String(zi)]||null:null;}
+function findZoneByN(){let best=null,bn=-1;for(const z of zones()){const r=stats(z.index);const n=r?r.n:0;if(n>bn){bn=n;best=z.index;}}return best;}
+
+// Match the reference page's named-level convention (Call Trigger / GG / Midrange).
+const NAMED={0:'PDC',0.236:'Call Trigger',0.382:'Golden Gate',0.618:'Midrange',1:'1 ATR',2:'2 ATR'};
+function levelName(atr){
+  if(Math.abs(atr)<1e-9) return 'PDC';
+  const abs=Math.abs(atr);
+  const raw=NAMED[abs]; if(!raw||raw==='PDC') return '';
+  if(atr<0 && raw==='Call Trigger') return 'Put Trigger';
+  if(abs===1||abs===2) return (atr>0?'+':'−')+raw;
+  return raw;
+}
+function levelNumeric(atr){
+  if(Math.abs(atr)<1e-9) return '0';
+  const sign=atr>0?'+':'−';
+  const num=Math.abs(atr).toFixed(3).replace(/\.?0+$/,'');
+  return sign+num;
+}
+
+function initButtons(){
+  const root=$('window-strip');
+  root.innerHTML=state.payload.windows_by_zone.windows.map(w=>`<button class="chip${w.key===state.windowKey?' active':''}" type="button" role="tab" aria-selected="${w.key===state.windowKey}" data-key="${esc(w.key)}">${esc(w.label)}</button>`).join('');
+  root.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{state.windowKey=b.dataset.key;render();}));
+}
+
+// Clean thin arrow + outlined label (no pill background) — matches reference style.
+function thinArrow(x, yFrom, yTo, color, sw){
+  sw = sw || 1.6;
+  const head = 7;
+  const up = yTo < yFrom;
+  // Triangle at yTo
+  const tri = up
+    ? `M ${x} ${yTo} L ${(x-4.6).toFixed(1)} ${(yTo+head).toFixed(1)} L ${(x+4.6).toFixed(1)} ${(yTo+head).toFixed(1)} Z`
+    : `M ${x} ${yTo} L ${(x-4.6).toFixed(1)} ${(yTo-head).toFixed(1)} L ${(x+4.6).toFixed(1)} ${(yTo-head).toFixed(1)} Z`;
+  // Shaft stops at the triangle base
+  const shaftEnd = up ? (yTo+head) : (yTo-head);
+  return `<line x1="${x}" y1="${yFrom.toFixed(1)}" x2="${x}" y2="${shaftEnd.toFixed(1)}" stroke="${color}" stroke-width="${sw}" stroke-linecap="round" opacity=".94" shape-rendering="geometricPrecision"/><path d="${tri}" fill="${color}" opacity=".96"/>`;
+}
+function probLabel(x, y, tag, valText, color, anchor){
+  anchor = anchor || 'start';
+  // Two-line label: small uppercase tag on top, big % below.
+  return `<text x="${x}" y="${(y-12).toFixed(1)}" text-anchor="${anchor}" class="prob-tag" fill="${color}">${esc(tag)}</text>`
+       + `<text x="${x}" y="${y.toFixed(1)}" text-anchor="${anchor}" class="prob-label">${esc(valText)}</text>`;
+}
+
+function fmtEndTime(hhmm){
+  const [h,m]=hhmm.split(':').map(Number);
+  const h12=((h+11)%12)+1;
+  const ap=h<12?'am':'pm';
+  return m ? `${h12}:${String(m).padStart(2,'0')}${ap}` : `${h12}${ap}`;
+}
+
+function renderArrows(z, r){
+  const out=[];
+  const yTop=yFor(z.upper_atr), yBot=yFor(z.lower_atr);
+  const yMid=(yTop+yBot)/2;
+  const zoneH=Math.max(2,yBot-yTop);
+
+  // Accept-up: crosses the upper boundary, extending above it.
+  const accUpStart = yTop + Math.min(6, zoneH*.2);
+  const accUpEnd   = Math.max(CHART_Y0+12, yTop - Math.max(34, Math.min(60, zoneH*.6)));
+  out.push(thinArrow(X_ACC_UP, accUpStart, accUpEnd, '#75c84a', 1.7));
+
+  // Test-up: stays inside the zone, ends at the upper boundary.
+  const tstUpStart = Math.min(yBot-2, yMid + Math.min(8, zoneH*.18));
+  const tstUpEnd   = yTop + 1;
+  out.push(thinArrow(X_TST_UP, tstUpStart, tstUpEnd, '#38bdf8', 1.55));
+
+  // Test-down: stays inside the zone, ends at the lower boundary.
+  const tstDnStart = Math.max(yTop+2, yMid - Math.min(8, zoneH*.18));
+  const tstDnEnd   = yBot - 1;
+  out.push(thinArrow(X_TST_DN, tstDnStart, tstDnEnd, '#fb7185', 1.55));
+
+  // Accept-down: crosses the lower boundary, extending below it.
+  const accDnStart = yBot - Math.min(6, zoneH*.2);
+  const accDnEnd   = Math.min(CHART_Y1-12, yBot + Math.max(34, Math.min(60, zoneH*.6)));
+  out.push(thinArrow(X_ACC_DN, accDnStart, accDnEnd, '#ef6c00', 1.7));
+
+  // Labels: place ABOVE upper boundary for the up-arrows, BELOW lower boundary for the down-arrows.
+  // Stagger so the closer-in (Test) label sits closer to the boundary and the further-out (Accept) sits further away.
+  const upBaseY = Math.max(CHART_Y0+30, yTop - 8);
+  const dnBaseY = Math.min(CHART_Y1-8,  yBot + 22);
+
+  const byT = fmtEndTime(win().end_et);
+  out.push(probLabel(X_ACC_UP+9, upBaseY-22, `Accept by ${byT} ▲`, pct(r.accepted_up,r.n), '#75c84a','start'));
+  out.push(probLabel(X_TST_UP+9, upBaseY,    `Test by ${byT} ▲`,   pct(r.tested_up,  r.n), '#38bdf8','start'));
+  out.push(probLabel(X_TST_DN+9, dnBaseY,    `Test by ${byT} ▼`,   pct(r.tested_down,r.n), '#fb7185','start'));
+  out.push(probLabel(X_ACC_DN+9, dnBaseY+22, `Accept by ${byT} ▼`, pct(r.accepted_down,r.n),'#ef6c00','start'));
+
+  return out.join('');
+}
+
+function renderPanel(z, r){
+  const out=[];
+  const w=win();
+  const xL = PANEL_X0;
+  const xR = PANEL_X1;
+
+  // Header block
+  let y = 92;
+  out.push(`<text x="${xL}" y="${y}" class="legend-title">ZONE STATE</text>`); y+=18;
+  out.push(`<text x="${xL}" y="${y}" class="legend-line">${esc(z.lower_label)} → ${esc(z.upper_label)}</text>`); y+=15;
+  out.push(`<text x="${xL}" y="${y}" class="legend-sub">${esc(w.label)} · ${esc(w.start_et)}–${esc(w.end_et)} ET</text>`); y+=18;
+  out.push(`<text x="${xL}" y="${y}" class="legend-line">N = </text><text x="${xR}" y="${y}" text-anchor="end" class="legend-val">${fmtN(r.n)}</text>`); y+=24;
+
+  // First-touch resolution: thin horizontal stacked bar + outside callouts.
+  out.push(`<text x="${xL}" y="${y}" class="legend-title">First-touch resolution</text>`); y+=14;
+  out.push(`<text x="${xL}" y="${y}" class="legend-sub">mutually exclusive · sums to N</text>`); y+=16;
+
+  const barX = xL;
+  const barW = xR - xL;
+  const barH = 22;
+  const barY = y;
+  const fr = r.first_resolution || {};
+  let cx = barX;
+  for(const b of BUCKETS){
+    const c = fr[b.key]||0;
+    if(c<=0) continue;
+    const w = (c/r.n)*barW;
+    out.push(`<rect x="${cx.toFixed(1)}" y="${barY}" width="${w.toFixed(1)}" height="${barH}" fill="${b.color}" fill-opacity=".92"/>`);
+    cx += w;
+  }
+  out.push(`<rect x="${barX}" y="${barY}" width="${barW}" height="${barH}" fill="none" stroke="#2a3045" stroke-width="1"/>`);
+  y = barY + barH + 18;
+
+  // Per-bucket lines
+  for(const b of BUCKETS){
+    const c = fr[b.key]||0;
+    if(c<=0) continue;
+    const p = pct(c, r.n);
+    out.push(`<rect x="${xL}" y="${y-9}" width="9" height="9" fill="${b.color}" fill-opacity=".92"/>`);
+    out.push(`<text x="${xL+15}" y="${y}" class="legend-line">${esc(b.label)}</text>`);
+    out.push(`<text x="${xR}" y="${y}" text-anchor="end" class="legend-val">${fmtN(c)} · ${p}</text>`);
+    y += 16;
+  }
+
+  y += 12;
+  out.push(`<text x="${xL}" y="${y}" class="legend-title">Independent counts</text>`); y+=18;
+  const indep=[
+    ['Tested either',      r.tested_either,  '#cfd6dc'],
+    ['Tested both',        r.tested_both,    '#cfd6dc'],
+    ['Rejected up',        r.rejected_up,    '#38bdf8'],
+    ['Rejected down',      r.rejected_down,  '#fb7185'],
+  ];
+  for(const [lab,v,col] of indep){
+    out.push(`<text x="${xL}" y="${y}" class="legend-line">${esc(lab)}</text>`);
+    out.push(`<text x="${xR}" y="${y}" text-anchor="end" class="legend-val" fill="${col}">${fmtN(v)} · ${pct(v,r.n)}</text>`);
+    y += 16;
+  }
+
+  // Median times (skip if both null/0)
+  const mu=r.median_up_m, md=r.median_down_m;
+  if(mu!=null || md!=null){
+    y += 10;
+    out.push(`<text x="${xL}" y="${y}" class="legend-title">Median time to first test</text>`); y+=18;
+    if(mu!=null){ out.push(`<text x="${xL}" y="${y}" class="legend-line">▲ Up</text><text x="${xR}" y="${y}" text-anchor="end" class="legend-val">${mu} min</text>`); y+=16; }
+    if(md!=null){ out.push(`<text x="${xL}" y="${y}" class="legend-line">▼ Down</text><text x="${xR}" y="${y}" text-anchor="end" class="legend-val">${md} min</text>`); y+=16; }
+  }
+  return out.join('');
+}
+
+function renderChart(){
+  const svg=$('probability-svg');
+  const w=win();
+  const sel=state.selectedZone;
+  const z = sel!=null ? state.payload.zones[sel] : null;
+  const r = stats(sel);
+  const lines=[];
+
+  // Background
+  lines.push(`<defs><linearGradient id="bg" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#10171a"/><stop offset="1" stop-color="#191f22"/></linearGradient></defs>`);
+  lines.push(`<rect width="1280" height="720" fill="#000"/>`);
+
+  // Title + subtitle
+  lines.push(`<text x="${CHART_X0}" y="28" class="chart-title">SPX ATR Zone State Probabilities</text>`);
+  const sub = z && r
+    ? `Within-window only · ${esc(w.label)} (${esc(w.start_et)}–${esc(w.end_et)} ET) · Zone ${esc(z.lower_label)} → ${esc(z.upper_label)} · N=${fmtN(r.n)} · later bars do not count`
+    : `Within-window only · ${esc(w.label)} (${esc(w.start_et)}–${esc(w.end_et)} ET) · click any zone band to inspect`;
+  lines.push(`<text x="${CHART_X0}" y="50" class="chart-subtitle">${sub}</text>`);
+
+  // Chart background panel
+  lines.push(`<rect x="${CHART_X0}" y="${CHART_Y0}" width="${CHART_X1-CHART_X0}" height="${CHART_Y1-CHART_Y0}" fill="url(#bg)"/>`);
+
+  // Divider between chart and panel
+  lines.push(`<line x1="${PANEL_X0-12}" y1="${CHART_Y0}" x2="${PANEL_X0-12}" y2="${CHART_Y1}" stroke="#2a3045" stroke-width="1" opacity=".7"/>`);
+
+  // Ladder: horizontal lines + axis labels
+  const majorSet=[-2,-1.5,-1,-.5,0,.5,1,1.5,2];
+  for(const lvl of ladder()){
+    const y=yFor(lvl.atr);
+    const major=majorSet.some(v=>Math.abs(lvl.atr-v)<1e-9);
+    const isP=Math.abs(lvl.atr)<1e-9;
+    const col=isP?'#e4e9ee':(major?'#8a969d':'#3c454c');
+    const op=isP?.95:(major?.58:.56);
+    const sw=isP?1.65:(major?1.15:0.72);
+    lines.push(`<line x1="${CHART_X0}" y1="${y.toFixed(1)}" x2="${CHART_X1}" y2="${y.toFixed(1)}" stroke="${col}" stroke-width="${sw}" opacity="${op}"/>`);
+    // Numeric label (left) + named label (further left)
+    lines.push(`<text x="${CHART_X0-9}" y="${(y+4).toFixed(1)}" text-anchor="end" class="axis-label${isP?' pdc':''}">${esc(levelNumeric(lvl.atr))}</text>`);
+    const nm=levelName(lvl.atr);
+    if(nm){
+      lines.push(`<text x="${CHART_X0-50}" y="${(y+4).toFixed(1)}" text-anchor="end" class="axis-name">${esc(nm)}</text>`);
+    }
+  }
+
+  // Clickable zone bands (transparent until hover/select)
+  for(const zz of zones()){
+    const yTop=yFor(zz.upper_atr), yBot=yFor(zz.lower_atr);
+    const rr=stats(zz.index);
+    const n=rr?rr.n:0;
+    const is=zz.index===sel;
+    const fill = is ? '#fbbf24' : '#38bdf8';
+    const fillOp = is ? '.085' : (n?'.020':'.010');
+    const stroke = is ? '#fbbf24' : 'transparent';
+    lines.push(`<rect class="click-zone" data-zi="${zz.index}" x="${CHART_X0}" y="${yTop.toFixed(1)}" width="${(CHART_X1-CHART_X0).toFixed(1)}" height="${(yBot-yTop).toFixed(1)}" fill="${fill}" fill-opacity="${fillOp}" stroke="${stroke}" stroke-opacity=".55" stroke-width="${is?'1.2':'0'}"><title>${esc(zz.lower_label)} → ${esc(zz.upper_label)} · n=${fmtN(n)}</title></rect>`);
+  }
+
+  // Selected zone: emphasized boundaries
+  if(z && r){
+    const yTop=yFor(z.upper_atr), yBot=yFor(z.lower_atr);
+    lines.push(`<line x1="${CHART_X0}" y1="${yTop.toFixed(1)}" x2="${CHART_X1}" y2="${yTop.toFixed(1)}" stroke="#fbbf24" stroke-width="1.6" opacity=".85" stroke-dasharray="6 4"/>`);
+    lines.push(`<line x1="${CHART_X0}" y1="${yBot.toFixed(1)}" x2="${CHART_X1}" y2="${yBot.toFixed(1)}" stroke="#fbbf24" stroke-width="1.6" opacity=".85" stroke-dasharray="6 4"/>`);
+    // Arrows + outlined labels
+    lines.push(renderArrows(z, r));
+    // Right-side info panel
+    lines.push(renderPanel(z, r));
+  }
+
+  // Footer
+  lines.push(`<text x="${CHART_X0+8}" y="${CHART_Y1+18}" class="footer-svg">Test = a 3-min bar's range spans the adjacent ATR boundary · independent rate, overlap allowed.</text>`);
+  lines.push(`<text x="${CHART_X0+8}" y="${CHART_Y1+34}" class="footer-svg">Accept = the first test bar's close lands through the boundary · subset of test, not sustained acceptance.</text>`);
+  lines.push(`<text x="${CHART_X1-4}" y="${CHART_Y1+18}" text-anchor="end" class="footer-svg">Dataset: SPX cash-index 1m → 3m RTH · FirstRateData</text>`);
+  lines.push(`<text x="${CHART_X1-4}" y="${CHART_Y1+34}" text-anchor="end" class="footer-svg">${esc(w.label)} · ${esc(w.start_et)}–${esc(w.end_et)} ET</text>`);
+
+  svg.innerHTML = lines.join('');
+  svg.querySelectorAll('.click-zone').forEach(el=>el.addEventListener('click',()=>{state.selectedZone=Number(el.dataset.zi);render();}));
+}
+
+function render(){
+  initButtons();
+  if(state.selectedZone==null) state.selectedZone = findZoneByN();
+  const z = state.payload.zones[state.selectedZone];
+  const b = bounds();
+  if(!z || z.lower_atr < b.min-1e-9 || z.upper_atr > b.max+1e-9) state.selectedZone = findZoneByN();
+  $('range-btn').textContent = state.expanded ? 'Show only ±1 ATR' : 'Show full ±2 ATR';
+  $('range-btn').setAttribute('aria-pressed', state.expanded ? 'true' : 'false');
+  renderChart();
+}
+
+async function boot(){
+  try{
+    const res=await fetch(DATA_URL,{cache:'no-store'});
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    state.payload = await res.json();
+    if(!state.payload.windows_by_zone) throw new Error('windows_by_zone missing');
+    $('session-count').textContent = fmtN(state.payload.metadata.n_days_in_zones);
+    $('page-foot').textContent = `source: ${state.payload.metadata.source_vendor||'FirstRateData'} · ${state.payload.metadata.intraday_start} → ${state.payload.metadata.intraday_end} · ${state.payload.metadata.version}`;
+    state.selectedZone = findZoneByN();
+    $('range-btn').addEventListener('click',()=>{state.expanded=!state.expanded;render();});
+    render();
+  }catch(e){
+    $('probability-svg').outerHTML = `<div class="err">Could not load ${esc(DATA_URL)}: ${esc(e.message)}. Regenerate via python3 backtest_atr_markov.py.</div>`;
+  }
+}
+boot();
+</script>
+</body>
+</html>

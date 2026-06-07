@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TSLA ATR Levels Probabilities</title>
+  <style>
+    :root { color-scheme: dark; }
+    html, body { margin:0; background:#050606; color:#f4f7f8; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    .wrap { min-height:100vh; display:grid; place-items:center; padding:0; box-sizing:border-box; overflow:hidden; }
+    .chart { width:min(1280px, 100vw); aspect-ratio:16/9; max-height:100vh; box-shadow:0 20px 70px rgba(0,0,0,.55); }
+    svg { display:block; width:100%; height:100%; }
+    .axis-label { fill:#f5f7fa; font-size:12px; font-weight:650; letter-spacing:-.01em; font-variant-numeric:tabular-nums; }
+    .prob-label { fill:#f7fafc; font-size:12px; font-weight:720; letter-spacing:-.02em; paint-order:stroke; stroke:#121819; stroke-width:3.4px; stroke-linejoin:round; font-variant-numeric:tabular-nums; }
+    .legend-title { fill:#eef5f7; font-size:12.5px; font-weight:760; letter-spacing:-.01em; }
+    .legend-line { fill:#b7c2c8; font-size:10.5px; font-weight:590; font-variant-numeric:tabular-nums; }
+    .footer { fill:#aebac0; font-size:9.8px; font-weight:700; text-anchor:start; paint-order:stroke; stroke:#080c0e; stroke-width:.9px; letter-spacing:-.01em; }
+    .credit { fill:#cdd7dc; text-decoration:underline; }
+    .caption { max-width:1280px; margin:10px auto 0; color:#a9b5ba; font-size:13px; line-height:1.35; }
+    .caption b { color:#fff; }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <div>
+      <div class="chart"><svg viewBox="0 0 1280 720" role="img" aria-label="TSLA ATR Levels Probabilities static chart">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#10171a"/><stop offset="1" stop-color="#191f22"/></linearGradient>
+  </defs>
+  <rect width="1280" height="720" fill="#000"/>
+  <rect x="245" y="18" width="1007" height="682" fill="url(#bg)"/>
+  <line x1="245" y1="18.0" x2="1252" y2="18.0" stroke="#8a969d" stroke-width="1.15" opacity="0.58"/><text x="235" y="22.0" text-anchor="end" class="axis-label">200% +2 ATR</text><line x1="245" y1="54.5" x2="1252" y2="54.5" stroke="#3c454c" stroke-width="0.72" opacity="0.56"/><text x="235" y="58.5" text-anchor="end" class="axis-label">178.6%</text><line x1="245" y1="83.1" x2="1252" y2="83.1" stroke="#3c454c" stroke-width="0.72" opacity="0.56"/><text x="235" y="87.1" text-anchor="end" class="axis-label">161.8%</text><line x1="245" y1="103.2" x2="1252" y2="103.2" stroke="#3c454c" stroke-width="0.72" opacity="0.56"/><text x="235" y="107.2" text-anchor="end" class="axis-label">150%</text><line x1="245" y1="123.4" x2="1252" y2="123.4" stroke="#3c454c" stroke-width="0.72" opacity="0.56"/><text x="235" y="127.4" text-anchor="end" class="axis-label">138.2%</text><line x1="245" y1="148.3" x2="1252" y2="148.3" stroke="#3c454c" stroke-width="0.72" opacity="0.56"/><text x="235" y="152.3" text-anchor="end" class="axis-label">123.6%</text><line x1="245" y1="188.5" x2="1252" y2="188.5" stroke="#8a969d" stroke-width="1.15" opacity="0.58"/><text x="235" y="192.5" text-anchor="end" class="axis-label">100% +1 ATR</text><line x1="245" y1="225.0" x2="1252" y2="225.0" stroke="#3c454c" stroke-width="0.72" opacity="0.56"/><text x="235" y="229.0" text-anchor="end" class="axis-label">78.6%</text><line x1="245" y1="253.6" x2="1252" y2="253.6" stroke="#3c454c" stroke-width="0.72" opacity="0.56"/><text x="235" y="257.6" text-anchor="end" class="axis-label">61.8% Midrange</text><line x1="245" y1="273.8" x2="1252" y2="273.8" stroke="#3c454c" stroke-width="0.72" opacity="0.56"/><text x="235" y="277.8" text-anchor="end" class="axis-label">50%</text><line x1="245" y1="293.9" x2="1252" y2="293.9" stroke="#3c454c" stroke-width="0.72" opacity="0.56"/><text x="235" y="297.9" text-anchor="end" class="axis-label">38.2% Golden Gate</text><line x1="245" y1="318.8" x2="1252" y2="318.8" stroke="#3c454c" stroke-width="0.72" opacity="0.56"/><text x="235" y="322.8" text-anchor="end" class="axis-label">23.6% Call Trigger</text><line x1="245" y1="359.0" x2="1252" y2="359.0" stroke="#8a969d" stroke-width="1.15" opacity="0.58"/><text x="235" y="363.0" text-anchor="end" class="axis-label">0 Previous Close</text><line x1="245" y1="399.2" x2="1252" y2="399.2" stroke="#3c454c" stroke-width="0.72" opacity="0.56"/><text x="235" y="403.2" text-anchor="end" class="axis-label">-23.6% Put Trigger</text><line x1="245" y1="424.1" x2="1252" y2="424.1" stroke="#3c454c" stroke-width="0.72" opacity="0.56"/><text x="235" y="428.1" text-anchor="end" class="axis-label">-38.2% Golden Gate</text><line x1="245" y1="444.2" x2="1252" y2="444.2" stroke="#3c454c" stroke-width="0.72" opacity="0.56"/><text x="235" y="448.2" text-anchor="end" class="axis-label">-50%</text><line x1="245" y1="464.4" x2="1252" y2="464.4" stroke="#3c454c" stroke-width="0.72" opacity="0.56"/><text x="235" y="468.4" text-anchor="end" class="axis-label">-61.8% Midrange</text><line x1="245" y1="493.0" x2="1252" y2="493.0" stroke="#3c454c" stroke-width="0.72" opacity="0.56"/><text x="235" y="497.0" text-anchor="end" class="axis-label">-78.6%</text><line x1="245" y1="529.5" x2="1252" y2="529.5" stroke="#8a969d" stroke-width="1.15" opacity="0.58"/><text x="235" y="533.5" text-anchor="end" class="axis-label">-100% -1 ATR</text><line x1="245" y1="569.7" x2="1252" y2="569.7" stroke="#3c454c" stroke-width="0.72" opacity="0.56"/><text x="235" y="573.7" text-anchor="end" class="axis-label">-123.6%</text><line x1="245" y1="594.6" x2="1252" y2="594.6" stroke="#3c454c" stroke-width="0.72" opacity="0.56"/><text x="235" y="598.6" text-anchor="end" class="axis-label">-138.2%</text><line x1="245" y1="614.8" x2="1252" y2="614.8" stroke="#3c454c" stroke-width="0.72" opacity="0.56"/><text x="235" y="618.8" text-anchor="end" class="axis-label">-150%</text><line x1="245" y1="634.9" x2="1252" y2="634.9" stroke="#3c454c" stroke-width="0.72" opacity="0.56"/><text x="235" y="638.9" text-anchor="end" class="axis-label">-161.8%</text><line x1="245" y1="663.5" x2="1252" y2="663.5" stroke="#3c454c" stroke-width="0.72" opacity="0.56"/><text x="235" y="667.5" text-anchor="end" class="axis-label">-178.6%</text><line x1="245" y1="700.0" x2="1252" y2="700.0" stroke="#8a969d" stroke-width="1.15" opacity="0.58"/><text x="235" y="704.0" text-anchor="end" class="axis-label">-200% -2 ATR</text>
+  <line x1="245" y1="359.0" x2="1252" y2="359.0" stroke="#e4e9ee" stroke-width="1.65" opacity=".95"/>
+  <line x1="245" y1="318.8" x2="1252" y2="318.8" stroke="#19a6a6" stroke-width="1.0" opacity=".55"/>
+  <line x1="245" y1="399.2" x2="1252" y2="399.2" stroke="#b8a31f" stroke-width="1.0" opacity=".55"/>
+  
+    <g class="prob-arrow">
+      <title>+0.236 to +0.382: 2,066/2,662 = 77.6%</title>
+      <line x1="276.0" y1="318.8" x2="276.0" y2="300.9" stroke="#75c84a" stroke-width="1.45" opacity=".92" shape-rendering="geometricPrecision" />
+      <path d="M 276.0 293.9 L 271.8 300.9 L 280.2 300.9 Z" fill="#75c84a" opacity=".96" />
+      <text x="296" y="310.3" text-anchor="start" class="prob-label">78%</text>
+    </g>
+    <g class="prob-arrow">
+      <title>+0.382 to +0.50: 1,639/2,066 = 79.3%</title>
+      <line x1="322.0" y1="293.9" x2="322.0" y2="280.8" stroke="#75c84a" stroke-width="1.45" opacity=".92" shape-rendering="geometricPrecision" />
+      <path d="M 322.0 273.8 L 317.8 280.8 L 326.2 280.8 Z" fill="#75c84a" opacity=".96" />
+      <text x="342" y="287.8" text-anchor="start" class="prob-label">79%</text>
+    </g>
+    <g class="prob-arrow">
+      <title>+0.50 to +0.618: 1,305/1,639 = 79.6%</title>
+      <line x1="370.0" y1="273.8" x2="370.0" y2="260.6" stroke="#75c84a" stroke-width="1.45" opacity=".92" shape-rendering="geometricPrecision" />
+      <path d="M 370.0 253.6 L 365.8 260.6 L 374.2 260.6 Z" fill="#75c84a" opacity=".96" />
+      <text x="390" y="267.7" text-anchor="start" class="prob-label">80%</text>
+    </g>
+    <g class="prob-arrow">
+      <title>+0.618 to +0.786: 899/1,305 = 68.9%</title>
+      <line x1="418.0" y1="253.6" x2="418.0" y2="232.0" stroke="#75c84a" stroke-width="1.45" opacity=".92" shape-rendering="geometricPrecision" />
+      <path d="M 418.0 225.0 L 413.8 232.0 L 422.2 232.0 Z" fill="#75c84a" opacity=".96" />
+      <text x="438" y="243.3" text-anchor="start" class="prob-label">69%</text>
+    </g>
+    <g class="prob-arrow">
+      <title>+0.786 to +1.00: 564/899 = 62.7%</title>
+      <line x1="470.0" y1="225.0" x2="470.0" y2="195.5" stroke="#75c84a" stroke-width="1.45" opacity=".92" shape-rendering="geometricPrecision" />
+      <path d="M 470.0 188.5 L 465.8 195.5 L 474.2 195.5 Z" fill="#75c84a" opacity=".96" />
+      <text x="490" y="210.7" text-anchor="start" class="prob-label">63%</text>
+    </g>
+    <g class="prob-arrow">
+      <title>+1.00 to +1.236: 339/564 = 60.1%</title>
+      <line x1="524.0" y1="188.5" x2="524.0" y2="155.3" stroke="#75c84a" stroke-width="1.45" opacity=".92" shape-rendering="geometricPrecision" />
+      <path d="M 524.0 148.3 L 519.8 155.3 L 528.2 155.3 Z" fill="#75c84a" opacity=".96" />
+      <text x="544" y="172.4" text-anchor="start" class="prob-label">60%</text>
+    </g>
+    <g class="prob-arrow">
+      <title>-0.236 to -0.382: 1,888/2,457 = 76.8%</title>
+      <line x1="276.0" y1="399.2" x2="276.0" y2="417.1" stroke="#c83d36" stroke-width="1.45" opacity=".92" shape-rendering="geometricPrecision" />
+      <path d="M 276.0 424.1 L 271.8 417.1 L 280.2 417.1 Z" fill="#c83d36" opacity=".96" />
+      <text x="296" y="415.7" text-anchor="start" class="prob-label">77%</text>
+    </g>
+    <g class="prob-arrow">
+      <title>-0.382 to -0.50: 1,501/1,888 = 79.5%</title>
+      <line x1="322.0" y1="424.1" x2="322.0" y2="437.2" stroke="#c83d36" stroke-width="1.45" opacity=".92" shape-rendering="geometricPrecision" />
+      <path d="M 322.0 444.2 L 317.8 437.2 L 326.2 437.2 Z" fill="#c83d36" opacity=".96" />
+      <text x="342" y="438.2" text-anchor="start" class="prob-label">80%</text>
+    </g>
+    <g class="prob-arrow">
+      <title>-0.50 to -0.618: 1,209/1,501 = 80.5%</title>
+      <line x1="370.0" y1="444.2" x2="370.0" y2="457.4" stroke="#c83d36" stroke-width="1.45" opacity=".92" shape-rendering="geometricPrecision" />
+      <path d="M 370.0 464.4 L 365.8 457.4 L 374.2 457.4 Z" fill="#c83d36" opacity=".96" />
+      <text x="390" y="458.3" text-anchor="start" class="prob-label">81%</text>
+    </g>
+    <g class="prob-arrow">
+      <title>-0.618 to -0.786: 844/1,209 = 69.8%</title>
+      <line x1="418.0" y1="464.4" x2="418.0" y2="486.0" stroke="#c83d36" stroke-width="1.45" opacity=".92" shape-rendering="geometricPrecision" />
+      <path d="M 418.0 493.0 L 413.8 486.0 L 422.2 486.0 Z" fill="#c83d36" opacity=".96" />
+      <text x="438" y="482.7" text-anchor="start" class="prob-label">70%</text>
+    </g>
+    <g class="prob-arrow">
+      <title>-0.786 to -1.00: 511/844 = 60.5%</title>
+      <line x1="470.0" y1="493.0" x2="470.0" y2="522.5" stroke="#c83d36" stroke-width="1.45" opacity=".92" shape-rendering="geometricPrecision" />
+      <path d="M 470.0 529.5 L 465.8 522.5 L 474.2 522.5 Z" fill="#c83d36" opacity=".96" />
+      <text x="490" y="515.3" text-anchor="start" class="prob-label">61%</text>
+    </g>
+    <g class="prob-arrow">
+      <title>-1.00 to -1.236: 307/511 = 60.1%</title>
+      <line x1="524.0" y1="529.5" x2="524.0" y2="562.7" stroke="#c83d36" stroke-width="1.45" opacity=".92" shape-rendering="geometricPrecision" />
+      <path d="M 524.0 569.7 L 519.8 562.7 L 528.2 562.7 Z" fill="#c83d36" opacity=".96" />
+      <text x="544" y="553.6" text-anchor="start" class="prob-label">60%</text>
+    </g>
+    <g class="prob-arrow">
+      <title>+0.382 to +0.618: 1,305/2,066 = 63.2%</title>
+      <line x1="592.0" y1="293.9" x2="592.0" y2="260.6" stroke="#75c84a" stroke-width="1.45" opacity=".92" shape-rendering="geometricPrecision" />
+      <path d="M 592.0 253.6 L 587.8 260.6 L 596.2 260.6 Z" fill="#75c84a" opacity=".96" />
+      <text x="612" y="277.8" text-anchor="start" class="prob-label">63% (Golden Gate)</text>
+    </g>
+    <g class="prob-arrow">
+      <title>-0.382 to -0.618: 1,209/1,888 = 64.0%</title>
+      <line x1="592.0" y1="424.1" x2="592.0" y2="457.4" stroke="#c83d36" stroke-width="1.45" opacity=".92" shape-rendering="geometricPrecision" />
+      <path d="M 592.0 464.4 L 587.8 457.4 L 596.2 457.4 Z" fill="#c83d36" opacity=".96" />
+      <text x="612" y="448.2" text-anchor="start" class="prob-label">64% (Golden Gate)</text>
+    </g>
+    <g class="prob-arrow">
+      <title>+1.382 to +1.618: 158/253 = 62.5%</title>
+      <line x1="592.0" y1="123.4" x2="592.0" y2="90.1" stroke="#75c84a" stroke-width="1.45" opacity=".92" shape-rendering="geometricPrecision" />
+      <path d="M 592.0 83.1 L 587.8 90.1 L 596.2 90.1 Z" fill="#75c84a" opacity=".96" />
+      <text x="612" y="107.2" text-anchor="start" class="prob-label">62% (Momentum Golden Gate)</text>
+    </g>
+    <g class="prob-arrow">
+      <title>-1.382 to -1.618: 133/222 = 59.9%</title>
+      <line x1="592.0" y1="594.6" x2="592.0" y2="627.9" stroke="#c83d36" stroke-width="1.45" opacity=".92" shape-rendering="geometricPrecision" />
+      <path d="M 592.0 634.9 L 587.8 627.9 L 596.2 627.9 Z" fill="#c83d36" opacity=".96" />
+      <text x="612" y="618.8" text-anchor="start" class="prob-label">60% (Momentum Golden Gate)</text>
+    </g>
+    <g class="prob-arrow">
+      <title>PDC to +1.00: 564/3,971 = 14.2%</title>
+      <line x1="782.0" y1="359.0" x2="782.0" y2="195.5" stroke="#75c84a" stroke-width="1.45" opacity=".92" shape-rendering="geometricPrecision" />
+      <path d="M 782.0 188.5 L 777.8 195.5 L 786.2 195.5 Z" fill="#75c84a" opacity=".96" />
+      <text x="802" y="202.5" text-anchor="start" class="prob-label">14% (0 to +1 ATR)</text>
+    </g>
+    <g class="prob-arrow">
+      <title>PDC to -1.00: 511/3,971 = 12.9%</title>
+      <line x1="782.0" y1="359.0" x2="782.0" y2="522.5" stroke="#c83d36" stroke-width="1.45" opacity=".92" shape-rendering="geometricPrecision" />
+      <path d="M 782.0 529.5 L 777.8 522.5 L 786.2 522.5 Z" fill="#c83d36" opacity=".96" />
+      <text x="802" y="521.5" text-anchor="start" class="prob-label">13% (0 to -1 ATR)</text>
+    </g>
+    <g class="prob-arrow">
+      <title>PDC to +2.00: 92/3,971 = 2.3%</title>
+      <line x1="930.0" y1="359.0" x2="930.0" y2="25.0" stroke="#75c84a" stroke-width="1.45" opacity=".92" shape-rendering="geometricPrecision" />
+      <path d="M 930.0 18.0 L 925.8 25.0 L 934.2 25.0 Z" fill="#75c84a" opacity=".96" />
+      <text x="946" y="76.0" text-anchor="start" class="prob-label">2% (0 to +2 ATR)</text>
+    </g>
+    <g class="prob-arrow">
+      <title>PDC to -2.00: 71/3,971 = 1.8%</title>
+      <line x1="930.0" y1="359.0" x2="930.0" y2="693.0" stroke="#c83d36" stroke-width="1.45" opacity=".92" shape-rendering="geometricPrecision" />
+      <path d="M 930.0 700.0 L 925.8 693.0 L 934.2 693.0 Z" fill="#c83d36" opacity=".96" />
+      <text x="946" y="602.0" text-anchor="start" class="prob-label">2% (0 to -2 ATR)</text>
+    </g>
+    <g class="prob-arrow">
+      <title>+1.236 to +1.382: 253/339 = 74.6%</title>
+      <line x1="525.0" y1="148.3" x2="525.0" y2="130.4" stroke="#75c84a" stroke-width="1.45" opacity=".92" shape-rendering="geometricPrecision" />
+      <path d="M 525.0 123.4 L 520.8 130.4 L 529.2 130.4 Z" fill="#75c84a" opacity=".96" />
+      <text x="545" y="139.8" text-anchor="start" class="prob-label">75%</text>
+    </g>
+    <g class="prob-arrow">
+      <title>-1.236 to -1.382: 222/307 = 72.3%</title>
+      <line x1="525.0" y1="569.7" x2="525.0" y2="587.6" stroke="#c83d36" stroke-width="1.45" opacity=".92" shape-rendering="geometricPrecision" />
+      <path d="M 525.0 594.6 L 520.8 587.6 L 529.2 587.6 Z" fill="#c83d36" opacity=".96" />
+      <text x="545" y="586.2" text-anchor="start" class="prob-label">72%</text>
+    </g>
+  
+<g class="legend">
+  <rect x="1010" y="248" width="244" height="232" rx="5" fill="#0d1316" fill-opacity=".94" stroke="#344047" stroke-width=".85"/>
+  <text x="1018" y="266" class="legend-title">TSLA ATR Levels Probabilities</text>
+  <text x="1018" y="284" class="legend-line">Overall same-day range chart</text>
+  <text x="1018" y="310" class="legend-line">Dataset: TSLA 1m → 3m RTH</text>
+  <text x="1018" y="328" class="legend-line">Massive · split-adjusted locally</text>
+  <text x="1018" y="346" class="legend-line">2010-07-20 to 2026-05-01</text>
+  <text x="1018" y="364" class="legend-line">N = 3,971 trading days</text>
+  <text x="1018" y="392" class="legend-line">Methodology:</text>
+  <text x="1018" y="410" class="legend-line">Counts any level inside RTH range.</text>
+  <text x="1018" y="428" class="legend-line">If TSLA opens beyond a level,</text>
+  <text x="1018" y="446" class="legend-line">that level counts as hit.</text>
+  <text x="1018" y="464" class="legend-line">Arrows = P(target hit | start hit).</text>
+</g>
+  
+<text x="940" y="646" class="footer">Overall chart: gap-open levels are included if inside the day’s RTH range</text>
+<text x="940" y="664" class="footer">For clean sequence studies, use the interactive cascade dashboard</text>
+<a href="https://satyland.com" target="_blank" rel="noopener noreferrer">
+  <text x="940" y="684" class="footer credit">ATR level framework: Saty Mahajan · satyland.com</text>
+</a>
+
+</svg></div>
+    </div>
+  </main>
+</body>
+</html>

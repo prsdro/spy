@@ -343,6 +343,9 @@ def main():
           f"downside in {m['months_dn_gate_opens']:,} "
           f"({m['months_dn_gate_opens']/m['n_months']*100:.1f}%); "
           f"both in {m['months_both_open']:,} ({m['months_both_open']/m['n_months']*100:.1f}%).")
+    print(f"Excluded as clock-truncated (< {HORIZON_DAYS} sessions left in month at open): "
+          f"{m['excluded_clock_truncated_up']} upside, {m['excluded_clock_truncated_dn']} downside. "
+          f"Reported rates below use only gates with a fair {HORIZON_DAYS}-session in-month window.")
 
     for key, lbl, trig_name in [
         ("up", "UPSIDE gate (+38.2% -> +61.8%)", "call trigger"),

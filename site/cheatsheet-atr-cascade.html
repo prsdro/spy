@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ATR Level Cascade | Milkman Trades</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥛</text></svg>">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0c0e12;--card:#11131a;--card2:#161922;--border:#1c1f2a;--border2:#252938;
+  --t:#e4e5e9;--t2:#b0b3c0;--t3:#7a7e90;
+  --bull:#1cd48a;--bullD:#0e5c3c;--bear:#ef6c00;--bearD:#6e3200;
+  --acc:#fbbf24;--accD:#5c4500;--red:#ef4444;--blue:#60a5fa;
+}
+html{font-size:14px}
+body{background:#060709;color:var(--t);font-family:'DM Sans',system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;padding:2rem 1rem 4rem}
+
+.save-bar{width:1200px;display:flex;justify-content:flex-end;margin-bottom:.75rem}
+.save-btn{
+  padding:.5rem 1.2rem;background:var(--acc);color:#000;border:none;border-radius:4px;
+  font-family:'JetBrains Mono',monospace;font-size:.75rem;font-weight:600;cursor:pointer;
+  letter-spacing:.03em;transition:opacity .15s;
+}
+.save-btn:hover{opacity:.85}
+.save-btn:active{transform:scale(.97)}
+
+.poster{
+  width:1200px;background:var(--bg);border:1px solid var(--border);border-radius:8px;
+  overflow:hidden;position:relative;
+}
+
+.hdr{
+  padding:1.8rem 2rem 1.4rem;
+  background:linear-gradient(135deg,#0e1018 0%,#12151f 100%);
+  border-bottom:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:flex-end;
+}
+.hdr-left h1{
+  font-family:'JetBrains Mono',monospace;font-size:1.5rem;font-weight:700;
+  letter-spacing:-.01em;line-height:1;margin-bottom:.35rem;
+}
+.hdr-left h1 span{color:var(--acc)}
+.hdr-left .sub{font-size:.8rem;color:var(--t3);font-weight:300}
+.hdr-right{text-align:right}
+.hdr-right .draft{
+  font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:500;
+  color:#a08000;background:#1a1600;padding:.2em .5em;border-radius:3px;
+  letter-spacing:.06em;text-transform:uppercase;margin-bottom:.3rem;display:inline-block;
+}
+.hdr-right .url{font-size:.75rem;color:var(--t3)}
+.hdr-right .back{font-size:.65rem;color:var(--blue);text-decoration:none;margin-right:.8rem}
+.hdr-right .back:hover{text-decoration:underline}
+
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.sec{border-right:1px solid var(--border);border-bottom:1px solid var(--border);padding:1.4rem 1.6rem}
+.sec:nth-child(even){border-right:none}
+.sec.full{grid-column:1/-1;border-right:none}
+.sec-num{
+  font-family:'JetBrains Mono',monospace;font-size:.6rem;font-weight:600;
+  color:var(--acc);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.6rem;
+}
+.sec-title{font-size:1rem;font-weight:700;margin-bottom:.8rem;line-height:1.2}
+
+.stats{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:.8rem}
+.stat{
+  flex:1;min-width:100px;background:var(--card);border:1px solid var(--border);
+  border-radius:5px;padding:.6rem .7rem;
+}
+.stat-val{font-family:'JetBrains Mono',monospace;font-size:1.4rem;font-weight:700;line-height:1}
+.stat-label{font-size:.75rem;color:var(--t3);margin-top:.2rem;line-height:1.3}
+.bull{color:var(--bull)}.bear{color:var(--bear)}.acc{color:var(--acc)}.red{color:var(--red)}.blue{color:var(--blue)}
+
+.mtable{width:100%;border-collapse:collapse;font-size:.7rem;margin:.5rem 0}
+.mtable th{
+  font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:500;
+  color:var(--t3);text-align:right;padding:.3rem .4rem;border-bottom:1px solid var(--border);
+  letter-spacing:.04em;text-transform:uppercase;
+}
+.mtable th:first-child{text-align:left}
+.mtable td{
+  padding:.3rem .4rem;border-bottom:1px solid #13151d;text-align:right;
+  font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--t2);
+}
+.mtable td:first-child{text-align:left;font-family:'DM Sans',sans-serif;color:var(--t);font-weight:400}
+.mtable tr.hi td{font-weight:600}
+.mtable tr.hi .bull{color:var(--bull)}
+.mtable tr.hi .blue{color:var(--blue)}
+.mtable tr.hi .bear{color:var(--bear)}
+
+.tbar-row{display:flex;align-items:center;gap:.3rem;margin-bottom:.2rem;font-size:.65rem}
+.tbar-lbl{width:48px;text-align:right;color:var(--t3);font-family:'JetBrains Mono',monospace;font-size:.7rem}
+.tbar-bg{flex:1;height:11px;background:var(--card2);border-radius:2px;overflow:hidden;display:flex}
+.tbar-fill{height:100%;border-radius:2px}
+.tbar-val{width:38px;font-family:'JetBrains Mono',monospace;font-size:.65rem;font-weight:600}
+
+.blist{list-style:none;font-size:.85rem;color:var(--t2);line-height:1.7}
+.blist li::before{content:'›';color:var(--acc);font-weight:700;margin-right:.4rem}
+.blist .key{color:var(--t);font-weight:500}
+.blist .val{font-family:'JetBrains Mono',monospace;font-weight:600}
+
+.ftr{
+  padding:.8rem 2rem;border-top:1px solid var(--border);
+  font-size:.6rem;color:var(--t3);display:flex;justify-content:space-between;
+  font-family:'JetBrains Mono',monospace;
+}
+
+.divlbl{
+  font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--t3);
+  letter-spacing:.08em;text-transform:uppercase;margin:.6rem 0 .3rem;
+}
+
+.flow{
+  display:grid;grid-template-columns:auto 1fr auto 1fr auto;
+  align-items:center;gap:.5rem;font-size:.75rem;
+  background:var(--card);border:1px solid var(--border);border-radius:6px;
+  padding:.7rem .9rem;margin-bottom:.7rem;
+}
+.flow .node{
+  font-family:'JetBrains Mono',monospace;font-size:.78rem;font-weight:700;
+  color:var(--t);background:var(--card2);padding:.3rem .55rem;border-radius:3px;
+  white-space:nowrap;border:1px solid var(--border);
+}
+.flow .node.start{border-color:var(--acc);color:var(--acc)}
+.flow .node.beyond{border-color:var(--bull);color:var(--bull)}
+.flow .node.behind{border-color:var(--blue);color:var(--blue)}
+.flow .arr{color:var(--t3);font-family:'JetBrains Mono',monospace;font-size:.65rem;text-align:center}
+.flow .arr .pct{font-weight:700;color:var(--t)}
+
+@media(max-width:767px){
+  body{padding:1rem .5rem 3rem}
+  .save-bar{width:100%;flex-wrap:wrap;gap:.4rem}
+  .poster{width:100%}
+  .hdr{flex-direction:column;align-items:flex-start;gap:.6rem;padding:1.2rem 1rem 1rem}
+  .hdr-left h1{font-size:1.1rem}
+  .hdr-left .sub{font-size:.72rem}
+  .hdr-right{text-align:left}
+  .grid{grid-template-columns:1fr}
+  .sec{border-right:none !important;padding:1.1rem 1rem}
+  .sec-title{font-size:.95rem}
+  .stats{flex-direction:column}
+  .stat{min-width:0}
+  .stat-val{font-size:1.2rem}
+  .tbar-row{gap:.25rem}
+  .tbar-lbl{width:42px;font-size:.65rem}
+  .tbar-val{width:36px;font-size:.6rem}
+  .tbar-bg{height:8px}
+  .mtable{font-size:.62rem;display:block;overflow-x:auto}
+  .mtable th,.mtable td{padding:.2rem .3rem;white-space:nowrap}
+  .ftr{flex-direction:column;gap:.4rem;text-align:center;font-size:.55rem;padding:.7rem 1rem}
+  .flow{grid-template-columns:1fr;gap:.3rem}
+  .flow .arr{font-size:.6rem}
+}
+</style>
+<script src="/nav.js"></script>
+<script src="/mobile-png.js"></script>
+</head>
+<body>
+
+<div class="save-bar">
+  <button class="save-btn save-mobile-btn" onclick="saveMobilePNG()" style="background:#60a5fa;margin-right:.5rem">📱 Mobile PNG</button>
+  <button class="save-btn" onclick="savePNG()">&#11015; Save as PNG</button>
+</div>
+
+<div class="poster" id="poster">
+
+<div class="hdr">
+  <div class="hdr-left">
+    <h1>Milkman Trades &mdash; <span>ATR Level Cascade</span></h1>
+    <div class="sub">After the first hit, where does price go next? &mdash; 25y SPY, 33,153 RTH events</div>
+  </div>
+  <div class="hdr-right">
+    <div class="draft">Draft</div><br>
+    <a class="back" href="cheatsheet.html">&larr; Master Sheet</a>
+    <span class="url">milkmantrades.com</span>
+  </div>
+</div>
+
+<div class="grid">
+
+<!-- Key stats -->
+<div class="sec full">
+  <div class="sec-num">01 &mdash; Headline</div>
+  <div class="sec-title">Continuation slightly beats retrace overall &mdash; but the edge swings hard with time of day</div>
+
+  <div class="stats">
+    <div class="stat"><div class="stat-val bull">52%</div><div class="stat-label">Continue<br>to next level</div></div>
+    <div class="stat"><div class="stat-val blue">41%</div><div class="stat-label">Retrace<br>to prior level</div></div>
+    <div class="stat"><div class="stat-val bear">5%</div><div class="stat-label">Last<br>(no further move)</div></div>
+    <div class="stat"><div class="stat-val acc">21m</div><div class="stat-label">Median<br>time-to-next</div></div>
+  </div>
+</div>
+
+<!-- Trigger flows -->
+<div class="sec">
+  <div class="sec-num">02 &mdash; Call Trigger Flow</div>
+  <div class="sec-title">+0.236 &rarr; what happens next?</div>
+
+  <div class="flow">
+    <div class="node start">+0.236</div>
+    <div class="arr">↗<br><span class="pct">68%</span><br>continue</div>
+    <div class="node beyond">+0.382</div>
+    <div class="arr">avg 20m</div>
+    <div class="node beyond">↗</div>
+  </div>
+  <div class="flow">
+    <div class="node start">+0.236</div>
+    <div class="arr">↘<br><span class="pct">27%</span><br>retrace</div>
+    <div class="node behind">PDC</div>
+    <div class="arr">avg 46m</div>
+    <div class="node behind">↘</div>
+  </div>
+
+  <div class="divlbl">By trigger hour (n=4,400)</div>
+  <div class="tbar-row"><div class="tbar-lbl">09:30</div><div class="tbar-bg"><div class="tbar-fill" style="width:78%;background:var(--bull)"></div></div><div class="tbar-val bull">78%</div></div>
+  <div class="tbar-row"><div class="tbar-lbl">10:00</div><div class="tbar-bg"><div class="tbar-fill" style="width:52%;background:var(--bull);opacity:.7"></div></div><div class="tbar-val" style="color:var(--t2)">52%</div></div>
+  <div class="tbar-row"><div class="tbar-lbl">11:00</div><div class="tbar-bg"><div class="tbar-fill" style="width:56%;background:var(--bull);opacity:.65"></div></div><div class="tbar-val" style="color:var(--t2)">56%</div></div>
+  <div class="tbar-row"><div class="tbar-lbl">12:00</div><div class="tbar-bg"><div class="tbar-fill" style="width:50%;background:var(--bull);opacity:.55"></div></div><div class="tbar-val" style="color:var(--t2)">50%</div></div>
+  <div class="tbar-row"><div class="tbar-lbl">13:00</div><div class="tbar-bg"><div class="tbar-fill" style="width:50%;background:var(--bull);opacity:.5"></div></div><div class="tbar-val" style="color:var(--t2)">50%</div></div>
+  <div class="tbar-row"><div class="tbar-lbl">14:00</div><div class="tbar-bg"><div class="tbar-fill" style="width:43%;background:var(--bull);opacity:.4"></div></div><div class="tbar-val" style="color:var(--t3)">43%</div></div>
+  <div class="tbar-row"><div class="tbar-lbl">15:00</div><div class="tbar-bg"><div class="tbar-fill" style="width:26%;background:var(--bull);opacity:.3"></div></div><div class="tbar-val" style="color:var(--t3)">26%</div></div>
+</div>
+
+<div class="sec">
+  <div class="sec-num">03 &mdash; Put Trigger Flow</div>
+  <div class="sec-title">-0.236 &rarr; what happens next?</div>
+
+  <div class="flow">
+    <div class="node start">-0.236</div>
+    <div class="arr">↙<br><span class="pct">67%</span><br>continue</div>
+    <div class="node beyond">-0.382</div>
+    <div class="arr">avg 17m</div>
+    <div class="node beyond">↘</div>
+  </div>
+  <div class="flow">
+    <div class="node start">-0.236</div>
+    <div class="arr">↗<br><span class="pct">30%</span><br>retrace</div>
+    <div class="node behind">PDC</div>
+    <div class="arr">avg 44m</div>
+    <div class="node behind">↗</div>
+  </div>
+
+  <div class="divlbl">By trigger hour (n=4,090)</div>
+  <div class="tbar-row"><div class="tbar-lbl">09:30</div><div class="tbar-bg"><div class="tbar-fill" style="width:76%;background:var(--bear)"></div></div><div class="tbar-val bear">76%</div></div>
+  <div class="tbar-row"><div class="tbar-lbl">10:00</div><div class="tbar-bg"><div class="tbar-fill" style="width:53%;background:var(--bear);opacity:.7"></div></div><div class="tbar-val" style="color:var(--t2)">53%</div></div>
+  <div class="tbar-row"><div class="tbar-lbl">11:00</div><div class="tbar-bg"><div class="tbar-fill" style="width:57%;background:var(--bear);opacity:.65"></div></div><div class="tbar-val" style="color:var(--t2)">57%</div></div>
+  <div class="tbar-row"><div class="tbar-lbl">12:00</div><div class="tbar-bg"><div class="tbar-fill" style="width:50%;background:var(--bear);opacity:.55"></div></div><div class="tbar-val" style="color:var(--t2)">50%</div></div>
+  <div class="tbar-row"><div class="tbar-lbl">13:00</div><div class="tbar-bg"><div class="tbar-fill" style="width:54%;background:var(--bear);opacity:.5"></div></div><div class="tbar-val" style="color:var(--t2)">54%</div></div>
+  <div class="tbar-row"><div class="tbar-lbl">14:00</div><div class="tbar-bg"><div class="tbar-fill" style="width:46%;background:var(--bear);opacity:.4"></div></div><div class="tbar-val" style="color:var(--t3)">46%</div></div>
+  <div class="tbar-row"><div class="tbar-lbl">15:00</div><div class="tbar-bg"><div class="tbar-fill" style="width:45%;background:var(--bear);opacity:.35"></div></div><div class="tbar-val" style="color:var(--t3)">45%</div></div>
+</div>
+
+<!-- Inner band table -->
+<div class="sec">
+  <div class="sec-num">04 &mdash; Inner Band (PDC ± 1 ATR)</div>
+  <div class="sec-title">All-day continuation vs retrace</div>
+
+  <table class="mtable">
+    <thead><tr><th>Level</th><th>N</th><th>Beyond</th><th>Behind</th><th>Last</th></tr></thead>
+    <tbody>
+      <tr><td>+1.00</td><td>908</td><td class="bull">42%</td><td class="blue">35%</td><td class="bear">21%</td></tr>
+      <tr><td>+0.786</td><td>1,492</td><td class="bull">43%</td><td class="blue">45%</td><td class="bear">11%</td></tr>
+      <tr class="hi"><td>+0.618 GG done</td><td>2,165</td><td class="bull">41%</td><td class="blue">52%</td><td>5%</td></tr>
+      <tr><td>+0.50</td><td>2,745</td><td class="bull">51%</td><td class="blue">44%</td><td>2%</td></tr>
+      <tr class="hi"><td>+0.382 GG entry</td><td>3,454</td><td class="bull">59%</td><td class="blue">37%</td><td>3%</td></tr>
+      <tr class="hi"><td>+0.236 call trig</td><td>4,400</td><td class="bull">68%</td><td class="blue">27%</td><td>4%</td></tr>
+      <tr class="hi"><td>-0.236 put trig</td><td>4,090</td><td class="bull">67%</td><td class="blue">30%</td><td>2%</td></tr>
+      <tr class="hi"><td>-0.382 GG entry</td><td>3,231</td><td class="bull">55%</td><td class="blue">42%</td><td>1%</td></tr>
+      <tr><td>-0.50</td><td>2,576</td><td class="bull">45%</td><td class="blue">51%</td><td>1%</td></tr>
+      <tr class="hi"><td>-0.618 GG done</td><td>2,116</td><td class="bull">37%</td><td class="blue">59%</td><td>2%</td></tr>
+      <tr><td>-0.786</td><td>1,580</td><td class="bull">42%</td><td class="blue">52%</td><td class="bear">6%</td></tr>
+      <tr><td>-1.00</td><td>1,057</td><td class="bull">42%</td><td class="blue">46%</td><td class="bear">11%</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Extension -->
+<div class="sec">
+  <div class="sec-num">05 &mdash; Extensions (beyond ±1 ATR)</div>
+  <div class="sec-title">Lower N, faster snap-backs</div>
+
+  <table class="mtable">
+    <thead><tr><th>Level</th><th>N</th><th>Beyond</th><th>Behind</th><th>Last</th><th>Med→back</th></tr></thead>
+    <tbody>
+      <tr><td>+2.00</td><td>38</td><td class="bull">26%</td><td class="blue">55%</td><td class="bear">13%</td><td>—</td></tr>
+      <tr><td>+1.786</td><td>79</td><td>25%</td><td class="blue">46%</td><td>19%</td><td>—</td></tr>
+      <tr><td>+1.618</td><td>139</td><td>29%</td><td class="blue">54%</td><td>12%</td><td>5m</td></tr>
+      <tr><td>+1.50</td><td>205</td><td>32%</td><td class="blue">56%</td><td>7%</td><td>5m</td></tr>
+      <tr><td>+1.382</td><td>311</td><td class="bull">43%</td><td>42%</td><td>10%</td><td>11m</td></tr>
+      <tr><td>+1.236</td><td>488</td><td class="bull">51%</td><td>26%</td><td>19%</td><td>34m</td></tr>
+      <tr><td>-1.236</td><td>637</td><td class="bull">50%</td><td>39%</td><td>9%</td><td>15m</td></tr>
+      <tr><td>-1.382</td><td>460</td><td class="bull">41%</td><td class="blue">51%</td><td>3%</td><td>3m</td></tr>
+      <tr><td>-1.50</td><td>361</td><td>30%</td><td class="blue">61%</td><td>2%</td><td>2m</td></tr>
+      <tr><td>-1.618</td><td>290</td><td>22%</td><td class="blue">69%</td><td>4%</td><td>2m</td></tr>
+      <tr><td>-1.786</td><td>208</td><td>30%</td><td class="blue">64%</td><td>4%</td><td>5m</td></tr>
+      <tr><td>-2.00</td><td>123</td><td class="bull">32%</td><td class="blue">61%</td><td>5%</td><td>9m</td></tr>
+    </tbody>
+  </table>
+  <div style="font-size:.7rem;color:var(--t3);margin-top:.4rem;line-height:1.5">
+    Single-digit median minutes for retrace at &plusmn;1.5+ extensions: tags don&rsquo;t hold.
+  </div>
+</div>
+
+<div class="sec">
+  <div class="sec-num">06 &mdash; Reading the time-of-day</div>
+  <div class="sec-title">Three regimes &mdash; pre-10:00, mid-day, post-15:00</div>
+
+  <ul class="blist">
+    <li><span class="key">09:30&ndash;10:00 = continuation regime.</span> Every level lights up green &mdash; <span class="val bull">76&ndash;78%</span> at the triggers, even <span class="val bull">70%</span> at &plusmn;0.618. Early breaks rarely retrace.</li>
+    <li><span class="key">10:00&ndash;14:00 = balanced.</span> Continuation drops into the 40&ndash;55% range; retrace climbs to 35&ndash;55%. Trigger trades become coin-flips between continuation and pivot retest.</li>
+    <li><span class="key">15:00&ndash;16:00 = last regime.</span> "Last" climbs to <span class="val bear">35&ndash;65%</span> for nearly every level. The session runs out before another adjacent level can fire.</li>
+    <li><span class="key">0.382 is sticky.</span> Both call- and put-side GG entries are retrace-favored on a same-bar basis &mdash; expect a fade back to the trigger before the push to 0.50/0.618.</li>
+    <li><span class="key">0.618 is a magnet but momentum returns past it.</span> Once GG completes, the next-out hit-rate climbs back above 50% on the way to 0.786.</li>
+  </ul>
+</div>
+
+</div><!-- /grid -->
+
+<div class="sec full" style="background:linear-gradient(135deg,#0f1118,#131620);border-bottom:none">
+  <div class="sec-num" style="color:var(--acc)">&#9733; Practical reads</div>
+  <div class="sec-title">Use the cascade as a path-handicapper</div>
+  <ul class="blist">
+    <li><span class="key">Trigger fired before 10:00:</span> bias is continuation (~77%). The PDC retrace probability under 25% lets you size into the next-level target without much retrace risk.</li>
+    <li><span class="key">Trigger fired 10:00&ndash;14:00:</span> roughly coin-flip. Entry needs another filter (HTF PO, compression, gap context) &mdash; the cascade alone is no longer enough edge.</li>
+    <li><span class="key">Trigger fired after 15:00:</span> "last" probability is the dominant outcome. Don&rsquo;t expect a follow-through swing &mdash; treat as a last-card scalp with tight bracket.</li>
+    <li><span class="key">Already at &plusmn;0.382 sticky-zone:</span> default expectation is a fade back to the trigger before the push to 0.50/0.618. Plan exits accordingly.</li>
+    <li><span class="key">Already at &plusmn;1.5+:</span> snap-back to the prior level is fast (median &lt; 10 minutes). Don&rsquo;t hold a flat position there &mdash; either flip with a stop or step aside.</li>
+  </ul>
+</div>
+
+<div class="ftr">
+  <span>milkmantrades.com &middot; ATR Levels by Saty Mahajan &middot; 25y SPY (2000&ndash;2025)</span>
+  <span>Draft &mdash; <a href="atr-cascade.html" style="color:var(--blue)">interactive explorer</a></span>
+</div>
+
+</div><!-- /poster -->
+
+<script>
+function savePNG() {
+  const btn = document.querySelector('.save-btn');
+  const orig = btn.textContent;
+  btn.textContent = 'Rendering...';
+  html2canvas(document.getElementById('poster'), {
+    scale: 2,
+    backgroundColor: '#0c0e12',
+    useCORS: true,
+  }).then(canvas => {
+    const a = document.createElement('a');
+    a.download = 'atr-cascade.png';
+    a.href = canvas.toDataURL('image/png');
+    a.click();
+    btn.textContent = '✓ Saved';
+    setTimeout(() => btn.textContent = orig, 2000);
+  });
+}
+</script>
+</body>
+</html>

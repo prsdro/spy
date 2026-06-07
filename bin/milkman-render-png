@@ -1,0 +1,151 @@
+#!/usr/bin/env python3
+"""Render a local HTML file to PNG for Milkman/TradeLab artifacts."""
+from __future__ import annotations
+
+import argparse
+import contextlib
+import os
+import shutil
+import socket
+import subprocess
+import sys
+import time
+import urllib.parse
+import urllib.request
+from pathlib import Path
+
+
+def chromium_path() -> str | None:
+    for candidate in [os.environ.get("CHROMIUM"), "/snap/bin/chromium", "/usr/bin/chromium", "/usr/bin/google-chrome", shutil.which("chromium"), shutil.which("google-chrome")]:
+        if candidate and Path(candidate).exists():
+            return candidate
+    return None
+
+
+def snap_private_path(out: Path) -> Path:
+    # Snap Chromium maps /tmp to a private tmp directory on this server.
+    if str(out).startswith("/tmp/"):
+        return Path("/tmp/snap-private-tmp/snap.chromium/tmp") / out.name
+    return out
+
+
+def free_port() -> int:
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.bind(("127.0.0.1", 0))
+        return int(s.getsockname()[1])
+
+
+@contextlib.contextmanager
+def local_http_url(html: Path):
+    # Use HTTP instead of file:// because Snap Chromium cannot reliably see /tmp paths.
+    port = free_port()
+    proc = subprocess.Popen(
+        [sys.executable, "-m", "http.server", str(port), "--bind", "127.0.0.1"],
+        cwd=str(html.parent),
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    )
+    url = f"http://127.0.0.1:{port}/{urllib.parse.quote(html.name)}"
+    last_exc = None
+    for _ in range(80):
+        try:
+            with urllib.request.urlopen(url, timeout=0.25) as r:
+                if r.status == 200:
+                    break
+        except Exception as exc:
+            last_exc = exc
+            time.sleep(0.1)
+    else:
+        proc.terminate()
+        raise RuntimeError(f"local render server did not become ready: {last_exc}")
+    try:
+        yield url
+    finally:
+        proc.terminate()
+        try:
+            proc.wait(timeout=3)
+        except subprocess.TimeoutExpired:
+            proc.kill()
+
+
+def render_playwright(html: Path, out: Path, width: int, height: str) -> bool:
+    try:
+        from playwright.sync_api import sync_playwright
+    except Exception:
+        return False
+    chrome = chromium_path()
+    try:
+        with sync_playwright() as p:
+            launch_kwargs = {"args": ["--no-sandbox", "--disable-gpu"]}
+            if chrome:
+                launch_kwargs["executable_path"] = chrome
+            browser = p.chromium.launch(**launch_kwargs)
+            page = browser.new_page(viewport={"width": width, "height": 1000 if height == "auto" else int(height)})
+            with local_http_url(html) as url:
+                page.goto(url, wait_until="networkidle", timeout=60000)
+                if height == "auto":
+                    page.screenshot(path=str(out), full_page=True)
+                else:
+                    page.screenshot(path=str(out), full_page=False)
+            browser.close()
+        return out.exists() and out.stat().st_size > 0
+    except Exception as exc:
+        print(f"playwright render failed, falling back to chromium cli: {exc}", file=sys.stderr)
+        return False
+
+
+def render_chromium_cli(html: Path, out: Path, width: int, height: str) -> bool:
+    chrome = chromium_path()
+    if not chrome:
+        raise SystemExit("No Chromium binary found. Set CHROMIUM=/path/to/chromium.")
+    h = 2600 if height == "auto" else int(height)
+    private = snap_private_path(out)
+    for p in [out, private]:
+        try:
+            p.unlink()
+        except FileNotFoundError:
+            pass
+    with local_http_url(html) as url:
+        cmd = [
+            chrome,
+            "--headless",
+            "--no-sandbox",
+            "--disable-gpu",
+            "--virtual-time-budget=8000",
+            f"--screenshot={out}",
+            f"--window-size={width},{h}",
+            url,
+        ]
+        subprocess.run(cmd, check=True)
+    if not out.exists() and private.exists():
+        shutil.copy2(private, out)
+    return out.exists() and out.stat().st_size > 0
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser(description="Render local HTML to PNG using Playwright or Chromium.")
+    ap.add_argument("html", help="Input HTML file")
+    ap.add_argument("out_png", help="Output PNG path")
+    ap.add_argument("--width", type=int, default=1800)
+    ap.add_argument("--height", default="auto", help="auto or integer viewport height")
+    args = ap.parse_args()
+
+    html = Path(args.html).expanduser().resolve()
+    out = Path(args.out_png).expanduser().resolve()
+    if not html.exists():
+        raise SystemExit(f"HTML not found: {html}")
+    out.parent.mkdir(parents=True, exist_ok=True)
+
+    ok = False
+    if args.height == "auto":
+        ok = render_playwright(html, out, args.width, args.height)
+    if not ok:
+        ok = render_chromium_cli(html, out, args.width, args.height)
+    if not ok:
+        raise SystemExit("Render failed")
+    print(f"rendered {out} bytes={out.stat().st_size}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

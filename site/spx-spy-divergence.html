@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPX vs SPY Morning Divergence | Milkman Trades</title>
+<meta name="description" content="When SPX and SPY's Saty Phase Oscillator and Pivot Ribbon diverge at the cash open, which side is the dominant signal? 18 years of 10-minute SPY (ETH) vs SPX (RTH) data measured.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥛</text></svg>">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --bg:#0c0e12;
+  --surface:#13161c;
+  --surface-2:#181c24;
+  --border:#1e2230;
+  --text:#e8eaed;
+  --text-dim:#6b7280;
+  --text-mid:#9ca3af;
+  --accent:#fbbf24;
+  --bull:#1cd48a;
+  --bull-bg:#0a1f15;
+  --bear:#ef6c00;
+  --bear-bg:#1f1208;
+  --blue:#38bdf8;
+  --blue-bg:#082331;
+  --violet:#a78bfa;
+  --violet-bg:#171126;
+}
+
+html{font-size:15px;scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'DM Sans',system-ui,sans-serif;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  z-index:-1;
+  background:linear-gradient(180deg, rgba(255,255,255,.018), transparent 46%);
+  pointer-events:none;
+}
+
+.page{max-width:820px;margin:0 auto;padding:3rem 1.5rem 5rem}
+
+.draft{
+  background:#1a1400;
+  border:1px solid #3d3200;
+  border-radius:6px;
+  padding:.6rem 1rem;
+  margin-bottom:1.5rem;
+  font-size:.75rem;
+  color:#d4a800;
+  line-height:1.5;
+}
+.draft strong{color:var(--accent)}
+
+.hero{margin-bottom:3.5rem}
+.kicker{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.7rem;
+  font-weight:500;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--accent);
+  margin-bottom:.75rem;
+}
+h1{
+  font-size:2.35rem;
+  font-weight:700;
+  letter-spacing:0;
+  line-height:1.12;
+  text-wrap:balance;
+  margin-bottom:1rem;
+}
+h1 em{
+  font-style:normal;
+  background:linear-gradient(135deg,var(--accent),var(--bear));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.lede{
+  max-width:650px;
+  font-size:1rem;
+  color:var(--text-mid);
+  font-weight:300;
+  line-height:1.7;
+  text-wrap:pretty;
+}
+
+.section{margin-bottom:3.5rem}
+.section-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.65rem;
+  font-weight:500;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--text-dim);
+  padding-bottom:.6rem;
+  border-bottom:1px solid var(--border);
+  margin-bottom:1.5rem;
+}
+.prose{
+  font-size:.92rem;
+  color:var(--text-mid);
+  font-weight:300;
+  line-height:1.75;
+  margin-bottom:1.5rem;
+  text-wrap:pretty;
+}
+.prose strong{color:var(--text);font-weight:500}
+.prose code{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.85em;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:4px;
+  padding:.05rem .35rem;
+  color:var(--accent);
+}
+
+.setup-strip{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:.5rem;
+  margin:1.75rem 0;
+}
+.setup-step{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:1rem;
+  min-height:118px;
+  position:relative;
+  overflow:hidden;
+}
+.setup-step::before{
+  content:'';
+  position:absolute;
+  left:0;top:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--accent),transparent);
+}
+.setup-step.bear::before{background:linear-gradient(90deg,var(--bear),transparent)}
+.setup-step.blue::before{background:linear-gradient(90deg,var(--blue),transparent)}
+.setup-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.68rem;
+  color:var(--text-dim);
+  margin-bottom:.55rem;
+}
+.setup-title{
+  font-size:.88rem;font-weight:600;color:var(--text);
+  line-height:1.25;margin-bottom:.45rem;
+}
+.setup-desc{
+  font-size:.72rem;color:var(--text-dim);line-height:1.45;
+}
+
+.bigstat{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:.65rem;
+  margin:2rem 0;
+}
+.bigstat-item{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:1.15rem;
+  position:relative;
+  overflow:hidden;
+}
+.bigstat-item::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+}
+.bigstat-item.bear::before{background:linear-gradient(90deg,var(--bear),transparent)}
+.bigstat-item.bull::before{background:linear-gradient(90deg,var(--bull),transparent)}
+.bigstat-item.blue::before{background:linear-gradient(90deg,var(--blue),transparent)}
+.bigstat-item.accent::before{background:linear-gradient(90deg,var(--accent),transparent)}
+.bigstat-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:1.8rem;
+  font-weight:700;
+  line-height:1;
+  margin-bottom:.4rem;
+  font-variant-numeric:tabular-nums;
+}
+.bigstat-num.bear{color:var(--bear)}
+.bigstat-num.bull{color:var(--bull)}
+.bigstat-num.blue{color:var(--blue)}
+.bigstat-num.accent{color:var(--accent)}
+.bigstat-label{font-size:.72rem;color:var(--text-dim);line-height:1.35}
+
+.data-table{
+  width:100%;
+  border-collapse:collapse;
+  margin:1.5rem 0;
+  font-size:.8rem;
+}
+.data-table th{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.62rem;font-weight:500;
+  letter-spacing:.06em;text-transform:uppercase;
+  color:var(--text-dim);text-align:right;
+  padding:.62rem .5rem;border-bottom:1px solid var(--border);
+  white-space:nowrap;
+}
+.data-table th:first-child{text-align:left}
+.data-table td{
+  padding:.58rem .5rem;border-bottom:1px solid #151820;
+  text-align:right;font-variant-numeric:tabular-nums;
+}
+.data-table td:first-child{text-align:left;color:var(--text);font-weight:500}
+.pct{font-family:'JetBrains Mono',monospace;font-weight:700}
+.pct.bear{color:var(--bear)}
+.pct.bull{color:var(--bull)}
+.pct.blue{color:var(--blue)}
+.pct.accent{color:var(--accent)}
+.pct.dim{color:var(--text-mid)}
+.n-col{font-family:'JetBrains Mono',monospace;color:var(--text-mid)}
+
+.callout{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:1rem 1.1rem;
+  margin:1.5rem 0;
+}
+.callout p{font-size:.84rem;color:var(--text-mid);line-height:1.65}
+.callout strong{color:var(--text);font-weight:500}
+.callout.warn{background:var(--bear-bg);border-color:#3d2108}
+.callout.warn strong{color:var(--bear)}
+.callout.bull{background:var(--bull-bg);border-color:#0d3a25}
+.callout.bull strong{color:var(--bull)}
+
+.study-links{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:.6rem;
+  margin:3rem 0 2rem;
+}
+.study-link{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:.5rem;padding:.8rem 1rem;
+  background:var(--surface);border:1px solid var(--border);border-radius:6px;
+  color:var(--text);text-decoration:none;font-size:.82rem;font-weight:500;
+  transition:border-color .15s,background .15s,transform .15s;
+}
+.study-link:hover{border-color:var(--accent);background:var(--surface-2);transform:translateY(-1px)}
+.study-link:active{transform:scale(.96)}
+.study-link svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;flex-shrink:0}
+
+.footer{
+  text-align:center;font-size:.72rem;color:var(--text-dim);
+  line-height:1.7;margin-top:2rem;padding-top:1.5rem;
+  border-top:1px solid var(--border);
+}
+.footer a{color:var(--text-dim);text-decoration:underline;text-underline-offset:2px}
+
+.reveal{opacity:0;transform:translateY(12px);transition:opacity .55s ease,transform .55s ease}
+.reveal.visible{opacity:1;transform:none}
+
+@media(max-width:760px){
+  .page{padding:2rem 1rem 4rem}
+  h1{font-size:1.9rem}
+  .setup-strip,.bigstat,.study-links{grid-template-columns:1fr}
+  .setup-step{min-height:auto}
+  .data-table{font-size:.74rem}
+  .data-table th,.data-table td{padding:.5rem .35rem}
+}
+</style>
+<script src="/nav.js"></script>
+</head>
+<body>
+<div class="page">
+
+<div class="draft">
+  <strong>Draft &mdash;</strong> First-pass exploratory study. Single 18-year sample, no VIX/regime stratification yet, no out-of-sample test. Read for context, not as a tradable signal.
+</div>
+
+<header class="hero reveal">
+  <div class="kicker">Study &mdash; SPX vs SPY Morning Divergence</div>
+  <h1>SPX&rsquo;s open-bar Phase&nbsp;Oscillator is <em>the lagging twin</em> &mdash; SPY&rsquo;s pre-market-cushioned reading is what carries the day.</h1>
+  <p class="lede">Big overnight gaps slam SPX&rsquo;s 10-minute EMA stack all at once at 09:30, because SPX has no extended-hours session. SPY&rsquo;s 04:00&ndash;09:30 pre-market bars partially absorb the same gap, so SPY&rsquo;s indicators arrive at the cash open already adjusted. The result: median <code>|PO_SPY &minus; PO_SPX|</code> at 09:30 is 40 oscillator units &mdash; about two full Saty zones &mdash; and the fast cloud disagrees on 38% of trading days. Across 4,527 RTH days from 2008 through 2026, SPY&rsquo;s reading wins.</p>
+</header>
+
+<div class="section reveal">
+  <div class="section-label">01 &mdash; The Setup</div>
+
+  <p class="prose">
+    Two parallel 10-minute datasets, joined on RTH timestamps. SPY indicators come from <code>ind_10m</code> (04:00&ndash;19:50 ET, mirroring a TradingView chart with pre-market on). SPX 10-minute bars are aggregated from FirstRateData 1-minute RTH-only data, then the same Saty Pivot Ribbon (EMA 8/13/21/48/200) and Phase Oscillator are computed from scratch on the SPX series. Gap is measured on SPY: <code>(SPY 09:30 first-bar open &minus; SPY prior daily close) / prior daily close</code>.
+  </p>
+
+  <div class="setup-strip">
+    <div class="setup-step">
+      <div class="setup-num">Step 01</div>
+      <div class="setup-title">Two indicator stacks</div>
+      <div class="setup-desc">SPY 10m indicators (with ETH bars) and SPX 10m indicators (RTH-only) computed independently using identical Saty formulas.</div>
+    </div>
+    <div class="setup-step blue">
+      <div class="setup-num">Step 02</div>
+      <div class="setup-title">Snapshot at 09:30</div>
+      <div class="setup-desc">First 10m RTH bar. Capture PO_SPY, PO_SPX, fast/slow cloud bullish flags for both. Compute <code>d_open = PO_SPY &minus; PO_SPX</code>.</div>
+    </div>
+    <div class="setup-step">
+      <div class="setup-num">Step 03</div>
+      <div class="setup-title">Track resolution</div>
+      <div class="setup-desc">Re-snapshot at 12:00 noon and 15:50 EOD. Decompose how the divergence closed: did SPY move toward SPX, or did SPX move toward SPY?</div>
+    </div>
+    <div class="setup-step bear">
+      <div class="setup-num">Sample</div>
+      <div class="setup-title">4,527 RTH days</div>
+      <div class="setup-desc">2008-01-09 through 2026-04-09. First 5 days dropped for EMA200 warm-up. No VIX or regime filtering at this stage.</div>
+    </div>
+  </div>
+</div>
+
+<div class="section reveal">
+  <div class="section-label">02 &mdash; How big is the divergence at the open?</div>
+
+  <div class="bigstat">
+    <div class="bigstat-item accent">
+      <div class="bigstat-num accent">40</div>
+      <div class="bigstat-label">Median |PO_SPY &minus; PO_SPX|<br>at 09:30 (oscillator units)</div>
+    </div>
+    <div class="bigstat-item bear">
+      <div class="bigstat-num bear">98</div>
+      <div class="bigstat-label">90th-pct |d_open|<br>p95 = 115 units</div>
+    </div>
+    <div class="bigstat-item blue">
+      <div class="bigstat-num blue">37.6%</div>
+      <div class="bigstat-label">Fast-cloud disagreement<br>SPY vs SPX at 09:30</div>
+    </div>
+    <div class="bigstat-item bull">
+      <div class="bigstat-num bull">92.6%</div>
+      <div class="bigstat-label">Of days, |d_eod| &lt; |d_open|<br>convergence is universal</div>
+    </div>
+  </div>
+
+  <p class="prose">
+    PO zones are 23.6 units wide. The typical SPX-vs-SPY gap at the open is roughly two zones; the worst 5% of days are five zones apart. By 16:00 the median residual is just <strong>5 oscillator units</strong> regardless of gap size &mdash; the divergence universally resolves. <em>How</em> it resolves is where the signal lives.
+  </p>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>|Gap| at open</th>
+        <th>N</th>
+        <th>Median |d_open|</th>
+        <th>Median |d_noon|</th>
+        <th>Median |d_eod|</th>
+        <th>Fast mismatch</th>
+        <th>Slow mismatch</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>&lt; 0.25%</td><td class="n-col">1,912</td><td>38.5</td><td>11.5</td><td class="pct dim">4.5</td><td class="pct accent">45.0%</td><td class="pct accent">35.7%</td></tr>
+      <tr><td>0.25 &ndash; 0.5%</td><td class="n-col">1,185</td><td>37.9</td><td>17.4</td><td class="pct dim">4.6</td><td class="pct accent">35.4%</td><td class="pct accent">39.5%</td></tr>
+      <tr><td>0.5 &ndash; 1%</td><td class="n-col">924</td><td>42.5</td><td>25.7</td><td class="pct dim">5.3</td><td class="pct accent">31.3%</td><td class="pct accent">40.4%</td></tr>
+      <tr><td><strong>&geq; 1%</strong></td><td class="n-col">506</td><td>48.0</td><td>33.4</td><td class="pct dim">6.2</td><td class="pct accent">25.9%</td><td class="pct accent">35.8%</td></tr>
+    </tbody>
+  </table>
+  <p class="prose" style="font-size:.78rem;margin-top:-.5rem">Bigger gaps produce bigger divergences and slower convergence (median |d_noon| rises from 11.5 in the smallest bin to 33.4 in the &geq;1% bin), but the EOD residual lands in the 4&ndash;6 unit range across all bins.</p>
+</div>
+
+<div class="section reveal">
+  <div class="section-label">03 &mdash; Q1: is there a signal in <em>how</em> it resolves? &mdash; yes</div>
+
+  <p class="prose">
+    Split |gap| &geq; 1% days into four cohorts by gap direction and the sign of <code>d_open = PO_SPY &minus; PO_SPX</code>. The afternoon return splits cleanly. The strongest case &mdash; gap-down with SPY&rsquo;s PO higher than SPX&rsquo;s &mdash; runs <strong>+0.18% full-day</strong> on average; its mirror &mdash; gap-down with SPX&rsquo;s PO higher than SPY&rsquo;s &mdash; runs <strong>&minus;0.36% full-day</strong> with a 43% afternoon up-rate. A 0.54-percent spread between symmetric cohorts is a real intraday signal.
+  </p>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>|Gap| &geq; 1.0% cohort</th>
+        <th>N</th>
+        <th>Morning</th>
+        <th>Afternoon</th>
+        <th>Aft up-rate</th>
+        <th>Full-day</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Gap-up &middot; SPY_PO &gt; SPX_PO</td><td class="n-col">85</td><td>+0.07%</td><td class="pct bull">+0.50%</td><td class="pct bull">56.5%</td><td class="pct bull">+0.56%</td></tr>
+      <tr><td>Gap-up &middot; SPX_PO &gt; SPY_PO</td><td class="n-col">151</td><td>&minus;0.05%</td><td class="pct dim">+0.12%</td><td class="pct dim">55.6%</td><td class="pct dim">+0.06%</td></tr>
+      <tr><td>Gap-down &middot; SPY_PO &gt; SPX_PO</td><td class="n-col">186</td><td class="pct bull">+0.14%</td><td class="pct dim">+0.04%</td><td class="pct dim">53.8%</td><td class="pct bull">+0.18%</td></tr>
+      <tr><td><strong>Gap-down &middot; SPX_PO &gt; SPY_PO</strong></td><td class="n-col">84</td><td>&minus;0.03%</td><td class="pct bear">&minus;0.34%</td><td class="pct bear">42.9%</td><td class="pct bear">&minus;0.36%</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <p><strong>Reading the cohorts:</strong> when gap-direction and PO-direction <em>agree</em> (SPY-bullish on a gap up, or SPY-more-bearish on a gap down where SPX hasn&rsquo;t caught down yet), SPY drifts further in the gap&rsquo;s direction over the day. When they <em>disagree</em>, the gap fades. The divergence direction is what predicts the afternoon, not the gap by itself.</p>
+  </div>
+</div>
+
+<div class="section reveal">
+  <div class="section-label">04 &mdash; Q2: which side dominates? &mdash; SPY</div>
+
+  <p class="prose">
+    Decompose the open&rarr;EOD convergence into how much each side moved. <code>closure_by_spy = &minus;sign(d_open) &middot; &Delta;PO_SPY</code> measures how much SPY moved toward SPX&rsquo;s reading; <code>closure_by_spx</code> the reverse. Then bucket each |gap| &geq; 1% day by which side did more of the closing.
+  </p>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>|Gap| &geq; 1% &middot; convergence path</th>
+        <th>N</th>
+        <th>Morning</th>
+        <th>Afternoon</th>
+        <th>Aft up-rate</th>
+        <th>Full-day</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Gap-up &middot; SPX caught up to SPY</td><td class="n-col">153</td><td>&minus;0.12%</td><td class="pct dim">+0.25%</td><td class="pct dim">52.3%</td><td class="pct dim">+0.13%</td></tr>
+      <tr><td><strong>Gap-up &middot; SPY caught down to SPX</strong></td><td class="n-col">83</td><td class="pct bull">+0.19%</td><td class="pct bull">+0.26%</td><td class="pct bull">62.7%</td><td class="pct bull">+0.45%</td></tr>
+      <tr><td>Gap-down &middot; SPX caught down to SPY</td><td class="n-col">187</td><td>+0.10%</td><td class="pct dim">+0.05%</td><td class="pct dim">56.2%</td><td class="pct dim">+0.15%</td></tr>
+      <tr><td><strong>Gap-down &middot; SPY caught down to SPX</strong></td><td class="n-col">83</td><td>+0.06%</td><td class="pct bear">&minus;0.36%</td><td class="pct bear">37.3%</td><td class="pct bear">&minus;0.29%</td></tr>
+    </tbody>
+  </table>
+
+  <p class="prose">
+    On <strong>62%</strong> of |gap| &geq; 1% days SPX is the one that moves &mdash; it absorbs the gap shock that SPY&rsquo;s pre-market session already metabolized. The default story is &ldquo;SPY had it right; SPX caught up.&rdquo; The exception is the bottom row: when SPY is the side that ends up moving (i.e. SPX&rsquo;s reading was the right one and SPY rolled over to match it), gap-down days deliver the worst afternoons in the sample &mdash; 37.3% afternoon up-rate, &minus;0.36% afternoon mean. Rare, but informative.
+  </p>
+
+  <div class="callout bull">
+    <p><strong>Practical read:</strong> at the cash open after a big gap, weight SPY&rsquo;s Saty stack &mdash; it is the leading indicator. SPX&rsquo;s 09:30 PO/Ribbon are dominated by RTH-only EMA mechanics, not by genuine new information.</p>
+  </div>
+</div>
+
+<div class="section reveal">
+  <div class="section-label">05 &mdash; Categorical version: fast-cloud mismatch at the open</div>
+
+  <p class="prose">
+    The Phase Oscillator is a continuous scalar; the Pivot Ribbon&rsquo;s fast-cloud color (EMA8 vs EMA21) is binary and is the signal you read off a chart in one glance. Same finding, simpler to use in real-time.
+  </p>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Fast cloud at 09:30 (|gap| &geq; 0.5%)</th>
+        <th>N</th>
+        <th>Morning</th>
+        <th>Afternoon</th>
+        <th>Aft up-rate</th>
+        <th>Full-day</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>SPY bull &middot; SPX bear</strong></td><td class="n-col">231</td><td>&minus;0.04%</td><td class="pct bull">+0.32%</td><td class="pct bull">61.0%</td><td class="pct bull">+0.28%</td></tr>
+      <tr><td><strong>SPY bear &middot; SPX bull</strong></td><td class="n-col">189</td><td>&minus;0.03%</td><td class="pct bear">&minus;0.12%</td><td class="pct bear">46.6%</td><td class="pct bear">&minus;0.14%</td></tr>
+      <tr><td>Both bull (no mismatch)</td><td class="n-col">532</td><td class="pct dim">+0.08%</td><td class="pct dim">+0.01%</td><td class="pct dim">55.3%</td><td class="pct dim">+0.10%</td></tr>
+      <tr><td>Both bear (no mismatch)</td><td class="n-col">478</td><td class="pct dim">&minus;0.00%</td><td class="pct dim">+0.03%</td><td class="pct dim">52.1%</td><td class="pct dim">+0.02%</td></tr>
+    </tbody>
+  </table>
+
+  <p class="prose">
+    Mismatch days deliver a <strong>0.42% full-day spread</strong> between SPY-bull/SPX-bear and SPY-bear/SPX-bull. The asymmetry holds: SPY&rsquo;s color leads. When the two ribbons agree (both bull or both bear), the day is a wash relative to the unconditional baseline.
+  </p>
+</div>
+
+<div class="section reveal">
+  <div class="section-label">06 &mdash; Why this happens (the mechanism)</div>
+
+  <p class="prose">
+    SPX is a price index of 500 stocks computed only during cash hours; SPY is an ETF that trades 04:00&ndash;20:00 ET. Saty&rsquo;s Phase Oscillator on a 10-minute chart is <code>EMA(((close &minus; EMA21) / (3 &middot; ATR14)) &middot; 100, 3)</code>. EMA21 on the SPY 10m chart accumulates pre-market bars; on the SPX 10m chart it does not. After a gap, SPY&rsquo;s 09:30 close sits closer to its already-adjusted EMA21, so PO_SPY reads near-neutral. SPX&rsquo;s 09:30 close has just jumped onto an EMA stack still anchored to yesterday&rsquo;s RTH levels, so PO_SPX reads extreme. The same logic applies to the Pivot Ribbon&rsquo;s 8/21 fast-cloud color.
+  </p>
+
+  <p class="prose">
+    The largest example in the sample: <strong>2026-04-08</strong>, a +2.6% gap up. PO_SPY at 09:30 was &minus;11.6 (slightly bearish, EMA stack already adjusted). PO_SPX at 09:30 was <strong>+138</strong> (extended_up &mdash; the gap detonated SPX&rsquo;s normalization). By EOD the divergence collapsed to &minus;19. SPY closed roughly flat for the day (&minus;0.08%). The SPX &ldquo;extended_up&rdquo; signal was structural noise; the SPY near-neutral read was the truth.
+  </p>
+</div>
+
+<div class="section reveal">
+  <div class="section-label">07 &mdash; Methodology Notes &amp; Caveats</div>
+
+  <p class="prose">
+    <strong>Data:</strong> SPY from <code>spy.db ind_10m</code> (550K 10m rows, 04:00&ndash;19:50 ET, 2000-01 onward). SPX from FirstRateData <code>SPX_full_1min_*.zip</code> aggregated to 10m RTH (179K rows, 2008-01-02 onward). Common RTH date intersection: 4,573 days; 4,532 retained after gap-pricing; 4,527 after dropping 5 EMA-warm-up days.<br>
+    <strong>Indicators:</strong> Pivot Ribbon EMAs and Phase Oscillator computed identically across both datasets using <code>indicators.py</code>&rsquo;s formulas (Wilder ATR, span EMAs, no Saty <code>period_index</code> shift since these are intrabar quantities, not level anchors).<br>
+    <strong>Snapshots:</strong> 09:30 first-bar values for divergence, 12:00 for noon checkpoint, 15:50 final RTH 10m bar for EOD. SPY morning return = open &rarr; 12:00 close; afternoon = 12:00 close &rarr; 15:50 close.<br>
+    <strong>Gap:</strong> <code>(SPY 09:30 first-bar open &minus; prior <code>candles_1d</code> close) / prior <code>candles_1d</code> close &middot; 100</code>. Daily candles are RTH-only and 2%-clipped against bad ticks, so the gap definition is the conventional cash-session open vs. prior cash close.
+  </p>
+
+  <div class="callout warn">
+    <p><strong>Open caveats &mdash; do not trade off this page yet:</strong> (1) No VIX-regime stratification. Edge size likely concentrates in higher-vol environments. (2) No FOMC/CPI/OpEx exclusion. (3) Sample includes 2008&ndash;2009 GFC tail; needs a 2010+ re-cut to confirm robustness. (4) No transaction-cost or slippage model on the implied morning fade trade. (5) Gap is measured on SPY; an SPX-native gap would be marginally cleaner. (6) Not yet checked whether a similar setup exists with the slow cloud (13/48) carrying more signal than the fast cloud (8/21).</p>
+  </div>
+</div>
+
+<div class="section reveal">
+  <div class="section-label">08 &mdash; Output Files</div>
+
+  <p class="prose">
+    <code>backtest_spx_spy_divergence.py</code> &mdash; analysis script.<br>
+    <code>analyst/spx_spy_divergence_summary.csv</code> &mdash; 4,527 daily records.<br>
+    <code>analyst/spx_spy_divergence_by_gap.csv</code> &mdash; binned summary.<br>
+    <code>analyst/spx_spy_divergence_signal_05.csv</code>, <code>_signal_10.csv</code> &mdash; sign(d_open) cohorts.<br>
+    <code>analyst/spx_spy_divergence_convergence_05.csv</code>, <code>_10.csv</code> &mdash; who-closed-the-gap cohorts.<br>
+    <code>analyst/spx_spy_divergence_ribbon_05.csv</code> &mdash; fast-cloud mismatch cohorts.<br>
+    <code>analyst/spx_spy_divergence_run.log</code> &mdash; full run log.
+  </p>
+</div>
+
+<div class="study-links">
+  <a href="/gap-fills.html" class="study-link">
+    Gap Fill (midpoint)
+    <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+  </a>
+  <a href="/tenam-traffic.html" class="study-link">
+    TenAM PO Divergence
+    <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+  </a>
+  <a href="/atr-cascade.html" class="study-link">
+    ATR Level Cascade
+    <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+  </a>
+</div>
+
+<footer class="footer">
+  Indicators by <a href="https://satyland.com" target="_blank" rel="noopener">Saty Mahajan</a><br>
+  Data: SPY 10m ETH from spy.db, SPX 10m RTH from FirstRateData &middot; 2008-01 through 2026-04 &middot; 4,527 RTH days<br>
+  <a href="https://milkmantrades.com">Milkman Trades</a>
+</footer>
+
+</div>
+
+<script>
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if(!e.isIntersecting) return;
+    e.target.classList.add('visible');
+    observer.unobserve(e.target);
+  });
+}, {threshold:.1});
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

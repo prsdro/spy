@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tesrak Data Upload</title>
+  <style>
+    :root { color-scheme: dark; --bg:#080b10; --card:#111827; --line:#263244; --text:#edf3ff; --muted:#9aa8bd; --accent:#4fd1c5; --bad:#fb7185; --good:#86efac; }
+    * { box-sizing:border-box; }
+    body { margin:0; min-height:100vh; display:grid; place-items:center; background:radial-gradient(circle at 20% 10%, #16324c, transparent 34%), radial-gradient(circle at 90% 80%, #203326, transparent 30%), var(--bg); font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif; color:var(--text); }
+    main { width:min(760px, calc(100vw - 32px)); background:rgba(17,24,39,.92); border:1px solid var(--line); border-radius:24px; padding:34px; box-shadow:0 24px 90px rgba(0,0,0,.45); }
+    h1 { margin:0 0 8px; font-size:clamp(28px, 5vw, 46px); letter-spacing:-.04em; }
+    p { color:var(--muted); line-height:1.55; }
+    label { display:block; font-weight:700; margin:22px 0 8px; }
+    input[type=password], input[type=file] { width:100%; border:1px solid var(--line); background:#0b1220; color:var(--text); border-radius:14px; padding:14px; font-size:16px; }
+    input[type=file] { border-style:dashed; padding:28px; }
+    button { margin-top:24px; width:100%; border:0; border-radius:14px; padding:16px 18px; font-size:17px; font-weight:800; color:#041014; background:linear-gradient(135deg, var(--accent), #b6f3d2); cursor:pointer; }
+    button:disabled { opacity:.55; cursor:not-allowed; }
+    .note { border:1px solid var(--line); background:#0b1220; border-radius:16px; padding:14px 16px; margin:18px 0; }
+    progress { width:100%; height:18px; margin-top:18px; }
+    pre { white-space:pre-wrap; word-break:break-word; border:1px solid var(--line); background:#06101c; padding:14px; border-radius:14px; color:#d7e7ff; }
+    .ok { color:var(--good); } .bad { color:var(--bad); }
+  </style>
+</head>
+<body>
+<main>
+  <h1>Tesrak upload</h1>
+  <p>Upload compressed 10-minute ticker data here. Files are stored directly on the Milkman server in the Tesrak incoming folder.</p>
+  <div class="note">
+    <strong>Max folder size:</strong> 50 GB total in the Tesrak incoming folder<br>
+    <strong>Max file size:</strong> none, as long as the folder stays under 50 GB<br>
+    <strong>Accepted:</strong> .csv, .csv.gz, .zip, .parquet, .json, .txt, .xlsx, .xls, .7z
+  </div>
+  <form id="form">
+    <label for="password">Upload password</label>
+    <input id="password" name="password" type="password" autocomplete="off" required>
+
+    <label for="files">Files</label>
+    <input id="files" name="files" type="file" multiple required>
+
+    <button id="button" type="submit">Upload files</button>
+  </form>
+  <progress id="progress" value="0" max="100" hidden></progress>
+  <pre id="result" hidden></pre>
+</main>
+<script>
+const form = document.getElementById('form');
+const result = document.getElementById('result');
+const progress = document.getElementById('progress');
+const button = document.getElementById('button');
+function show(text, ok=false) { result.hidden = false; result.className = ok ? 'ok' : 'bad'; result.textContent = text; }
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const data = new FormData(form);
+  const xhr = new XMLHttpRequest();
+  xhr.open('POST', '/tesrak-upload/upload');
+  xhr.upload.onprogress = (ev) => {
+    if (ev.lengthComputable) { progress.hidden = false; progress.value = Math.round(ev.loaded / ev.total * 100); }
+  };
+  xhr.onload = () => {
+    button.disabled = false;
+    try {
+      const parsed = JSON.parse(xhr.responseText);
+      if (xhr.status >= 200 && xhr.status < 300 && parsed.ok) {
+        show('Upload complete:\n' + parsed.saved.map(f => `• ${f.original_filename} -> ${f.stored_path} (${f.size_human})`).join('\n') + `\n\nFolder used: ${parsed.folder_used}\nFolder remaining: ${parsed.folder_remaining}`, true);
+      } else { show(parsed.detail || xhr.responseText || 'Upload failed'); }
+    } catch { show(xhr.responseText || 'Upload failed'); }
+  };
+  xhr.onerror = () => { button.disabled = false; show('Network error during upload.'); };
+  button.disabled = true;
+  result.hidden = true;
+  progress.hidden = false;
+  progress.value = 0;
+  xhr.send(data);
+});
+</script>
+</body>
+</html>

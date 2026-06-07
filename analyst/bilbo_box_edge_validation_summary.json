@@ -1,0 +1,385 @@
+{
+  "study": "bilbo_box_edge_validation",
+  "locked_setup": {
+    "cut": "3m_bull_x_10m_po",
+    "label": "3m BULL \u00d7 10m PO bull_exp+rising",
+    "entry_mode": "immediate_touch",
+    "variant": "short_box_tight_atr_gap",
+    "initial_stop": "tight_half_R (0.5R against entry)",
+    "target": "T2 = 1.0R (single-contract bracket)",
+    "max_bars": 15,
+    "R_definition": "box_high - box_low",
+    "tight_atr_quantile": 0.25,
+    "atr_threshold_used": 0.0820758650173703,
+    "breakeven_hit_rate_for_2to1": 0.3333333333333333
+  },
+  "headline": {
+    "n": 394,
+    "t2_hit_rate": 0.4720812182741117,
+    "stop_rate": 0.5203045685279187,
+    "timeout_rate": 0.007614213197969543,
+    "mean_R_per_trade": 0.21124296885718968,
+    "median_R_per_trade": -0.49999999999978695,
+    "profit_factor": 1.8098619329389092,
+    "max_consecutive_losses": 9,
+    "max_drawdown_R": -4.49999999999997,
+    "expected_R_per_1000_trades": 211.24296885718968
+  },
+  "walk_forward": [
+    {
+      "year": 2000,
+      "n": 13,
+      "qualifying": false,
+      "win_pct": 0.15384615384615385,
+      "avg_R": -0.2692307692307692,
+      "profit_factor": null,
+      "clears_breakeven": null
+    },
+    {
+      "year": 2001,
+      "n": 12,
+      "qualifying": false,
+      "win_pct": 0.6666666666666666,
+      "avg_R": 0.5416666666666666,
+      "profit_factor": null,
+      "clears_breakeven": null
+    },
+    {
+      "year": 2002,
+      "n": 8,
+      "qualifying": false,
+      "win_pct": 0.5,
+      "avg_R": 0.24999999999999287,
+      "profit_factor": null,
+      "clears_breakeven": null
+    },
+    {
+      "year": 2003,
+      "n": 7,
+      "qualifying": false,
+      "win_pct": 0.2857142857142857,
+      "avg_R": -0.07142857142856898,
+      "profit_factor": null,
+      "clears_breakeven": null
+    },
+    {
+      "year": 2004,
+      "n": 3,
+      "qualifying": false,
+      "win_pct": 0.0,
+      "avg_R": -0.4999999999999662,
+      "profit_factor": null,
+      "clears_breakeven": null
+    },
+    {
+      "year": 2005,
+      "n": 4,
+      "qualifying": false,
+      "win_pct": 0.5,
+      "avg_R": 0.2499999999999778,
+      "profit_factor": null,
+      "clears_breakeven": null
+    },
+    {
+      "year": 2006,
+      "n": 7,
+      "qualifying": false,
+      "win_pct": 0.2857142857142857,
+      "avg_R": -0.07142857142853774,
+      "profit_factor": null,
+      "clears_breakeven": null
+    },
+    {
+      "year": 2007,
+      "n": 10,
+      "qualifying": false,
+      "win_pct": 0.5,
+      "avg_R": 0.25000000000001665,
+      "profit_factor": null,
+      "clears_breakeven": null
+    },
+    {
+      "year": 2008,
+      "n": 8,
+      "qualifying": false,
+      "win_pct": 0.75,
+      "avg_R": 0.625,
+      "profit_factor": null,
+      "clears_breakeven": null
+    },
+    {
+      "year": 2009,
+      "n": 10,
+      "qualifying": false,
+      "win_pct": 0.6,
+      "avg_R": 0.39999999999997027,
+      "profit_factor": null,
+      "clears_breakeven": null
+    },
+    {
+      "year": 2010,
+      "n": 8,
+      "qualifying": false,
+      "win_pct": 0.375,
+      "avg_R": 0.06249999999999048,
+      "profit_factor": null,
+      "clears_breakeven": null
+    },
+    {
+      "year": 2011,
+      "n": 19,
+      "qualifying": false,
+      "win_pct": 0.5263157894736842,
+      "avg_R": 0.289473684210534,
+      "profit_factor": null,
+      "clears_breakeven": null
+    },
+    {
+      "year": 2012,
+      "n": 14,
+      "qualifying": false,
+      "win_pct": 0.5,
+      "avg_R": 0.24999999999999517,
+      "profit_factor": null,
+      "clears_breakeven": null
+    },
+    {
+      "year": 2013,
+      "n": 16,
+      "qualifying": false,
+      "win_pct": 0.375,
+      "avg_R": 0.06249999999995137,
+      "profit_factor": null,
+      "clears_breakeven": null
+    },
+    {
+      "year": 2014,
+      "n": 11,
+      "qualifying": false,
+      "win_pct": 0.6363636363636364,
+      "avg_R": 0.45454545454544876,
+      "profit_factor": null,
+      "clears_breakeven": null
+    },
+    {
+      "year": 2015,
+      "n": 15,
+      "qualifying": false,
+      "win_pct": 0.4,
+      "avg_R": 0.10000000000002132,
+      "profit_factor": null,
+      "clears_breakeven": null
+    },
+    {
+      "year": 2016,
+      "n": 17,
+      "qualifying": false,
+      "win_pct": 0.47058823529411764,
+      "avg_R": 0.20588235294114804,
+      "profit_factor": null,
+      "clears_breakeven": null
+    },
+    {
+      "year": 2017,
+      "n": 21,
+      "qualifying": false,
+      "win_pct": 0.6666666666666666,
+      "avg_R": 0.5000000000000306,
+      "profit_factor": null,
+      "clears_breakeven": null
+    },
+    {
+      "year": 2018,
+      "n": 21,
+      "qualifying": false,
+      "win_pct": 0.5238095238095238,
+      "avg_R": 0.28571428571427526,
+      "profit_factor": null,
+      "clears_breakeven": null
+    },
+    {
+      "year": 2019,
+      "n": 25,
+      "qualifying": false,
+      "win_pct": 0.44,
+      "avg_R": 0.15999999999999737,
+      "profit_factor": null,
+      "clears_breakeven": null
+    },
+    {
+      "year": 2020,
+      "n": 32,
+      "qualifying": false,
+      "win_pct": 0.5625,
+      "avg_R": 0.34375000000003786,
+      "profit_factor": null,
+      "clears_breakeven": null
+    },
+    {
+      "year": 2021,
+      "n": 34,
+      "qualifying": false,
+      "win_pct": 0.47058823529411764,
+      "avg_R": 0.22058823529411717,
+      "profit_factor": null,
+      "clears_breakeven": null
+    },
+    {
+      "year": 2022,
+      "n": 20,
+      "qualifying": false,
+      "win_pct": 0.3,
+      "avg_R": -0.04999999999999194,
+      "profit_factor": null,
+      "clears_breakeven": null
+    },
+    {
+      "year": 2023,
+      "n": 18,
+      "qualifying": false,
+      "win_pct": 0.6111111111111112,
+      "avg_R": 0.41666666666666186,
+      "profit_factor": null,
+      "clears_breakeven": null
+    },
+    {
+      "year": 2024,
+      "n": 22,
+      "qualifying": false,
+      "win_pct": 0.4090909090909091,
+      "avg_R": 0.11363636363641967,
+      "profit_factor": null,
+      "clears_breakeven": null
+    },
+    {
+      "year": 2025,
+      "n": 15,
+      "qualifying": false,
+      "win_pct": 0.26666666666666666,
+      "avg_R": -0.08468468468461263,
+      "profit_factor": null,
+      "clears_breakeven": null
+    },
+    {
+      "year": 2026,
+      "n": 4,
+      "qualifying": false,
+      "win_pct": 0.5,
+      "avg_R": 0.24999999999999917,
+      "profit_factor": null,
+      "clears_breakeven": null
+    }
+  ],
+  "walk_forward_min_trades_per_year": 50,
+  "monte_carlo": {
+    "n_paths": 5000,
+    "path_len": 1000,
+    "seed": 42,
+    "median_final_R": 211.45945945946994,
+    "p10_final_R": 180.4189189189298,
+    "p90_final_R": 242.41891891892695,
+    "pct_positive": 1.0,
+    "pct_dd_worse_than_neg50R": 0.0
+  },
+  "sensitivity_grid": [
+    {
+      "stop_R": 0.45,
+      "target_R": 0.95,
+      "n": 394,
+      "win_pct": 0.46954314720812185,
+      "avg_R": 0.21010083687748704,
+      "ev_per_1000": 210.10083687748704
+    },
+    {
+      "stop_R": 0.45,
+      "target_R": 1.0,
+      "n": 394,
+      "win_pct": 0.4619289340101523,
+      "avg_R": 0.22253738510083726,
+      "ev_per_1000": 222.53738510083727
+    },
+    {
+      "stop_R": 0.45,
+      "target_R": 1.05,
+      "n": 394,
+      "win_pct": 0.43908629441624364,
+      "avg_R": 0.21136987241048197,
+      "ev_per_1000": 211.36987241048197
+    },
+    {
+      "stop_R": 0.5,
+      "target_R": 0.95,
+      "n": 394,
+      "win_pct": 0.48223350253807107,
+      "avg_R": 0.20235972012621806,
+      "ev_per_1000": 202.35972012621806
+    },
+    {
+      "stop_R": 0.5,
+      "target_R": 1.0,
+      "n": 394,
+      "win_pct": 0.4720812182741117,
+      "avg_R": 0.21124296885718247,
+      "ev_per_1000": 211.24296885718246
+    },
+    {
+      "stop_R": 0.5,
+      "target_R": 1.05,
+      "n": 394,
+      "win_pct": 0.4467005076142132,
+      "avg_R": 0.19550692824804541,
+      "ev_per_1000": 195.50692824804543
+    },
+    {
+      "stop_R": 0.55,
+      "target_R": 0.95,
+      "n": 394,
+      "win_pct": 0.5076142131979695,
+      "avg_R": 0.21314652215667487,
+      "ev_per_1000": 213.14652215667488
+    },
+    {
+      "stop_R": 0.55,
+      "target_R": 1.0,
+      "n": 394,
+      "win_pct": 0.49746192893401014,
+      "avg_R": 0.2226642886541368,
+      "ev_per_1000": 222.66428865413678
+    },
+    {
+      "stop_R": 0.55,
+      "target_R": 1.05,
+      "n": 394,
+      "win_pct": 0.4720812182741117,
+      "avg_R": 0.20680134449170023,
+      "ev_per_1000": 206.80134449170023
+    }
+  ],
+  "friction": {
+    "slippage_per_side_points": 0.02,
+    "commission_per_side_points": 0.01,
+    "friction_per_trade_points": 0.06,
+    "mean_cost_R_per_trade": 0.49277123068821604,
+    "median_cost_R_per_trade": 0.3751172607880377,
+    "mean_R_after_friction": -0.28152826183102636,
+    "profit_factor_after_friction": 0.4731036547363522,
+    "ev_per_1000_after_friction": -281.5282618310264
+  },
+  "verdict": "not_publishable",
+  "verdict_criteria": {
+    "n_criteria_met": 2,
+    "full_win_pct_gt_36": true,
+    "year_pass_ratio_ge_60pct": false,
+    "mc_p10_positive": true,
+    "friction_ev_positive": false,
+    "qualifying_years": 0,
+    "qualifying_years_passing": 0,
+    "year_pass_ratio": 0.0,
+    "criteria_definitions": {
+      "full_win_pct_gt_36": "headline t2_hit_rate > 0.36",
+      "year_pass_ratio_ge_60pct": ">= 60% of years with n>=50 clear 33.3%",
+      "mc_p10_positive": "Monte Carlo 10th percentile final R > 0",
+      "friction_ev_positive": "EV per 1,000 trades after friction > 0"
+    }
+  }
+}

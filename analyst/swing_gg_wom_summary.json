@@ -6,17 +6,20 @@
     "date_start": "2000-11-27",
     "date_end": "2026-05-01",
     "n_months": 293,
-    "months_up_gate_opens": 177,
-    "months_dn_gate_opens": 139,
-    "months_both_open": 48
+    "horizon_days": 5,
+    "months_up_gate_opens": 166,
+    "months_dn_gate_opens": 126,
+    "months_both_open": 36,
+    "excluded_clock_truncated_up": 11,
+    "excluded_clock_truncated_dn": 13
   },
   "up": {
     "overall": {
-      "n": 177,
-      "completes": 57.6,
-      "complete_5d": 33.9,
-      "cont_786_given_complete": 57.8,
-      "cont_100_given_complete": 25.5
+      "n": 166,
+      "completes": 60.8,
+      "complete_5d": 33.7,
+      "cont_786_given_complete": 57.4,
+      "cont_100_given_complete": 25.7
     },
     "by_wom": [
       {
@@ -55,71 +58,60 @@
       {
         "wom": 4,
         "wom_name": "Week 4",
-        "n": 16,
-        "median_remaining": 5,
-        "completes": 25.0,
-        "complete_5d": 25.0,
-        "cont_786_given_complete": 50.0,
+        "n": 9,
+        "median_remaining": 7,
+        "completes": 33.3,
+        "complete_5d": 22.2,
+        "cont_786_given_complete": 33.3,
         "cont_100_given_complete": 0.0,
-        "median_days_to_complete": 2
-      },
-      {
-        "wom": 5,
-        "wom_name": "Week 5",
-        "n": 4,
-        "median_remaining": 1,
-        "completes": 0.0,
-        "complete_5d": 50.0,
-        "cont_786_given_complete": null,
-        "cont_100_given_complete": null,
-        "median_days_to_complete": null
+        "median_days_to_complete": 4
       }
     ],
     "retrace": [
       {
         "retrace": "none",
         "label": "No bounce to trigger",
-        "n": 66,
-        "share": 37.3,
-        "completes": 77.3
+        "n": 56,
+        "share": 33.7,
+        "completes": 89.3
       },
       {
         "retrace": "trigger",
         "label": "Bounced to trigger (23.6%)",
-        "n": 61,
-        "share": 34.5,
-        "completes": 52.5
+        "n": 60,
+        "share": 36.1,
+        "completes": 53.3
       },
       {
         "retrace": "pivot",
         "label": "Bounced to pivot (0 line)",
         "n": 22,
-        "share": 12.4,
+        "share": 13.3,
         "completes": 27.3
       },
       {
         "retrace": "opposite",
         "label": "Crossed to opposite trigger",
         "n": 18,
-        "share": 10.2,
+        "share": 10.8,
         "completes": 16.7
       },
       {
         "retrace": "same_day_complete",
         "label": "Completed same day (no window)",
         "n": 10,
-        "share": 5.6,
+        "share": 6.0,
         "completes": 100.0
       }
     ]
   },
   "down": {
     "overall": {
-      "n": 139,
-      "completes": 63.3,
-      "complete_5d": 48.9,
-      "cont_786_given_complete": 77.3,
-      "cont_100_given_complete": 47.7
+      "n": 126,
+      "completes": 65.9,
+      "complete_5d": 47.6,
+      "cont_786_given_complete": 78.3,
+      "cont_100_given_complete": 49.4
     },
     "by_wom": [
       {
@@ -158,22 +150,11 @@
       {
         "wom": 4,
         "wom_name": "Week 4",
-        "n": 12,
-        "median_remaining": 4,
-        "completes": 50.0,
-        "complete_5d": 58.3,
-        "cont_786_given_complete": 66.7,
-        "cont_100_given_complete": 16.7,
-        "median_days_to_complete": 0
-      },
-      {
-        "wom": 5,
-        "wom_name": "Week 5",
-        "n": 6,
-        "median_remaining": 1,
-        "completes": 16.7,
-        "complete_5d": 50.0,
-        "cont_786_given_complete": 0.0,
+        "n": 5,
+        "median_remaining": 6,
+        "completes": 40.0,
+        "complete_5d": 40.0,
+        "cont_786_given_complete": 50.0,
         "cont_100_given_complete": 0.0,
         "median_days_to_complete": 1
       }
@@ -182,36 +163,36 @@
       {
         "retrace": "none",
         "label": "No bounce to trigger",
-        "n": 12,
-        "share": 8.6,
-        "completes": 83.3
+        "n": 10,
+        "share": 7.9,
+        "completes": 100.0
       },
       {
         "retrace": "trigger",
         "label": "Bounced to trigger (23.6%)",
-        "n": 53,
-        "share": 38.1,
-        "completes": 77.4
+        "n": 45,
+        "share": 35.7,
+        "completes": 86.7
       },
       {
         "retrace": "pivot",
         "label": "Bounced to pivot (0 line)",
         "n": 23,
-        "share": 16.5,
+        "share": 18.3,
         "completes": 65.2
       },
       {
         "retrace": "opposite",
         "label": "Crossed to opposite trigger",
         "n": 32,
-        "share": 23.0,
+        "share": 25.4,
         "completes": 9.4
       },
       {
         "retrace": "same_day_complete",
         "label": "Completed same day (no window)",
-        "n": 19,
-        "share": 13.7,
+        "n": 16,
+        "share": 12.7,
         "completes": 100.0
       }
     ]

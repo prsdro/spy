@@ -1,0 +1,588 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SPX Live ATR Cascade Dashboard</title>
+  <style>
+    :root {
+      --bg: #070a12;
+      --panel: #111827;
+      --panel2: #0b1220;
+      --panel3: #0f172a;
+      --text: #e5eefb;
+      --muted: #94a3b8;
+      --line: rgba(148,163,184,.22);
+      --cyan: #22d3ee;
+      --blue: #60a5fa;
+      --green: #34d399;
+      --yellow: #fbbf24;
+      --red: #fb7185;
+      --purple: #a78bfa;
+      --shadow: 0 24px 70px rgba(0,0,0,.35);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at 18% 0%, rgba(34,211,238,.16), transparent 34rem),
+        radial-gradient(circle at 80% 10%, rgba(167,139,250,.14), transparent 28rem),
+        var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    a { color: var(--cyan); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .wrap { max-width: 1440px; margin: 0 auto; padding: 22px; }
+    .hero {
+      border: 1px solid var(--line);
+      background: linear-gradient(135deg, rgba(17,24,39,.94), rgba(15,23,42,.76));
+      border-radius: 26px;
+      box-shadow: var(--shadow);
+      padding: 24px;
+      margin-top: 18px;
+    }
+    .eyebrow { color: var(--cyan); text-transform: uppercase; letter-spacing: .18em; font-size: 12px; font-weight: 800; }
+    h1 { margin: 8px 0 8px; font-size: clamp(30px, 4vw, 56px); line-height: .98; letter-spacing: -.04em; }
+    .sub { color: var(--muted); max-width: 980px; line-height: 1.55; font-size: 16px; }
+    .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; align-items: center; }
+    .history-controls {
+      display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end;
+      margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(148,163,184,.16);
+    }
+    .field { display: flex; flex-direction: column; gap: 5px; color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .1em; font-weight: 850; }
+    .field input, .field select {
+      min-width: 132px; border: 1px solid rgba(148,163,184,.28); border-radius: 12px;
+      background: rgba(2,6,23,.72); color: var(--text); padding: 10px 11px; font: inherit;
+      text-transform: none; letter-spacing: 0;
+    }
+    button, .pill-link {
+      border: 1px solid rgba(34,211,238,.38);
+      color: #ecfeff;
+      background: linear-gradient(135deg, rgba(8,145,178,.92), rgba(37,99,235,.82));
+      padding: 11px 16px;
+      border-radius: 999px;
+      font-weight: 850;
+      cursor: pointer;
+      box-shadow: 0 10px 24px rgba(34,211,238,.14);
+    }
+    button:disabled { opacity: .55; cursor: wait; }
+    .pill-link { background: rgba(15,23,42,.72); border-color: var(--line); color: var(--text); }
+    .status { color: var(--muted); font-size: 13px; margin-left: 4px; }
+    .grid { display: grid; gap: 14px; }
+    .kpi-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 16px 0; }
+    .scenario-grid { grid-template-columns: 1.15fr 1fr 1fr 1fr; }
+    .two-grid { grid-template-columns: 1fr 1fr; }
+    .card {
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(17,24,39,.92), rgba(11,18,32,.92));
+      border-radius: 20px;
+      padding: 16px;
+      box-shadow: 0 16px 40px rgba(0,0,0,.22);
+      min-width: 0;
+    }
+    .card h2, .card h3 { margin: 0 0 10px; letter-spacing: -.02em; }
+    .card h2 { font-size: 20px; }
+    .card h3 { font-size: 16px; color: #dbeafe; }
+    .label { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .12em; font-weight: 800; }
+    .big { font-size: 34px; font-weight: 900; letter-spacing: -.035em; margin: 3px 0 1px; }
+    .mid { font-size: 22px; font-weight: 850; margin: 4px 0; }
+    .tiny { color: var(--muted); font-size: 12px; line-height: 1.45; }
+    .mono { font-variant-numeric: tabular-nums; font-feature-settings: "tnum" 1; }
+    .tag {
+      display: inline-flex; align-items: center; gap: 5px;
+      border-radius: 999px; padding: 4px 8px; margin: 2px;
+      border: 1px solid var(--line); background: rgba(15,23,42,.8);
+      color: #dbeafe; font-size: 12px; font-weight: 800;
+    }
+    .tag.green { color: #bbf7d0; border-color: rgba(52,211,153,.35); background: rgba(5,150,105,.12); }
+    .tag.red { color: #fecdd3; border-color: rgba(251,113,133,.35); background: rgba(225,29,72,.12); }
+    .tag.yellow { color: #fde68a; border-color: rgba(251,191,36,.35); background: rgba(180,83,9,.14); }
+    .tag.cyan { color: #cffafe; border-color: rgba(34,211,238,.35); background: rgba(8,145,178,.14); }
+    .tag.purple { color: #ddd6fe; border-color: rgba(167,139,250,.35); background: rgba(109,40,217,.14); }
+    .prob { display: grid; gap: 8px; margin-top: 10px; }
+    .prob-row { display: grid; grid-template-columns: 90px 1fr 64px; gap: 8px; align-items: center; font-size: 13px; }
+    .bar { height: 10px; border-radius: 999px; background: rgba(148,163,184,.16); overflow: hidden; }
+    .fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--cyan), var(--blue)); }
+    .fill.green { background: linear-gradient(90deg, #10b981, #34d399); }
+    .fill.red { background: linear-gradient(90deg, #e11d48, #fb7185); }
+    .fill.yellow { background: linear-gradient(90deg, #d97706, #fbbf24); }
+    .fill.purple { background: linear-gradient(90deg, #7c3aed, #a78bfa); }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th, td { padding: 8px 9px; border-bottom: 1px solid rgba(148,163,184,.14); text-align: right; }
+    th:first-child, td:first-child { text-align: left; }
+    th { color: #cbd5e1; font-size: 11px; text-transform: uppercase; letter-spacing: .1em; background: rgba(15,23,42,.72); position: sticky; top: 0; z-index: 1; }
+    tr.current td { background: rgba(34,211,238,.08); }
+    tr.hit td { color: #d1fae5; }
+    .table-wrap { max-height: 520px; overflow: auto; border: 1px solid rgba(148,163,184,.15); border-radius: 14px; }
+    .path { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .path .step { border: 1px solid var(--line); background: rgba(15,23,42,.8); border-radius: 12px; padding: 7px 8px; font-size: 12px; }
+    .note { color: var(--muted); line-height: 1.55; }
+    .warn { color: #fde68a; }
+    .error { color: #fecdd3; background: rgba(225,29,72,.12); border: 1px solid rgba(251,113,133,.3); padding: 12px; border-radius: 14px; }
+    .footer { color: var(--muted); font-size: 12px; margin: 28px 0 12px; text-align: center; }
+    @media (max-width: 1120px) {
+      .kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .scenario-grid, .two-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 640px) {
+      .wrap { padding: 12px; }
+      .hero { padding: 18px; border-radius: 20px; }
+      .kpi-grid { grid-template-columns: 1fr; }
+      .big { font-size: 30px; }
+      th, td { padding: 7px 6px; font-size: 12px; }
+      .prob-row { grid-template-columns: 72px 1fr 54px; }
+    }
+  </style>
+</head>
+<body>
+  <script src="/nav.js"></script>
+  <div class="wrap">
+    <section class="hero">
+      <div class="eyebrow">MilkmanTrades research console</div>
+      <h1>SPX Live ATR Cascade</h1>
+      <p class="sub">
+        Click refresh to pull the latest Massive <span class="mono">I:SPX</span> print, or type a historical day/time to replay the dashboard as-of that bar. The server rebuilds the Saty ATR ladder from prior-close + prior ATR, calculates PO / pivot ribbon values, then maps the session against the SPX ATR Cascade and Open-Band Path studies.
+      </p>
+      <div class="actions">
+        <button id="refreshBtn" type="button">Refresh live SPX</button>
+        <a class="pill-link" href="/atr-cascade-spx.html">Open ATR Cascade study</a>
+        <a class="pill-link" href="/spx-open-band-path.html">Open-Band Path study</a>
+        <span id="status" class="status">Loading...</span>
+      </div>
+      <div class="history-controls">
+        <label class="field">Historical date <input id="histDate" type="date" /></label>
+        <label class="field">Time <input id="histTime" type="time" step="60" value="10:00" /></label>
+        <label class="field">Zone <select id="histTz"><option value="CT" selected>CT</option><option value="ET">ET</option></select></label>
+        <button id="historyBtn" type="button">Load historical</button>
+        <span class="tiny">Historical mode uses bars up to the typed timestamp; the actuals card shows what happened afterward when the full day is available.</span>
+      </div>
+    </section>
+
+    <section id="errorBox" class="error" style="display:none; margin-top:14px;"></section>
+
+    <section class="grid kpi-grid" id="kpis" aria-live="polite"></section>
+
+    <section class="grid scenario-grid" style="margin-top:14px;">
+      <div class="card" id="openScenario"></div>
+      <div class="card" id="cascadeScenario"></div>
+      <div class="card" id="indicatorScenario"></div>
+      <div class="card" id="actualScenario"></div>
+    </section>
+
+    <section class="grid two-grid" style="margin-top:14px;">
+      <div class="card">
+        <h2>ATR level ladder</h2>
+        <p class="tiny">Public levels are from the SPX ATR Cascade ladder. Outer ±2.236 rails are calculated for awareness but not part of open-band cohorts.</p>
+        <div class="table-wrap"><table id="levelsTable"></table></div>
+      </div>
+      <div class="card">
+        <h2>Session hit log</h2>
+        <p class="tiny">First-hit sequence excludes levels already beyond the opening print, matching the cascade study convention. Historical mode shows hits through the selected timestamp.</p>
+        <div class="table-wrap"><table id="hitsTable"></table></div>
+      </div>
+    </section>
+
+    <section class="card" style="margin-top:14px;">
+      <h2>Open-band path prefix</h2>
+      <p class="tiny">This is the as-of band-walk path, not only the first ATR level hit. Each step is the band being tested and whether price continued away from PDC, retraced toward PDC, hit both in the same bar, or ended with no next boundary.</p>
+      <div id="pathBox" class="path"></div>
+    </section>
+
+    <div class="footer">Uses server-side Massive access so no API key is exposed in the browser. Times show CT and ET where relevant.</div>
+  </div>
+
+<script>
+const API_URL = '/charts/api/spx-live-cascade';
+const ATR_STUDY_URL = '/data/atr-cascade-spx.json';
+const OPEN_STUDY_URL = '/data/spx-open-band-path.json';
+
+let atrStudy = null;
+let openStudy = null;
+let cellMap = new Map();
+let ladderIndex = new Map();
+
+const $ = (id) => document.getElementById(id);
+const fmt = (n, d = 2) => (n === null || n === undefined || Number.isNaN(Number(n))) ? 'na' : Number(n).toLocaleString(undefined, {minimumFractionDigits: d, maximumFractionDigits: d});
+const pct = (x) => (x === null || x === undefined || Number.isNaN(Number(x))) ? 'na' : `${(Number(x) * 100).toFixed(1)}%`;
+const signed = (x, d = 3) => (x === null || x === undefined || Number.isNaN(Number(x))) ? 'na' : `${Number(x) >= 0 ? '+' : ''}${Number(x).toFixed(d)}`;
+const esc = (v) => String(v ?? '').replace(/[&<>"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));
+
+function initStudyIndexes() {
+  cellMap = new Map();
+  (atrStudy?.cells || []).forEach(c => cellMap.set(`${c.level}|${c.hour_bucket}`, c));
+  ladderIndex = new Map();
+  (atrStudy?.metadata?.ladder || []).forEach((label, idx) => ladderIndex.set(label, idx));
+}
+
+async function loadStudies() {
+  if (atrStudy && openStudy) return;
+  const [atrResp, openResp] = await Promise.all([
+    fetch(ATR_STUDY_URL, {cache: 'no-store'}),
+    fetch(OPEN_STUDY_URL, {cache: 'no-store'}),
+  ]);
+  if (!atrResp.ok) throw new Error(`ATR study fetch failed: ${atrResp.status}`);
+  if (!openResp.ok) throw new Error(`Open-band study fetch failed: ${openResp.status}`);
+  atrStudy = await atrResp.json();
+  openStudy = await openResp.json();
+  initStudyIndexes();
+}
+
+function getCell(level, hour) {
+  return cellMap.get(`${level}|${hour}`) || cellMap.get(`${level}|ALL`) || null;
+}
+
+function sideColor(label) {
+  if (label === 'PDC') return 'cyan';
+  if (String(label).startsWith('+')) return 'green';
+  if (String(label).startsWith('-')) return 'red';
+  return 'cyan';
+}
+
+function bandText(band) {
+  if (!band) return 'Outside public ladder';
+  return `${band.lower_label} to ${band.upper_label}`;
+}
+
+function outcomeLabel(outcome) {
+  return {cont:'continue', retr:'retrace', amb:'ambiguous', none:'no boundary', null:'active'}[outcome] || 'active';
+}
+
+function outcomeColor(outcome) {
+  return {cont:'green', retr:'red', amb:'yellow', none:'purple'}[outcome] || 'cyan';
+}
+
+function renderProbabilityBars(container, rows, total) {
+  const denom = total || rows.reduce((a, r) => a + (r.count || 0), 0) || 0;
+  container.innerHTML = `<div class="prob">${rows.map(r => {
+    const frac = denom ? (r.count || 0) / denom : (r.value || 0);
+    const width = Math.max(0, Math.min(100, frac * 100));
+    return `<div class="prob-row"><div>${esc(r.label)}</div><div class="bar"><div class="fill ${r.color || ''}" style="width:${width}%"></div></div><div class="mono">${denom ? `${(frac*100).toFixed(1)}%` : pct(r.value)}</div></div>`;
+  }).join('')}</div>`;
+}
+
+function openBandStats(live) {
+  const prefix = live.open_band_walk?.path_prefix || [];
+  if (!prefix.length || !openStudy?.days?.length) return null;
+  const last = prefix[prefix.length - 1];
+  const prefixForStats = prefix.map((step, idx) => ({...step, outcome: idx === prefix.length - 1 ? null : step.outcome}));
+  const depth = prefixForStats.length - 1;
+  const matched = openStudy.days.filter(day => {
+    const p = day.p || [];
+    if (p.length <= depth) return false;
+    for (let i = 0; i < prefixForStats.length; i++) {
+      const want = prefixForStats[i];
+      const got = p[i];
+      if (!got || got.bi !== want.band_index) return false;
+      if (want.outcome !== null && got.o !== want.outcome) return false;
+    }
+    return true;
+  });
+  const counts = {cont:0, retr:0, amb:0, none:0};
+  matched.forEach(day => {
+    const outcome = day.p?.[depth]?.o || 'none';
+    counts[outcome] = (counts[outcome] || 0) + 1;
+  });
+  const openBandIdx = live.session?.open_band?.index;
+  const sameOpenBand = openStudy.days.filter(day => day.p?.[0]?.bi === openBandIdx);
+  const firstCounts = {cont:0, retr:0, amb:0, none:0};
+  sameOpenBand.forEach(day => {
+    const outcome = day.p?.[0]?.o || 'none';
+    firstCounts[outcome] = (firstCounts[outcome] || 0) + 1;
+  });
+  return {prefix, last, matched, counts, firstCounts, sameOpenBand};
+}
+
+function renderOpenScenario(live) {
+  const el = $('openScenario');
+  const stats = openBandStats(live);
+  const openBand = live.session.open_band;
+  if (!stats) {
+    el.innerHTML = `<h2>Opening band scenario</h2><p class="note">No open-band cohort is available for today&apos;s opening print.</p>`;
+    return;
+  }
+  const last = stats.last;
+  const terminal = live.open_band_walk?.terminal;
+  const actual = last?.outcome === null || last?.outcome === undefined ? 'active' : outcomeLabel(last.outcome);
+  const total = stats.matched.length;
+  el.innerHTML = `
+    <h2>Opening band scenario</h2>
+    <div class="label">Session opened in</div>
+    <div class="mid mono">${esc(bandText(openBand))}</div>
+    <div>
+      <span class="tag ${openBand?.side === 'up' ? 'green' : 'red'}">open ${signed(live.session.open_atr_multiple)} ATR</span>
+      <span class="tag ${outcomeColor(last?.outcome)}">${terminal ? 'terminal' : 'current'}: ${esc(actual)}</span>
+      <span class="tag cyan">matched path n=${total}</span>
+    </div>
+    <p class="tiny">Next-boundary probabilities from matching historical SPX days with the same open band and same path prefix up to this state.</p>
+    <div id="openProb"></div>
+    <p class="tiny" style="margin-top:10px;">First move from this opening band alone: cont ${ratioText(stats.firstCounts.cont, stats.sameOpenBand.length)}, retr ${ratioText(stats.firstCounts.retr, stats.sameOpenBand.length)}, amb ${ratioText(stats.firstCounts.amb, stats.sameOpenBand.length)}, none ${ratioText(stats.firstCounts.none, stats.sameOpenBand.length)}. Denominator ${stats.sameOpenBand.length}.</p>
+  `;
+  renderProbabilityBars($('openProb'), [
+    {label:'continue', count:stats.counts.cont, color:'green'},
+    {label:'retrace', count:stats.counts.retr, color:'red'},
+    {label:'ambig', count:stats.counts.amb, color:'yellow'},
+    {label:'none', count:stats.counts.none, color:'purple'},
+  ], total);
+}
+
+function ratioText(count, total) {
+  return total ? `${((count || 0) / total * 100).toFixed(1)}%` : 'na';
+}
+
+function adjacentLabels(label) {
+  const idx = ladderIndex.get(label);
+  const pdc = ladderIndex.get('PDC');
+  const ladder = atrStudy?.metadata?.ladder || [];
+  if (idx === undefined || pdc === undefined) return {beyond:'next farther', behind:'toward PDC'};
+  if (idx > pdc) return {beyond: ladder[idx + 1] || 'outside', behind: ladder[idx - 1] || 'PDC'};
+  if (idx < pdc) return {beyond: ladder[idx - 1] || 'outside', behind: ladder[idx + 1] || 'PDC'};
+  return {beyond:'away from PDC', behind:'toward PDC'};
+}
+
+function renderCascadeScenario(live) {
+  const el = $('cascadeScenario');
+  const hit = live.latest_level_hit;
+  if (!hit) {
+    el.innerHTML = `<h2>ATR cascade scenario</h2><p class="note">No public ATR level has been first-hit after the open yet.</p>`;
+    return;
+  }
+  const cell = getCell(hit.label, hit.hour_bucket);
+  const all = getCell(hit.label, 'ALL');
+  const adj = adjacentLabels(hit.label);
+  el.innerHTML = `
+    <h2>ATR first-hit scenario</h2>
+    <div class="label">Latest first-hit level</div>
+    <div class="mid mono">${esc(hit.label)} <span class="tiny">${esc(hit.name)}</span></div>
+    <div>
+      <span class="tag ${sideColor(hit.label)}">${esc(hit.time_et)} ET</span>
+      <span class="tag cyan">${esc(hit.hour_bucket)}</span>
+      <span class="tag purple">level ${fmt(hit.value)}</span>
+    </div>
+    <p class="tiny">Cascade probabilities after first hit: farther means ${esc(adj.beyond)}, behind means ${esc(adj.behind)}.</p>
+    <div id="cascadeProb"></div>
+    <p class="tiny" style="margin-top:10px;">All-day baseline for ${esc(hit.label)}: farther ${pct(all?.p_beyond)}, behind ${pct(all?.p_behind)}, last ${pct(all?.p_last)}, ambig ${pct(all?.p_ambig)}. n=${all?.n ?? 'na'}.</p>
+  `;
+  renderProbabilityBars($('cascadeProb'), [
+    {label:'farther', value:cell?.p_beyond, color:'green'},
+    {label:'behind', value:cell?.p_behind, color:'red'},
+    {label:'last', value:cell?.p_last, color:'yellow'},
+    {label:'ambig', value:cell?.p_ambig, color:'purple'},
+  ]);
+}
+
+function renderIndicatorScenario(live) {
+  const el = $('indicatorScenario');
+  const i3 = live.indicators?.['3m'];
+  const i10 = live.indicators?.['10m'];
+  el.innerHTML = `
+    <h2>PO + pivot ribbon</h2>
+    ${indicatorBlock('3m', i3)}
+    ${indicatorBlock('10m', i10)}
+  `;
+}
+
+function indicatorBlock(label, snap) {
+  if (!snap) return `<p class="note">${label}: no indicator data.</p>`;
+  const rib = snap.pivot_ribbon || {};
+  const cloudTag = (v) => `<span class="tag ${v === 'bullish' ? 'green' : 'red'}">${esc(v)}</span>`;
+  return `
+    <div style="margin-top:10px; padding-top:10px; border-top:1px solid rgba(148,163,184,.15);">
+      <div class="label">${label}</div>
+      <div class="mid mono">PO ${fmt(snap.phase_oscillator, 1)} <span class="tiny">${esc(snap.phase_zone)}</span></div>
+      <div>${cloudTag(rib.fast_cloud)} ${cloudTag(rib.slow_cloud)} ${cloudTag(rib.longterm)} ${snap.po_compression ? '<span class="tag yellow">compression</span>' : '<span class="tag cyan">no compression</span>'}</div>
+      <p class="tiny mono">8 ${fmt(rib.ema_8)} | 13 ${fmt(rib.ema_13)} | 21 ${fmt(rib.ema_21)} | 48 ${fmt(rib.ema_48)} | 200 ${fmt(rib.ema_200)}</p>
+    </div>
+  `;
+}
+
+function renderActualScenario(live) {
+  const el = $('actualScenario');
+  if (live.request?.mode !== 'historical') {
+    el.innerHTML = `
+      <h2>Historical actuals</h2>
+      <p class="note">Type a market date/time and click Load historical to replay the dashboard as-of that bar.</p>
+      <p class="tiny">The API will also report the next first-hit level after the selected time and the full-day final stats when available.</p>
+    `;
+    return;
+  }
+  const actual = live.historical_actual;
+  if (!actual) {
+    el.innerHTML = `<h2>Historical actuals</h2><p class="note">No full-session result data was available for this selected timestamp.</p>`;
+    return;
+  }
+  const next = actual.next_first_hit_after_asof;
+  const fullPath = actual.full_open_band_walk?.path_prefix || [];
+  const lastStep = fullPath.length ? fullPath[fullPath.length - 1] : null;
+  const terminalText = lastStep ? `${lastStep.lower_label}/${lastStep.upper_label} ${outcomeLabel(lastStep.outcome)}` : 'na';
+  el.innerHTML = `
+    <h2>Historical actuals</h2>
+    <div class="label">After selected time</div>
+    <div class="mid mono">${next ? `${esc(next.label)} @ ${esc(next.time_et)} ET` : 'No new first-hit'}</div>
+    <div>
+      <span class="tag ${actual.complete_session_available ? 'green' : 'yellow'}">${actual.complete_session_available ? 'full day' : 'partial day'}</span>
+      <span class="tag cyan">final ${fmt(actual.final_price)}</span>
+      <span class="tag purple">range ${fmt(actual.full_day_range_atr, 3)}x ATR</span>
+    </div>
+    <p class="tiny mono" style="margin-top:10px;">Final H ${fmt(actual.full_day_high)} | L ${fmt(actual.full_day_low)} | ${esc(actual.final_time_ct)}</p>
+    <p class="tiny">Final open-band path: ${esc(terminalText)}. Steps ${fullPath.length}.</p>
+  `;
+}
+
+function renderKpis(live) {
+  const s = live.session;
+  const ref = live.atr_reference;
+  const isHist = live.request?.mode === 'historical';
+  const priceLabel = isHist ? 'As-of SPX' : 'Latest SPX';
+  const priceNote = isHist
+    ? `Selected ${esc(live.request.input_date)} ${esc(live.request.input_time)} ${esc(live.request.input_timezone)} | bar ${esc(s.latest_time_ct)} | ${esc(s.latest_time_et)}`
+    : `${esc(s.latest_time_ct)} | ${esc(s.latest_time_et)}`;
+  $('kpis').innerHTML = `
+    <div class="card"><div class="label">${priceLabel}</div><div class="big mono">${fmt(s.latest_price)}</div><div class="tiny">${priceNote}</div></div>
+    <div class="card"><div class="label">ATR position</div><div class="big mono">${signed(s.latest_atr_multiple, 3)}</div><div class="tiny">Current band: ${esc(bandText(s.current_band))}</div></div>
+    <div class="card"><div class="label">Daily ATR reference</div><div class="big mono">${fmt(ref.atr_14)}</div><div class="tiny">Prev close ${fmt(ref.previous_close)} from ${esc(ref.date)}</div></div>
+    <div class="card"><div class="label">Session through as-of</div><div class="big mono">${fmt(s.range_atr, 3)}x</div><div class="tiny">Open ${fmt(s.open)} | H ${fmt(s.high)} | L ${fmt(s.low)} | bars ${s.bar_count_1m}</div></div>
+  `;
+}
+
+function renderLevels(live) {
+  const hits = new Map((live.level_hits || []).map(h => [h.label, h]));
+  const currentBand = live.session.current_band;
+  const rows = (live.levels || []).map(l => {
+    const hit = hits.get(l.label);
+    const isCurrent = currentBand && (l.label === currentBand.lower_label || l.label === currentBand.upper_label);
+    return `<tr class="${isCurrent ? 'current' : ''} ${hit ? 'hit' : ''}">
+      <td><span class="tag ${sideColor(l.label)}">${esc(l.label)}</span></td>
+      <td>${esc(l.name)}</td>
+      <td class="mono">${fmt(l.value)}</td>
+      <td class="mono">${signed(l.atr, 3)}</td>
+      <td>${l.public ? 'public' : 'outer'}</td>
+      <td>${hit ? `${esc(hit.time_et)} ET` : ''}</td>
+    </tr>`;
+  }).join('');
+  $('levelsTable').innerHTML = `<thead><tr><th>Level</th><th>Name</th><th>Price</th><th>ATR</th><th>Type</th><th>Hit</th></tr></thead><tbody>${rows}</tbody>`;
+}
+
+function renderHits(live) {
+  const hits = live.level_hits || [];
+  if (!hits.length) {
+    $('hitsTable').innerHTML = `<tbody><tr><td>No levels hit after open yet.</td></tr></tbody>`;
+    return;
+  }
+  const rows = hits.map(h => {
+    const c = getCell(h.label, h.hour_bucket);
+    return `<tr>
+      <td><span class="tag ${sideColor(h.label)}">${esc(h.label)}</span></td>
+      <td>${esc(h.time_et)} ET</td>
+      <td>${esc(h.hour_bucket)}</td>
+      <td class="mono">${fmt(h.value)}</td>
+      <td class="mono">${pct(c?.p_beyond)}</td>
+      <td class="mono">${pct(c?.p_behind)}</td>
+      <td class="mono">${c?.n ?? 'na'}</td>
+    </tr>`;
+  }).join('');
+  $('hitsTable').innerHTML = `<thead><tr><th>Level</th><th>Time</th><th>Bucket</th><th>Price</th><th>Farther</th><th>Behind</th><th>n</th></tr></thead><tbody>${rows}</tbody>`;
+}
+
+function renderPath(live) {
+  const prefix = live.open_band_walk?.path_prefix || [];
+  if (!prefix.length) {
+    $('pathBox').innerHTML = '<span class="tiny">No open-band path available.</span>';
+    return;
+  }
+  $('pathBox').innerHTML = prefix.map((step, idx) => {
+    const outcome = step.outcome === null || step.outcome === undefined ? 'active' : outcomeLabel(step.outcome);
+    const color = step.outcome === null || step.outcome === undefined ? 'cyan' : outcomeColor(step.outcome);
+    const time = step.time_et ? ` @ ${step.time_et}` : '';
+    return `<div class="step"><strong>${idx + 1}. ${esc(step.lower_label)} / ${esc(step.upper_label)}</strong><br><span class="tag ${color}">${esc(outcome)}${esc(time)}</span></div>`;
+  }).join('');
+}
+
+function renderAll(live) {
+  renderKpis(live);
+  renderOpenScenario(live);
+  renderCascadeScenario(live);
+  renderIndicatorScenario(live);
+  renderActualScenario(live);
+  renderLevels(live);
+  renderHits(live);
+  renderPath(live);
+}
+
+async function fetchDashboard(params) {
+  const query = new URLSearchParams({t: String(Date.now())});
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== null && value !== undefined && String(value).trim() !== '') query.set(key, value);
+  });
+  let lastError = null;
+  let firstError = null;
+  for (const base of [API_URL, '/api/spx-live-cascade']) {
+    try {
+      const resp = await fetch(`${base}?${query.toString()}`, {cache: 'no-store'});
+      const data = await resp.json();
+      if (!resp.ok || !data.ok) throw new Error(data.error || `SPX API failed: ${resp.status}`);
+      return data;
+    } catch (e) {
+      if (!firstError) firstError = e;
+      lastError = e;
+    }
+  }
+  throw firstError || lastError || new Error('SPX API failed');
+}
+
+async function refresh(params = {}, modeLabel = 'live') {
+  const buttons = [$('refreshBtn'), $('historyBtn')].filter(Boolean);
+  const status = $('status');
+  const err = $('errorBox');
+  buttons.forEach(btn => { btn.disabled = true; });
+  status.textContent = modeLabel === 'historical' ? 'Loading historical SPX...' : 'Refreshing live SPX...';
+  err.style.display = 'none';
+  try {
+    await loadStudies();
+    const data = await fetchDashboard(params);
+    renderAll(data);
+    const mode = data.request?.mode === 'historical'
+      ? `historical ${data.request.input_date} ${data.request.input_time} ${data.request.input_timezone}`
+      : 'live';
+    status.textContent = `Updated ${new Date().toLocaleTimeString()} | ${mode} | source ${data.source} ${data.ticker}`;
+  } catch (e) {
+    console.error(e);
+    err.textContent = e.message || String(e);
+    err.style.display = 'block';
+    status.textContent = 'Refresh failed';
+  } finally {
+    buttons.forEach(btn => { btn.disabled = false; });
+  }
+}
+
+function loadHistorical() {
+  const date = $('histDate').value;
+  const time = $('histTime').value;
+  const tz = $('histTz').value || 'CT';
+  if (!date || !time) {
+    const err = $('errorBox');
+    err.textContent = 'Pick a historical date and time first.';
+    err.style.display = 'block';
+    return;
+  }
+  refresh({date, time, tz}, 'historical');
+}
+
+function setDefaultHistoricalDate() {
+  try {
+    const parts = new Intl.DateTimeFormat('en-US', {timeZone:'America/Chicago', year:'numeric', month:'2-digit', day:'2-digit'}).formatToParts(new Date());
+    const lookup = Object.fromEntries(parts.map(p => [p.type, p.value]));
+    $('histDate').value = `${lookup.year}-${lookup.month}-${lookup.day}`;
+  } catch (e) {
+    // Leave blank if the browser cannot format Central time.
+  }
+}
+
+$('refreshBtn').addEventListener('click', () => refresh({}, 'live'));
+$('historyBtn').addEventListener('click', loadHistorical);
+setDefaultHistoricalDate();
+refresh();
+</script>
+</body>
+</html>

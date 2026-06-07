@@ -165,87 +165,87 @@ table.kv tr:last-child td{border-bottom:none}
   <div class="verdict">
     <span class="tag">Headline</span>
     <h2>After a Swing gate opens, a pullback toward the pivot means opposite things up vs down — but only while the pullback is shallow. Once price is back at the monthly pivot, the completion edge is gone in both directions.</h2>
-    <p><b>The two baselines, first.</b> A gate <b>opens</b> when price reaches ±38.2% of the monthly ATR away from the prior-month close, and <b>completes</b> when price reaches ±61.8%. Of the <b>139 downside gates that opened</b>, <b>88 completed</b> — a <b>63% completion rate</b>. Of the <b>177 upside gates that opened</b>, <b>102 completed</b> — a <b>58% completion rate</b>. Every figure below is measured against those two base rates.</p>
-    <p><b>A shallow pullback behaves oppositely by direction.</b> Of the downside gates that opened and then bounced back up to the <b>put trigger</b> (−23.6%) before completing, <b>41 of 53 still completed (77%)</b> — higher than the 63% downside base rate, so a bounce to the put trigger did not hurt. Of the upside gates that opened and then dipped back to the <b>call trigger</b> (+23.6%), only <b>32 of 61 completed (52%)</b> — below the 58% upside base rate. This shallow-pullback split (it spares puts, it hurts calls) is the finding that survives the daily-bar sensitivity check.</p>
-    <p><b>A deeper pullback to the pivot erases the edge both ways.</b> The monthly pivot is the prior-month close (the 0-ATR line). Of downside gates that retraced all the way back to the pivot, <b>15 of 23 completed (65%)</b> — essentially equal to the 63% downside base rate. Of upside gates that retraced to the pivot, only <b>6 of 22 completed (27%)</b> — roughly half the 58% upside base rate. And once price crossed the pivot to tag the <b>opposite</b> trigger, completion collapsed: <b>3 of 32 downside gates (9%)</b> and <b>3 of 18 upside gates (17%)</b>. The pivot is the invalidation line, not a discount.</p>
-    <p>Separately (Question A below), the completion rate also falls the later in the month a gate first opens — but that is mostly the shrinking number of trading sessions left to travel from 38.2% to 61.8%. <b>Note:</b> the exact retrace percentages above are sensitive to a daily-bar limitation explained in Method &amp; caveats.</p>
+    <p><b>The two baselines, first.</b> A gate <b>opens</b> when price reaches ±38.2% of the monthly ATR away from the prior-month close, and <b>completes</b> when price reaches ±61.8%. Of the <b>126 downside gates that opened with a fair window</b>, <b>83 completed</b> — a <b>66% completion rate</b>. Of the <b>166 upside gates that opened with a fair window</b>, <b>101 completed</b> — a <b>61% completion rate</b>. (Gates that opened with fewer than 5 trading sessions left in the month are excluded throughout — see the note below.) Every figure here is measured against those two base rates.</p>
+    <p><b>A shallow pullback behaves oppositely by direction.</b> Of the downside gates that opened and then bounced back up to the <b>put trigger</b> (−23.6%) before completing, <b>39 of 45 still completed (87%)</b> — well above the 66% downside base rate, so a bounce to the put trigger did not hurt. Of the upside gates that opened and then dipped back to the <b>call trigger</b> (+23.6%), only <b>32 of 60 completed (53%)</b> — below the 61% upside base rate. This shallow-pullback split (it spares puts, it hurts calls) is the finding that survives the daily-bar sensitivity check.</p>
+    <p><b>A deeper pullback to the pivot erases the edge both ways.</b> The monthly pivot is the prior-month close (the 0-ATR line). Of downside gates that retraced all the way back to the pivot, <b>15 of 23 completed (65%)</b> — essentially equal to the 66% downside base rate. Of upside gates that retraced to the pivot, only <b>6 of 22 completed (27%)</b> — under half the 61% upside base rate. And once price crossed the pivot to tag the <b>opposite</b> trigger, completion collapsed: <b>3 of 32 downside gates (9%)</b> and <b>3 of 18 upside gates (17%)</b>. The pivot is the invalidation line, not a discount.</p>
+    <p>Separately (Question A below), among gates that had a fair window the completion rate is still highest for early-month opens. <b>Note:</b> the exact retrace percentages above are sensitive to a daily-bar limitation explained in Method &amp; caveats.</p>
   </div>
 
   <div class="verdict" style="background:linear-gradient(160deg,#1d1410,#1a1612);border-color:var(--bear)">
     <span class="tag" style="background:var(--bear);color:#1a1a1a">Biggest edge · downside</span>
-    <h2>How <span class="dn">fast</span> price reaches the gate predicts whether it completes. A violent drop from the put trigger to the gate finishes far more often than a slow grind — the single strongest filter we have found on this setup.</h2>
-    <p><b>The test.</b> Before a downside gate opens (−38.2%), price must first pass the <b>put trigger</b> (−23.6%). We measured how many trading sessions that traversal took, then asked whether the gate went on to complete (−61.8%) by month end. Of the <b>139 downside gates</b>, <b>88 completed</b> — the <b>63% base rate</b>. Splitting by traversal speed:</p>
+    <h2>How <span class="dn">fast</span> price reaches the gate predicts whether it completes. A violent drop from the put trigger to the gate finishes more often than a slow grind — a real, momentum-based filter on this setup, though a modest one.</h2>
+    <p><b>The test.</b> Before a downside gate opens (−38.2%), price must first pass the <b>put trigger</b> (−23.6%). We measured how many trading sessions that traversal took, then asked whether the gate went on to complete (−61.8%) by month end. Of the <b>126 downside gates that opened with a fair window</b> (clock-truncated opens excluded — see the note below), <b>83 completed</b> — the <b>66% base rate</b>. Splitting by traversal speed:</p>
 
     <div class="tiles" style="margin-top:14px">
       <div class="tile hi">
-        <span class="pct">69%</span>
+        <span class="pct">70%</span>
         <span class="lbl"><b>Fast</b> — trigger→gate in ≤1 session</span>
-        <span class="foot">58 of 84 · +6 vs base</span>
+        <span class="foot">55 of 79 · +4 vs base</span>
       </div>
       <div class="tile">
-        <span class="pct" style="color:var(--bear)">55%</span>
+        <span class="pct" style="color:var(--bear)">60%</span>
         <span class="lbl"><b>Slow</b> — ≥2 sessions to grind down</span>
-        <span class="foot">30 of 55 · −9 vs base</span>
+        <span class="foot">28 of 47 · −6 vs base</span>
       </div>
       <div class="tile">
-        <span class="pct" style="color:var(--text-mid)">63%</span>
-        <span class="lbl">Base rate — all opened downside gates</span>
-        <span class="foot">88 of 139</span>
+        <span class="pct" style="color:var(--text-mid)">66%</span>
+        <span class="lbl">Base rate — fair-window downside gates</span>
+        <span class="foot">83 of 126</span>
       </div>
     </div>
 
     <div class="card" style="margin-top:12px">
       <h3>Completion rate by trigger→gate traversal speed <span class="dirpill down">▼ downside</span></h3>
-      <div class="ck">Each bar = of the downside gates whose traversal took that long, the percentage that still completed ±61.8%. Grey tick = the 63% base rate. Bars right of it beat the base rate.</div>
+      <div class="ck">Each bar = of the fair-window downside gates whose traversal took that long, the percentage that still completed ±61.8%. Grey tick = the 66% base rate. Bars right of it beat the base rate.</div>
 
       <div class="dow-row">
         <span class="t">same-day<br>/ gap</span>
         <div class="bar-wrap">
-          <div class="bar-fill dn" style="width:74.4%"></div>
-          <span class="baseline-mark" style="left:63.3%"></span>
-          <span class="bar-pct" style="left:8px">74%</span>
+          <div class="bar-fill dn" style="width:72.2%"></div>
+          <span class="baseline-mark" style="left:65.9%"></span>
+          <span class="bar-pct" style="left:8px">72%</span>
         </div>
-        <span class="n">39 gates</span>
+        <span class="n">26 of 36</span>
       </div>
       <div class="dow-row">
         <span class="t">1 day</span>
         <div class="bar-wrap">
-          <div class="bar-fill dn" style="width:64.4%"></div>
-          <span class="baseline-mark" style="left:63.3%"></span>
-          <span class="bar-pct" style="left:8px">64%</span>
+          <div class="bar-fill dn" style="width:67.4%"></div>
+          <span class="baseline-mark" style="left:65.9%"></span>
+          <span class="bar-pct" style="left:8px">67%</span>
         </div>
-        <span class="n">45 gates</span>
+        <span class="n">29 of 43</span>
       </div>
       <div class="dow-row">
         <span class="t">2–3 days</span>
         <div class="bar-wrap">
-          <div class="bar-fill dn" style="width:53.3%"></div>
-          <span class="baseline-mark" style="left:63.3%"></span>
-          <span class="bar-pct" style="left:8px">53%</span>
+          <div class="bar-fill dn" style="width:57.1%"></div>
+          <span class="baseline-mark" style="left:65.9%"></span>
+          <span class="bar-pct" style="left:8px">57%</span>
         </div>
-        <span class="n">30 gates</span>
+        <span class="n">16 of 28</span>
       </div>
       <div class="dow-row">
         <span class="t">4+ days</span>
         <div class="bar-wrap">
-          <div class="bar-fill dn" style="width:56.0%"></div>
-          <span class="baseline-mark" style="left:63.3%"></span>
-          <span class="bar-pct" style="left:8px">56%</span>
+          <div class="bar-fill dn" style="width:63.2%"></div>
+          <span class="baseline-mark" style="left:65.9%"></span>
+          <span class="bar-pct" style="left:8px">63%</span>
         </div>
-        <span class="n">25 gates</span>
+        <span class="n">12 of 19</span>
       </div>
       <div class="dow-legend">
-        <span><i class="same" style="background:var(--text-mid)"></i>grey tick = 63% base rate</span>
+        <span><i class="same" style="background:var(--text-mid)"></i>grey tick = 66% base rate</span>
       </div>
     </div>
 
-    <p style="margin-top:12px"><b>It is not just "opened earlier."</b> Fast gates do tend to open earlier in the month (median 18 sessions left vs 12 for slow ones), and the parent study shows earlier opens complete more simply because more days remain. But the speed edge survives holding days-left fixed: among gates with <b>more than 10 sessions left</b> (the reliable group), fast still beat slow <b>70% (54 of 77) to 63% (20 of 32)</b>. And the same pattern shows up — <b>stronger</b> — on the upside gate (fast ≤1 day completes 73% vs 51% slow), independent confirmation that momentum into the gate, not the calendar, is doing the work.</p>
+    <p style="margin-top:12px"><b>It is not just "opened earlier."</b> Fast gates do tend to open earlier in the month (median 18 sessions left vs 14 for slow ones), and the parent study shows earlier opens complete more simply because more days remain. But the speed edge survives holding days-left fixed: among gates with <b>more than 10 sessions left</b>, fast still beat slow <b>70% (54 of 77) to 63% (20 of 32)</b>. And the same pattern shows up — <b>stronger</b> — on the upside gate (fast ≤1 session completes <b>73% (40 of 55)</b> vs <b>55% (61 of 111)</b> slow), independent confirmation that momentum into the gate, not the calendar, is doing the work.</p>
 
-    <p><b>Stacking with weekly context.</b> The other condition that helped was a <b>stretched-up weekly Phase Oscillator</b> (≥61.8) when the downside gate opens — a reversal from a weekly top, which completed 75% (21 of 28). Combining the two: a <b>fast traversal while the weekly PO is extended-up</b> completed <b>79% (15 of 19)</b>, versus <b>52% (24 of 46)</b> for a slow traversal with a non-stretched weekly. Thin cells (n=19), but consistent with both signals on their own.</p>
+    <p><b>Stacking with weekly context.</b> The other condition that helped was a <b>stretched-up weekly Phase Oscillator</b> (≥61.8) when the downside gate opens — a reversal from a weekly top, which completed <b>73% (19 of 26)</b>. Combining the two: a <b>fast traversal while the weekly PO is extended-up</b> completed <b>77% (13 of 17)</b>, versus <b>58% (22 of 38)</b> for a slow traversal with a non-stretched weekly. Thin cells (n=17), but consistent with both signals on their own.</p>
 
-    <div class="callout" style="border-left-color:var(--bear)"><b>How to use it.</b> When a monthly downside Golden Gate opens, check how price got there. A gap or single-session plunge through the put trigger is a momentum tell that favours the gate completing; a multi-day grind into 38.2% is a weaker setup that completes below the base rate. <b>What did not matter:</b> the daily and weekly 21-EMA slope, and price's position relative to the daily 21-EMA, were all within noise (+2 to +3 points). A <em>deeply oversold</em> daily PO (&lt;−61.8) when the gate opens was a small <b>anti</b>-signal (33%, 3 of 9) — the down move was already spent.</div>
+    <div class="callout" style="border-left-color:var(--bear)"><b>How to use it.</b> When a monthly downside Golden Gate opens, check how price got there. A gap or single-session plunge through the put trigger is a momentum tell that modestly favours the gate completing; a multi-day grind into 38.2% is a weaker setup that completes below the base rate. <b>What did not matter:</b> the daily and weekly 21-EMA slope, and price's position relative to the daily 21-EMA, were all within a few points of the 66% base rate. A <em>deeply oversold</em> daily PO (&lt;−61.8) when the gate opens looked like a small <b>anti</b>-signal (3 of 7, 43%) but the cell is too thin to lean on.</div>
 
-    <p style="font-size:11.5px;color:var(--text-dim);margin-top:10px">Exploratory follow-up · daily indicators read from the bar <em>before</em> the open day and weekly from the last week ending before it (no look-ahead); same daily-bar ordering limit as below applies to the same-day/gap bucket. Generated from <code style="font-family:'JetBrains Mono',monospace;color:var(--text-mid)">backtest_swing_gg_wom_predictors.py</code>.</p>
+    <p style="font-size:11.5px;color:var(--text-dim);margin-top:10px">Exploratory follow-up · same clock-truncated exclusion as the rest of the page (gates with &lt;5 sessions left in the month at open are dropped). Daily indicators read from the bar <em>before</em> the open day and weekly from the last week ending before it (no look-ahead); same daily-bar ordering limit as below applies to the same-day/gap bucket. Generated from <code style="font-family:'JetBrains Mono',monospace;color:var(--text-mid)">backtest_swing_gg_wom_predictors.py</code>.</p>
   </div>
 
   <div class="section-title">Pick the direction</div>
@@ -278,7 +278,7 @@ table.kv tr:last-child td{border-bottom:none}
   <div class="section-title">Completion by the week the gate opens</div>
   <div class="card">
     <h3 id="womlead">Of gates that opened in each week of the month, the percentage that completed ±61.8%</h3>
-    <div class="ck">The bar = <b>of the gates that first opened in that week of the month, the percentage that completed</b> (reached ±61.8%) by the end of the same calendar month. The blue tick = the percentage that completed <b>within 5 trading sessions of opening</b> (the open session plus the next four). For week-4 and week-5 opens the tick can sit <b>past</b> the bar, because the 5-session window runs into the next month while "by month end" stops at month-end — that gap is the clock effect made visible. Right column: number of gates that opened that week · median trading sessions left in the month after the open.</div>
+    <div class="ck">The bar = <b>of the gates that first opened in that week of the month, the percentage that completed</b> (reached ±61.8%) by the end of the same calendar month. The blue tick = the percentage that completed <b>within 5 trading sessions of opening</b> (the open session plus the next four). Only fair-window gates are shown — those with at least 5 trading sessions left in the month at the open — so the tick always sits at or below the bar. (Week-5 opens are excluded entirely; they never have a 5-session in-month window.) Right column: number of gates that opened that week · median trading sessions left in the month after the open.</div>
     <div id="womchart"></div>
     <div class="dow-legend">
       <span><i style="background:var(--accent)"></i>completed by month end</span>
@@ -292,7 +292,7 @@ table.kv tr:last-child td{border-bottom:none}
     <h3>Completion rate, side by side</h3>
     <div class="ck">Green bar = the percentage of opened <span class="upx">upside</span> gates that completed; orange bar = the percentage of opened <span class="dnx">downside</span> gates that completed — one pair per week of the month the gate opened. Compare the retrace ladders above for the sharper asymmetry.</div>
     <div id="symchart"></div>
-    <div class="callout">Both directions' completion rates fall as the open slips later in the month. That is partly the clock — a gate opening in week 1 has a median of <b>19 trading sessions</b> left in the month to travel from 38.2% to 61.8%, versus about <b>5 sessions</b> for a week-4 open — and partly that a late-month open means price took longer to reach 38.2% in the first place (a slower, less directional move). The cleaner, time-independent signal is the <b>retrace ladder</b> above: a bounce to the same-side trigger is tolerated on the downside but not the upside.</div>
+    <div class="callout">These bars cover only fair-window gates (≥5 sessions left at the open); the late-month opens that had no room to complete are excluded, which is why there is no week-5 column. What remains is a mild early-month edge — week-1 opens complete most often in both directions — plus a real upside week-3 dip. The cleaner, time-independent signal is the <b>retrace ladder</b> above: a bounce to the same-side trigger is tolerated on the downside but not the upside.</div>
   </div>
 
   <div class="section-title">Continuation — once it completes, how far does it run?</div>
@@ -306,13 +306,14 @@ table.kv tr:last-child td{border-bottom:none}
   <details class="def">
     <summary>Method &amp; caveats</summary>
     <div class="body">
-      <p><strong>Data:</strong> FirstRateData SPX cash index, daily bars. Levels from the prior month's close + one-month-lagged monthly Wilder ATR(14), matching the lag convention used elsewhere on this site. Warmup leaves <strong>268 months</strong> of scored events (2002-01 → 2026-04).</p>
+      <p><strong>Data:</strong> FirstRateData SPX cash index, daily bars. Levels from the prior month's close + one-month-lagged monthly Wilder ATR(14), matching the lag convention used elsewhere on this site. Warmup leaves <strong>293 analyzed months</strong> (2002-01 → 2026-04). A gate opens in 177 of them on the upside and 139 on the downside; after the exclusion below, <strong>166 upside and 126 downside</strong> gates remain in the reported rates.</p>
       <p><strong>Week of month</strong> = calendar week of the open day: days 1–7 = week 1, 8–14 = week 2, 15–21 = week 3, 22–28 = week 4, 29–31 = week 5.</p>
+      <p><strong>⚠ Clock-truncated opens are excluded — and why.</strong> A gate that first opens with fewer than <strong>5 trading sessions left in the month</strong> cannot fairly reach 61.8% before the monthly level resets on the 1st, so its non-completion measures the calendar, not the setup. These opens were dragging the late-week completion rates toward zero (their by-month-end completion was 9% on the upside / 39% on the downside, but 36% / 62% within a fair 5-session window). We drop them everywhere: <strong>11 upside and 13 downside</strong> gates (all week-4 and week-5 opens). This raises the base completion rates from 58% to 61% (up) and 63% to 66% (down), removes the artificial week-5 collapse, and — because every kept gate now has a full in-month 5-session window — guarantees the within-5-day tick never exceeds the by-month-end bar.</p>
       <p><strong>Retrace depth</strong> is the deepest bounce back toward the pivot measured from the open day up to (but not including) the completion day — so the retrace genuinely precedes completion. Buckets are nested by depth: same-side trigger (±23.6%) → pivot (0 line) → opposite trigger. "No bounce" = never retraced as far as the same-side trigger.</p>
       <p><strong>Open / complete detection</strong> uses daily highs and lows, so within a single day the order of a high vs a low is unknown; gates that open and complete the same session are split out separately (no retrace window). Each direction is scored independently per month.</p>
-      <p><strong>⚠ Daily-bar limit on the retrace ladder (Question B):</strong> the retrace window includes the <em>open day</em>, whose intraday high and low may have occurred <em>before</em> the gate opened — so the bucketing is approximate. Excluding the open day from the window reclassifies 74 of the 316 events, and the completion rates in the thin buckets move materially: the downside-pivot bucket's completion rate goes from 65% to 56%, the upside-trigger bucket from 52% to 34%, and the upside-pivot bucket from 27% to 11%. What <em>survives</em> that sensitivity check — and the part you should trust — is the <b>shallow-pullback asymmetry</b> (a bounce to the same-side trigger is tolerated on the downside but lowers the upside completion rate) and the <b>opposite-trigger collapse</b> (under 20% completion either way). The exact pivot and opposite-trigger percentages are noisy on daily data; the definitive test needs intraday (1-minute) bar ordering.</p>
-      <p><strong>Independent check:</strong> re-running this exact analysis on Yahoo Finance ^GSPC daily bars (a different data vendor) over the same window reproduced every completion rate above to within about 1 event per bucket — so the numbers are not an artifact of one data source. This does not address the daily-bar ordering limit above, which applies to any daily OHLC source.</p>
-      <p><strong>The clock confound:</strong> week-of-open and sessions-left-in-month are nearly the same axis. Most of the week-of-month decay is mechanical. The retrace ladder is the time-independent signal.</p>
+      <p><strong>⚠ Daily-bar limit on the retrace ladder (Question B):</strong> the retrace window includes the <em>open day</em>, whose intraday high and low may have occurred <em>before</em> the gate opened — so the bucketing is approximate. Excluding the open day from the window reclassifies 54 of the 292 fair-window events, and the completion rates in the thin buckets move materially: the upside-trigger bucket goes from 53% to 35%, the upside-pivot bucket from 27% to 11%, the downside-trigger bucket from 87% to 76%, and the downside-pivot bucket from 65% to 56%. What <em>survives</em> that sensitivity check — and the part you should trust — is the <b>shallow-pullback asymmetry</b> (a bounce to the same-side trigger is tolerated on the downside but lowers the upside completion rate) and the <b>opposite-trigger collapse</b> (under 20% completion either way). The exact pivot and opposite-trigger percentages are noisy on daily data; the definitive test needs intraday (1-minute) bar ordering.</p>
+      <p><strong>Independent check:</strong> re-running this exact analysis on Yahoo Finance ^GSPC daily bars (a different data vendor) over the same window reproduced every completion rate to within about 1 event per bucket — so the numbers are not an artifact of one data source. This does not address the daily-bar ordering limit above, which applies to any daily OHLC source.</p>
+      <p><strong>The clock confound:</strong> week-of-open and sessions-left-in-month are nearly the same axis, which is exactly why the clock-truncated opens are excluded above. Among the gates that remain (all with a fair 5-session window) the late-month completion collapse is gone; the residual early-month edge — and the upside week-3 dip — are real, not mechanical. The retrace ladder is the cleanest time-independent signal.</p>
       <p><strong>Caveats:</strong> the pivot and opposite-trigger retrace buckets run thin (n&lt;50, flagged faded) — the <em>direction</em> of the effect is robust, the exact percentages are noisy. SPX is the cash index (no overnight gaps inside the month's range the way a tradable gaps), so map onto SPY/ES with care.</p>
     </div>
   </details>
@@ -324,7 +325,7 @@ table.kv tr:last-child td{border-bottom:none}
 
 </div>
 
-<script id="data" type="application/json">{"meta":{"ticker":"SPX","mode":"Swing (monthly ATR)","source":"FirstRateData SPX index daily","date_start":"2000-11-27","date_end":"2026-05-01","n_months":293,"months_up_gate_opens":177,"months_dn_gate_opens":139,"months_both_open":48},"up":{"overall":{"n":177,"completes":57.6,"complete_5d":33.9,"cont_786_given_complete":57.8,"cont_100_given_complete":25.5},"by_wom":[{"wom":1,"wom_name":"Week 1","n":55,"median_remaining":19,"completes":74.5,"complete_5d":45.5,"cont_786_given_complete":73.2,"cont_100_given_complete":39.0,"median_days_to_complete":4},{"wom":2,"wom_name":"Week 2","n":60,"median_remaining":15,"completes":73.3,"complete_5d":35.0,"cont_786_given_complete":47.7,"cont_100_given_complete":20.5,"median_days_to_complete":5},{"wom":3,"wom_name":"Week 3","n":42,"median_remaining":9,"completes":31.0,"complete_5d":19.0,"cont_786_given_complete":46.2,"cont_100_given_complete":7.7,"median_days_to_complete":3},{"wom":4,"wom_name":"Week 4","n":16,"median_remaining":5,"completes":25.0,"complete_5d":25.0,"cont_786_given_complete":50.0,"cont_100_given_complete":0.0,"median_days_to_complete":2},{"wom":5,"wom_name":"Week 5","n":4,"median_remaining":1,"completes":0.0,"complete_5d":50.0,"cont_786_given_complete":null,"cont_100_given_complete":null,"median_days_to_complete":null}],"retrace":[{"retrace":"none","label":"No bounce to trigger","n":66,"share":37.3,"completes":77.3},{"retrace":"trigger","label":"Bounced to trigger (23.6%)","n":61,"share":34.5,"completes":52.5},{"retrace":"pivot","label":"Bounced to pivot (0 line)","n":22,"share":12.4,"completes":27.3},{"retrace":"opposite","label":"Crossed to opposite trigger","n":18,"share":10.2,"completes":16.7},{"retrace":"same_day_complete","label":"Completed same day (no window)","n":10,"share":5.6,"completes":100.0}]},"down":{"overall":{"n":139,"completes":63.3,"complete_5d":48.9,"cont_786_given_complete":77.3,"cont_100_given_complete":47.7},"by_wom":[{"wom":1,"wom_name":"Week 1","n":68,"median_remaining":19,"completes":75.0,"complete_5d":52.9,"cont_786_given_complete":80.4,"cont_100_given_complete":58.8,"median_days_to_complete":1},{"wom":2,"wom_name":"Week 2","n":37,"median_remaining":15,"completes":54.1,"complete_5d":40.5,"cont_786_given_complete":90.0,"cont_100_given_complete":50.0,"median_days_to_complete":2},{"wom":3,"wom_name":"Week 3","n":16,"median_remaining":9,"completes":62.5,"complete_5d":43.8,"cont_786_given_complete":50.0,"cont_100_given_complete":10.0,"median_days_to_complete":2},{"wom":4,"wom_name":"Week 4","n":12,"median_remaining":4,"completes":50.0,"complete_5d":58.3,"cont_786_given_complete":66.7,"cont_100_given_complete":16.7,"median_days_to_complete":0},{"wom":5,"wom_name":"Week 5","n":6,"median_remaining":1,"completes":16.7,"complete_5d":50.0,"cont_786_given_complete":0.0,"cont_100_given_complete":0.0,"median_days_to_complete":1}],"retrace":[{"retrace":"none","label":"No bounce to trigger","n":12,"share":8.6,"completes":83.3},{"retrace":"trigger","label":"Bounced to trigger (23.6%)","n":53,"share":38.1,"completes":77.4},{"retrace":"pivot","label":"Bounced to pivot (0 line)","n":23,"share":16.5,"completes":65.2},{"retrace":"opposite","label":"Crossed to opposite trigger","n":32,"share":23.0,"completes":9.4},{"retrace":"same_day_complete","label":"Completed same day (no window)","n":19,"share":13.7,"completes":100.0}]}}</script>
+<script id="data" type="application/json">{"meta":{"ticker":"SPX","mode":"Swing (monthly ATR)","source":"FirstRateData SPX index daily","date_start":"2000-11-27","date_end":"2026-05-01","n_months":293,"horizon_days":5,"months_up_gate_opens":166,"months_dn_gate_opens":126,"months_both_open":36,"excluded_clock_truncated_up":11,"excluded_clock_truncated_dn":13},"up":{"overall":{"n":166,"completes":60.8,"complete_5d":33.7,"cont_786_given_complete":57.4,"cont_100_given_complete":25.7},"by_wom":[{"wom":1,"wom_name":"Week 1","n":55,"median_remaining":19,"completes":74.5,"complete_5d":45.5,"cont_786_given_complete":73.2,"cont_100_given_complete":39.0,"median_days_to_complete":4},{"wom":2,"wom_name":"Week 2","n":60,"median_remaining":15,"completes":73.3,"complete_5d":35.0,"cont_786_given_complete":47.7,"cont_100_given_complete":20.5,"median_days_to_complete":5},{"wom":3,"wom_name":"Week 3","n":42,"median_remaining":9,"completes":31.0,"complete_5d":19.0,"cont_786_given_complete":46.2,"cont_100_given_complete":7.7,"median_days_to_complete":3},{"wom":4,"wom_name":"Week 4","n":9,"median_remaining":7,"completes":33.3,"complete_5d":22.2,"cont_786_given_complete":33.3,"cont_100_given_complete":0.0,"median_days_to_complete":4}],"retrace":[{"retrace":"none","label":"No bounce to trigger","n":56,"share":33.7,"completes":89.3},{"retrace":"trigger","label":"Bounced to trigger (23.6%)","n":60,"share":36.1,"completes":53.3},{"retrace":"pivot","label":"Bounced to pivot (0 line)","n":22,"share":13.3,"completes":27.3},{"retrace":"opposite","label":"Crossed to opposite trigger","n":18,"share":10.8,"completes":16.7},{"retrace":"same_day_complete","label":"Completed same day (no window)","n":10,"share":6.0,"completes":100.0}]},"down":{"overall":{"n":126,"completes":65.9,"complete_5d":47.6,"cont_786_given_complete":78.3,"cont_100_given_complete":49.4},"by_wom":[{"wom":1,"wom_name":"Week 1","n":68,"median_remaining":19,"completes":75.0,"complete_5d":52.9,"cont_786_given_complete":80.4,"cont_100_given_complete":58.8,"median_days_to_complete":1},{"wom":2,"wom_name":"Week 2","n":37,"median_remaining":15,"completes":54.1,"complete_5d":40.5,"cont_786_given_complete":90.0,"cont_100_given_complete":50.0,"median_days_to_complete":2},{"wom":3,"wom_name":"Week 3","n":16,"median_remaining":9,"completes":62.5,"complete_5d":43.8,"cont_786_given_complete":50.0,"cont_100_given_complete":10.0,"median_days_to_complete":2},{"wom":4,"wom_name":"Week 4","n":5,"median_remaining":6,"completes":40.0,"complete_5d":40.0,"cont_786_given_complete":50.0,"cont_100_given_complete":0.0,"median_days_to_complete":1}],"retrace":[{"retrace":"none","label":"No bounce to trigger","n":10,"share":7.9,"completes":100.0},{"retrace":"trigger","label":"Bounced to trigger (23.6%)","n":45,"share":35.7,"completes":86.7},{"retrace":"pivot","label":"Bounced to pivot (0 line)","n":23,"share":18.3,"completes":65.2},{"retrace":"opposite","label":"Crossed to opposite trigger","n":32,"share":25.4,"completes":9.4},{"retrace":"same_day_complete","label":"Completed same day (no window)","n":16,"share":12.7,"completes":100.0}]}}</script>
 <script>
 const DATA = JSON.parse(document.getElementById('data').textContent);
 let state = { dir: 'up' };
@@ -332,27 +333,27 @@ let state = { dir: 'up' };
 const meta = DATA.meta;
 document.getElementById('meta').innerHTML =
   `<span>${meta.ticker}</span><span>2002-01 → 2026-04</span>` +
-  `<span>293 months · 268 opened a gate</span><span>monthly ATR</span>`;
+  `<span>293 months · clock-truncated opens excluded</span><span>monthly ATR</span>`;
 document.getElementById('tg-up-n').textContent =
-  `opens in ${(meta.months_up_gate_opens/meta.n_months*100).toFixed(0)}% of months · n=${DATA.up.overall.n}`;
+  `${DATA.up.overall.n} fair-window opens (${meta.excluded_clock_truncated_up} excluded)`;
 document.getElementById('tg-dn-n').textContent =
-  `opens in ${(meta.months_dn_gate_opens/meta.n_months*100).toFixed(0)}% of months · n=${DATA.down.overall.n}`;
+  `${DATA.down.overall.n} fair-window opens (${meta.excluded_clock_truncated_dn} excluded)`;
 
 const pf = v => (v==null?'—':v.toFixed(1)+'%');
 const block = () => DATA[state.dir];
 
 const TRIGNAME = { up: 'call trigger', down: 'put trigger' };
 const NOTE_RT = {
-  up: 'Base rate for reference: of all <b>177 upside gates that opened</b>, <b>102 completed (58%)</b> — that is the grey tick. The bars show that pulling back only lowers the odds from there. Of upside gates that dipped back to the <b>call trigger</b> (+23.6%) before completing, <b>32 of 61 completed (52%)</b>; of those that fell all the way to the <b>monthly pivot</b>, <b>6 of 22 completed (27%)</b>; and of those that crossed below the pivot to the opposite (put) trigger, <b>3 of 18 completed (17%)</b>. Every step back toward the pivot lowers the completion rate — on the upside a pullback is a warning, not a discount.',
-  down: 'Base rate for reference: of all <b>139 downside gates that opened</b>, <b>88 completed (63%)</b> — that is the grey tick. A shallow bounce is tolerated: of downside gates that bounced back up to the <b>put trigger</b> (−23.6%) before completing, <b>41 of 53 completed (77%)</b> — above the 63% base rate. A deeper bounce to the <b>monthly pivot</b> still completed <b>15 of 23 (65%)</b> — about equal to the base rate, so no edge gained or lost. But crossing above the pivot to the <b>call trigger</b> was near-fatal: <b>3 of 32 completed (9%)</b>. On the downside the pivot is the invalidation line, while a bounce only to the put trigger is fine.'
+  up: 'Base rate for reference: of the <b>166 upside gates that opened with a fair window</b>, <b>101 completed (61%)</b> — that is the grey tick. The bars show that pulling back only lowers the odds from there. Of upside gates that dipped back to the <b>call trigger</b> (+23.6%) before completing, <b>32 of 60 completed (53%)</b>; of those that fell all the way to the <b>monthly pivot</b>, <b>6 of 22 completed (27%)</b>; and of those that crossed below the pivot to the opposite (put) trigger, <b>3 of 18 completed (17%)</b>. Every step back toward the pivot lowers the completion rate — on the upside a pullback is a warning, not a discount.',
+  down: 'Base rate for reference: of the <b>126 downside gates that opened with a fair window</b>, <b>83 completed (66%)</b> — that is the grey tick. A shallow bounce is tolerated: of downside gates that bounced back up to the <b>put trigger</b> (−23.6%) before completing, <b>39 of 45 completed (87%)</b> — well above the 66% base rate. A deeper bounce to the <b>monthly pivot</b> still completed <b>15 of 23 (65%)</b> — about equal to the base rate, so no edge gained or lost. But crossing above the pivot to the <b>call trigger</b> was near-fatal: <b>3 of 32 completed (9%)</b>. On the downside the pivot is the invalidation line, while a bounce only to the put trigger is fine.'
 };
 const NOTE_WOM = {
-  up: 'Completes-by-month-end (the bar) falls with a later open: of upside gates that opened in <b>week 1</b> (days 1–7), <b>41 of 55 completed by month end (75%)</b>; <b>week 2</b>, <b>44 of 60 (73%)</b>; <b>week 3</b>, <b>13 of 42 (31%)</b>; <b>week 4</b>, <b>4 of 16 (25%)</b>. But the within-5-trading-day rate (blue tick) shows that decay is mostly the clock: <b>25 of 55 week-1 gates (45%)</b> completed within 5 sessions, versus <b>2 of 4 week-5 gates (50%)</b> — even though only 0 of those 4 week-5 gates completed by month end, because the month ran out, not the move.',
-  down: 'Completes-by-month-end (the bar) is highest for early opens: of downside gates that opened in <b>week 1</b>, <b>51 of 68 completed by month end (75%)</b>. The within-5-trading-day rate (blue tick) is steadier across the month: <b>36 of 68 week-1 gates (53%)</b> completed within 5 sessions, and even <b>7 of 12 week-4 gates (58%)</b> did — above their 6-of-12 (50%) by-month-end rate, because the 5-session window reaches into the next month. Given a fair 5-session window, when a downside gate opens in the month barely changes how often it completes.'
+  up: 'Among fair-window gates only (≥5 sessions left in the month at the open), upside completion is highest for early opens: <b>week 1</b> (days 1–7) = <b>41 of 55 (75%)</b>, <b>week 2</b> = <b>44 of 60 (73%)</b>, then <b>week 3</b> = <b>13 of 42 (31%)</b> and <b>week 4</b> = <b>3 of 9 (33%)</b>. The week-3 drop is real — those gates had a median of 9 sessions left, a genuine window — so early-month upside opens are simply the better ones. The within-5-trading-day rate (blue tick) sits below each bar: week 1 = <b>25 of 55 (45%)</b>, week 3 = <b>8 of 42 (19%)</b>.',
+  down: 'Among fair-window gates only (≥5 sessions left at the open), downside completion is highest for <b>week 1</b> opens (<b>51 of 68, 75%</b>) and noisier after: <b>week 2</b> = <b>20 of 37 (54%)</b>, <b>week 3</b> = <b>10 of 16 (63%)</b>, <b>week 4</b> = <b>2 of 5 (40%, thin)</b>. The within-5-trading-day rate (blue tick) tracks below each bar — week 1 = <b>36 of 68 (53%)</b>, week 2 = <b>15 of 37 (41%)</b>. With clock-truncated opens removed there is no late-month collapse; what remains is a mild early-month edge.'
 };
 const NOTE_CONT = {
-  up: 'Continuation is conditional on completing first. Of the <b>102 upside gates that completed</b>, <b>59 went on to +78.6% (58%)</b> and <b>26 reached a full monthly ATR at +100% (25%)</b>. It is front-loaded: most full-ATR runs came from week-1 and week-2 opens; later-week rows hold only a handful of completions, so treat their percentages as noise.',
-  down: 'Of the <b>88 downside gates that completed</b>, <b>68 went on to −78.6% (77%)</b> and <b>42 reached a full monthly ATR at −100% (48%)</b> — markedly more follow-through than the upside, where 26 of 102 completions (25%) reached a full ATR. When monthly selling completes the gate, it tends to keep going.'
+  up: 'Continuation is conditional on completing first. Of the <b>101 upside gates that completed</b>, <b>58 went on to +78.6% (57%)</b> and <b>26 reached a full monthly ATR at +100% (26%)</b>. It is front-loaded: most full-ATR runs came from week-1 and week-2 opens; later-week rows hold only a handful of completions, so treat their percentages as noise.',
+  down: 'Of the <b>83 downside gates that completed</b>, <b>65 went on to −78.6% (78%)</b> and <b>41 reached a full monthly ATR at −100% (49%)</b> — markedly more follow-through than the upside, where 26 of 101 completions (26%) reached a full ATR. When monthly selling completes the gate, it tends to keep going.'
 };
 
 const RT_ORDER = ['none','trigger','pivot','opposite'];

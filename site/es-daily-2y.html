@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ES Futures &middot; Daily &middot; 2 Years | Milkman Trades</title>
+<meta name="description" content="E-mini S&P 500 futures (ES) daily OHLC candlesticks, two-year continuous ratio-adjusted series.">
+<meta name="robots" content="noindex,follow">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥛</text></svg>">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --bg:#0c0e12;
+  --surface:#13161c;
+  --surface-2:#181c24;
+  --border:#1e2230;
+  --border-strong:#2a3045;
+  --text:#e8eaed;
+  --text-dim:#6b7280;
+  --text-mid:#9ca3af;
+  --accent:#fbbf24;
+  --bull:#1cd48a;
+  --bear:#ef6c00;
+}
+
+html{font-size:15px;scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'DM Sans',system-ui,sans-serif;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+body::before{
+  content:'';position:fixed;inset:0;z-index:-1;
+  background:
+    radial-gradient(ellipse at 20% 10%, rgba(28,212,138,.04) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 90%, rgba(239,108,0,.03) 0%, transparent 50%),
+    linear-gradient(180deg, rgba(255,255,255,.018), transparent 46%);
+  pointer-events:none;
+}
+
+.page{max-width:1180px;margin:0 auto;padding:3rem 1.5rem 5rem}
+
+.hero{margin-bottom:2rem;max-width:780px}
+.kicker{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.7rem;font-weight:500;
+  letter-spacing:.12em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:.75rem;
+}
+h1{font-size:2.4rem;font-weight:700;line-height:1.12;margin-bottom:1rem;text-wrap:balance}
+h1 em{
+  font-style:normal;
+  background:linear-gradient(135deg,var(--bull),var(--accent));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.lede{font-size:1rem;color:var(--text-mid);font-weight:300;line-height:1.7;text-wrap:pretty}
+
+.meta-strip{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;
+  margin:1.5rem 0 1.75rem;
+}
+.meta-cell{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:8px;padding:.7rem .9rem;
+}
+.meta-cell .lbl{
+  font-family:'JetBrains Mono',monospace;font-size:.62rem;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);
+}
+.meta-cell .val{
+  font-family:'JetBrains Mono',monospace;font-size:1rem;font-weight:500;
+  color:var(--text);margin-top:.25rem;
+}
+.meta-cell .val.bull{color:var(--bull)}
+.meta-cell .val.bear{color:var(--bear)}
+
+.chart-wrap{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;padding:1.1rem 1.1rem .6rem;
+  margin-bottom:1.5rem;
+  position:relative;
+}
+.chart-header{
+  display:flex;align-items:baseline;justify-content:space-between;
+  margin-bottom:.75rem;flex-wrap:wrap;gap:.5rem;
+}
+.chart-title{
+  font-family:'JetBrains Mono',monospace;font-size:.78rem;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--text);
+}
+.chart-sub{
+  font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--text-dim);
+}
+#chart{width:100%;height:540px}
+#legend{
+  position:absolute;top:3.2rem;left:1.6rem;z-index:3;pointer-events:none;
+  font-family:'JetBrains Mono',monospace;font-size:.74rem;line-height:1.6;
+  color:var(--text-mid);
+}
+#legend .row{display:flex;gap:.7rem}
+#legend b{color:var(--text);font-weight:500;min-width:2.2em;display:inline-block}
+#legend .px{color:var(--text)}
+#legend .chg{margin-left:.4rem}
+#legend .chg.bull{color:var(--bull)}
+#legend .chg.bear{color:var(--bear)}
+
+.notes{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:8px;padding:1rem 1.2rem;
+  font-size:.85rem;color:var(--text-mid);line-height:1.7;
+}
+.notes strong{color:var(--text);font-weight:500}
+.notes code{
+  font-family:'JetBrains Mono',monospace;font-size:.78rem;
+  color:var(--accent);background:var(--surface-2);
+  padding:.05rem .35rem;border-radius:3px;border:1px solid var(--border);
+}
+.notes ul{list-style:none;padding-left:0;margin-top:.5rem}
+.notes ul li{padding-left:1rem;position:relative}
+.notes ul li::before{
+  content:'\\002022';color:var(--accent);font-weight:700;
+  position:absolute;left:0;
+}
+
+.footer{
+  text-align:center;font-size:.72rem;color:var(--text-dim);
+  line-height:1.7;margin-top:2.5rem;padding-top:1.5rem;
+  border-top:1px solid var(--border);
+}
+.footer a{color:var(--text-dim);text-decoration:underline;text-underline-offset:2px}
+.back{
+  display:inline-block;font-family:'JetBrains Mono',monospace;font-size:.7rem;
+  letter-spacing:.05em;color:var(--accent);text-decoration:none;
+  border-bottom:1px dotted var(--accent);margin-top:.6rem;
+}
+
+@media(max-width:760px){
+  .page{padding:2rem 1rem 4rem}
+  h1{font-size:1.85rem}
+  .meta-strip{grid-template-columns:repeat(2,1fr)}
+  #chart{height:420px}
+  #legend{left:1.2rem;font-size:.68rem}
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <div class="hero">
+    <div class="kicker">ES &middot; Daily &middot; Two Years</div>
+    <h1>E-mini S&amp;P 500 <em>continuous</em> futures</h1>
+    <p class="lede">
+      Daily OHLC candles for the ES front-month, stitched continuously with
+      ratio-adjustment across contract rolls. Trading day follows the CME ETH
+      session (Sun 17:00 CT &rarr; Fri 16:00 CT).
+    </p>
+  </div>
+
+  <div class="meta-strip">
+    <div class="meta-cell">
+      <div class="lbl">First bar</div>
+      <div class="val" id="m-first">&mdash;</div>
+    </div>
+    <div class="meta-cell">
+      <div class="lbl">Last bar</div>
+      <div class="val" id="m-last">&mdash;</div>
+    </div>
+    <div class="meta-cell">
+      <div class="lbl">2y return</div>
+      <div class="val" id="m-return">&mdash;</div>
+    </div>
+    <div class="meta-cell">
+      <div class="lbl">Sessions</div>
+      <div class="val" id="m-count">&mdash;</div>
+    </div>
+  </div>
+
+  <div class="chart-wrap">
+    <div class="chart-header">
+      <div class="chart-title">ES &middot; Daily OHLC</div>
+      <div class="chart-sub">scroll / pinch to zoom &middot; drag to pan</div>
+    </div>
+    <div id="legend"><div class="row"><b>&mdash;</b></div></div>
+    <div id="chart"></div>
+  </div>
+
+  <div class="notes">
+    <strong>About this dataset</strong>
+    <ul>
+      <li><strong>Symbol:</strong> ES (E-mini S&amp;P 500 futures) &mdash; continuous front-month series.</li>
+      <li><strong>Roll handling:</strong> ratio-adjusted across contract rolls. Levels won't match raw exchange prices on any single contract &mdash; suitable for returns and TA, not for absolute price targets or option-strike alignment.</li>
+      <li><strong>Session definition:</strong> CME ETH trading day, Sun 17:00 CT &rarr; Fri 16:00 CT. Evening sessions roll into the next day's bar.</li>
+      <li><strong>Source:</strong> <code>ES_full_1min_continuous_ratio_adjusted</code>, resampled from 1-minute &rarr; 60-minute &rarr; daily.</li>
+    </ul>
+  </div>
+
+  <div class="footer">
+    <a class="back" href="/">&larr; back to milkman</a>
+  </div>
+
+</div>
+
+<script src="https://unpkg.com/lightweight-charts@4.2.3/dist/lightweight-charts.standalone.production.js"></script>
+<script>
+(async function(){
+  const res = await fetch('/data/es-daily-2y.json', {cache:'no-cache'});
+  const payload = await res.json();
+  const bars = payload.bars;
+
+  const fmtDate = (s)=> new Date(s+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+  const fmtPx = (n)=> n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+
+  document.getElementById('m-first').textContent = fmtDate(payload.data_first);
+  document.getElementById('m-last').textContent = fmtDate(payload.data_last);
+  document.getElementById('m-count').textContent = payload.bar_count.toLocaleString();
+
+  const first = bars[0], last = bars[bars.length-1];
+  const ret = (last.close/first.open - 1) * 100;
+  const retEl = document.getElementById('m-return');
+  retEl.textContent = (ret>=0?'+':'') + ret.toFixed(2) + '%';
+  retEl.classList.add(ret>=0?'bull':'bear');
+
+  const chart = LightweightCharts.createChart(document.getElementById('chart'), {
+    layout: {
+      background: { color: '#13161c' },
+      textColor: '#9ca3af',
+      fontFamily: "'JetBrains Mono', monospace",
+      fontSize: 11,
+    },
+    grid: {
+      vertLines: { color: 'rgba(42,48,69,0.35)' },
+      horzLines: { color: 'rgba(42,48,69,0.35)' },
+    },
+    crosshair: {
+      mode: LightweightCharts.CrosshairMode.Normal,
+      vertLine: { color: '#fbbf24', width: 1, style: LightweightCharts.LineStyle.Dotted, labelBackgroundColor: '#fbbf24' },
+      horzLine: { color: '#fbbf24', width: 1, style: LightweightCharts.LineStyle.Dotted, labelBackgroundColor: '#fbbf24' },
+    },
+    rightPriceScale: { borderColor: '#2a3045', textColor: '#9ca3af' },
+    timeScale: {
+      borderColor: '#2a3045',
+      timeVisible: false,
+      secondsVisible: false,
+      rightOffset: 6,
+      barSpacing: 4,
+    },
+  });
+
+  const series = chart.addCandlestickSeries({
+    upColor: '#1cd48a', downColor: '#ef6c00',
+    borderUpColor: '#1cd48a', borderDownColor: '#ef6c00',
+    wickUpColor: '#1cd48a', wickDownColor: '#ef6c00',
+  });
+
+  series.setData(bars.map(b => ({
+    time: b.time, open: b.open, high: b.high, low: b.low, close: b.close
+  })));
+
+  chart.timeScale().fitContent();
+
+  // legend updater
+  const legend = document.getElementById('legend');
+  function setLegend(b) {
+    const dirCls = b.close >= b.open ? 'bull' : 'bear';
+    const chg = b.close - b.open;
+    const chgPct = (chg / b.open) * 100;
+    legend.innerHTML = `
+      <div class="row"><b>${b.time}</b></div>
+      <div class="row">
+        <span>O <span class="px">${fmtPx(b.open)}</span></span>
+        <span>H <span class="px">${fmtPx(b.high)}</span></span>
+        <span>L <span class="px">${fmtPx(b.low)}</span></span>
+        <span>C <span class="px">${fmtPx(b.close)}</span>
+          <span class="chg ${dirCls}">${chg>=0?'+':''}${fmtPx(chg)} (${chg>=0?'+':''}${chgPct.toFixed(2)}%)</span>
+        </span>
+      </div>
+    `;
+  }
+  setLegend(last);
+  chart.subscribeCrosshairMove((param) => {
+    if (!param.time) { setLegend(last); return; }
+    const d = param.seriesData.get(series);
+    if (d) setLegend({ time: param.time, open: d.open, high: d.high, low: d.low, close: d.close });
+  });
+
+  // resize
+  const ro = new ResizeObserver(entries => {
+    for (const e of entries) chart.applyOptions({ width: e.contentRect.width });
+  });
+  ro.observe(document.getElementById('chart'));
+})();
+</script>
+
+</body>
+</html>

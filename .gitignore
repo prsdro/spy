@@ -27,8 +27,33 @@ __pycache__/
 # Screenshots (not essential for the project)
 *.jpg
 *.png
+*.webp
 !validated-backtests/*.jpeg
 !validated-backtests/*.webp
+
+# Large source-data archives (rebuild/redownload; like spy.zip)
+/data/
+*.zip
+SPY_1hour_*.csv
+
+# Service & staging dirs (run separately / not part of this repo)
+incoming/
+upload_service/
+protected_downloads/
+
+# Generated / scratch / scratch dirs
+audit-reruns/
+agent_reports/
+archive/
+massive_pipeline/
+outputs/
+.hermes/
+*.log
+*.pre-sanitize
+
+# Heavy per-event dumps (regenerable from backtests; too big for git)
+/tenam_traffic_events.json
+analyst/bilbo_box_events.csv
 
 # OS
 .DS_Store
