@@ -52,22 +52,25 @@ header .meta span{background:var(--surface-2);border:1px solid var(--border);pad
 .card .ck{color:var(--text-mid);font-size:12px;margin-bottom:12px;line-height:1.5}
 .card .ck code,.verdict code{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);background:var(--surface-3);padding:1px 5px;border-radius:4px}
 
-/* vertical price ladder */
-.ladder{position:relative;margin:6px 0 4px;height:430px;border-left:2px solid var(--border-strong);margin-left:96px}
-.lvl{position:absolute;left:0;right:0;height:0;border-top:1px dashed var(--border-strong)}
-.lvl .name{position:absolute;right:calc(100% + 8px);top:-9px;white-space:nowrap;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--text-mid);text-align:right;width:150px}
-.lvl .px{position:absolute;left:8px;top:-9px;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;color:var(--text)}
-.lvl.major{border-top-style:solid;border-top-color:var(--text-dim)}
-.lvl.gate{border-top-color:var(--bear);border-top-style:solid}
-.lvl.gate .name{color:var(--bear)}
-.lvl.pivot{border-top-color:var(--accent);border-top-style:solid}
-.lvl.pivot .name{color:var(--accent)}
-.gatezone{position:absolute;left:0;right:0;background:var(--bear-bg);border-left:2px solid var(--bear)}
-.gatezone .ztag{position:absolute;right:10px;top:50%;transform:translateY(-50%);text-align:right;font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.06em;color:var(--bear);font-weight:700;text-transform:uppercase;opacity:.8}
-.marker{position:absolute;left:0;right:0;height:0;border-top:2px solid var(--blue);z-index:4}
-.marker.low{border-top-color:#7dd3fc;border-top-style:dotted}
-.marker .name{position:absolute;left:8px;top:-16px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;color:var(--blue);background:var(--bg);padding:0 4px}
-.marker.low .name{color:#7dd3fc;top:2px}
+/* sorted price ladder (mobile-safe: flows top->bottom, no overlap) */
+.lad{margin:6px 0 2px;border:1px solid var(--border);border-radius:11px;overflow:hidden}
+.lad .row{display:grid;grid-template-columns:60px 1fr auto;align-items:baseline;gap:10px;padding:10px 13px;border-bottom:1px solid var(--border)}
+.lad .row:last-child{border-bottom:none}
+.lad .atr{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-dim);font-weight:600}
+.lad .nm{font-size:13px;color:var(--text-mid);min-width:0}
+.lad .px{font-family:'JetBrains Mono',monospace;font-size:13.5px;font-weight:700;color:var(--text);text-align:right;white-space:nowrap}
+.lad .row.gate{background:var(--bear-bg)}
+.lad .row.edge{box-shadow:inset 3px 0 0 var(--bear)}
+.lad .row.edge .nm{color:var(--bear);font-weight:700}
+.lad .row.edge .atr{color:var(--bear)}
+.lad .row.pivot{box-shadow:inset 3px 0 0 var(--accent)}
+.lad .row.pivot .nm{color:var(--accent);font-weight:700}
+.lad .row.mark{box-shadow:inset 3px 0 0 var(--blue)}
+.lad .row.mark .nm,.lad .row.mark .atr{color:var(--blue);font-weight:700}
+.lad .row.mark.low{box-shadow:inset 3px 0 0 #7dd3fc}
+.lad .row.mark.low .nm,.lad .row.mark.low .atr{color:#7dd3fc}
+.lad-legend{display:flex;gap:14px;margin-top:10px;font-size:11px;color:var(--text-mid);flex-wrap:wrap}
+.lad-legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
 
 table.kv{width:100%;border-collapse:collapse;margin-top:4px}
 table.kv td,table.kv th{padding:8px 4px;border-bottom:1px solid var(--border);font-size:13px;vertical-align:middle}
@@ -142,20 +145,22 @@ details.def .body code{font-family:'JetBrains Mono',monospace;font-size:11px;col
 
   <div class="section-title">The June Saty ladder &amp; where price sits</div>
   <div class="card">
-    <div class="ck">Levels are one monthly ATR (376.96) off the prior-month close (PMC 7,580.06), at the canonical Saty fibs. The shaded band is the Golden Gate (−38.2% → −61.8%). Blue = Friday's close; dotted = the month's intraday low so far.</div>
-    <div class="ladder">
-      <!-- positions: top=PMC(0 ATR), bottom=-1.0 ATR; top% = fib*100 -->
-      <div class="gatezone" style="top:38.2%;height:23.6%"><span class="ztag">Golden<br>Gate</span></div>
-      <div class="lvl pivot" style="top:0%"><span class="name">PMC / pivot · 0</span><span class="px">7,580.06</span></div>
-      <div class="lvl" style="top:23.6%"><span class="name">Put trigger · −0.236</span><span class="px">7,491.10</span></div>
-      <div class="lvl gate" style="top:38.2%"><span class="name">GG open · −0.382</span><span class="px">7,436.06</span></div>
-      <div class="lvl" style="top:50%"><span class="name">Midrange · −0.50</span><span class="px">7,391.58</span></div>
-      <div class="lvl gate" style="top:61.8%"><span class="name">GG complete · −0.618</span><span class="px">7,347.10</span></div>
-      <div class="lvl" style="top:78.6%"><span class="name">−0.786</span><span class="px">7,283.77</span></div>
-      <div class="lvl major" style="top:100%"><span class="name">−1.0 ATR</span><span class="px">7,203.10</span></div>
-      <!-- markers -->
-      <div class="marker" style="top:52.1%"><span class="name">◀ Fri 6/5 close 7,383.74</span></div>
-      <div class="marker low" style="top:56.1%"><span class="name">◀ MTD low 7,368.63</span></div>
+    <div class="ck">Levels are one monthly ATR (376.96) off the prior-month close (PMC 7,580.06), at the canonical Saty fibs, ordered high → low. The shaded rows are the Golden Gate (−38.2% → −61.8%); the bear bars mark its edges. Blue rows are where SPX sits now — Friday's close and the month's intraday low — both already inside the gate.</div>
+    <div class="lad">
+      <div class="row pivot"><span class="atr">0</span><span class="nm">PMC / monthly pivot</span><span class="px">7,580.06</span></div>
+      <div class="row"><span class="atr">−0.236</span><span class="nm">Put trigger</span><span class="px">7,491.10</span></div>
+      <div class="row gate edge"><span class="atr">−0.382</span><span class="nm">GG open</span><span class="px">7,436.06</span></div>
+      <div class="row gate"><span class="atr">−0.50</span><span class="nm">Midrange</span><span class="px">7,391.58</span></div>
+      <div class="row gate mark"><span class="atr">−0.521</span><span class="nm">◀ Fri 6/5 close</span><span class="px">7,383.74</span></div>
+      <div class="row gate mark low"><span class="atr">−0.561</span><span class="nm">◀ Month-to-date low</span><span class="px">7,368.63</span></div>
+      <div class="row gate edge"><span class="atr">−0.618</span><span class="nm">GG complete</span><span class="px">7,347.10</span></div>
+      <div class="row"><span class="atr">−0.786</span><span class="nm">Continuation (78.6%)</span><span class="px">7,283.77</span></div>
+      <div class="row"><span class="atr">−1.00</span><span class="nm">Full −1 ATR</span><span class="px">7,203.10</span></div>
+    </div>
+    <div class="lad-legend">
+      <span><i style="background:var(--bear-bg);border:1px solid var(--bear)"></i>Golden Gate zone</span>
+      <span><i style="background:var(--blue)"></i>current price</span>
+      <span>Completion (7,347) sits just below the month's low — ~0.5% away.</span>
     </div>
   </div>
 
