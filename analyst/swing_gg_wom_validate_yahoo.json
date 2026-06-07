@@ -1,0 +1,215 @@
+{
+  "meta": {
+    "n_months": 293,
+    "date_start": "2000-11-27",
+    "date_end": "2026-05-01",
+    "up_opens": 177,
+    "dn_opens": 139
+  },
+  "up": {
+    "overall": {
+      "n": 177,
+      "completes": 57.6,
+      "same_day_complete": 5.6,
+      "cont_786_given_complete": 57.8,
+      "cont_100_given_complete": 25.5
+    },
+    "by_wom": [
+      {
+        "wom": 1,
+        "wom_name": "Week 1",
+        "n": 56,
+        "median_remaining": 19,
+        "completes": 75.0,
+        "same_day_complete": 8.9,
+        "cont_786_given_complete": 71.4,
+        "cont_100_given_complete": 38.1,
+        "median_days_to_complete": 4
+      },
+      {
+        "wom": 2,
+        "wom_name": "Week 2",
+        "n": 59,
+        "median_remaining": 15,
+        "completes": 72.9,
+        "same_day_complete": 5.1,
+        "cont_786_given_complete": 48.8,
+        "cont_100_given_complete": 20.9,
+        "median_days_to_complete": 5
+      },
+      {
+        "wom": 3,
+        "wom_name": "Week 3",
+        "n": 42,
+        "median_remaining": 9,
+        "completes": 31.0,
+        "same_day_complete": 4.8,
+        "cont_786_given_complete": 46.2,
+        "cont_100_given_complete": 7.7,
+        "median_days_to_complete": 3
+      },
+      {
+        "wom": 4,
+        "wom_name": "Week 4",
+        "n": 16,
+        "median_remaining": 5,
+        "completes": 25.0,
+        "same_day_complete": 0.0,
+        "cont_786_given_complete": 50.0,
+        "cont_100_given_complete": 0.0,
+        "median_days_to_complete": 2
+      },
+      {
+        "wom": 5,
+        "wom_name": "Week 5",
+        "n": 4,
+        "median_remaining": 1,
+        "completes": 0.0,
+        "same_day_complete": 0.0,
+        "cont_786_given_complete": null,
+        "cont_100_given_complete": null,
+        "median_days_to_complete": null
+      }
+    ],
+    "retrace": [
+      {
+        "retrace": "none",
+        "label": "No bounce to trigger",
+        "n": 67,
+        "share": 37.9,
+        "completes": 76.1
+      },
+      {
+        "retrace": "trigger",
+        "label": "Bounced to trigger (23.6%)",
+        "n": 59,
+        "share": 33.3,
+        "completes": 52.5
+      },
+      {
+        "retrace": "pivot",
+        "label": "Bounced to pivot (0 line)",
+        "n": 23,
+        "share": 13.0,
+        "completes": 30.4
+      },
+      {
+        "retrace": "opposite",
+        "label": "Crossed to opposite trigger",
+        "n": 18,
+        "share": 10.2,
+        "completes": 16.7
+      },
+      {
+        "retrace": "same_day_complete",
+        "label": "Completed same day (no window)",
+        "n": 10,
+        "share": 5.6,
+        "completes": 100.0
+      }
+    ]
+  },
+  "down": {
+    "overall": {
+      "n": 139,
+      "completes": 63.3,
+      "same_day_complete": 13.7,
+      "cont_786_given_complete": 77.3,
+      "cont_100_given_complete": 47.7
+    },
+    "by_wom": [
+      {
+        "wom": 1,
+        "wom_name": "Week 1",
+        "n": 68,
+        "median_remaining": 19,
+        "completes": 75.0,
+        "same_day_complete": 16.2,
+        "cont_786_given_complete": 80.4,
+        "cont_100_given_complete": 58.8,
+        "median_days_to_complete": 1
+      },
+      {
+        "wom": 2,
+        "wom_name": "Week 2",
+        "n": 37,
+        "median_remaining": 15,
+        "completes": 54.1,
+        "same_day_complete": 8.1,
+        "cont_786_given_complete": 90.0,
+        "cont_100_given_complete": 50.0,
+        "median_days_to_complete": 2
+      },
+      {
+        "wom": 3,
+        "wom_name": "Week 3",
+        "n": 16,
+        "median_remaining": 9,
+        "completes": 62.5,
+        "same_day_complete": 6.2,
+        "cont_786_given_complete": 50.0,
+        "cont_100_given_complete": 10.0,
+        "median_days_to_complete": 2
+      },
+      {
+        "wom": 4,
+        "wom_name": "Week 4",
+        "n": 12,
+        "median_remaining": 4,
+        "completes": 50.0,
+        "same_day_complete": 33.3,
+        "cont_786_given_complete": 66.7,
+        "cont_100_given_complete": 16.7,
+        "median_days_to_complete": 0
+      },
+      {
+        "wom": 5,
+        "wom_name": "Week 5",
+        "n": 6,
+        "median_remaining": 1,
+        "completes": 16.7,
+        "same_day_complete": 0.0,
+        "cont_786_given_complete": 0.0,
+        "cont_100_given_complete": 0.0,
+        "median_days_to_complete": 1
+      }
+    ],
+    "retrace": [
+      {
+        "retrace": "none",
+        "label": "No bounce to trigger",
+        "n": 12,
+        "share": 8.6,
+        "completes": 83.3
+      },
+      {
+        "retrace": "trigger",
+        "label": "Bounced to trigger (23.6%)",
+        "n": 53,
+        "share": 38.1,
+        "completes": 77.4
+      },
+      {
+        "retrace": "pivot",
+        "label": "Bounced to pivot (0 line)",
+        "n": 23,
+        "share": 16.5,
+        "completes": 65.2
+      },
+      {
+        "retrace": "opposite",
+        "label": "Crossed to opposite trigger",
+        "n": 32,
+        "share": 23.0,
+        "completes": 9.4
+      },
+      {
+        "retrace": "same_day_complete",
+        "label": "Completed same day (no window)",
+        "n": 19,
+        "share": 13.7,
+        "completes": 100.0
+      }
+    ]
+  }
+}
