@@ -270,6 +270,7 @@ def calc_atr_levels_multi(atr_mode, vis_start, end_date):
 
 import requests as _requests
 from datetime import datetime as _dt, timezone as _tz, timedelta as _td
+from zoneinfo import ZoneInfo
 
 def _utc_to_et(utc_ts):
     """Convert UTC unix timestamp to ET datetime."""
@@ -358,6 +359,630 @@ def _fetch_yahoo_daily_history(days=10):
     except Exception as e:
         print(f"Yahoo daily history fetch error: {e}")
         return pd.DataFrame()
+
+
+# ═══════════════════════════════════════════════════════════════
+# Live SPX ATR cascade dashboard helpers
+# ═══════════════════════════════════════════════════════════════
+
+_SPX_ET = ZoneInfo("America/New_York")
+_SPX_CT = ZoneInfo("America/Chicago")
+_SPX_TICKER = "I:SPX"
+
+# Measurement ladder includes hidden outside rails; public ladder matches the
+# ATR cascade and open-band studies published in site/data.
+_SPX_LEVELS = [
+    ("-2.236", -2.236, "Outer Put Extension"),
+    ("-2.00", -2.000, "-2 ATR"),
+    ("-1.786", -1.786, "Momo Put 78.6"),
+    ("-1.618", -1.618, "Momo Put GG Closed"),
+    ("-1.50", -1.500, "Momo Put Midrange"),
+    ("-1.382", -1.382, "Momo Put GG Open"),
+    ("-1.236", -1.236, "Momo Put Trigger"),
+    ("-1.00", -1.000, "-1 ATR"),
+    ("-0.786", -0.786, "Put 78.6"),
+    ("-0.618", -0.618, "Put GG Closed"),
+    ("-0.50", -0.500, "Put Midrange"),
+    ("-0.382", -0.382, "Put GG Open"),
+    ("-0.236", -0.236, "Put Trigger"),
+    ("PDC", 0.000, "Previous Close / Central Pivot"),
+    ("+0.236", 0.236, "Call Trigger"),
+    ("+0.382", 0.382, "Call GG Open"),
+    ("+0.50", 0.500, "Call Midrange"),
+    ("+0.618", 0.618, "Call GG Closed"),
+    ("+0.786", 0.786, "Call 78.6"),
+    ("+1.00", 1.000, "+1 ATR"),
+    ("+1.236", 1.236, "Momo Call Trigger"),
+    ("+1.382", 1.382, "Momo Call GG Open"),
+    ("+1.50", 1.500, "Momo Call Midrange"),
+    ("+1.618", 1.618, "Momo Call GG Closed"),
+    ("+1.786", 1.786, "Momo Call 78.6"),
+    ("+2.00", 2.000, "+2 ATR"),
+    ("+2.236", 2.236, "Outer Call Extension"),
+]
+_SPX_HIDDEN_LABELS = {"-2.236", "+2.236"}
+_SPX_PUBLIC_LEVELS = [r for r in _SPX_LEVELS if r[0] not in _SPX_HIDDEN_LABELS]
+_SPX_PUBLIC_PDC_INDEX = next(i for i, row in enumerate(_SPX_PUBLIC_LEVELS) if row[0] == "PDC")
+
+
+def _safe_float(value, ndigits=2):
+    try:
+        if value is None or pd.isna(value):
+            return None
+        return round(float(value), ndigits)
+    except Exception:
+        return None
+
+
+def _load_massive_api_key():
+    for env_name in ("MASSIVE_API_KEY", "POLYGON_API_KEY"):
+        value = os.environ.get(env_name)
+        if value:
+            return value.strip().strip('"').strip("'")
+
+    candidates = [
+        os.path.join(BASE_DIR, ".env"),
+        "/root/spx-chart-app/.env",
+        "/root/medical/.env",
+    ]
+    for path in candidates:
+        if not os.path.exists(path):
+            continue
+        try:
+            with open(path, "r", encoding="utf-8") as fh:
+                for raw in fh:
+                    line = raw.strip()
+                    if not line or line.startswith("#") or "=" not in line:
+                        continue
+                    key, value = line.split("=", 1)
+                    if key.strip() in ("MASSIVE_API_KEY", "POLYGON_API_KEY"):
+                        value = value.strip().strip('"').strip("'")
+                        if value:
+                            return value
+        except OSError:
+            continue
+    return None
+
+
+def _massive_aggs(ticker, multiplier, timespan, start_date, end_date, limit=50000):
+    api_key = _load_massive_api_key()
+    if not api_key:
+        raise RuntimeError("Massive API key not configured on server")
+    url = f"https://api.massive.com/v2/aggs/ticker/{ticker}/range/{multiplier}/{timespan}/{start_date}/{end_date}"
+    resp = _requests.get(
+        url,
+        params={"adjusted": "true", "sort": "asc", "limit": limit, "apiKey": api_key},
+        timeout=15,
+    )
+    if resp.status_code != 200:
+        try:
+            payload = resp.json()
+        except Exception:
+            payload = {"error": resp.text[:240]}
+        raise RuntimeError(f"Massive returned HTTP {resp.status_code}: {payload.get('error') or payload.get('message') or 'unknown error'}")
+    data = resp.json()
+    return data.get("results") or []
+
+
+def _massive_daily_df(days_back=220, end_date=None):
+    end = end_date or _dt.now(_SPX_ET).date()
+    if isinstance(end, str):
+        end = _dt.fromisoformat(end).date()
+    start = end - _td(days=days_back)
+    rows = _massive_aggs(_SPX_TICKER, 1, "day", start.isoformat(), end.isoformat(), limit=5000)
+    records = []
+    for row in rows:
+        ts = _dt.fromtimestamp(row["t"] / 1000, tz=_tz.utc).astimezone(_SPX_ET)
+        records.append({
+            "timestamp": pd.Timestamp(ts.date()),
+            "open": float(row.get("o")),
+            "high": float(row.get("h")),
+            "low": float(row.get("l")),
+            "close": float(row.get("c")),
+            "volume": float(row.get("v", 0) or 0),
+        })
+    if not records:
+        return pd.DataFrame()
+    return pd.DataFrame(records).drop_duplicates("timestamp", keep="last").set_index("timestamp").sort_index()
+
+
+def _massive_intraday_df(days_back=21, end_date=None, start_date=None):
+    end = end_date or _dt.now(_SPX_ET).date()
+    if isinstance(end, str):
+        end = _dt.fromisoformat(end).date()
+    start = start_date or (end - _td(days=days_back))
+    if isinstance(start, str):
+        start = _dt.fromisoformat(start).date()
+    rows = _massive_aggs(_SPX_TICKER, 1, "minute", start.isoformat(), end.isoformat(), limit=50000)
+    records = []
+    for row in rows:
+        ts = _dt.fromtimestamp(row["t"] / 1000, tz=_tz.utc).astimezone(_SPX_ET)
+        records.append({
+            "timestamp": pd.Timestamp(ts),
+            "open": float(row.get("o")),
+            "high": float(row.get("h")),
+            "low": float(row.get("l")),
+            "close": float(row.get("c")),
+            "volume": float(row.get("v", 0) or 0),
+        })
+    if not records:
+        return pd.DataFrame()
+    return pd.DataFrame(records).drop_duplicates("timestamp", keep="last").set_index("timestamp").sort_index()
+
+
+def _atr_series(df, period=14):
+    prev_close = df["close"].shift(1)
+    tr = pd.concat([
+        df["high"] - df["low"],
+        (df["high"] - prev_close).abs(),
+        (df["low"] - prev_close).abs(),
+    ], axis=1).max(axis=1)
+    return tr.ewm(alpha=1 / period, adjust=False, min_periods=period).mean()
+
+
+def _ema(series, period):
+    return series.ewm(span=period, adjust=False, min_periods=1).mean()
+
+
+def _rma(series, period):
+    return series.ewm(alpha=1 / period, adjust=False, min_periods=1).mean()
+
+
+def _aggregate_rth(df, rule):
+    if df.empty:
+        return pd.DataFrame()
+    chunks = []
+    for _, grp in df.groupby(df.index.date):
+        agg = grp.resample(rule, origin="start_day", offset="9h30min").agg({
+            "open": "first",
+            "high": "max",
+            "low": "min",
+            "close": "last",
+            "volume": "sum",
+        }).dropna(subset=["open", "high", "low", "close"])
+        agg = agg.between_time("09:30", "15:59")
+        if not agg.empty:
+            chunks.append(agg)
+    if not chunks:
+        return pd.DataFrame()
+    return pd.concat(chunks).sort_index()
+
+
+def _phase_zone(value):
+    if value is None:
+        return "na"
+    if value > 100:
+        return "extended_up"
+    if value > 61.8:
+        return "distribution"
+    if value > 23.6:
+        return "neutral_up"
+    if value > -23.6:
+        return "neutral"
+    if value > -61.8:
+        return "neutral_down"
+    if value > -100:
+        return "accumulation"
+    return "extended_down"
+
+
+def _indicator_snapshot(df):
+    if df.empty:
+        return None
+    work = df.copy()
+    price = work["close"]
+    work["ema_8"] = _ema(price, 8)
+    work["ema_13"] = _ema(price, 13)
+    work["ema_21"] = _ema(price, 21)
+    work["ema_48"] = _ema(price, 48)
+    work["ema_200"] = _ema(price, 200)
+    atr14 = _atr_series(work, 14)
+    pivot = work["ema_21"]
+    raw_signal = ((price - pivot) / (3.0 * atr14.replace(0, np.nan))) * 100
+    work["phase_oscillator"] = _ema(raw_signal, 3)
+    std21 = price.rolling(window=21, min_periods=1).std()
+    bband_offset = 2.0 * std21
+    above_pivot = price >= pivot
+    compression_val = np.where(
+        above_pivot,
+        pivot + bband_offset - (pivot + 2.0 * atr14),
+        (pivot - 2.0 * atr14) - (pivot - bband_offset),
+    )
+    work["po_compression"] = pd.Series(compression_val, index=work.index).le(0).astype(int)
+    last = work.iloc[-1]
+    po_value = _safe_float(last.get("phase_oscillator"), 1)
+    ts = work.index[-1]
+    return {
+        "timestamp_et": ts.isoformat(),
+        "phase_oscillator": po_value,
+        "phase_zone": _phase_zone(po_value),
+        "po_compression": bool(int(last.get("po_compression", 0)) == 1),
+        "pivot_ribbon": {
+            "ema_8": _safe_float(last.get("ema_8")),
+            "ema_13": _safe_float(last.get("ema_13")),
+            "ema_21": _safe_float(last.get("ema_21")),
+            "ema_48": _safe_float(last.get("ema_48")),
+            "ema_200": _safe_float(last.get("ema_200")),
+            "fast_cloud": "bullish" if last.get("ema_8") >= last.get("ema_21") else "bearish",
+            "slow_cloud": "bullish" if last.get("ema_13") >= last.get("ema_48") else "bearish",
+            "longterm": "bullish" if last.get("ema_21") >= last.get("ema_200") else "bearish",
+        },
+    }
+
+
+def _build_spx_levels(prev_close, atr_value):
+    levels = []
+    for label, multiple, name in _SPX_LEVELS:
+        value = prev_close + multiple * atr_value
+        levels.append({
+            "label": label,
+            "atr": multiple,
+            "name": name,
+            "value": _safe_float(value),
+            "public": label not in _SPX_HIDDEN_LABELS,
+        })
+    return levels
+
+
+def _find_public_band(atr_multiple):
+    if atr_multiple is None:
+        return None
+    public = list(_SPX_PUBLIC_LEVELS)
+    for idx in range(len(public) - 1):
+        lo_label, lo_atr, lo_name = public[idx]
+        hi_label, hi_atr, hi_name = public[idx + 1]
+        if idx == len(public) - 2:
+            in_band = lo_atr <= atr_multiple <= hi_atr
+        else:
+            in_band = lo_atr <= atr_multiple < hi_atr
+        if in_band:
+            side = "up" if idx >= _SPX_PUBLIC_PDC_INDEX else "down"
+            return {
+                "index": idx,
+                "lower_label": lo_label,
+                "upper_label": hi_label,
+                "lower_atr": lo_atr,
+                "upper_atr": hi_atr,
+                "lower_name": lo_name,
+                "upper_name": hi_name,
+                "side": side,
+            }
+    return None
+
+
+def _level_dict(levels):
+    return {row["label"]: row["value"] for row in levels if row.get("public")}
+
+
+def _session_level_hits(session_3m, levels, session_open):
+    if session_3m.empty:
+        return []
+    level_values = _level_dict(levels)
+    events = []
+    for label, multiple, name in _SPX_PUBLIC_LEVELS:
+        if label == "PDC":
+            continue
+        price = level_values.get(label)
+        if price is None:
+            continue
+        direction = "up" if multiple > 0 else "down"
+        if direction == "up" and session_open >= price:
+            continue
+        if direction == "down" and session_open <= price:
+            continue
+        if direction == "up":
+            mask = session_3m["high"] >= price
+        else:
+            mask = session_3m["low"] <= price
+        if not bool(mask.any()):
+            continue
+        ts = session_3m.index[mask.to_numpy().argmax()]
+        minute = (ts.hour * 60 + ts.minute) - (9 * 60 + 30)
+        hour_bucket = "09:30-10:00" if ts.hour == 9 else f"{ts.hour:02d}:00-{ts.hour + 1:02d}:00"
+        events.append({
+            "label": label,
+            "atr": multiple,
+            "name": name,
+            "value": _safe_float(price),
+            "direction": direction,
+            "timestamp_et": ts.isoformat(),
+            "time_et": ts.strftime("%H:%M"),
+            "minutes_from_open": int(minute),
+            "hour_bucket": hour_bucket,
+        })
+    events.sort(key=lambda row: (row["timestamp_et"], abs(row["atr"])))
+    return events
+
+
+def _open_band_walk(session_3m, levels, open_band):
+    if session_3m.empty or open_band is None:
+        return {"path_prefix": [], "completed_events": [], "active_band": open_band, "terminal": False}
+
+    rung_prices = [levels[row[0]] for row in _SPX_PUBLIC_LEVELS]
+    public = list(_SPX_PUBLIC_LEVELS)
+    pdc_idx = _SPX_PUBLIC_PDC_INDEX
+    open_idx = int(open_band["index"])
+    bars = session_3m.reset_index()
+    time_col = bars.columns[0]
+    session_open = float(bars.iloc[0]["open"])
+    lower_idx = open_idx
+    upper_idx = open_idx + 1
+    is_first_band = True
+    start_bar = 0
+    completed = []
+
+    def band_payload(idx):
+        if idx is None or idx < 0 or idx >= len(public) - 1:
+            return None
+        side = "up" if idx >= pdc_idx else "down"
+        lo = public[idx]
+        hi = public[idx + 1]
+        return {
+            "band_index": int(idx),
+            "lower_label": lo[0],
+            "upper_label": hi[0],
+            "lower_atr": lo[1],
+            "upper_atr": hi[1],
+            "side": side,
+        }
+
+    terminal = False
+    while start_bar < len(bars):
+        hit = None
+        hit_bar = None
+        lower_price = rung_prices[lower_idx]
+        upper_price = rung_prices[upper_idx]
+        if is_first_band and abs(session_open - lower_price) < 1e-9:
+            lower_hit_from = 1
+        else:
+            lower_hit_from = 0
+        for i in range(start_bar, len(bars)):
+            row = bars.iloc[i]
+            hi_hit = float(row["high"]) >= upper_price
+            lo_hit = (i >= lower_hit_from) and float(row["low"]) <= lower_price
+            if hi_hit and lo_hit:
+                hit = "amb"
+                hit_bar = i
+                break
+            if hi_hit:
+                hit = "upper"
+                hit_bar = i
+                break
+            if lo_hit:
+                hit = "lower"
+                hit_bar = i
+                break
+        band_idx = lower_idx
+        side = "up" if band_idx >= pdc_idx else "down"
+        if hit is None:
+            final_bar = bars.iloc[-1]
+            final_ts = final_bar[time_col]
+            full_session = final_ts.strftime("%H:%M") >= "15:57"
+            if full_session:
+                completed.append({**band_payload(band_idx), "outcome": "none", "minutes_from_open": 390})
+                terminal = True
+                return {"path_prefix": completed, "completed_events": completed, "active_band": None, "terminal": terminal}
+            active = band_payload(band_idx)
+            prefix = completed + [{**active, "outcome": None}]
+            return {"path_prefix": prefix, "completed_events": completed, "active_band": active, "terminal": terminal}
+
+        ts = bars.iloc[hit_bar][time_col]
+        minute = int((ts.hour * 60 + ts.minute) - (9 * 60 + 30))
+        if hit == "amb":
+            outcome = "amb"
+        else:
+            continued = (side == "up" and hit == "upper") or (side == "down" and hit == "lower")
+            outcome = "cont" if continued else "retr"
+        event = {**band_payload(band_idx), "outcome": outcome, "minutes_from_open": minute, "time_et": ts.strftime("%H:%M"), "timestamp_et": ts.isoformat()}
+        completed.append(event)
+        if outcome == "amb":
+            terminal = True
+            return {"path_prefix": completed, "completed_events": completed, "active_band": None, "terminal": terminal}
+        if hit == "upper":
+            lower_idx += 1
+            upper_idx += 1
+        else:
+            lower_idx -= 1
+            upper_idx -= 1
+        if lower_idx < 0 or upper_idx >= len(public):
+            terminal = True
+            return {"path_prefix": completed, "completed_events": completed, "active_band": None, "terminal": terminal}
+        start_bar = hit_bar + 1
+        is_first_band = False
+
+    active = band_payload(lower_idx)
+    if active:
+        final_ts = bars.iloc[-1][time_col]
+        full_session = final_ts.strftime("%H:%M") >= "15:57"
+        if full_session:
+            completed.append({**active, "outcome": "none", "minutes_from_open": 390})
+            return {"path_prefix": completed, "completed_events": completed, "active_band": None, "terminal": True}
+    prefix = completed + ([{**active, "outcome": None}] if active else [])
+    return {"path_prefix": prefix, "completed_events": completed, "active_band": active, "terminal": terminal}
+
+
+def _parse_spx_asof(date_value=None, time_value=None, tz_value="CT"):
+    """Parse optional historical as-of inputs. Default user-facing time zone is Central."""
+    if not date_value and not time_value:
+        return None
+    if not date_value:
+        raise ValueError("Historical mode requires a date in YYYY-MM-DD format")
+
+    raw_time = (time_value or "15:00").strip()
+    if len(raw_time) == 4 and raw_time[1] == ":":
+        raw_time = "0" + raw_time
+    if len(raw_time) == 5:
+        raw_time = raw_time + ":00"
+    try:
+        naive = _dt.fromisoformat(f"{str(date_value).strip()}T{raw_time}")
+    except ValueError:
+        raise ValueError("Use date YYYY-MM-DD and time HH:MM")
+
+    tz_key = (tz_value or "CT").strip().upper()
+    if tz_key in ("ET", "EST", "EDT", "EASTERN", "AMERICA/NEW_YORK"):
+        zone = _SPX_ET
+        label = "ET"
+    else:
+        zone = _SPX_CT
+        label = "CT"
+    local_dt = naive.replace(tzinfo=zone)
+    et_dt = local_dt.astimezone(_SPX_ET)
+    ct_dt = et_dt.astimezone(_SPX_CT)
+    return {
+        "mode": "historical",
+        "input_date": str(date_value).strip(),
+        "input_time": raw_time[:5],
+        "input_timezone": label,
+        "as_of_time_et": et_dt,
+        "as_of_time_ct": ct_dt,
+    }
+
+
+@app.get("/api/spx-live-cascade")
+def api_spx_live_cascade(date: Optional[str] = None, time: Optional[str] = None, tz: Optional[str] = "CT"):
+    try:
+        asof = _parse_spx_asof(date, time, tz)
+        historical_mode = asof is not None
+        end_date = asof["as_of_time_et"].date() if historical_mode else None
+
+        daily = _massive_daily_df(end_date=end_date)
+        intraday_raw = _massive_intraday_df(end_date=end_date)
+        if daily.empty:
+            return JSONResponse({"ok": False, "error": "No SPX daily bars returned from Massive"}, status_code=502)
+        if intraday_raw.empty:
+            return JSONResponse({"ok": False, "error": "No SPX intraday bars returned from Massive"}, status_code=502)
+
+        if historical_mode:
+            asof_ts = pd.Timestamp(asof["as_of_time_et"])
+            session_date = asof_ts.date()
+            intraday_asof = intraday_raw[intraday_raw.index <= asof_ts].copy()
+            rth_intraday = intraday_asof.between_time("09:30", "15:59")
+            session_all = intraday_asof[intraday_asof.index.date == session_date].copy()
+            session_1m = rth_intraday[rth_intraday.index.date == session_date].copy()
+            full_session_all = intraday_raw[intraday_raw.index.date == session_date].copy()
+            full_session_1m = full_session_all.between_time("09:30", "15:59")
+            if session_1m.empty:
+                return JSONResponse({
+                    "ok": False,
+                    "error": f"No SPX RTH bars found for {session_date.isoformat()} through {asof['as_of_time_ct'].strftime('%H:%M %Z')}. Use a market day/time after 08:30 CT."
+                }, status_code=404)
+        else:
+            rth_intraday = intraday_raw.between_time("09:30", "15:59")
+            if rth_intraday.empty:
+                return JSONResponse({"ok": False, "error": "No SPX RTH bars returned from Massive"}, status_code=502)
+            session_date = max(rth_intraday.index.date)
+            session_all = intraday_raw[intraday_raw.index.date == session_date].copy()
+            session_1m = rth_intraday[rth_intraday.index.date == session_date].copy()
+            full_session_all = session_all
+            full_session_1m = session_1m
+            intraday_asof = intraday_raw
+            asof_ts = session_all.index[-1] if not session_all.empty else None
+
+        session_3m = _aggregate_rth(session_1m, "3min")
+        warm_3m = _aggregate_rth(intraday_asof, "3min")
+        warm_10m = _aggregate_rth(intraday_asof, "10min")
+        if session_all.empty or session_1m.empty or session_3m.empty:
+            return JSONResponse({"ok": False, "error": "SPX session bars were empty after RTH filter"}, status_code=502)
+
+        prior_daily = daily[daily.index.date < session_date].copy()
+        if len(prior_daily) < 20:
+            return JSONResponse({"ok": False, "error": "Not enough daily history to compute ATR"}, status_code=502)
+        prior_atr = _atr_series(prior_daily, 14).dropna()
+        if prior_atr.empty:
+            return JSONResponse({"ok": False, "error": "ATR calculation returned no values"}, status_code=502)
+        prev_close = float(prior_daily["close"].iloc[-1])
+        atr_value = float(prior_atr.iloc[-1])
+        atr_date = prior_daily.index[-1].strftime("%Y-%m-%d")
+        levels = _build_spx_levels(prev_close, atr_value)
+
+        latest = session_all.iloc[-1]
+        latest_ts = session_all.index[-1]
+        latest_price = float(latest["close"])
+        latest_atr_multiple = (latest_price - prev_close) / atr_value if atr_value else None
+        session_open = float(session_1m.iloc[0]["open"])
+        open_atr_multiple = (session_open - prev_close) / atr_value if atr_value else None
+        session_high = float(session_1m["high"].max())
+        session_low = float(session_1m["low"].min())
+        open_band = _find_public_band(open_atr_multiple)
+        current_band = _find_public_band(latest_atr_multiple)
+        hits = _session_level_hits(session_3m, levels, session_open)
+        public_levels = _level_dict(levels)
+        walk = _open_band_walk(session_3m, public_levels, open_band)
+
+        historical_actual = None
+        if historical_mode and not full_session_1m.empty:
+            full_session_3m = _aggregate_rth(full_session_1m, "3min")
+            if not full_session_3m.empty:
+                full_hits = _session_level_hits(full_session_3m, levels, session_open)
+                future_hits = [h for h in full_hits if pd.Timestamp(h["timestamp_et"]) > latest_ts]
+                full_walk = _open_band_walk(full_session_3m, public_levels, open_band)
+                final_bar = full_session_all.iloc[-1] if not full_session_all.empty else full_session_1m.iloc[-1]
+                final_ts = full_session_all.index[-1] if not full_session_all.empty else full_session_1m.index[-1]
+                final_ct = final_ts.tz_convert(_SPX_CT)
+                full_high = float(full_session_1m["high"].max())
+                full_low = float(full_session_1m["low"].min())
+                historical_actual = {
+                    "complete_session_available": final_ts.strftime("%H:%M") >= "15:57",
+                    "final_time_et": final_ts.strftime("%Y-%m-%d %H:%M %Z"),
+                    "final_time_ct": final_ct.strftime("%Y-%m-%d %H:%M %Z"),
+                    "final_price": _safe_float(float(final_bar["close"])),
+                    "full_day_high": _safe_float(full_high),
+                    "full_day_low": _safe_float(full_low),
+                    "full_day_range_atr": _safe_float((full_high - full_low) / atr_value, 3),
+                    "next_first_hit_after_asof": future_hits[0] if future_hits else None,
+                    "full_level_hits": full_hits,
+                    "full_open_band_walk": full_walk,
+                }
+
+        ct_ts = latest_ts.tz_convert(_SPX_CT)
+        request_payload = {
+            "mode": "historical" if historical_mode else "live",
+            "input_date": asof["input_date"] if historical_mode else None,
+            "input_time": asof["input_time"] if historical_mode else None,
+            "input_timezone": asof["input_timezone"] if historical_mode else None,
+            "as_of_time_et": asof["as_of_time_et"].isoformat() if historical_mode else None,
+            "as_of_time_ct": asof["as_of_time_ct"].isoformat() if historical_mode else None,
+        }
+        response = {
+            "ok": True,
+            "source": "Massive / Polygon",
+            "ticker": _SPX_TICKER,
+            "generated_at_et": _dt.now(_SPX_ET).isoformat(),
+            "request": request_payload,
+            "session": {
+                "date": session_date.isoformat(),
+                "latest_time_et": latest_ts.strftime("%Y-%m-%d %H:%M %Z"),
+                "latest_time_ct": ct_ts.strftime("%Y-%m-%d %H:%M %Z"),
+                "latest_price": _safe_float(latest_price),
+                "open": _safe_float(session_open),
+                "high": _safe_float(session_high),
+                "low": _safe_float(session_low),
+                "range_atr": _safe_float((session_high - session_low) / atr_value, 3),
+                "bar_count_1m": int(len(session_1m)),
+                "bar_count_3m": int(len(session_3m)),
+                "latest_atr_multiple": _safe_float(latest_atr_multiple, 4),
+                "open_atr_multiple": _safe_float(open_atr_multiple, 4),
+                "open_band": open_band,
+                "current_band": current_band,
+            },
+            "atr_reference": {
+                "date": atr_date,
+                "previous_close": _safe_float(prev_close),
+                "atr_14": _safe_float(atr_value),
+            },
+            "levels": levels,
+            "level_hits": hits,
+            "latest_level_hit": hits[-1] if hits else None,
+            "open_band_walk": walk,
+            "historical_actual": historical_actual,
+            "indicators": {
+                "3m": _indicator_snapshot(warm_3m),
+                "10m": _indicator_snapshot(warm_10m),
+            },
+        }
+        return JSONResponse(response)
+    except Exception as exc:
+        return JSONResponse({"ok": False, "error": str(exc)}, status_code=500)
 
 
 # ═══════════════════════════════════════════════════════════════

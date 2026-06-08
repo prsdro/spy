@@ -2,7 +2,7 @@
 
 Generated: 2026-04-24/25  
 Primary purpose: compact, source-traceable operating knowledge for future SPY/SPX analysis.  
-Scope rule from Mr. Pedro: **Satyland individual trade reviews were excluded**. Satyland is used only for foundational concepts, indicator topics, canonical vocabulary, and general setup doctrine.
+Scope rule from the trader: **Satyland individual trade reviews were excluded**. Satyland is used only for foundational concepts, indicator topics, canonical vocabulary, and general setup doctrine.
 
 This document is research support, not financial advice. Statistics are historical SPY backtests and extracted doctrine; they are not certainties.
 
@@ -30,10 +30,10 @@ When asked to analyze SPX/SPY, use this sequence:
 6. **Prefer level-to-level thinking**. The system is built around hops through ATR levels, not one-shot full-ATR predictions.
 7. **Respect time decay**. Early RTH triggers are much higher quality than late-day triggers, especially bullish Golden Gates.
 8. **Mark stats vs doctrine**:
-   - Backtested stats: from `/root/spy/analyst/studies_reference.md`, `/root/spy/KNOWLEDGE.md`, `/root/spy/README.md`.
-   - Saty doctrine: from `/root/satyland/kb/glossary.md` and foundational concept JSON.
+   - Backtested stats: from `spy/analyst/studies_reference.md`, `spy/KNOWLEDGE.md`, `spy/README.md`.
+   - Saty doctrine: from `satyland/kb/glossary.md` and foundational concept JSON.
 
-[Sources: `/root/spy/analyst/studies_reference.md`; `/root/spy/KNOWLEDGE.md`; `/root/spy/README.md`; `/root/satyland/kb/glossary.md`; `/root/satyland/viewer2/kb-unified/concepts/*.json`]
+[Sources: `spy/analyst/studies_reference.md`; `spy/KNOWLEDGE.md`; `spy/README.md`; `satyland/kb/glossary.md`; `satyland/viewer2/kb-unified/concepts/*.json`]
 
 ---
 
@@ -42,7 +42,7 @@ When asked to analyze SPX/SPY, use this sequence:
 ### Products
 
 - **SPX**: S&P 500 cash index; cash-settled options; often used for 0DTE/1DTE premium trades.
-- **SPY**: S&P 500 ETF; underlying for the 25-year backtests in `/root/spy`.
+- **SPY**: S&P 500 ETF; underlying for the 25-year backtests in the SPY research archive.
 - **ES / /ES**: S&P futures; useful for overnight/premarket context.
 - **QQQ / NDX / /NQ**: Nasdaq variants.
 - **IWM / RUT**: Russell variants.
@@ -67,7 +67,7 @@ When asked to analyze SPX/SPY, use this sequence:
 - **Full ATR**: ±100% ATR.
 - **Extensions**: ±123.6%, ±161.8%, ±200%, ±261.8%, ±300%.
 
-Critical terminology: **hitting the trigger does not mean the Golden Gate opened**. Trigger is 23.6%; GG opens at 38.2%; GG completes at 61.8%. [Source: `/root/spy/analyst/studies_reference.md#terminology-get-this-right`]
+Critical terminology: **hitting the trigger does not mean the Golden Gate opened**. Trigger is 23.6%; GG opens at 38.2%; GG completes at 61.8%. [Source: `spy/analyst/studies_reference.md#terminology-get-this-right`]
 
 ### Options/trade lifecycle
 
@@ -90,7 +90,7 @@ Critical terminology: **hitting the trigger does not mean the Golden Gate opened
 - **Stacked bearish**: shorter EMAs below longer EMAs.
 - **Curling / flattening**: EMA slope changing direction or losing slope.
 
-[Source: `/root/satyland/kb/glossary.md`]
+[Source: `satyland/kb/glossary.md`]
 
 ---
 
@@ -98,7 +98,7 @@ Critical terminology: **hitting the trigger does not mean the Golden Gate opened
 
 ### 2.1 Saty ATR Levels
 
-**Definition:** ATR-based Fibonacci grid using the previous period close and the 14-period ATR from a higher timeframe. Day mode uses daily ATR, multiday uses weekly, swing uses monthly, position uses quarterly, long-term uses yearly. [Source: `/root/spy/KNOWLEDGE.md#indicator-1-saty-atr-levels`]
+**Definition:** ATR-based Fibonacci grid using the previous period close and the 14-period ATR from a higher timeframe. Day mode uses daily ATR, multiday uses weekly, swing uses monthly, position uses quarterly, long-term uses yearly. [Source: `spy/KNOWLEDGE.md#indicator-1-saty-atr-levels`]
 
 **Key levels:**
 
@@ -118,13 +118,13 @@ Critical terminology: **hitting the trigger does not mean the Golden Gate opened
 - Daily/weekly candles use RTH data only.
 - Bad tick clipping caps bar wicks at 2% beyond the candle body to remove phantom prints while preserving real volatility.
 
-[Source: `/root/spy/KNOWLEDGE.md#implementation-notes--validation-results`]
+[Source: `spy/KNOWLEDGE.md#implementation-notes--validation-results`]
 
 **Operating rule:** use the ATR grid as support/resistance and target ladder. Do not jump straight from PDC to full ATR unless the setup supports it.
 
 ### 2.2 Saty Pivot Ribbon Pro
 
-**Definition:** multi-layer EMA cloud/ribbon system showing trend structure, pullback zones, compression candles, and conviction signals. [Source: `/root/spy/KNOWLEDGE.md#indicator-2-saty-pivot-ribbon-pro`]
+**Definition:** multi-layer EMA cloud/ribbon system showing trend structure, pullback zones, compression candles, and conviction signals. [Source: `spy/KNOWLEDGE.md#indicator-2-saty-pivot-ribbon-pro`]
 
 **EMA layers:**
 
@@ -150,11 +150,11 @@ Critical terminology: **hitting the trigger does not mean the Golden Gate opened
   - Orange: up candle below EMA48 = bounce in bearish trend.
   - Gray/violet: compression candles.
 
-**Saty doctrine:** trade with the trend; wait for confirmation; do not chase; prefer pullback-to-ribbon entries; avoid sideways/entangled ribbons. [Sources: `/root/satyland/kb/glossary.md`; `/root/satyland/viewer2/kb-unified/concepts/trend-mantra.json`; `/root/satyland/viewer2/kb-unified/concepts/pivot-ribbon.json`]
+**Saty doctrine:** trade with the trend; wait for confirmation; do not chase; prefer pullback-to-ribbon entries; avoid sideways/entangled ribbons. [Sources: `satyland/kb/glossary.md`; `satyland/viewer2/kb-unified/concepts/trend-mantra.json`; `satyland/viewer2/kb-unified/concepts/pivot-ribbon.json`]
 
 ### 2.3 Saty Phase Oscillator
 
-**Definition:** range-normalized momentum oscillator measuring distance from EMA21, normalized by ATR. [Source: `/root/spy/KNOWLEDGE.md#indicator-3-saty-phase-oscillator`]
+**Definition:** range-normalized momentum oscillator measuring distance from EMA21, normalized by ATR. [Source: `spy/KNOWLEDGE.md#indicator-3-saty-phase-oscillator`]
 
 Formula:
 
@@ -183,7 +183,7 @@ oscillator = EMA(raw_signal, 3)
 - Leaving extreme up: crosses below +100; strong reversal signal.
 - Rising/falling state matters; high+rising vs high+falling and low+falling vs low+rising can change GG odds.
 
-**Caveat:** 60m PO has a known accuracy gap versus TradingView because extended-hours data inflates hourly ATR; 10m PO accuracy is much better. Still, 60m PO was more predictive in the historical Bilbo GG tests; treat this as useful but audit-sensitive. [Sources: `/root/spy/KNOWLEDGE.md#validated-against-tradingview-export`; `/root/spy/analyst/studies_reference.md#4-10m-vs-60m-phase-oscillator`]
+**Caveat:** 60m PO has a known accuracy gap versus TradingView because extended-hours data inflates hourly ATR; 10m PO accuracy is much better. Still, 60m PO was more predictive in the historical Bilbo GG tests; treat this as useful but audit-sensitive. [Sources: `spy/KNOWLEDGE.md#validated-against-tradingview-export`; `spy/analyst/studies_reference.md#4-10m-vs-60m-phase-oscillator`]
 
 ### 2.4 Compression / Squeeze
 
@@ -200,7 +200,7 @@ Satyland glossary also maps Squeeze/Squeeze Pro:
 - Pro intensity colors: black/narrow, red/normal, orange/wide, green/fired.
 - “5–10 dots” is a heuristic for enough compression to matter.
 
-[Sources: `/root/spy/KNOWLEDGE.md#bollinger-band-compression`; `/root/satyland/kb/glossary.md`]
+[Sources: `spy/KNOWLEDGE.md#bollinger-band-compression`; `satyland/kb/glossary.md`]
 
 ### 2.5 VWAP, RAF, volume, VIX, gamma
 
@@ -212,7 +212,65 @@ Use these as context/confluence, not as standalone rules unless the setup requir
 - **VIX key levels**: volatility regime/context.
 - **Gamma levels**: possible pin/resistance/support zones around OpEx and large strikes.
 
-[Source: `/root/satyland/kb/glossary.md`]
+[Source: `satyland/kb/glossary.md`]
+
+### 2.6 Saints' Gamma Guide
+
+**Core framework:** use gamma key levels as a map, not a standalone signal. **Regime tells how to trade; walls frame the day; C/L levels give the route; reaction confirms the trade.** Zones matter more than exact ticks.
+
+**Priority stack for ES/SPX day trading:**
+
+| Rank | Level | Primary job | Trading translation |
+|---:|---|---|---|
+| 1 | Vol Trigger / Hedge Wall | Defines volatility regime | Decide whether fades or momentum deserve priority. |
+| 2 | Call Wall / Put Wall | Expected upper/lower range | Watch for rejection, failed break, or acceptance. |
+| 3 | C1-C4 | Combined index + ETF gamma levels | Use as major reaction zones and level-to-level targets. |
+| 4 | L1-L4 | Large gamma / hedging levels | Use as magnets, pivots, pins, and partial-profit areas. |
+| 5 | Market structure | VWAP, ONH/ONL, prior high/low, news | Confirm the options map with real-time price behavior. |
+
+**Level dictionary:**
+
+- **Vol Trigger (VT):** regime line. Above VT = more stable / lower-vol tendency; below VT = higher realized-volatility and directional-expansion risk. Ask: what changes if price accepts below it?
+- **Hedge Wall:** stock-focused volatility/risk regime level. Above it, mean reversion may work better; below it, ranges can widen. Ask whether the wall is rising, falling, or being lost.
+- **Call Wall:** largest call-gamma area. Often behaves as upper resistance / expected range cap until price accepts above. Ask whether buyers are stalling or accepting above.
+- **Put Wall:** largest put-gamma area. Often behaves as lower support / expected range floor until price accepts below. Ask whether sellers are being absorbed or breaking through.
+- **C1-C4 combo levels:** ranked combined gamma reaction zones, often blending index + ETF positioning. C1 is strongest. Identify nearest C-level above and below.
+- **L1-L4 large gamma levels:** ranked large gamma / hedging levels. L1 is strongest. Often function as magnets, pivots, pins, or targets. Watch whether price rotates around the level or cleanly rejects.
+
+**Fast read:**
+
+| Situation | Interpretation |
+|---|---|
+| Above VT | Prefer controlled movement, fades, and reversion until proven otherwise. |
+| Below VT | Respect expansion risk; failed reclaims matter more than first-touch fades. |
+| At Call Wall | Expect resistance unless price accepts above and holds pullbacks. |
+| At Put Wall | Expect support unless price accepts below and cannot reclaim. |
+| At C/L level | Look for reject, reclaim, pin, or break-and-hold behavior. |
+
+**Trading playbooks:**
+
+- **Positive-gamma / range style:** usually when price is above VT and inside the Call/Put Wall range. Expect chop, pinning, VWAP respect, and level-to-level rotation. Best setups are fading extremes after absorption or failed breakout/breakdown. Targets: VWAP, next C/L level, prior session level, or opposite wall.
+- **Negative-gamma / expansion style:** usually when price is below VT or after a clean Put Wall break. Expect wider ranges, faster continuation, and fewer clean first-touch holds. Best setups are failed VT reclaims, retests of broken support, and trend pullbacks. Reduce size or widen logic because realized volatility can expand.
+- **Break-and-acceptance framework:** touch + reject = level active; break + immediate reclaim = failed break and fade back toward prior level; break + hold + retest = acceptance and target next level; chop around level = magnet/pinning behavior, avoid overtrading.
+
+**Confirmation checklist at every gamma level:**
+
+| Behavior | Evidence | Trading response |
+|---|---|---|
+| Rejection | Wick through level, failed hold, delta exhaustion, return inside prior range | Fade back to VWAP or nearest C/L level. |
+| Acceptance | Break, hold, successful retest, volume supports direction | Trade toward next mapped level. |
+| Failed reclaim | Price loses level, retests from below, cannot hold above | Continuation setup; avoid bottom-fishing. |
+| Pinning | Repeated rotations around the same C/L/large gamma level | Take smaller targets; avoid chasing edges. |
+
+**Morning map:** mark VT/Hedge Wall; Call Wall and Put Wall; C1-C4 and L1-L4; prior day high/low/close; overnight high/low; VWAP after open; nearest level above and below; stacked confluence; and invalidation before entry.
+
+**Do:** use levels as zones, wait for confirmation, prioritize confluence, adjust by regime, reduce size near uncertainty. **Don't:** blindly short Call Wall, blindly buy Put Wall, fade hard below VT, ignore news/VIX expansion, or treat stale levels as valid.
+
+**Trade thesis template:** context = above/below VT and inside/outside wall range; location = which C/L/wall level is being tested and whether VWAP/prior high/low confluence exists; reaction = reject/reclaim/accept/pin and invalidation; target = next mapped level and partial/exit area.
+
+**Memory aid:** Vol Trigger = regime. Call/Put Walls = range. C1-C4 / L1-L4 = route, magnets, targets. Price reaction = confirmation. **No reaction, no trade.**
+
+[Source: `Gamma Key Levels Guide.pdf` provided 2026-04-28]
 
 ---
 
@@ -243,7 +301,7 @@ Before evaluating a trade, build the morning/context map:
    - Do not chase random candles. Identify which setup is active.
    - If no primary setup is active, do nothing.
 
-Saty doctrine: identify market condition first, then apply the matching primary setup; “FOMO is stupid.” Doing nothing is often the best course. [Sources: `/root/satyland/viewer2/kb-unified/concepts/primary-setups.json`; `/root/satyland/viewer2/kb-unified/concepts/discipline.json`; `/root/satyland/viewer2/kb-unified/concepts/morning-plan.json`]
+Saty doctrine: identify market condition first, then apply the matching primary setup; “FOMO is stupid.” Doing nothing is often the best course. [Sources: `satyland/viewer2/kb-unified/concepts/primary-setups.json`; `satyland/viewer2/kb-unified/concepts/discipline.json`; `satyland/viewer2/kb-unified/concepts/morning-plan.json`]
 
 ---
 
@@ -299,7 +357,7 @@ The Golden Gate is the path from ±38.2% ATR to ±61.8% ATR:
 - Bear GG opens when price reaches -38.2% ATR.
 - Bear GG completes when price reaches -61.8% ATR.
 
-Ideal doctrine: clear trend, EMAs stacked in the direction of the move, and entry at/near the ribbon if possible. Take profit at the 61.8 level / Golden Fib. [Sources: `/root/satyland/viewer2/kb-unified/concepts/golden-gate.json`; `/root/satyland/kb/glossary.md`]
+Ideal doctrine: clear trend, EMAs stacked in the direction of the move, and entry at/near the ribbon if possible. Take profit at the 61.8 level / Golden Fib. [Sources: `satyland/viewer2/kb-unified/concepts/golden-gate.json`; `satyland/kb/glossary.md`]
 
 ### 5.2 Level-to-level probabilities
 
@@ -316,7 +374,7 @@ Day-mode, within the same day:
 | Bull GG baseline completion | 63.0% (n=3,411) |
 | Bear GG baseline completion | 65.0% (n=3,200) |
 
-Use the latest compact study reference for live decisions: Trigger→38.2 = 80%, 38.2→61.8 = 69%, full ATR cumulative = 14%. [Source: `/root/spy/analyst/studies_reference.md#1-level-to-level-probabilities-day-mode-within-same-day`]
+Use the latest compact study reference for live decisions: Trigger→38.2 = 80%, 38.2→61.8 = 69%, full ATR cumulative = 14%. [Source: `spy/analyst/studies_reference.md#1-level-to-level-probabilities-day-mode-within-same-day`]
 
 ### 5.3 Bilbo Golden Gate: 1h PO filter
 
@@ -349,9 +407,9 @@ Continuation beyond 61.8:
 - Bear PO Low+Falling: 61.8 = 90.2%, 78.6 = 80%, 100 = 66%, 123.6 = 43.8%.
 - Bear baseline: 61.8 = 65%, 78.6 = 48.1%, 100 = 31.4%, 123.6 = 18.3%.
 
-Key: bearish Bilbo is the strongest intraday directional configuration; it had 66% full-ATR reach in the study, higher than baseline GG completion itself. [Source: `/root/spy/analyst/studies_reference.md#2-bilbo-golden-gate-conditioned-on-1-hour-phase-oscillator`]
+Key: bearish Bilbo is the strongest intraday directional configuration; it had 66% full-ATR reach in the study, higher than baseline GG completion itself. [Source: `spy/analyst/studies_reference.md#2-bilbo-golden-gate-conditioned-on-1-hour-phase-oscillator`]
 
-**Audit caveat:** the unified KB flags some Bilbo GG claims as `needs_code_fix` because one script may not have selected all 61.8 columns before using them. Preserve the stat, but do not oversell it without checking reruns if money/risk depends on precision. [Source: `/root/satyland/viewer2/kb-unified/concepts/bilbo-golden-gate.json`]
+**Audit caveat:** the unified KB flags some Bilbo GG claims as `needs_code_fix` because one script may not have selected all 61.8 columns before using them. Preserve the stat, but do not oversell it without checking reruns if money/risk depends on precision. [Source: `satyland/viewer2/kb-unified/concepts/bilbo-golden-gate.json`]
 
 ### 5.4 10m vs 60m PO
 
@@ -360,7 +418,7 @@ For GG completion, the 60m PO was 5–12x more predictive than the 10m PO:
 - Bull edge: 60m +14.7pp over baseline; 10m only +3.1pp.
 - Bear edge: 60m +25.2pp; 10m only +2.1pp.
 
-Use 60m PO for Bilbo setups, with the hourly TradingView/data caveat noted. [Source: `/root/spy/analyst/studies_reference.md#4-10m-vs-60m-phase-oscillator`]
+Use 60m PO for Bilbo setups, with the hourly TradingView/data caveat noted. [Source: `spy/analyst/studies_reference.md#4-10m-vs-60m-phase-oscillator`]
 
 ### 5.5 Entry optimization
 
@@ -373,7 +431,7 @@ Use 60m PO for Bilbo setups, with the hourly TradingView/data caveat noted. [Sou
 | 50% midpoint | 60%, negative EV (-3%); reward too small vs risk |
 | Trigger pullback | 43–48% completion but 38.2% ATR reward |
 
-Saty doctrine favors entries at ribbon pullbacks when possible; the backtest says immediate and EMA8/EMA21 pullbacks have similar hit rates, while deeper 1h EMA21 pullbacks have better R:R but lower completion. [Source: `/root/spy/analyst/studies_reference.md#5-gg-entry-optimization`]
+Saty doctrine favors entries at ribbon pullbacks when possible; the backtest says immediate and EMA8/EMA21 pullbacks have similar hit rates, while deeper 1h EMA21 pullbacks have better R:R but lower completion. [Source: `spy/analyst/studies_reference.md#5-gg-entry-optimization`]
 
 ### 5.6 Invalidation
 
@@ -390,7 +448,7 @@ Other warnings:
 - 10m EMA21 break: only -6pp, weaker.
 - 10m EMA8 break: noise.
 
-Operational rule: if in a GG trade, a 10m close back through trigger is a major de-risk/cut signal. [Source: `/root/spy/analyst/studies_reference.md#6-gg-pullback-invalidation-when-to-cut`]
+Operational rule: if in a GG trade, a 10m close back through trigger is a major de-risk/cut signal. [Source: `spy/analyst/studies_reference.md#6-gg-pullback-invalidation-when-to-cut`]
 
 ### 5.7 Timing / Subway
 
@@ -407,7 +465,7 @@ GG completion by trigger hour:
 | 14:00 | 41% | 48% |
 | 15:00 | 16% | 30% |
 
-Key: open triggers are highest conviction; bearish GGs remain more viable later than bullish; late bullish triggers are weak. [Source: `/root/spy/analyst/studies_reference.md#7-subway-timing-gg-completion-by-trigger-hour`]
+Key: open triggers are highest conviction; bearish GGs remain more viable later than bullish; late bullish triggers are weak. [Source: `spy/analyst/studies_reference.md#7-subway-timing-gg-completion-by-trigger-hour`]
 
 ---
 
@@ -420,9 +478,9 @@ A trigger box day opens between PDC and a trigger:
 - **Bearish trigger box**: open below PDC but above put trigger. Occurs 22.6% of days (n=1,462).
 - **Bullish trigger box**: open above PDC but below call trigger. Occurs 26.3% of days (n=1,698).
 
-[Source: `/root/spy/analyst/studies_reference.md#8-trigger-box`]
+[Source: `spy/analyst/studies_reference.md#8-trigger-box`]
 
-Saty doctrine: in a trend, break of call trigger can justify calls; break of put trigger can justify puts; stops can be just below/above the trigger; scale at midrange and ±1 ATR. 2–4 DTE on SPY was noted as a preference in the extracted doctrine. [Source: `/root/satyland/viewer2/kb-unified/concepts/trigger-box.json`]
+Saty doctrine: in a trend, break of call trigger can justify calls; break of put trigger can justify puts; stops can be just below/above the trigger; scale at midrange and ±1 ATR. 2–4 DTE on SPY was noted as a preference in the extracted doctrine. [Source: `satyland/viewer2/kb-unified/concepts/trigger-box.json`]
 
 ### 6.2 Hold-time implications
 
@@ -447,7 +505,7 @@ When PDC is reclaimed in first hour:
 - 73% reach opposite trigger.
 - 49% reach opposite GG entry (38.2%).
 
-[Source: `/root/spy/analyst/studies_reference.md#8-trigger-box`]
+[Source: `spy/analyst/studies_reference.md#8-trigger-box`]
 
 ### 6.3 Trigger Box credit spreads
 
@@ -474,7 +532,7 @@ Two approaches:
 - ±100: 97–99% win, lower premium.
 - ±61.8: 88–93% win, more premium but worse loss ratio.
 
-Use ±38.2 as stop concept. Setup fires ~10% of trading days. [Source: `/root/spy/analyst/studies_reference.md#9-trigger-box-credit-spreads`]
+Use ±38.2 as stop concept. Setup fires ~10% of trading days. [Source: `spy/analyst/studies_reference.md#9-trigger-box-credit-spreads`]
 
 ---
 
@@ -508,7 +566,7 @@ By time:
 - 14:00: 74.0%.
 - 15:30: 29.1%.
 
-Key: a 3-minute close back below the trigger is a powerful kill signal; clean trades before 14:00 were near-100% in this study. [Source: `/root/spy/KNOWLEDGE.md#4-call-trigger-confirmation--3-minute-close-study`]
+Key: a 3-minute close back below the trigger is a powerful kill signal; clean trades before 14:00 were near-100% in this study. [Source: `spy/KNOWLEDGE.md#4-call-trigger-confirmation--3-minute-close-study`]
 
 ### 7.2 Call trigger → put trigger morning reversal
 
@@ -537,7 +595,7 @@ Interpretation:
 - Hourly PO compression is the most bearish filter: lowest PDC recovery and highest close-below-put rate.
 - Bullish hourly expansion suppresses downside continuation.
 
-[Source: `/root/spy/KNOWLEDGE.md#6-call-trigger-to-put-trigger-morning-reversal`]
+[Source: `spy/KNOWLEDGE.md#6-call-trigger-to-put-trigger-morning-reversal`]
 
 ---
 
@@ -550,7 +608,7 @@ Interpretation:
 - Small gaps are more likely to fill quickly.
 - Counter-trend gaps fill faster than pro-trend gaps.
 
-[Sources: `/root/spy/analyst/studies_reference.md#10-gap-fill-midpoint-fill--price-reaches-halfway-back-through-gap`; `/root/satyland/viewer2/kb-unified/concepts/gap-fill.json`]
+[Sources: `spy/analyst/studies_reference.md#10-gap-fill-midpoint-fill--price-reaches-halfway-back-through-gap`; `satyland/viewer2/kb-unified/concepts/gap-fill.json`]
 
 ### 8.2 Midpoint fill rates
 
@@ -573,7 +631,7 @@ Gap down midpoint fill rates:
 | 0.5–1% | 77% | 71% | 86% |
 | 1–2% | 70% | 66% | 80% |
 
-Key: tiny gaps (<0.25%) are near-certain midpoint fills; counter-trend gaps fill faster; large gap-ups in compression plus bull trend resist filling. [Source: `/root/spy/analyst/studies_reference.md#10-gap-fill-midpoint-fill--price-reaches-halfway-back-through-gap`]
+Key: tiny gaps (<0.25%) are near-certain midpoint fills; counter-trend gaps fill faster; large gap-ups in compression plus bull trend resist filling. [Source: `spy/analyst/studies_reference.md#10-gap-fill-midpoint-fill--price-reaches-halfway-back-through-gap`]
 
 ### 8.3 Operational use
 
@@ -592,7 +650,7 @@ Use gaps as a contextual magnet, not an automatic trade:
 
 Setup: 10m PO enters compression / Bollinger squeeze for at least 30 minutes. Expansion direction is measured from compression range midpoint over 120 minutes after expansion.
 
-Total events: 6,116; 3,311 bullish and 2,805 bearish. [Source: `/root/spy/analyst/studies_reference.md#13-10-minute-compression--expansion`]
+Total events: 6,116; 3,311 bullish and 2,805 bearish. [Source: `spy/analyst/studies_reference.md#13-10-minute-compression--expansion`]
 
 Baseline:
 
@@ -627,7 +685,7 @@ ATR position at expansion:
 - Bear trigger box: 38% bullish / 62% bearish.
 - Below -61.8%: 89% bearish.
 
-Operational rule: long compression + aligned EMA21/48 + supportive ATR position = strong directional clue. Time of day matters less than trend and ATR position. [Source: `/root/spy/analyst/studies_reference.md#13-10-minute-compression--expansion`]
+Operational rule: long compression + aligned EMA21/48 + supportive ATR position = strong directional clue. Time of day matters less than trend and ATR position. [Source: `spy/analyst/studies_reference.md#13-10-minute-compression--expansion`]
 
 ### 9.2 Bilbo Box breakout
 
@@ -637,7 +695,7 @@ Definition: Bilbo Box is the range of the first 5 compression bars. Once the box
 - Close-outside confirmation.
 - Retest.
 
-Sample: 50,889 break events across 3m/10m/1h/4h/1d, 2000–2026. [Source: `/root/spy/analyst/studies_reference.md#15-bilbo-box-breakout`]
+Sample: 50,889 break events across 3m/10m/1h/4h/1d, 2000–2026. [Source: `spy/analyst/studies_reference.md#15-bilbo-box-breakout`]
 
 10-bar Net-R median:
 
@@ -657,11 +715,11 @@ Takeaways:
 4. Stops at opposite boundary; realistic TP 0.5–1.0R.
 5. Raw signal is texture, not a standalone exploit: ~51% hit rate, +0.03R median. Stack with trend/time/volatility filters.
 
-Caveats: 1h PO/data issue; 1d sample underpowered; ambiguous outside bars excluded. [Source: `/root/spy/analyst/studies_reference.md#15-bilbo-box-breakout`]
+Caveats: 1h PO/data issue; 1d sample underpowered; ambiguous outside bars excluded. [Source: `spy/analyst/studies_reference.md#15-bilbo-box-breakout`]
 
 #### 9.2.1 Bilbo Box × higher-timeframe Phase Oscillator refinement
 
-Refined studies: HTF PO joins are lookahead-safe (`merge_asof` after shifting HTF timestamps forward by one full bar). The original fixed-window R study is now exploratory only. The actionable rebuild uses Pedro's corrected bracket exits: R = **box height** (`box_high - box_low` price range), not time width; T1 = 0.5R, T2 = 1R, T3 = 2R; stop = opposite box side; time stop = 15 bars; same-bar target/stop ambiguity waits for candle close instead of stop-first. [Sources: `/root/spy/backtest_bilbo_box_htf_po_exits.py`; `/root/spy/analyst/bilbo_box_htf_po_exits_summary.json`; `/root/spy/analyst/studies_reference.md#16a-bilbo-box--higher-timeframe-po--bracket-exit-rebuild`; `https://milkmantrades.com/bilbo-htf-po.html`]
+Refined studies: HTF PO joins are lookahead-safe (`merge_asof` after shifting HTF timestamps forward by one full bar). The original fixed-window R study is now exploratory only. The actionable rebuild uses the trader's corrected bracket exits: R = **box height** (`box_high - box_low` price range), not time width; T1 = 0.5R, T2 = 1R, T3 = 2R; stop = opposite box side; time stop = 15 bars; same-bar target/stop ambiguity waits for candle close instead of stop-first. [Sources: `spy/backtest_bilbo_box_htf_po_exits.py`; `spy/analyst/bilbo_box_htf_po_exits_summary.json`; `spy/analyst/studies_reference.md#16a-bilbo-box--higher-timeframe-po--bracket-exit-rebuild`; `https://milkmantrades.com/bilbo-htf-po.html`]
 
 Original fixed-window headline, now superseded for trading decisions: **same-direction PO expansion did not improve Bilbo outcomes**.
 
@@ -710,7 +768,7 @@ Caveat: the 10m PO cut is cleaner; the 1h PO cut inherits the known wick-clip-er
 
 ### 10.1 ±1 ATR RTM
 
-Saty doctrine: RTM / return-to-mean works around ±1 ATR extremes, Phase Oscillator extremes, ribbon distance, and exhaustion. It is both-directional and should be paired with context, not blindly faded. [Sources: `/root/satyland/kb/glossary.md`; `/root/satyland/viewer2/kb-unified/concepts/rtm-1atr.json`]
+Saty doctrine: RTM / return-to-mean works around ±1 ATR extremes, Phase Oscillator extremes, ribbon distance, and exhaustion. It is both-directional and should be paired with context, not blindly faded. [Sources: `satyland/kb/glossary.md`; `satyland/viewer2/kb-unified/concepts/rtm-1atr.json`]
 
 Operational pattern:
 
@@ -745,7 +803,7 @@ Mean reversion by deviation:
 - Practical signal: 4h PO declining while daily PO still rising (n=38): 1d -0.42%, 2d -0.81%, 3d -0.85%.
 - Strongest signal: 4h PO big drop delta < -10 (n=7): 1d -1.64%, 2d -1.29%.
 
-[Source: `/root/spy/KNOWLEDGE.md#5-price-vs-daily-21-ema--reversion-study`]
+[Source: `spy/KNOWLEDGE.md#5-price-vs-daily-21-ema--reversion-study`]
 
 ### 10.3 4h PO rollover + OpEx window
 
@@ -769,11 +827,11 @@ Takeaways:
 - Long-dated puts preferred over weeklies when playing the tail.
 - Deep extension (wk/mo ATR ≥1.0) underperforms moderate extension at 5d but has fatter left tails at 10d.
 
-[Source: `/root/spy/analyst/studies_reference.md#14-4h-po-rollover--opex-window-extended-conditions`]
+[Source: `spy/analyst/studies_reference.md#14-4h-po-rollover--opex-window-extended-conditions`]
 
 ### 10.4 TICK fading
 
-Extracted doctrine: wait until an extreme $TICK reading registers (>+1000 or <-1000), then fade the move; avoid jumping into the froth after the extreme has already hit. [Source: `/root/satyland/viewer2/kb-unified/concepts/discipline.json`]
+Extracted doctrine: wait until an extreme $TICK reading registers (>+1000 or <-1000), then fade the move; avoid jumping into the froth after the extreme has already hit. [Source: `satyland/viewer2/kb-unified/concepts/discipline.json`]
 
 ---
 
@@ -781,7 +839,7 @@ Extracted doctrine: wait until an extreme $TICK reading registers (>+1000 or <-1
 
 ### 11.1 ORB — Opening Range Breakout
 
-Definition: 5m or 10m opening range breakout/breakdown, using the opening range, VWAP, trend, and target ladder. [Sources: `/root/satyland/kb/glossary.md`; `/root/satyland/viewer2/kb-unified/concepts/orb.json`]
+Definition: 5m or 10m opening range breakout/breakdown, using the opening range, VWAP, trend, and target ladder. [Sources: `satyland/kb/glossary.md`; `satyland/viewer2/kb-unified/concepts/orb.json`]
 
 Doctrine distilled from foundational entries:
 
@@ -802,7 +860,7 @@ Live template:
 ### 11.2 Vomy / iVomy
 
 **Vomy**: bearish setup using Pivot Ribbon, 8/13 EMA cross/ribbon flip, squeeze/compression, Phase Oscillator, and ATR targets.  
-**iVomy**: inverse/bullish version. [Source: `/root/satyland/kb/glossary.md`]
+**iVomy**: inverse/bullish version. [Source: `satyland/kb/glossary.md`]
 
 Vomy doctrine:
 
@@ -813,7 +871,7 @@ Vomy doctrine:
 - Invalidation can be reclaim of 13 EMA or relevant ribbon level against the short.
 - Targets: put trigger, -1 ATR, support/gap fill; scale into targets.
 
-Sources: `/root/satyland/viewer2/kb-unified/concepts/vomy.json`; `/root/satyland/kb/glossary.md`]
+Sources: `satyland/viewer2/kb-unified/concepts/vomy.json`; `satyland/kb/glossary.md`]
 
 
 iVomy doctrine:
@@ -824,7 +882,7 @@ iVomy doctrine:
 - Targets: 50% ATR, 61.8% Golden Fib, prior high, call trigger/GG ladder.
 - Take profit aggressively on lottos; Satyland doctrine explicitly says to take profit on lottos at 100%.
 
-[Source: `/root/satyland/viewer2/kb-unified/concepts/ivomy.json`]
+[Source: `satyland/viewer2/kb-unified/concepts/ivomy.json`]
 
 ### 11.3 Support/resistance and supply/demand
 
@@ -843,7 +901,7 @@ Supply/demand doctrine:
 - Invalidation is breakout through high of supply zone.
 - Targets can include call/put triggers, gap fill, and nearby support.
 
-[Sources: `/root/satyland/viewer2/kb-unified/concepts/support-resistance.json`; `/root/satyland/viewer2/kb-unified/concepts/supply-demand-zones.json`]
+[Sources: `satyland/viewer2/kb-unified/concepts/support-resistance.json`; `satyland/viewer2/kb-unified/concepts/supply-demand-zones.json`]
 
 ### 11.4 Power Play, failed breakout, divergences, patterns
 
@@ -856,7 +914,7 @@ Use these as secondary setup families unless current context explicitly matches 
 - **H Pattern, Head & Shoulders, wedges, Wyckoff**: structure/pattern context; require level confirmation.
 - **Time Warp**: multi-timeframe analysis; do not mix timeframes without stating which is primary.
 
-[Source: `/root/satyland/kb/glossary.md`]
+[Source: `satyland/kb/glossary.md`]
 
 ---
 
@@ -873,7 +931,7 @@ Conditioned on previous day daily PO:
 - Bear Bilbo: prior day PO Low+Falling: 94% day 1 (n=54), strongest signal in studies.
 - Counter bear: prior day PO Mid+Rising: 60% day 1.
 
-[Source: `/root/spy/analyst/studies_reference.md#11-multi-day-gg-weekly-atr-conditioned-on-previous-days-daily-po`]
+[Source: `spy/analyst/studies_reference.md#11-multi-day-gg-weekly-atr-conditioned-on-previous-days-daily-po`]
 
 ### 12.2 Monthly ATR / swing GG
 
@@ -886,7 +944,7 @@ Conditioned on previous week weekly PO:
 - Monthly moves take weeks.
 - Full ATR only 24% bull / 42% bear by day 20.
 
-[Source: `/root/spy/analyst/studies_reference.md#12-swing-gg-monthly-atr-conditioned-on-previous-weeks-weekly-po`]
+[Source: `spy/analyst/studies_reference.md#12-swing-gg-monthly-atr-conditioned-on-previous-weeks-weekly-po`]
 
 ---
 
@@ -1127,25 +1185,25 @@ Conditioned on previous week weekly PO:
 
 | Edge / study | Best live-use takeaway | Source |
 |---|---|---|
-| Level-to-level | Trigger→38.2 = 80%; 38.2→61.8 = 69%; full ATR cumulative only 14% | `/root/spy/analyst/studies_reference.md#1` |
-| Baseline GG | Bull GG 63%; Bear GG 65% | `/root/spy/analyst/studies_reference.md#1` |
-| Bilbo GG | Bull PO high+rising 77.7%; Bear PO low+falling 90.2% | `/root/spy/analyst/studies_reference.md#2` |
-| Bilbo continuation | Bear low+falling full ATR 66% | `/root/spy/analyst/studies_reference.md#3` |
-| 60m vs 10m PO | 60m PO 5–12x more predictive for GG | `/root/spy/analyst/studies_reference.md#4` |
-| GG entry | Immediate/EMA8 entries solid; 1h EMA21 best R:R but lower hit | `/root/spy/analyst/studies_reference.md#5` |
-| GG invalidation | 10m trigger close break cuts completion by ~39pp | `/root/spy/analyst/studies_reference.md#6` |
-| GG timing | Open triggers ~86–88%; late bull weak | `/root/spy/analyst/studies_reference.md#7` |
-| Trigger Box | Box held 1h → ~80% GG open | `/root/spy/analyst/studies_reference.md#8` |
-| Trigger Box spreads | 1h-held box: ±61.8 spreads ~92–93.6%; ±100 ~97.5–98.7% | `/root/spy/analyst/studies_reference.md#9` |
-| Gap midpoint | <0.25% gaps fill midpoint ~94–95% day 1 | `/root/spy/analyst/studies_reference.md#10` |
-| Weekly bear Bilbo | Prior daily PO low+falling bear weekly GG = 94% day-1 | `/root/spy/analyst/studies_reference.md#11` |
-| Monthly GG | Bear monthly moves faster; monthly moves take weeks | `/root/spy/analyst/studies_reference.md#12` |
-| Compression expansion | 180m+ compression + bullish EMA21>48 = 83.7% bullish expansion | `/root/spy/analyst/studies_reference.md#13` |
-| 4h PO + OpEx | Extended OpEx rollover has 10d tail edge; not immediate | `/root/spy/analyst/studies_reference.md#14` |
-| Bilbo Box | Immediate beats retest; retest underperforms | `/root/spy/analyst/studies_reference.md#15` |
-| Call trigger confirmation | Clean 3m close above trigger → 38.2 hit 97.1%; median 18m | `/root/spy/KNOWLEDGE.md#4` |
-| Call→put reversal | PDC recovery 73.7%; downside GG open 75.3%; -1 ATR 18.5% | `/root/spy/KNOWLEDGE.md#6` |
-| EMA21 reversion | >4% above daily EMA21 touched EMA21 within 28d in 50/50 episodes | `/root/spy/KNOWLEDGE.md#5` |
+| Level-to-level | Trigger→38.2 = 80%; 38.2→61.8 = 69%; full ATR cumulative only 14% | `spy/analyst/studies_reference.md#1` |
+| Baseline GG | Bull GG 63%; Bear GG 65% | `spy/analyst/studies_reference.md#1` |
+| Bilbo GG | Bull PO high+rising 77.7%; Bear PO low+falling 90.2% | `spy/analyst/studies_reference.md#2` |
+| Bilbo continuation | Bear low+falling full ATR 66% | `spy/analyst/studies_reference.md#3` |
+| 60m vs 10m PO | 60m PO 5–12x more predictive for GG | `spy/analyst/studies_reference.md#4` |
+| GG entry | Immediate/EMA8 entries solid; 1h EMA21 best R:R but lower hit | `spy/analyst/studies_reference.md#5` |
+| GG invalidation | 10m trigger close break cuts completion by ~39pp | `spy/analyst/studies_reference.md#6` |
+| GG timing | Open triggers ~86–88%; late bull weak | `spy/analyst/studies_reference.md#7` |
+| Trigger Box | Box held 1h → ~80% GG open | `spy/analyst/studies_reference.md#8` |
+| Trigger Box spreads | 1h-held box: ±61.8 spreads ~92–93.6%; ±100 ~97.5–98.7% | `spy/analyst/studies_reference.md#9` |
+| Gap midpoint | <0.25% gaps fill midpoint ~94–95% day 1 | `spy/analyst/studies_reference.md#10` |
+| Weekly bear Bilbo | Prior daily PO low+falling bear weekly GG = 94% day-1 | `spy/analyst/studies_reference.md#11` |
+| Monthly GG | Bear monthly moves faster; monthly moves take weeks | `spy/analyst/studies_reference.md#12` |
+| Compression expansion | 180m+ compression + bullish EMA21>48 = 83.7% bullish expansion | `spy/analyst/studies_reference.md#13` |
+| 4h PO + OpEx | Extended OpEx rollover has 10d tail edge; not immediate | `spy/analyst/studies_reference.md#14` |
+| Bilbo Box | Immediate beats retest; retest underperforms | `spy/analyst/studies_reference.md#15` |
+| Call trigger confirmation | Clean 3m close above trigger → 38.2 hit 97.1%; median 18m | `spy/KNOWLEDGE.md#4` |
+| Call→put reversal | PDC recovery 73.7%; downside GG open 75.3%; -1 ATR 18.5% | `spy/KNOWLEDGE.md#6` |
+| EMA21 reversion | >4% above daily EMA21 touched EMA21 within 28d in 50/50 episodes | `spy/KNOWLEDGE.md#5` |
 
 ---
 
@@ -1158,7 +1216,7 @@ Conditioned on previous week weekly PO:
 5. **1d Bilbo Box underpowered**: daily Bilbo Box sample n=279; bullish drift drives much of higher-TF bull edge.
 6. **Upward drift bias**: 25-year SPY history favors bull breaks on higher timeframes.
 7. **Extracted Satyland doctrine**: some Saty claims come from OCR/vision extraction of screenshots. Use as doctrine/terminology, not validated quant.
-8. **Avoid example contamination**: example chart tickers, dates, visible panels are not rules unless doctrine text explicitly states them. [Source: `/root/satyland/kb/glossary.md#applicability-vs-example-only`]
+8. **Avoid example contamination**: example chart tickers, dates, visible panels are not rules unless doctrine text explicitly states them. [Source: `satyland/kb/glossary.md#applicability-vs-example-only`]
 9. **Conflicting close→trigger number**: `studies_reference.md` says close→±Trigger reached on 99.2% of days in either direction; `README.md` and older `KNOWLEDGE.md` cite 80% in a level-to-level table. Prefer `studies_reference.md` for current compact stats and preserve the conflict if precision matters.
 10. **Execution matters**: options spreads, 0DTE greeks, slippage, IV, and strike selection can dominate the theoretical underlying move edge.
 
@@ -1168,31 +1226,31 @@ Conditioned on previous week weekly PO:
 
 ### Primary quant/stat sources
 
-- `/root/spy/analyst/studies_reference.md` — compact 15-section study reference; primary source for headline stats.
-- `/root/spy/KNOWLEDGE.md` — indicator definitions, implementation notes, call-trigger study, EMA21 reversion, call→put reversal.
-- `/root/spy/README.md` — repo overview and key findings.
+- `spy/analyst/studies_reference.md` — compact 15-section study reference; primary source for headline stats.
+- `spy/KNOWLEDGE.md` — indicator definitions, implementation notes, call-trigger study, EMA21 reversion, call→put reversal.
+- `spy/README.md` — repo overview and key findings.
 
 ### Saty doctrine / vocabulary sources
 
-- `/root/satyland/kb/glossary.md` — canonical setup names, aliases, shorthand, indicator vocabulary, applicability warning.
-- `/root/satyland/viewer2/kb-unified/concepts/saty-atr-levels.json`
-- `/root/satyland/viewer2/kb-unified/concepts/pivot-ribbon.json`
-- `/root/satyland/viewer2/kb-unified/concepts/phase-oscillator.json`
-- `/root/satyland/viewer2/kb-unified/concepts/orb.json`
-- `/root/satyland/viewer2/kb-unified/concepts/vomy.json`
-- `/root/satyland/viewer2/kb-unified/concepts/ivomy.json`
-- `/root/satyland/viewer2/kb-unified/concepts/rtm-1atr.json`
-- `/root/satyland/viewer2/kb-unified/concepts/golden-gate.json`
-- `/root/satyland/viewer2/kb-unified/concepts/trigger-box.json`
-- `/root/satyland/viewer2/kb-unified/concepts/morning-plan.json`
-- `/root/satyland/viewer2/kb-unified/concepts/primary-setups.json`
-- `/root/satyland/viewer2/kb-unified/concepts/compression-expansion.json`
-- `/root/satyland/viewer2/kb-unified/concepts/bilbo-golden-gate.json`
-- `/root/satyland/viewer2/kb-unified/concepts/gap-fill.json`
-- `/root/satyland/viewer2/kb-unified/concepts/support-resistance.json`
-- `/root/satyland/viewer2/kb-unified/concepts/supply-demand-zones.json`
-- `/root/satyland/viewer2/kb-unified/concepts/trend-mantra.json`
-- `/root/satyland/viewer2/kb-unified/concepts/discipline.json`
+- `satyland/kb/glossary.md` — canonical setup names, aliases, shorthand, indicator vocabulary, applicability warning.
+- `satyland/viewer2/kb-unified/concepts/saty-atr-levels.json`
+- `satyland/viewer2/kb-unified/concepts/pivot-ribbon.json`
+- `satyland/viewer2/kb-unified/concepts/phase-oscillator.json`
+- `satyland/viewer2/kb-unified/concepts/orb.json`
+- `satyland/viewer2/kb-unified/concepts/vomy.json`
+- `satyland/viewer2/kb-unified/concepts/ivomy.json`
+- `satyland/viewer2/kb-unified/concepts/rtm-1atr.json`
+- `satyland/viewer2/kb-unified/concepts/golden-gate.json`
+- `satyland/viewer2/kb-unified/concepts/trigger-box.json`
+- `satyland/viewer2/kb-unified/concepts/morning-plan.json`
+- `satyland/viewer2/kb-unified/concepts/primary-setups.json`
+- `satyland/viewer2/kb-unified/concepts/compression-expansion.json`
+- `satyland/viewer2/kb-unified/concepts/bilbo-golden-gate.json`
+- `satyland/viewer2/kb-unified/concepts/gap-fill.json`
+- `satyland/viewer2/kb-unified/concepts/support-resistance.json`
+- `satyland/viewer2/kb-unified/concepts/supply-demand-zones.json`
+- `satyland/viewer2/kb-unified/concepts/trend-mantra.json`
+- `satyland/viewer2/kb-unified/concepts/discipline.json`
 
 ### Explicitly excluded by scope
 
@@ -1204,7 +1262,7 @@ Conditioned on previous week weekly PO:
 
 ## 17. Compact live-analysis template
 
-Use this when Mr. Pedro sends “SPX” or asks for a live plan:
+Use this when the trader sends “SPX” or asks for a live plan:
 
 ```text
 Context

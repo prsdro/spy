@@ -211,11 +211,31 @@
     <div class="section section-draft" id="drafts">
       <div class="section-label">
         <span>Draft Studies &mdash; In Progress</span>
-        <span class="count">9 studies</span>
+        <span class="count">11 studies</span>
       </div>
       <div class="section-intro">
         Real signal but a weak frame. These need tweaks &mdash; sample-size deepening, reframed metrics, rebuilt code, or merging into adjacent studies &mdash; before an edge can be confirmed. Treat as research drafts, not playbook material.
       </div>
+
+      <a class="study-card" id="spx-spy-divergence" href="/spx-spy-divergence.html">
+        <div class="head">
+          <span class="name">SPX vs SPY Morning Divergence <span style="font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--draft);letter-spacing:.06em;text-transform:uppercase;margin-left:.4rem">New</span></span>
+          <span class="arrow">&rarr;</span>
+        </div>
+        <div class="reason">
+          <strong>Exploratory first cut.</strong> Median <code>|PO_SPY &minus; PO_SPX|</code> at 09:30 is ~40 oscillator units (about two full Saty zones); fast cloud disagrees on 38% of days. Mechanism: SPY&rsquo;s pre-market bars cushion its EMAs; SPX&rsquo;s RTH-only EMAs absorb the gap all at once at 09:30. Across 4,527 RTH days (2008&ndash;2026), <strong>SPY&rsquo;s reading is the leading signal</strong> &mdash; |gap| &geq; 1% cohorts produce a 0.54% full-day spread between symmetric sign(d_open) buckets, and the fast-cloud-mismatch cuts deliver a 0.42% spread. Needs VIX/regime stratification, FOMC/OpEx exclusion, and a 2010+ re-cut before it becomes tradable.
+        </div>
+      </a>
+
+      <a class="study-card" id="atr-cascade" href="/atr-cascade.html">
+        <div class="head">
+          <span class="name">ATR Level Cascade <span style="font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--draft);letter-spacing:.06em;text-transform:uppercase;margin-left:.4rem">New</span></span>
+          <span class="arrow">&rarr;</span>
+        </div>
+        <div class="reason">
+          <strong>First-pass map.</strong> 33,153 RTH first-touch events across 25y SPY tagged with continuation / retrace / last and time-of-day bucket. Solid construction (3-min bars, no look-ahead) and clear time-of-day shape &mdash; 76&ndash;78% continuation pre-10:00 collapsing to <em>last</em>-dominated post-15:00. Needs regime-stratification (high/low ATR days, gap days, FOMC) and a paired entry/exit framework before it earns a tradable slot. Use the <a href="/atr-cascade.html" style="color:var(--accent)">explorer</a> as a path-handicapper for now, or the <a href="/atr-levels-probabilities-spy.html" style="color:var(--accent)">static Saty-style chart</a> for the same-session probability map.
+        </div>
+      </a>
 
       <a class="study-card" id="bilbo-golden-gate" href="/bilbo-golden-gate.html">
         <div class="head">
