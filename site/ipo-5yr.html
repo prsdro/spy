@@ -72,6 +72,36 @@ table.kv tr:last-child td{border-bottom:none}
 .dist .d{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:10px 11px;text-align:center}
 .dist .d .n{font-family:'JetBrains Mono',monospace;font-size:19px;font-weight:700}
 .dist .d .c{font-size:10.5px;color:var(--text-dim);line-height:1.35;margin-top:3px}
+/* ---- charts (size/tech angle) ---- */
+:root{--s1:#3987e5;--s2:#c98500;--s3:#199e70;--s4:#9085e9;--spyline:#5d6678;--dim-dot:#2c3242}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:2px 0 10px}
+.chips .grp{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.chips .grp+.grp{margin-left:8px;padding-left:10px;border-left:1px solid var(--border-strong)}
+.chip{font-family:'JetBrains Mono',monospace;font-size:10.5px;padding:4px 10px;border-radius:999px;border:1px solid var(--border-strong);background:var(--surface-2);color:var(--text-mid);cursor:pointer;user-select:none;line-height:1.3}
+.chip.on{background:#16283f;border-color:var(--s1);color:#cfe3ff}
+.chartbox{position:relative;margin:6px 0 2px}
+.chartbox svg{display:block;width:100%;height:auto}
+.ctip{position:absolute;pointer-events:none;background:#0b0e14f2;border:1px solid var(--border-strong);border-radius:8px;padding:7px 9px;font-family:'JetBrains Mono',monospace;font-size:11px;line-height:1.55;z-index:5;display:none;white-space:nowrap}
+.ctip .d{color:var(--text-dim);font-size:10px;margin-bottom:2px}
+.ctip .row{display:flex;align-items:center;gap:6px}
+.ctip .row .key{display:inline-block;width:12px;height:2px;border-radius:2px;flex:none}
+.ctip .row b{color:var(--text)}
+.ctip .row span{color:var(--text-dim)}
+.legend{display:flex;flex-wrap:wrap;gap:5px 14px;margin:4px 2px 2px;font-size:11px;color:var(--text-mid);font-family:'JetBrains Mono',monospace}
+.legend .key{display:inline-block;width:14px;height:2px;border-radius:2px;vertical-align:middle;margin-right:5px;position:relative;top:-2px}
+.legend .keyr{display:inline-block;width:9px;height:9px;border-radius:3px;vertical-align:middle;margin-right:5px}
+table.heat{width:100%;border-collapse:separate;border-spacing:2px;margin-top:6px}
+table.heat th{font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.04em;font-weight:600;padding:3px 2px;text-align:center}
+table.heat th:first-child{text-align:right}
+table.heat td{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;text-align:center;padding:6px 2px;border-radius:6px}
+table.heat td.rl{text-align:right;color:var(--text-mid);font-size:10.5px;background:none;padding-right:6px;white-space:nowrap}
+.readout{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-mid);margin:8px 2px 0;line-height:1.6}
+.readout b{color:var(--text)}
+ul.takeaways{list-style:none;margin:2px 0 0}
+ul.takeaways li{position:relative;padding:7px 0 7px 22px;font-size:13px;color:var(--text-mid);line-height:1.5;border-bottom:1px solid var(--border)}
+ul.takeaways li:last-child{border-bottom:none}
+ul.takeaways li::before{content:"";position:absolute;left:4px;top:14px;width:7px;height:7px;border-radius:2px;background:var(--accent)}
+ul.takeaways li b{color:var(--text)}
 .footer{margin:28px 0 10px;padding-top:16px;border-top:1px solid var(--border);font-size:11.5px;color:var(--text-dim);line-height:1.6}
 .footer code{font-family:'JetBrains Mono',monospace;color:var(--text-mid)}
 .footer a{color:var(--text-dim);text-decoration:underline;text-underline-offset:2px}
@@ -102,6 +132,28 @@ table.kv tr:last-child td{border-bottom:none}
     <h2>Buying every IPO on day 1 compounded at 3.4%/yr while the same dollars in SPY made 15.6%/yr. Waiting 6 months erases the penalty — but produces no alpha.</h2>
     <p>The median IPO is down <b>−61% one year</b> after its first trade; only <b>19%</b> beat SPY over that year. The damage isn't a first-week phenomenon — it accrues steadily through the first year, so waiting 1 week or even 1 month barely helps. By <b>~6 months</b> (lockup expiry territory) the forward numbers finally match the index.</p>
     <p>Both candidate filters are real: <b>deal size is the strongest single filter</b> (sub-$25M listings are near-total capital destruction; $500M+ deals lose only modestly), and <b>industry is statistically predictive</b> (Kruskal–Wallis p≈0.0005) — financial-sector IPOs hold up, services/shipping micro-caps are the graveyard.</p>
+    <p>Size thresholds don't rescue day-1 buying: even <b>≥$1B deals compound ~8pp/yr behind SPY</b> bought at the open. Six months of patience brings every size bucket back to market — and the only slice that pulls <em>ahead</em> is <b>non-tech $250M+ deals after the wait (+4pp/yr)</b>. Tech IPOs never catch up from any entry.</p>
+  </div>
+
+  <div class="section-title">Key takeaways</div>
+  <div class="card">
+    <ul class="takeaways">
+      <li><b>Never buy the day-1 open indiscriminately.</b> $1 into every IPO compounds at <b>3.4%/yr vs 15.6%</b> for the same dollars in SPY; the median IPO is −61% a year after listing.</li>
+      <li><b>Wait at least ~5 months.</b> The entry-delay benefit rises steadily, knees at ~5 months, and is flat out to 12 — "6 months" is convention, not magic. Nothing shorter than ~3 months moves the needle.</li>
+      <li><b>Size alone doesn't rescue day-1 buying.</b> Even ≥$1B mega-deals lag SPY by ~8pp/yr from the open (and do <em>worse</em> than ≥$500M deals).</li>
+      <li><b>Skip tech.</b> Tech IPOs lag from every entry; waiting narrows but never closes the gap (big-tech +6-month entry: 4.2%/yr vs SPY 15.2%).</li>
+      <li><b>The edge cell: non-tech, ≥$250M, bought ~6 months in</b> — 20.6%/yr vs SPY's 16.3% on the same cashflow dates.</li>
+      <li><b>A −10% stop helps only if the freed cash goes back to work.</b> On the edge-cell entry, stopped-out dollars reinvested equally into the remaining open positions end at <b>$1.69 per $1 (26.8%/yr) vs $1.50 (20.7%) with no stop and $1.38 (16.3%) for SPY</b> — but parked in cash they end at $1.27, <em>worse</em> than no stop. ~3 in 4 positions stop out and returns concentrate in the surviving tail. Promising, not proven.</li>
+      <li><b>Don't chase pops, don't buy the dip to issue price.</b> "Back at the IPO price" is adverse selection — dip-buyers underperform the simple wait in every cohort, and a stop <em>at</em> issue fires late (~−30%) on 75% of entries.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>The strategy, as an equity curve</h3>
+    <div class="ck">Value <b>per $1 invested</b>, weekly. Strategy = non-tech ≥$250M IPOs, entry at the close 6 months after listing, sold on the first daily close −10% below entry. <b>All lines are self-financing</b>: exit proceeds (stops and delistings alike) are reinvested equally into that portfolio's remaining open positions, so no line gets a cash drag. Grey = the same external dollars into <b>SPY</b> on the strategy's dates, held throughout.</div>
+    <div class="chartbox" id="cv-strat"></div>
+    <div class="legend" id="cv-strat-leg"></div>
+    <div class="callout" id="cv-strat-note"></div>
   </div>
 
   <div class="tiles" id="tiles"></div>
@@ -136,6 +188,68 @@ table.kv tr:last-child td{border-bottom:none}
     <div class="ck">Restricting to deals that raised ≥ $100M (n=291 with usable data):</div>
     <table class="kv" id="bigtab"></table>
     <div class="callout" id="bignote"></div>
+  </div>
+
+  <div class="section-title">The big-deal universe — how many per year?</div>
+  <div class="card">
+    <h3>IPOs raising ≥ $250M, by year and size</h3>
+    <div class="ck" id="yrck"></div>
+    <div class="chartbox" id="yrchart"></div>
+    <div class="legend" id="yrlegend"></div>
+    <div class="callout" id="yrnote"></div>
+  </div>
+
+  <div class="section-title">Only buy the big ones?</div>
+  <div class="card">
+    <h3>Size-threshold strategies vs SPY</h3>
+    <div class="ck">Money-weighted return (XIRR) of $1 into every qualifying IPO, held to <b>2026-05-07</b> or delisting, vs the same dollars into SPY on identical dates.</div>
+    <table class="kv" id="threshtab"></table>
+    <div class="callout" id="threshnote"></div>
+  </div>
+  <div class="card">
+    <h3>Does waiting help? By size and by tech</h3>
+    <div class="ck">Median 1-year excess return vs SPY for each entry point. Green = closer to (or above) the index.</div>
+    <table class="heat" id="waitheat"></table>
+    <div class="callout" id="waitnote"></div>
+  </div>
+
+  <div class="section-title">Equity curves — cumulative $ vs SPY</div>
+  <div class="card">
+    <h3 id="cv-tech-h">Tech vs non-tech</h3>
+    <div class="ck">$1 into each IPO at the day-1 open (toggle to +6-month entry), shown per dollar invested. All curves are <b>self-financing</b>: delisting proceeds are reinvested equally into the portfolio's remaining open positions. The <b>grey line is the S&amp;P</b>: the same dollars into SPY on the same dates, held throughout. Tech = SIC computers, electronics &amp; semis, software/IT.</div>
+    <div class="chips" id="cv-tech-chips"></div>
+    <div class="chartbox" id="cv-tech"></div>
+    <div class="legend" id="cv-tech-leg"></div>
+    <div class="callout" id="cv-tech-note"></div>
+  </div>
+  <div class="card">
+    <h3>$250–500M IPOs — buy now vs wait</h3>
+    <div class="chips" id="cv-r250-chips"></div>
+    <div class="chartbox" id="cv-r250"></div>
+    <div class="legend" id="cv-r250-leg"></div>
+  </div>
+  <div class="card">
+    <h3>$500M–1B IPOs — buy now vs wait</h3>
+    <div class="chips" id="cv-r500-chips"></div>
+    <div class="chartbox" id="cv-r500"></div>
+    <div class="legend" id="cv-r500-leg"></div>
+  </div>
+  <div class="card">
+    <h3>≥ $1B IPOs — buy now vs wait</h3>
+    <div class="chips" id="cv-r1000-chips"></div>
+    <div class="chartbox" id="cv-r1000"></div>
+    <div class="legend" id="cv-r1000-leg"></div>
+    <div class="callout" id="cv-size-note"></div>
+  </div>
+
+  <div class="section-title">Every IPO vs the index — 1-year scatter</div>
+  <div class="card">
+    <h3>IPO 1-year return vs SPY over the same window</h3>
+    <div class="ck">Each dot is one IPO, day-1 open entry, held 1 year. Above the diagonal = beat the index. Y-axis clamped at +300% (▲ = off-scale winner).</div>
+    <div class="chips" id="sc-chips"></div>
+    <div class="chartbox" id="scatter"></div>
+    <div class="readout" id="sc-read"></div>
+    <div class="callout" id="scnote"></div>
   </div>
 
   <div class="section-title">Industry — predictive, mostly as a size proxy</div>
@@ -178,8 +292,8 @@ table.kv tr:last-child td{border-bottom:none}
   </details>
 
   <footer class="footer">
-    Buy Every IPO? study · generated from <code>backtest_ipo_5yr.py</code> ·
-    data <code>ipo-5yr.json</code> · <a href="/">milkman trades</a>
+    Buy Every IPO? study · generated from <code>backtest_ipo_5yr.py</code> + <code>backtest_ipo_size_tech_curves.py</code> ·
+    data <code>ipo-5yr.json</code> / <code>ipo-5yr-curves.json</code> · <a href="/">milkman trades</a>
   </footer>
 
 </div>
@@ -279,6 +393,286 @@ document.getElementById('wintab').innerHTML =
   `<tr><th>ticker</th><th>listed</th><th>raised</th><th>to date</th></tr>`+
   D.top_winners.map(w=>
     `<tr><td><b style="color:var(--text)">${w.t}</b> <span style="font-size:11px">${w.name}</span></td><td>${w.y}</td><td>$${w.size_m}M</td><td class="pos">${w.ret>=10?'+'+(w.ret+1).toFixed(0)+'x':fmt(w.ret)}</td></tr>`).join('');
+});
+</script>
+<script>
+fetch('/data/ipo-5yr-curves.json').then(r=>r.json()).then(C=>{
+const fmt=(x,d=1)=>x==null?'—':(x>0?'+':'')+(100*x).toFixed(d)+'%';
+const $=id=>document.getElementById(id);
+const NS='http://www.w3.org/2000/svg';
+const COL={s1:'#3987e5',s2:'#c98500',s3:'#199e70',s4:'#9085e9',spy:'#5d6678'};
+const SURF='#13161c', GRID='#1e2230', GRID2='#2a3045';
+function el(tag,attrs,parent){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e;}
+function ticks(lo,hi,n=4){const span=hi-lo,step0=span/n,mag=Math.pow(10,Math.floor(Math.log10(step0)));
+  let step=mag;for(const m of[1,2,2.5,5,10]){if(step0<=m*mag){step=m*mag;break}}
+  const t=[];for(let v=Math.ceil(lo/step)*step;v<=hi+1e-9;v+=step)t.push(+v.toFixed(10));return t;}
+const dates=C.grid, N=dates.length;
+const yearIdx=[];{let py='';dates.forEach((d,i)=>{const y=d.slice(0,4);if(y!==py){if(py)yearIdx.push([i,y]);py=y;}});}
+
+// ---------- generic line chart with crosshair tooltip ----------
+function lineChart(boxId, series, opts){
+  const box=$(boxId); box.innerHTML='';
+  const W=530,H=opts.h||240,m={l:46,r:12,t:10,b:22},pw=W-m.l-m.r,ph=H-m.t-m.b;
+  const svg=el('svg',{viewBox:`0 0 ${W} ${H}`},box);
+  let lo=Infinity,hi=-Infinity;
+  series.forEach(s=>s.vals.forEach(v=>{if(v!=null&&isFinite(v)){if(v<lo)lo=v;if(v>hi)hi=v;}}));
+  if(opts.baseline!=null){lo=Math.min(lo,opts.baseline);hi=Math.max(hi,opts.baseline);}
+  const pad=(hi-lo)*0.06||1;lo-=pad;hi+=pad;
+  const X=i=>m.l+pw*i/(N-1), Y=v=>m.t+ph*(1-(v-lo)/(hi-lo));
+  ticks(lo,hi).forEach(v=>{
+    el('line',{x1:m.l,x2:W-m.r,y1:Y(v),y2:Y(v),stroke:GRID,'stroke-width':1},svg);
+    const t=el('text',{x:m.l-6,y:Y(v)+3.5,'text-anchor':'end',fill:'#6b7280','font-size':10,'font-family':'JetBrains Mono,monospace'},svg);
+    t.textContent=opts.fmtY(v);});
+  yearIdx.forEach(([i,y])=>{
+    el('line',{x1:X(i),x2:X(i),y1:m.t,y2:H-m.b,stroke:GRID,'stroke-width':1},svg);
+    const t=el('text',{x:X(i)+3,y:H-8,fill:'#6b7280','font-size':10,'font-family':'JetBrains Mono,monospace'},svg);
+    t.textContent=y;});
+  if(opts.baseline!=null)
+    el('line',{x1:m.l,x2:W-m.r,y1:Y(opts.baseline),y2:Y(opts.baseline),stroke:GRID2,'stroke-width':1.5},svg);
+  series.forEach(s=>{
+    let d='',pen=false;
+    s.vals.forEach((v,i)=>{if(v==null||!isFinite(v)){pen=false;return;}d+=(pen?'L':'M')+X(i).toFixed(1)+' '+Y(v).toFixed(1);pen=true;});
+    el('path',{d,fill:'none',stroke:s.color,'stroke-width':2,'stroke-linejoin':'round','stroke-linecap':'round'},svg);});
+  const cross=el('line',{x1:0,x2:0,y1:m.t,y2:H-m.b,stroke:GRID2,'stroke-width':1,visibility:'hidden'},svg);
+  const tip=document.createElement('div');tip.className='ctip';box.appendChild(tip);
+  const hit=el('rect',{x:m.l,y:m.t,width:pw,height:ph,fill:'transparent'},svg);
+  hit.addEventListener('pointermove',e=>{
+    const r=box.getBoundingClientRect(),sc=r.width/W;
+    const i=Math.max(0,Math.min(N-1,Math.round(((e.clientX-r.left)/sc-m.l)/pw*(N-1))));
+    cross.setAttribute('x1',X(i));cross.setAttribute('x2',X(i));cross.setAttribute('visibility','visible');
+    tip.innerHTML='';const d=document.createElement('div');d.className='d';d.textContent=dates[i];tip.appendChild(d);
+    [...series].sort((a,b)=>(b.vals[i]??-1e9)-(a.vals[i]??-1e9)).forEach(s=>{
+      const row=document.createElement('div');row.className='row';
+      const k=document.createElement('span');k.className='key';k.style.background=s.color;
+      const v=document.createElement('b');v.textContent=s.vals[i]==null?'—':opts.fmtY(s.vals[i]);
+      const nm=document.createElement('span');nm.textContent=s.name+(s.inv?` · ${s.inv[i]} in`:'');
+      row.append(k,v,nm);tip.appendChild(row);});
+    tip.style.display='block';
+    const bx=(e.clientX-r.left), flip=bx>r.width*0.55;
+    tip.style.left=flip?'':(bx+14)+'px';tip.style.right=flip?(r.width-bx+14)+'px':'';
+    tip.style.top=Math.max(4,e.clientY-r.top-30)+'px';});
+  hit.addEventListener('pointerleave',()=>{tip.style.display='none';cross.setAttribute('visibility','hidden');});
+}
+function legend(id,items){const L=$(id);L.innerHTML='';items.forEach(s=>{
+  const sp=document.createElement('span');
+  const k=document.createElement('span');k.className='key';k.style.background=s.color;
+  sp.appendChild(k);sp.appendChild(document.createTextNode(s.name));L.appendChild(sp);});}
+function chips(id,groups,onpick){const box=$(id);box.innerHTML='';
+  groups.forEach(g=>{const gd=document.createElement('span');gd.className='grp';
+    g.opts.forEach(o=>{const c=document.createElement('span');c.className='chip'+(o.v===g.cur()?' on':'');
+      c.textContent=o.l;c.onclick=()=>{g.set(o.v);onpick();};gd.appendChild(c);});
+    box.appendChild(gd);});}
+
+// ---------- curve views ----------
+const G=C.groups, CV=C.curves;
+function seriesFor(gk,tag,view,name,color){
+  const c=CV[gk][tag];
+  const vals=c.v.map((v,i)=>{
+    if(view==='ratio')return c.s[i]>0?v/c.s[i]:null;
+    if(view==='per1')return c.inv[i]>0?v/c.inv[i]:null;
+    return c.inv[i]>0?v:null;});
+  return {name:`${name} (n=${c.n})`,color,vals,inv:c.inv};}
+function spySeries(gk,tag,view){const c=CV[gk][tag];
+  return {name:'SPY, same cashflows',color:COL.spy,
+    vals:c.s.map((v,i)=>c.inv[i]>0?(view==='per1'?v/c.inv[i]:v):null),inv:c.inv};}
+const fmtX=v=>v.toFixed(v<3?2:1)+'×', fmtD=v=>'$'+(v>=100?v.toFixed(0):v.toFixed(1)),
+      fmtP1=v=>'$'+v.toFixed(2);
+const VIEWS=[{l:'per $1 invested',v:'per1'},{l:'relative to SPY',v:'ratio'},{l:'$ total',v:'$'}];
+const fmtFor=view=>view==='ratio'?fmtX:(view==='per1'?fmtP1:fmtD);
+const baseFor=view=>view==='$'?null:1;
+
+// tech vs non-tech
+const tstate={basis:'all',delay:'e0',view:'per1'};
+function drawTech(){
+  const suf=tstate.basis==='all'?'_all':'_ge250';
+  const s=[seriesFor('tech'+suf,tstate.delay,tstate.view,'Tech',COL.s1),
+           seriesFor('nontech'+suf,tstate.delay,tstate.view,'Non-tech',COL.s4)];
+  if(tstate.view!=='ratio')s.push(spySeries('nontech'+suf,tstate.delay,tstate.view));
+  lineChart('cv-tech',s,{fmtY:fmtFor(tstate.view),baseline:baseFor(tstate.view)});
+  legend('cv-tech-leg',s);
+  chips('cv-tech-chips',[
+    {opts:[{l:'all sizes',v:'all'},{l:'≥ $250M',v:'ge250'}],cur:()=>tstate.basis,set:v=>tstate.basis=v},
+    {opts:[{l:'day-1 entry',v:'e0'},{l:'+6mo entry',v:'e126'}],cur:()=>tstate.delay,set:v=>tstate.delay=v},
+    {opts:VIEWS,cur:()=>tstate.view,set:v=>tstate.view=v}],drawTech);
+}
+drawTech();
+
+// size-range wait charts
+const rdefs=[['cv-r250','r250_500'],['cv-r500','r500_1000'],['cv-r1000','ge1000']];
+const rstate={};rdefs.forEach(([id])=>rstate[id]='per1');
+function drawRange(id,gk){
+  const view=rstate[id];
+  const s=[seriesFor(gk,'e0',view,'Day-1',COL.s1),
+           seriesFor(gk,'e21',view,'+1 month',COL.s2),
+           seriesFor(gk,'e126',view,'+6 months',COL.s3)];
+  if(view!=='ratio')s.push(spySeries(gk,'e0',view));
+  lineChart(id,s,{fmtY:fmtFor(view),baseline:baseFor(view)});
+  legend(id+'-leg',s);
+  chips(id+'-chips',[{opts:VIEWS,cur:()=>rstate[id],set:v=>rstate[id]=v}],()=>drawRange(id,gk));
+}
+rdefs.forEach(([id,gk])=>drawRange(id,gk));
+
+// headline strategy chart (fixed per-$1 view)
+(function(){
+  const per1=(c,arr)=>arr.map((v,i)=>c.inv[i]>0?v/c.inv[i]:null);
+  const st=CV.strat_stop10, ns=CV.nontech_ge250.e126, rw=CV.nontech_ge250.e0,
+        ta=CV.tech_all.e0, na=CV.nontech_all.e0;
+  const all={v:ta.v.map((v,i)=>v+na.v[i]),inv:ta.inv.map((v,i)=>v+na.inv[i]),n:ta.n+na.n};
+  const s=[
+    {name:`Wait 6mo + stop −10%, reinvest (n=${st.n})`,color:COL.s1,vals:per1(st,st.v),inv:st.inv},
+    {name:`Wait 6mo, no stop (n=${ns.n})`,color:COL.s3,vals:per1(ns,ns.v),inv:ns.inv},
+    {name:`Same IPOs, day-1 (n=${rw.n})`,color:COL.s2,vals:per1(rw,rw.v),inv:rw.inv},
+    {name:`Every IPO, day-1 (n=${all.n})`,color:COL.s4,vals:per1(all,all.v),inv:all.inv},
+    {name:'SPY, same $ & dates',color:COL.spy,vals:per1(st,st.s),inv:st.inv}];
+  lineChart('cv-strat',s,{fmtY:fmtP1,baseline:1});
+  legend('cv-strat-leg',s);
+  const f1=a=>'$'+(a.v[a.v.length-1]/a.inv[a.inv.length-1]).toFixed(2);
+  document.getElementById('cv-strat-note').innerHTML=
+    `Per external $1, everything reinvested to the end: stop + reinvest <b>${f1(st)} (26.8%/yr)</b> · no stop <b>${f1(ns)} (20.7%/yr)</b> · SPY same dates <b>$${(st.s[st.s.length-1]/st.inv[st.inv.length-1]).toFixed(2)} (16.3%/yr)</b> · same IPOs day-1 ${f1(rw)} · every IPO day-1 ${f1(all)}. The stop fires on <b>${st.stopped} of ${st.n}</b> positions (74%, median exit ≈ −12%); cutting the year-one bleeders and rolling the cash into the surviving trenders is where the extra ~6pp/yr comes from — <b>the redeployment target is the whole game</b>: the same stops with proceeds into SPY end at $1.52, and left as dead cash $1.27, <em>below</em> no-stop. The book also gets more concentrated as stops fire (returns live in the tail). Promising, not proven: n is small and the rule was found by iterating on this same window.`;
+})();
+
+// ---------- yearly stacked columns ----------
+(function(){
+  const segs=[['r250_500','$250–500M',COL.s1],['r500_1000','$500M–1B',COL.s2],['ge1000','≥ $1B',COL.s4]];
+  const years=['2021','2022','2023','2024','2025','2026'];
+  const totals=years.map(y=>segs.reduce((a,[gk])=>a+(G[gk].per_year[y]||0),0));
+  const W=530,H=190,m={l:30,r:10,t:20,b:20},pw=W-m.l-m.r,ph=H-m.t-m.b;
+  const box=$('yrchart');const svg=el('svg',{viewBox:`0 0 ${W} ${H}`},box);
+  const hi=Math.max(...totals)*1.05;
+  const bw=24, slot=pw/years.length;
+  const tip=document.createElement('div');tip.className='ctip';box.appendChild(tip);
+  years.forEach((y,xi)=>{
+    let acc=0;const x=m.l+slot*xi+(slot-bw)/2;
+    segs.forEach(([gk,nm,col],si)=>{
+      const v=G[gk].per_year[y]||0;if(!v)return;
+      const y1=m.t+ph*(1-(acc+v)/hi), hgt=ph*v/hi-(si<2?2:0);
+      const isTop=segs.slice(si+1).every(([g2])=>!(G[g2].per_year[y]||0));
+      const rc=el('rect',{x,y:y1,width:bw,height:Math.max(0,hgt),fill:col,rx:isTop?4:0},svg);
+      if(isTop&&hgt>4)el('rect',{x,y:y1+hgt-4,width:bw,height:4,fill:col,'pointer-events':'none'},svg);
+      rc.addEventListener('pointermove',e=>{
+        const r=box.getBoundingClientRect();
+        tip.innerHTML='';const d=document.createElement('div');d.className='d';d.textContent=y+(y==='2021'?' (H2 only)':y==='2026'?' (thru June)':'');tip.appendChild(d);
+        const row=document.createElement('div');row.className='row';
+        const k=document.createElement('span');k.className='key';k.style.background=col;
+        const b=document.createElement('b');b.textContent=v+' IPOs';
+        const s2=document.createElement('span');s2.textContent=nm;
+        row.append(k,b,s2);tip.appendChild(row);
+        tip.style.display='block';tip.style.left=Math.min(e.clientX-r.left+12,r.width-150)+'px';tip.style.top=(e.clientY-r.top-34)+'px';});
+      rc.addEventListener('pointerleave',()=>tip.style.display='none');
+      acc+=v;});
+    const t=el('text',{x:x+bw/2,y:m.t+ph*(1-acc/hi)-6,'text-anchor':'middle',fill:'#9ca3af','font-size':11,'font-weight':700,'font-family':'JetBrains Mono,monospace'},svg);
+    t.textContent=acc;
+    const xl=el('text',{x:x+bw/2,y:H-6,'text-anchor':'middle',fill:'#6b7280','font-size':10,'font-family':'JetBrains Mono,monospace'},svg);
+    xl.textContent=y+(y==='2021'||y==='2026'?'*':'');});
+  const L=$('yrlegend');segs.forEach(([gk,nm,col])=>{
+    const sp=document.createElement('span');const k=document.createElement('span');k.className='keyr';k.style.background=col;
+    sp.appendChild(k);sp.appendChild(document.createTextNode(`${nm} (n=${G[gk].n})`));L.appendChild(sp);});
+})();
+$('yrck').innerHTML=`Operating-company IPOs with usable price history (SPACs excluded). *2021 = July–Dec only, *2026 = through June.`;
+$('yrnote').innerHTML=`≥$250M deals average <b>${(G.ge250.n/5).toFixed(0)}/yr</b> over the window, ≥$500M <b>${(G.ge500.n/5).toFixed(0)}/yr</b>, ≥$1B <b>${(G.ge1000.n/5).toFixed(0)}/yr</b> — with a boom-bust cycle: the 2021 frenzy, a near-shutdown 2022–23, and a re-opening through 2024–25.`;
+
+// ---------- threshold table ----------
+{
+  const rows=[['ge250','≥ $250M'],['ge500','≥ $500M'],['ge1000','≥ $1B']];
+  const cell=(x,sx)=>x==null?'—':`<span class="${x<0?'neg':'pos'}">${fmt(x)}</span> <span style="color:var(--text-dim)">vs ${fmt(sx)}</span>`;
+  $('threshtab').innerHTML=
+    `<tr><th>filter</th><th>n</th><th>/yr</th><th>day-1 xirr</th><th>+6mo xirr</th></tr>`+
+    rows.map(([k,l])=>{const g=G[k];
+      return `<tr><td>${l}</td><td>${g.n}</td><td>~${(g.n/5).toFixed(0)}</td>`+
+        `<td>${cell(g.xirr.e0.strat,g.xirr.e0.spy)}</td><td>${cell(g.xirr.e126.strat,g.xirr.e126.spy)}</td></tr>`;}).join('');
+}
+
+// ---------- wait heatmap ----------
+{
+  const cols=[['ge250','≥$250M'],['ge500','≥$500M'],['ge1000','≥$1B'],['tech_all','Tech'],['nontech_all','Non-tech']];
+  const rows=[['e0','Day-1 open'],['e1','+1 day'],['e5','+1 week'],['e21','+1 month'],['e63','+3 months'],['e126','+6 months']];
+  const bg=v=>{if(v==null)return'';const a=Math.min(.6,Math.abs(v)/.35*.6);
+    return v<0?`background:rgba(239,108,0,${a.toFixed(2)})`:`background:rgba(28,212,138,${a.toFixed(2)})`;};
+  $('waitheat').innerHTML=
+    `<tr><th></th>${cols.map(c=>`<th>${c[1]}</th>`).join('')}</tr>`+
+    rows.map(([tag,l])=>`<tr><td class="rl">${l}</td>`+
+      cols.map(([gk])=>{const a=G[gk].ladder[tag];
+        return `<td style="${bg(a&&a.median_excess)}" title="${a?`n=${a.n}, beat SPY ${(100*a.beat_spy).toFixed(0)}%`:''}">${a?fmt(a.median_excess,0):'—'}</td>`;}).join('')+'</tr>').join('');
+}
+
+// ---------- interpretive notes (data-driven) ----------
+const fp=x=>x==null?'—':(100*x).toFixed(1)+'%';
+$('threshnote').innerHTML=
+  `Raising the size bar does <b>not</b> rescue day-1 buying: ≥$1B deals (${fmt(G.ge1000.xirr.e0.strat)}/yr) actually do <em>worse</em> than ≥$500M (${fmt(G.ge500.xirr.e0.strat)}/yr), and every threshold lags SPY by 5–8pp/yr at the open. After a <b>6-month wait</b> all three converge to market-matching. The sweet spot is the <b>$500M–1B</b> range: ${fmt(G.r500_1000.xirr.e126.strat)}/yr vs SPY's ${fmt(G.r500_1000.xirr.e126.spy)} after the wait. Mind the n's — these are ${G.ge1000.n} to ${G.ge250.n} deals over 5 years.`;
+$('waitnote').innerHTML=
+  `Waiting helps <b>every</b> column — the median 1-yr excess roughly halves (or better) from day-1 to +6-months in all size buckets. But the columns end in different places: big non-tech deals get to near-par, while <b>tech never catches up</b> (${fmt(G.tech_all.ladder.e126.median_excess)} median excess even entering 6 months in). Delayed entries only include IPOs still listed at the entry date — that's the implementable strategy, not a bias.`;
+$('cv-tech-note').innerHTML=
+  `Tech is the slice waiting <b>can't fix</b>: big tech IPOs (≥$250M) compound at ${fmt(G.tech_ge250.xirr.e0.strat)}/yr from day-1 and still just ${fmt(G.tech_ge250.xirr.e126.strat)}/yr entering 6 months in, vs SPY's ${fmt(G.tech_ge250.xirr.e126.spy)}. The only combination in this study that <b>beats</b> the index: <b>non-tech ≥$250M with a 6-month wait</b> — ${fmt(G.nontech_ge250.xirr.e126.strat)}/yr vs ${fmt(G.nontech_ge250.xirr.e126.spy)}. (Tech here is n=${G.tech_ge250.n}, so read as a lean, not a law.)`;
+$('cv-size-note').innerHTML=
+  `Same shape in every size bucket: the day-1 line decays against SPY through the first year of each vintage, the +6-month line tracks the index far closer. ≥$1B mega-deals (n=${G.ge1000.n}) are <b>no safer</b> than $500M–1B — the 2021 mega-vintage (Rivian et al.) bled just as hard as the mid-caps.`;
+$('scnote').innerHTML=
+  `The cloud sits mostly <b>below the diagonal</b> in every filter — the median IPO loses to the index over its own first year regardless of what SPY did. Filtering to bigger deals tightens the spread (fewer −90% wipeouts, fewer +300% moonshots) but doesn't move the cloud above the line. The handful of ▲ off-scale winners is what keeps the portfolio means respectable.`;
+
+// ---------- scatter ----------
+(function(){
+  const pts=C.scatter;
+  const sizeF=[['any','any size',()=>true],['250','≥ $250M',p=>p.sz>=250],['500','≥ $500M',p=>p.sz>=500],['1000','≥ $1B',p=>p.sz>=1000]];
+  const typeF=[['all','tech + non',()=>true],['tech','tech only',p=>p.tech],['non','non-tech',p=>!p.tech]];
+  const st={size:'250',type:'all'};
+  const W=530,H=400,m={l:46,r:14,t:12,b:26},pw=W-m.l-m.r,ph=H-m.t-m.b;
+  const YLO=-1,YHI=3;
+  let xlo=Infinity,xhi=-Infinity;pts.forEach(p=>{if(p.spy<xlo)xlo=p.spy;if(p.spy>xhi)xhi=p.spy;});
+  const xpad=(xhi-xlo)*0.05;xlo-=xpad;xhi+=xpad;
+  const X=v=>m.l+pw*(v-xlo)/(xhi-xlo), Y=v=>m.t+ph*(1-(Math.max(YLO,Math.min(YHI,v))-YLO)/(YHI-YLO));
+  function draw(){
+    const box=$('scatter');box.innerHTML='';
+    const svg=el('svg',{viewBox:`0 0 ${W} ${H}`},box);
+    ticks(YLO,YHI,4).forEach(v=>{el('line',{x1:m.l,x2:W-m.r,y1:Y(v),y2:Y(v),stroke:v===0?GRID2:GRID,'stroke-width':1},svg);
+      const t=el('text',{x:m.l-6,y:Y(v)+3.5,'text-anchor':'end',fill:'#6b7280','font-size':10,'font-family':'JetBrains Mono,monospace'},svg);t.textContent=fmt(v,0);});
+    ticks(xlo,xhi,5).forEach(v=>{el('line',{x1:X(v),x2:X(v),y1:m.t,y2:H-m.b,stroke:v===0?GRID2:GRID,'stroke-width':1},svg);
+      const t=el('text',{x:X(v),y:H-8,'text-anchor':'middle',fill:'#6b7280','font-size':10,'font-family':'JetBrains Mono,monospace'},svg);t.textContent=fmt(v,0);});
+    // diagonal y=x (beat-SPY boundary)
+    const dx1=Math.max(xlo,YLO),dx2=Math.min(xhi,YHI);
+    el('line',{x1:X(dx1),y1:Y(dx1),x2:X(dx2),y2:Y(dx2),stroke:'#fbbf24','stroke-width':1,opacity:.55},svg);
+    const dl=el('text',{x:X(dx2)-4,y:Y(dx2)+12,'text-anchor':'end',fill:'#b8933f','font-size':9.5,'font-family':'JetBrains Mono,monospace'},svg);dl.textContent='IPO = SPY';
+    const fS=sizeF.find(f=>f[0]===st.size)[2], fT=typeF.find(f=>f[0]===st.type)[2];
+    const sel=[],dim=[];
+    pts.forEach(p=>((fS(p)&&fT(p))?sel:dim).push(p));
+    const active=(st.size!=='any'||st.type!=='all');
+    dim.forEach(p=>el('circle',{cx:X(p.spy),cy:Y(p.ipo),r:2.2,fill:active?'#2c3242':'#3d465c'},svg));
+    sel.forEach(p=>{
+      if(p.ipo>YHI){el('path',{d:`M${X(p.spy)-3.6} ${m.t+8}L${X(p.spy)+3.6} ${m.t+8}L${X(p.spy)} ${m.t+1}Z`,fill:COL.s1,stroke:SURF,'stroke-width':1},svg);}
+      else el('circle',{cx:X(p.spy),cy:Y(p.ipo),r:3.1,fill:COL.s1,stroke:SURF,'stroke-width':1.2},svg);});
+    // nearest-point hover
+    const tip=document.createElement('div');tip.className='ctip';box.appendChild(tip);
+    const all=sel.concat(active?[]:dim);
+    svg.addEventListener('pointermove',e=>{
+      const r=box.getBoundingClientRect(),sc=r.width/W;
+      const mx=(e.clientX-r.left)/sc,my=(e.clientY-r.top)/sc;
+      let best=null,bd=400;
+      (sel.length?sel:pts).forEach(p=>{const dxx=X(p.spy)-mx,dyy=Y(p.ipo)-my,d2=dxx*dxx+dyy*dyy;if(d2<bd){bd=d2;best=p;}});
+      if(!best){tip.style.display='none';return;}
+      tip.innerHTML='';
+      const d=document.createElement('div');d.className='d';
+      d.textContent=`${best.t} · ${best.y}${best.sz?` · $${best.sz>=1000?(best.sz/1000).toFixed(1)+'B':best.sz.toFixed(0)+'M'}`:''}${best.tech?' · tech':''}`;
+      tip.appendChild(d);
+      const nm=document.createElement('div');nm.className='d';nm.textContent=best.nm;tip.appendChild(nm);
+      [['IPO 1y',best.ipo,COL.s1],['SPY same window',best.spy,COL.spy]].forEach(([l,v,c])=>{
+        const row=document.createElement('div');row.className='row';
+        const k=document.createElement('span');k.className='key';k.style.background=c;
+        const b=document.createElement('b');b.textContent=fmt(v);b.style.color=v<0?'var(--bear)':'var(--bull)';
+        const s2=document.createElement('span');s2.textContent=l;
+        row.append(k,b,s2);tip.appendChild(row);});
+      tip.style.display='block';
+      const bx=e.clientX-r.left,flip=bx>r.width*0.55;
+      tip.style.left=flip?'':(bx+14)+'px';tip.style.right=flip?(r.width-bx+14)+'px':'';
+      tip.style.top=Math.max(4,e.clientY-r.top-40)+'px';});
+    svg.addEventListener('pointerleave',()=>tip.style.display='none');
+    // readout
+    const med=a=>{if(!a.length)return null;const s=[...a].sort((x,y)=>x-y);return s[Math.floor(s.length/2)];};
+    const ex=sel.map(p=>p.ipo-p.spy);
+    $('sc-read').innerHTML=`<b>${sel.length}</b> IPOs highlighted · median 1y <b class="${med(sel.map(p=>p.ipo))<0?'neg':'pos'}">${fmt(med(sel.map(p=>p.ipo)))}</b> vs SPY <b>${fmt(med(sel.map(p=>p.spy)))}</b> same window · <b>${(100*ex.filter(v=>v>0).length/(ex.length||1)).toFixed(0)}%</b> beat the index`;
+    chips('sc-chips',[
+      {opts:sizeF.map(f=>({l:f[1],v:f[0]})),cur:()=>st.size,set:v=>st.size=v},
+      {opts:typeF.map(f=>({l:f[1],v:f[0]})),cur:()=>st.type,set:v=>st.type=v}],draw);
+  }
+  draw();
+})();
 });
 </script>
 </body>

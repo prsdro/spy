@@ -702,6 +702,58 @@ script `backtest_ipo_5yr.py`, data `site/data/ipo-5yr.json` + `analyst/ipo_study
   returns both legs (no dividends). Data: local parquet + Massive API (2-yr cap
   on current tier) + Yahoo (validated to-the-cent) + SEC EDGAR SIC codes.
 
+**Angle 2 (added 2026-07-03): size thresholds, tech split, equity curves**
+(script `backtest_ipo_size_tech_curves.py`, data `site/data/ipo-5yr-curves.json`;
+tech = SIC 3570-79/3660-99/7370-79; XIRR = $1/IPO held to 2026-05-07 or delisting,
+same cashflows into SPY):
+
+- **Big-deal counts (with usable bars)**: ≥$250M n=179 (~36/yr; 46·7·15·35·52·24
+  by year 2021H2→2026H1), ≥$500M n=88 (~18/yr), ≥$1B n=36 (~7/yr).
+- **Raising the size bar does NOT rescue day-1 buying**: day-1 XIRR 8.6% (≥$250M),
+  9.6% (≥$500M), 6.6% (≥$1B) vs SPY ~14.3-14.6% — ≥$1B is *worse* than ≥$500M
+  (Rivian-class 2021 mega-deals −65 to −76% year 1). Every threshold lags 5-8pp/yr.
+- **The 6-month wait converges every size bucket to ~market**: +6mo XIRR 16.0/16.9/15.1%
+  vs SPY 15.9/16.0/15.9%. Best cell: $500M–1B range +6mo = 18.2% vs 16.0%.
+- **Wait ladder is monotonic in all buckets** (median 1-y excess roughly halves
+  day-1→+6mo, e.g. ≥$1B −24%→−5%) — but nothing before +3 months moves the needle.
+- **Tech is the slice waiting can't fix**: tech ≥$250M day-1 XIRR 1.4%, +6mo still
+  4.2% vs SPY 15.2% (n=37). All-tech +6mo 10.9% vs 16.6%. **Non-tech ≥$250M +6mo
+  is the only index-beating cell: 20.6% vs 16.3%** (n=114 curve positions; read as
+  a lean given sample sizes, not a law).
+- Scatter (1-y IPO return vs SPY same window, all 530 completed windows): cloud
+  sits below the y=x diagonal in every filter; size filters tighten dispersion but
+  don't lift the median above the line.
+
+**Angle 3 (2026-07-03): entry-timing sweep, issue-price rules, stop-loss overlay**
+(scratch_ipo_pop_dip.py, scratch_ipo_wait_sweep_stop.py, scratch_ipo_6mo_above_issue.py;
+headline strategy on page via backtest_ipo_strategy_curve.py):
+
+- **Wait-window sweep** (monthly steps to 12mo): benefit knees at **~5 months**,
+  flat 5→12; "6 months" is convention. <3 months doesn't move the needle.
+- **Pop-then-dip-to-issue entry**: beats day-1, loses to plain +6mo everywhere.
+  Dip-to-issue = adverse selection — never-dipped big-pop ≥$100M names went
+  median +82% yr-1 with 100% beating SPY, but that's only knowable ex-post.
+- **Buy-pop-with-stop-at-issue**: disaster (stop ~30% below popped entry, fires
+  on ~75%). **"Above issue at 6mo" filter**: unreliable — helps ≥$100M ~+1.7pp,
+  HURTS nontech≥250M (its below-issue half did 22.3% vs 16.1%). Never-dipped-
+  through-6mo bought at 6mo is uniformly bad: winners front-load months 0-6.
+- **Tight stop on the +6mo entry: value depends entirely on redeployment.**
+  −10% daily-close stop on nontech≥250M e126 (n=114, 84 stopped, median exit
+  ≈ −12%). Per external $1 held/reinvested to 2026-05-07: proceeds **reinvested
+  equally into remaining open positions $1.69 (26.8%/yr)** > no-stop $1.50
+  (20.7%/yr) > proceeds→SPY $1.52 > SPY-hold $1.38 (16.3%/yr) > **proceeds→cash
+  $1.27 (12.3%/yr, WORSE than no stop)**. The naive dated-flow XIRR (28.6% vs
+  14.5% "mirror") is a deployment-window artifact — a rate while deployed, not
+  extra wealth; don't quote it standalone. Beat-rate collapses 45%→30% and the
+  book concentrates as stops fire. Promising-not-proven (rule iterated on the
+  same window).
+- **Curve convention (angle-3 rebuild)**: ALL equity curves in
+  ipo-5yr-curves.json are self-financing — exit proceeds (stops + delistings)
+  redeployed equally across that portfolio's open positions same-day (cash only
+  while nothing is open); SPY leg = same external dollars, held to sample end.
+  Simulator in backtest_ipo_size_tech_curves.py (sim/build_positions);
+  strat curve = curves['strat_stop10'].
+
 ---
 
 ## Analysis TODO
