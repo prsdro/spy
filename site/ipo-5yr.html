@@ -97,6 +97,8 @@ table.heat td{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:
 table.heat td.rl{text-align:right;color:var(--text-mid);font-size:10.5px;background:none;padding-right:6px;white-space:nowrap}
 .readout{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-mid);margin:8px 2px 0;line-height:1.6}
 .readout b{color:var(--text)}
+.chartnote{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--text-dim);line-height:1.55;margin:6px 2px 2px;padding:7px 10px;background:var(--surface-2);border-radius:8px}
+.chartnote b{color:var(--text-mid)}
 ul.takeaways{list-style:none;margin:2px 0 0}
 ul.takeaways li{position:relative;padding:7px 0 7px 22px;font-size:13px;color:var(--text-mid);line-height:1.5;border-bottom:1px solid var(--border)}
 ul.takeaways li:last-child{border-bottom:none}
@@ -153,6 +155,7 @@ ul.takeaways li b{color:var(--text)}
     <div class="ck">Value <b>per $1 invested</b>, weekly. Strategy = non-tech ≥$250M IPOs, entry at the close 6 months after listing, sold on the first daily close −10% below entry. <b>All lines are self-financing</b>: exit proceeds (stops and delistings alike) are reinvested equally into that portfolio's remaining open positions, so no line gets a cash drag. Grey = the same external dollars into <b>SPY</b> on the strategy's dates, held throughout.</div>
     <div class="chartbox" id="cv-strat"></div>
     <div class="legend" id="cv-strat-leg"></div>
+    <div class="chartnote">↻ cash redeployment: when a position stops out (or delists), its proceeds are split <b>equally across that portfolio's still-open positions</b> at that day's close — nothing sits in cash. The SPY line never sells; it holds the same contributed dollars to the end.</div>
     <div class="callout" id="cv-strat-note"></div>
   </div>
 
@@ -519,7 +522,7 @@ rdefs.forEach(([id,gk])=>drawRange(id,gk));
         ta=CV.tech_all.e0, na=CV.nontech_all.e0;
   const all={v:ta.v.map((v,i)=>v+na.v[i]),inv:ta.inv.map((v,i)=>v+na.inv[i]),n:ta.n+na.n};
   const s=[
-    {name:`Wait 6mo + stop −10%, reinvest (n=${st.n})`,color:COL.s1,vals:per1(st,st.v),inv:st.inv},
+    {name:`Wait 6mo + stop −10% → roll into survivors (n=${st.n})`,color:COL.s1,vals:per1(st,st.v),inv:st.inv},
     {name:`Wait 6mo, no stop (n=${ns.n})`,color:COL.s3,vals:per1(ns,ns.v),inv:ns.inv},
     {name:`Same IPOs, day-1 (n=${rw.n})`,color:COL.s2,vals:per1(rw,rw.v),inv:rw.inv},
     {name:`Every IPO, day-1 (n=${all.n})`,color:COL.s4,vals:per1(all,all.v),inv:all.inv},
