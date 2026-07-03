@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Buy Every IPO? | Milkman Trades</title>
+<meta name="description" content="If you had bought every US IPO of the last 5 years, how would you have done? Day-1 entry vs waiting for the price to chill out, deal-size filters, and industry segmentation. 882 listings, delistings included.">
+<meta name="robots" content="noindex,follow">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥛</text></svg>">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0c0e12; --surface:#13161c; --surface-2:#181c24; --surface-3:#1d2230;
+  --border:#1e2230; --border-strong:#2a3045;
+  --text:#e8eaed; --text-dim:#6b7280; --text-mid:#9ca3af;
+  --accent:#fbbf24; --bull:#1cd48a; --bull-bg:#0a1f15; --bear:#ef6c00; --bear-bg:#1f1208;
+  --blue:#38bdf8; --amb:#c084fc;
+}
+html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif;font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+body{min-height:100dvh;padding-bottom:90px}
+.app{max-width:560px;margin:0 auto;padding:0 14px}
+header.topbar{padding:20px 0 8px}
+header h1{font-size:20px;font-weight:700;letter-spacing:-0.015em}
+header h1 .q{color:var(--accent)}
+header .sub{color:#aab4c5;font-size:12.5px;margin-top:4px;font-family:'JetBrains Mono',monospace;line-height:1.5}
+header .meta{margin-top:8px;font-size:11px;color:var(--text-dim);font-family:'JetBrains Mono',monospace;display:flex;flex-wrap:wrap;gap:5px}
+header .meta span{background:var(--surface-2);border:1px solid var(--border);padding:3px 8px;border-radius:6px}
+.section-title{font-size:11px;text-transform:uppercase;letter-spacing:0.09em;color:var(--text-dim);font-weight:600;margin:24px 4px 9px;font-family:'JetBrains Mono',monospace}
+details.def{background:var(--surface);border:1px solid var(--border);border-radius:12px;margin:12px 0;overflow:hidden}
+details.def summary{padding:13px 15px;font-size:13px;font-weight:600;cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;color:var(--text-mid)}
+details.def summary::after{content:"▾";color:var(--text-dim);font-size:12px;transition:transform .15s}
+details.def[open] summary::after{transform:rotate(180deg)}
+details.def .body{padding:0 15px 15px;font-size:13px;color:var(--text-mid);line-height:1.55}
+details.def .body p{margin-bottom:9px}
+details.def .body strong{color:var(--text)}
+details.def .body code{font-family:'JetBrains Mono',monospace;font-size:11.5px;background:var(--surface-3);padding:1px 5px;border-radius:4px;color:var(--accent)}
+.verdict{background:linear-gradient(160deg,#16131c,#13161c);border:1px solid var(--border-strong);border-radius:16px;padding:18px;margin:14px 0}
+.verdict .tag{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#1a1a1a;background:var(--accent);padding:3px 9px;border-radius:6px;margin-bottom:10px}
+.verdict h2{font-size:16px;font-weight:700;line-height:1.35;margin-bottom:8px}
+.verdict p{font-size:13.5px;color:var(--text-mid);line-height:1.6}
+.verdict p+p{margin-top:8px}
+.verdict b{color:var(--text)}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}
+.tile{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 13px}
+.tile .k{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px;line-height:1.4}
+.tile .v{font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;letter-spacing:-0.02em;line-height:1.1}
+.tile .s{font-size:11px;color:var(--text-dim);margin-top:4px;line-height:1.4}
+.neg{color:var(--bear)} .pos{color:var(--bull)} .neu{color:var(--blue)}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:15px;margin:10px 0}
+.card h3{font-size:14px;font-weight:700;margin-bottom:4px}
+.card .ck{font-size:12px;color:var(--text-dim);line-height:1.5;margin-bottom:12px}
+.card .ck b{color:var(--text-mid)}
+.brow{display:grid;grid-template-columns:92px 1fr 62px;align-items:center;gap:8px;margin:7px 0;font-family:'JetBrains Mono',monospace}
+.brow .lbl{font-size:11px;color:var(--text-mid);text-align:right;line-height:1.25}
+.brow .lbl small{display:block;color:var(--text-dim);font-size:9.5px}
+.brow .track{position:relative;height:16px;display:flex;align-items:center}
+.brow .track .zero{position:absolute;top:-2px;bottom:-2px;width:1px;background:var(--border-strong)}
+.brow .bar{position:absolute;height:12px;border-radius:0 4px 4px 0;min-width:2px}
+.brow .bar.left{border-radius:4px 0 0 4px}
+.brow .val{font-size:11.5px;font-weight:700;text-align:left;white-space:nowrap}
+table.kv{width:100%;border-collapse:collapse;margin-top:4px}
+table.kv th{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.05em;text-align:right;padding:4px;border-bottom:1px solid var(--border-strong);font-weight:600}
+table.kv th:first-child{text-align:left}
+table.kv td{padding:7px 4px;border-bottom:1px solid var(--border);font-size:12.5px;vertical-align:top}
+table.kv td:first-child{color:var(--text-mid)}
+table.kv td:not(:first-child){text-align:right;font-family:'JetBrains Mono',monospace;font-weight:600;white-space:nowrap}
+table.kv tr:last-child td{border-bottom:none}
+.callout{background:var(--surface-2);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:12px 14px;margin:12px 0;font-size:13px;color:var(--text-mid);line-height:1.55}
+.callout b{color:var(--text)}
+.dist{display:flex;gap:7px;margin:12px 0}
+.dist .d{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:10px 11px;text-align:center}
+.dist .d .n{font-family:'JetBrains Mono',monospace;font-size:19px;font-weight:700}
+.dist .d .c{font-size:10.5px;color:var(--text-dim);line-height:1.35;margin-top:3px}
+.footer{margin:28px 0 10px;padding-top:16px;border-top:1px solid var(--border);font-size:11.5px;color:var(--text-dim);line-height:1.6}
+.footer code{font-family:'JetBrains Mono',monospace;color:var(--text-mid)}
+.footer a{color:var(--text-dim);text-decoration:underline;text-underline-offset:2px}
+</style>
+<script src="/nav.js"></script>
+</head>
+<body>
+<div class="app">
+
+  <header class="topbar">
+    <h1>Buy <span class="q">Every IPO</span>?</h1>
+    <div class="sub">5 years of US listings — day-1 buying vs waiting it out, by deal size and industry</div>
+    <div class="meta" id="meta"></div>
+  </header>
+
+  <details class="def">
+    <summary>Universe &amp; rules</summary>
+    <div class="body">
+      <p><strong>Every operating-company IPO</strong> on NASDAQ / NYSE / AMEX listed <strong>2021-07-01 → 2026-06-30</strong>: common stock and ADRs from the Massive IPO reference feed. <strong>707 SPAC unit offerings</strong> and 276 OTC listings are excluded (blank-check shells that slipped through as common stock are segmented out by SIC 6770).</p>
+      <p><strong>Entry:</strong> equal $1 into each IPO at the <strong>day-1 opening trade</strong> — the first price a retail buyer can actually get (allocation at the issue price isn't realistically available). Delayed variants enter at the close 1, 5, 21, 63, or 126 trading days after listing.</p>
+      <p><strong>Exit / valuation:</strong> held to <code>2026-05-07</code> or to delisting (acquisitions exit near deal price, bankruptcies near zero). <strong>Delistings stay in the sample</strong> — dropping them would fake the results upward.</p>
+      <p><strong>Benchmark:</strong> every position is compared against SPY over the <em>exact same dates</em> ("excess"). Portfolio-level comparisons use money-weighted return (XIRR) on identical cashflow timing.</p>
+    </div>
+  </details>
+
+  <div class="verdict">
+    <span class="tag">Verdict</span>
+    <h2>Buying every IPO on day 1 compounded at 3.4%/yr while the same dollars in SPY made 15.6%/yr. Waiting 6 months erases the penalty — but produces no alpha.</h2>
+    <p>The median IPO is down <b>−61% one year</b> after its first trade; only <b>19%</b> beat SPY over that year. The damage isn't a first-week phenomenon — it accrues steadily through the first year, so waiting 1 week or even 1 month barely helps. By <b>~6 months</b> (lockup expiry territory) the forward numbers finally match the index.</p>
+    <p>Both candidate filters are real: <b>deal size is the strongest single filter</b> (sub-$25M listings are near-total capital destruction; $500M+ deals lose only modestly), and <b>industry is statistically predictive</b> (Kruskal–Wallis p≈0.0005) — financial-sector IPOs hold up, services/shipping micro-caps are the graveyard.</p>
+  </div>
+
+  <div class="tiles" id="tiles"></div>
+  <div class="dist" id="dist"></div>
+
+  <div class="section-title">Does waiting help? Entry delay ladder</div>
+  <div class="card">
+    <h3>Same IPOs, later entries</h3>
+    <div class="ck">Each strategy buys every IPO still trading at the entry point, holds 1 year, measured as <b>median excess vs SPY</b> over identical dates. Money-weighted (XIRR) shown for the held-to-today portfolios.</div>
+    <div id="delay"></div>
+    <div class="callout" id="delaynote"></div>
+  </div>
+
+  <div class="section-title">The chill-out curve</div>
+  <div class="card">
+    <h3>Median IPO path after the first day</h3>
+    <div class="ck">Median return relative to the <b>day-1 close</b>. This is the drift a day-1 buyer sits through — and the discount a patient buyer gets.</div>
+    <div id="drift"></div>
+    <div class="callout">The bleed is <b>slow and persistent</b>, not a first-week flush: −2% after a week, −6% after a month, −23% after a quarter, <b>−40% after six months, −60% after a year</b> (78% of IPOs below their day-1 close by then). "Wait for it to chill out" is directionally right — the median IPO gets cheaper for a full year.</div>
+  </div>
+
+  <div class="section-title">Deal size — the strongest filter</div>
+  <div class="card">
+    <h3>1-year median excess vs SPY, by offer size</h3>
+    <div class="ck">Day-1 open entry, 1-year hold. n = IPOs with a completed 1-year window.</div>
+    <div id="size"></div>
+    <div class="callout"><b>A third of all IPOs raise under $25M</b> — penny-stock listings that median <b>−78%</b> in year one and drive the universe-wide carnage. The gradient is monotonic: bigger deal → smaller loss. But note even <b>$500M+ deals lag SPY</b> at the median.</div>
+  </div>
+
+  <div class="card">
+    <h3>The $100M+ portfolio</h3>
+    <div class="ck">Restricting to deals that raised ≥ $100M (n=291 with usable data):</div>
+    <table class="kv" id="bigtab"></table>
+    <div class="callout" id="bignote"></div>
+  </div>
+
+  <div class="section-title">Industry — predictive, mostly as a size proxy</div>
+  <div class="card">
+    <h3>1-year median excess vs SPY, by SIC sector</h3>
+    <div class="ck">Day-1 open entry, sectors with n ≥ 10 completed 1-year windows. SIC codes from SEC EDGAR + Massive reference.</div>
+    <div id="industry"></div>
+    <div class="callout" id="indnote"></div>
+  </div>
+
+  <div class="section-title">The pop you don't get</div>
+  <div class="card">
+    <h3>Issue price → first trade</h3>
+    <div class="ck" id="popck"></div>
+    <table class="kv" id="poptab"></table>
+    <div class="callout">The famous "IPO pop" goes to allocated institutional buyers at the issue price. A retail day-1 buyer starts <b>after</b> the median +8% pop — and then rides the chill-out curve down.</div>
+  </div>
+
+  <div class="section-title">Cohorts &amp; the fat right tail</div>
+  <div class="card">
+    <h3>By listing year</h3>
+    <div class="ck">Median 1-year return (day-1 entry) and share beating SPY. Every cohort looks the same — this is not just the 2021–22 bust.</div>
+    <table class="kv" id="cohorttab"></table>
+  </div>
+  <div class="card">
+    <h3>Biggest winners to date (day-1 entry)</h3>
+    <div class="ck">The mean is carried by a tiny tail. Note what the top of the tail actually is: mostly sub-$25M listings with squeeze/pump dynamics, not durable businesses.</div>
+    <table class="kv" id="wintab"></table>
+  </div>
+
+  <details class="def">
+    <summary>Method &amp; caveats</summary>
+    <div class="body">
+      <p><strong>Data:</strong> Massive (Polygon) IPO reference + daily adjusted bars from the local parquet store, Massive API, and Yahoo (validated to-the-cent against the parquet store on overlapping tickers). SIC industry codes from SEC EDGAR submissions with Massive ticker details as fallback. SPY benchmark from the same stores.</p>
+      <p><strong>Coverage:</strong> 705 of 882 qualifying IPOs (80%) have usable price history. 33 of the missing listed after the valuation cutoff (excluded by design). The remaining ~144 are <strong>delisted names, median deal $58M</strong>, whose history is temporarily unavailable — they skew small and dead, so published medians are, if anything, <strong>optimistic</strong>, and the small-bucket numbers especially so. The ≥$100M segment is missing 76 delisted names (~21%) — its true numbers are likely somewhat worse than shown.</p>
+      <p><strong>Returns</strong> are price returns (no dividends) for both the IPO leg and the SPY leg — consistent, but understates SPY total return by ~1.3%/yr of yield. Ticker-reuse splices are guarded by requiring the first bar within 7 days of the official listing date and truncating any &gt;30-calendar-day gap.</p>
+      <p><strong>Delayed-entry samples shrink</strong> with delay (an IPO must survive to the entry point) — that's the real, implementable strategy, not a bias. Horizon returns for delisted names use the last trade as terminal value.</p>
+      <p><strong>Industry test:</strong> Kruskal–Wallis on 1-year excess across the 8 sectors with n≥15: H=26.1, p=0.00049. Much of the sector effect is a deal-size proxy (finance IPOs are big, services micro-caps are tiny); a size-controlled sector test was not significant at n available.</p>
+    </div>
+  </details>
+
+  <footer class="footer">
+    Buy Every IPO? study · generated from <code>backtest_ipo_5yr.py</code> ·
+    data <code>ipo-5yr.json</code> · <a href="/">milkman trades</a>
+  </footer>
+
+</div>
+
+<script>
+fetch('/data/ipo-5yr.json').then(r=>r.json()).then(D=>{
+const fmt=(x,d=1)=>x==null?'—':(x>0?'+':'')+(100*x).toFixed(d)+'%';
+const M=D.meta;
+document.getElementById('meta').innerHTML =
+  `<span>${M.universe} IPOs</span><span>${M.window}</span><span>valued ${M.valued_at}</span>`+
+  `<span>${M.events} with data</span><span>delistings included</span>`;
+
+const e0=D.strategies.e0, e126=D.strategies.e126;
+document.getElementById('tiles').innerHTML = `
+  <div class="tile"><div class="k">Buy day-1 open · XIRR</div><div class="v neg">${fmt(e0.xirr)}</div><div class="s">per year, money-weighted, all ${e0.end.n} positions</div></div>
+  <div class="tile"><div class="k">Same dollars in SPY</div><div class="v pos">${fmt(e0.xirr_spy)}</div><div class="s">identical cashflow dates</div></div>
+  <div class="tile"><div class="k">Median IPO, 1yr after listing</div><div class="v neg">${fmt(e0['252'].median_ret)}</div><div class="s">n=${e0['252'].n} completed windows</div></div>
+  <div class="tile"><div class="k">Beat SPY over year 1</div><div class="v neu">${(100*e0['252'].beat_spy).toFixed(0)}%</div><div class="s">of IPOs, day-1 entry</div></div>`;
+
+document.getElementById('dist').innerHTML = `
+  <div class="d"><div class="n neg">${(100*D.pct_lost_half).toFixed(0)}%</div><div class="c">lost ≥ half<br>(to date)</div></div>
+  <div class="d"><div class="n neg">${(100*D.pct_lost_90).toFixed(0)}%</div><div class="c">lost ≥ 90%</div></div>
+  <div class="d"><div class="n pos">${(100*D.pct_2x).toFixed(0)}%</div><div class="c">doubled<br>or better</div></div>`;
+
+// ---- shared diverging bar row (negative left of zero-line, positive right)
+function rows(el, items, scale){
+  const max=Math.max(...items.map(i=>Math.abs(i.v)));
+  const sc=scale||max;
+  el.innerHTML = items.map(i=>{
+    const w=Math.min(48,48*Math.abs(i.v)/sc);
+    const neg=i.v<0;
+    const bar=`left:${neg?50-w:50}%;width:${w}%;background:${neg?'var(--bear)':'var(--bull)'}`;
+    return `<div class="brow" title="${i.title||''}">
+      <div class="lbl">${i.l}${i.sub?`<small>${i.sub}</small>`:''}</div>
+      <div class="track"><span class="zero" style="left:50%"></span><span class="bar ${neg?'left':''}" style="${bar}"></span></div>
+      <div class="val ${neg?'neg':'pos'}">${fmt(i.v)}</div></div>`;
+  }).join('');
+}
+
+// entry-delay ladder
+const S=D.strategies;
+const delays=[['e0','Day-1 open',''],['e1','+1 day','close'],['e5','+1 week','close'],['e21','+1 month','close'],['e63','+3 months','close'],['e126','+6 months','close']];
+rows(document.getElementById('delay'), delays.map(([k,l,sub])=>({
+  l, sub, v:S[k]['252'].median_excess, title:`n=${S[k]['252'].n}, beat SPY ${(100*S[k]['252'].beat_spy).toFixed(0)}%`})));
+document.getElementById('delaynote').innerHTML =
+  `Median 1-yr excess improves from <b>${fmt(S.e0['252'].median_excess)}</b> (day-1) to <b>${fmt(S.e126['252'].median_excess)}</b> (+6&nbsp;months) — but never turns positive: the median IPO underperforms from <em>any</em> entry. What flips is the <b>portfolio</b>: the winners' tail is strong enough after month 6 that money-weighted return reaches <b>${fmt(S.e126.xirr)}</b> vs SPY's ${fmt(S.e126.xirr_spy)} — even, not ahead. Waiting doesn't buy alpha; it just stops the bleeding.`;
+
+// drift
+const dr=D.drift;
+rows(document.getElementById('drift'), [['5','+1 week'],['21','+1 month'],['63','+3 months'],['126','+6 months'],['252','+1 year']].map(([k,l])=>({
+  l, v:dr[k].median, title:`n=${dr[k].n}, ${(100*dr[k].pct_below_d1close).toFixed(0)}% below day-1 close`})), 0.65);
+
+// size buckets
+const sb=D.size_buckets, order=['<$25M','$25-100M','$100-500M','>=$500M'];
+rows(document.getElementById('size'), order.filter(k=>sb[k]&&sb[k].e0_1y).map(k=>({
+  l:k.replace('>=','≥'), sub:`n=${sb[k].e0_1y.n}`, v:sb[k].e0_1y.median_excess,
+  title:`median raw ${fmt(sb[k].e0_1y.median_ret)}, beat SPY ${(100*sb[k].e0_1y.beat_spy).toFixed(0)}%`})), 1.0);
+
+// big100m table
+const B=D.big100m.strategies;
+document.getElementById('bigtab').innerHTML =
+  `<tr><th>entry</th><th>med 1y</th><th>med 1y vs SPY</th><th>beat SPY</th><th>XIRR</th></tr>`+
+  [['e0','Day-1 open'],['e21','+1 month'],['e63','+3 months'],['e126','+6 months']].map(([k,l])=>{
+    const a=B[k]['252'];
+    return `<tr><td>${l}</td><td class="${a.median_ret<0?'neg':'pos'}">${fmt(a.median_ret)}</td><td class="${a.median_excess<0?'neg':'pos'}">${fmt(a.median_excess)}</td><td>${(100*a.beat_spy).toFixed(0)}%</td><td>${B[k].xirr!=null?fmt(B[k].xirr)+' vs '+fmt(B[k].xirr_spy):'—'}</td></tr>`;
+  }).join('');
+document.getElementById('bignote').innerHTML =
+  `Filtering to $100M+ cuts the median 1-yr loss from −61% to <b>${fmt(B.e0['252'].median_ret)}</b> and lifts the day-1 XIRR to <b>${fmt(B.e0.xirr)}</b> — better, still ~6pp/yr behind SPY. Add the 6-month wait and it reaches <b>${fmt(B.e126.xirr)} vs ${fmt(B.e126.xirr_spy)}</b>: market-matching, nothing more. <b>Caveat:</b> 76 delisted $100M+ names are missing from the data — true numbers are likely a bit worse.`;
+
+// industry
+const ind=Object.entries(D.industry)
+  .filter(([k,v])=>v.e0_1y&&v.e0_1y.n>=10&&k!=='Unknown')
+  .sort((a,b)=>b[1].e0_1y.median_excess-a[1].e0_1y.median_excess);
+rows(document.getElementById('industry'), ind.map(([k,v])=>({
+  l:k.replace(' & ',' &amp; '), sub:`n=${v.e0_1y.n}`, v:v.e0_1y.median_excess,
+  title:`median raw ${fmt(v.e0_1y.median_ret)}, beat SPY ${(100*v.e0_1y.beat_spy).toFixed(0)}%`})), 1.1);
+document.getElementById('indnote').innerHTML =
+  `Sector differences are real (Kruskal–Wallis H=${D.kruskal.H}, <b>p=${D.kruskal.p}</b>) but read them as a <b>size proxy first</b>: banks/finance and energy IPOs are large sober deals; "other services", transport and wholesale are dominated by tiny foreign micro-listings. Biotech — the biggest single IPO sector (n=90) — medians <b>${fmt(D.industry['Biotech & Pharma'].e0_1y.median_ret)}</b> in year one despite normal-sized deals.`;
+
+// pop
+document.getElementById('popck').innerHTML = `n=${D.pop.n} IPOs with a valid issue price (≥$1).`;
+document.getElementById('poptab').innerHTML =
+  `<tr><td>Median pop (issue → day-1 open)</td><td class="pos">${fmt(D.pop.median_pop_open)}</td></tr>`+
+  `<tr><td>Mean pop (skewed by micro-cap spikes)</td><td class="pos">${fmt(D.pop.mean_pop_open)}</td></tr>`;
+
+// cohorts
+const C=D.cohorts;
+document.getElementById('cohorttab').innerHTML =
+  `<tr><th>listed</th><th>n</th><th>med 1y</th><th>beat SPY</th><th>med to-date</th></tr>`+
+  Object.keys(C).sort().map(y=>{
+    const a=C[y]['1y'], e=C[y].end;
+    return `<tr><td>${y}</td><td>${C[y].n}</td><td class="neg">${a?fmt(a.median_ret):'—'}</td><td>${a?(100*a.beat_spy).toFixed(0)+'%':'—'}</td><td class="${e&&e.median_ret<0?'neg':'pos'}">${e?fmt(e.median_ret):'—'}</td></tr>`;
+  }).join('');
+
+// winners
+document.getElementById('wintab').innerHTML =
+  `<tr><th>ticker</th><th>listed</th><th>raised</th><th>to date</th></tr>`+
+  D.top_winners.map(w=>
+    `<tr><td><b style="color:var(--text)">${w.t}</b> <span style="font-size:11px">${w.name}</span></td><td>${w.y}</td><td>$${w.size_m}M</td><td class="pos">${w.ret>=10?'+'+(w.ret+1).toFixed(0)+'x':fmt(w.ret)}</td></tr>`).join('');
+});
+</script>
+</body>
+</html>

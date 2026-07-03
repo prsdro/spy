@@ -24,6 +24,8 @@
     {label:'Multi-Day', href:'/multiday-gg.html'},
     {label:'MGG×Weekday', href:'/spx-multiday-gg-dow.html'},
     {label:'Swing', href:'/swing-gg.html'},
+    {label:'Bet Sizing', href:'/bet-sizing.html'},
+    {label:'IPOs', href:'/ipo-5yr.html'},
     {label:'Cheat Sheet', href:'/cheatsheet.html'},
     {label:'Data', href:'/data/'},
   ];

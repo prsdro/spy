@@ -239,6 +239,10 @@
           <span>Subway Timing Stats <span class="tag tag-gg">GG</span></span>
           <span class="arrow">&rarr;</span>
         </a>
+        <a class="study-link" href="/ipo-5yr.html">
+          <span>Buy Every IPO? (day-1 vs waiting) <span class="tag tag-draft">New</span></span>
+          <span class="arrow">&rarr;</span>
+        </a>
         <a class="study-link" href="/spx-double-gg.html">
           <span>SPX Double Golden Gate <span class="tag tag-draft">New</span></span>
           <span class="arrow">&rarr;</span>
@@ -330,6 +334,10 @@
     <div class="section">
       <div class="section-label">Resources</div>
       <div class="grid">
+        <a class="study-link" href="/bet-sizing.html">
+          <span>Bet Sizing Lab — Monte Carlo <span class="tag tag-data">Tool</span></span>
+          <span class="arrow">&rarr;</span>
+        </a>
         <a class="study-link" href="/cheatsheet.html">
           <span>Master Cheat Sheet <span class="tag tag-pdf">PDF</span></span>
           <span class="arrow">&rarr;</span>
@@ -356,10 +364,23 @@
     </div>
   </div>
 
-  <canvas id="mc" width="20" height="28" style="position:fixed;bottom:20px;left:50px;width:100px;height:140px;image-rendering:pixelated;image-rendering:crisp-edges;z-index:999;pointer-events:none"></canvas>
+  <canvas id="mc" width="20" height="28" style="position:fixed;bottom:20px;left:50px;width:100px;height:140px;image-rendering:pixelated;image-rendering:crisp-edges;z-index:999;pointer-events:none;display:none"></canvas>
   <canvas id="dc" width="28" height="18" style="position:fixed;bottom:8px;width:196px;height:126px;image-rendering:pixelated;image-rendering:crisp-edges;z-index:1000;pointer-events:none;display:none"></canvas>
-  <canvas id="vc" style="position:fixed;inset:0;width:100vw;height:100vh;z-index:998;pointer-events:none"></canvas>
+  <canvas id="vc" style="position:fixed;inset:0;width:100vw;height:100vh;z-index:998;pointer-events:none;display:none"></canvas>
   <div id="hint" style="position:fixed;bottom:185px;left:50%;transform:translateX(-50%);font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;color:#c9f76f;z-index:1002;opacity:0;transition:opacity 0.4s;pointer-events:none;text-shadow:0 0 12px rgba(201,247,111,0.4);white-space:nowrap;letter-spacing:0.04em;text-align:center;line-height:1.6"></div>
+
+  <button id="gameBtn" title="release the milkman">🥛</button>
+  <style>
+    #gameBtn {
+      position: fixed; bottom: 18px; right: 18px; z-index: 1003;
+      width: 44px; height: 44px; border-radius: 50%;
+      background: #12131a; border: 1px solid #1e2030; cursor: pointer;
+      font-size: 1.15rem; line-height: 1; opacity: 0.55;
+      transition: opacity .2s, border-color .2s, transform .2s;
+    }
+    #gameBtn:hover { opacity: 1; border-color: rgba(201,247,111,0.5); transform: translateY(-2px); }
+    @media (max-width: 768px), (pointer: coarse) { #gameBtn { display: none !important; } }
+  </style>
 
   <script>
   (() => {
@@ -713,15 +734,17 @@
     }
 
     /* ═══════════════════ KEYBOARD ═══════════════════ */
+    let gameStarted = false;
     const keys = {};
     window.addEventListener('keydown', e => {
+      if (!gameStarted) return;
       keys[e.key] = true;
       if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].includes(e.key)) e.preventDefault();
     });
     window.addEventListener('keyup', e => { keys[e.key] = false; });
 
     /* ═══════════════════ STATE MACHINE ═══════════════════ */
-    const startTime = Date.now();
+    let startTime = Date.now();
     const DOLPHIN_TIME = 5000;
     const CHASE_LIMIT = 20;
     const MILK_KILL_TIME = 15;
@@ -1072,7 +1095,17 @@
       requestAnimationFrame(loop);
     }
 
-    loop();
+    /* Game stays hidden until the bottom-right button is clicked (desktop only) */
+    document.getElementById('gameBtn').addEventListener('click', function(){
+      if (gameStarted) return;
+      gameStarted = true;
+      this.remove();
+      mcvs.style.display = 'block';
+      document.getElementById('vc').style.display = 'block';
+      mx = window.innerWidth - 160;
+      startTime = Date.now();
+      loop();
+    });
   })();
   </script>
 

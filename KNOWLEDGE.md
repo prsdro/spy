@@ -495,6 +495,215 @@ far it continues (±78.6%, full weekly ATR). Upside gate opens in 54% of weeks, 
 
 ---
 
+### 9. Cross-timeframe GG conflict — downside Swing GG (monthly) vs upside Multi-Day GG (weekly)
+
+`backtest_spx_cross_tf_gg_conflict.py` · FirstRateData SPX cash daily, 2002-01→2026-05,
+**293 months / 126 fair downside-swing episodes**. Swing levels = prior-month close +
+1-month-lagged monthly Wilder ATR(14); Multiday levels = prior-week close + 1-week-lagged
+weekly Wilder ATR(14). Setup: the downside **Swing** gate opens (low ≤ −38.2% monthly) and
+while still **live** — not closed to −61.8% monthly and not retraced above the −23.6%
+monthly put trigger — the upside **Multi-Day** gate opens (high ≥ +38.2% weekly). That day
+starts the race. Daily resolution (intraday H/L order unknown); same-day transitions flagged.
+
+- **Rare**: only **17 setups** (15 fair) in 24 years, but well-distributed across **13
+  different years** (no single-regime clustering). Median gap swing-open → weekly-up trigger
+  is **1 session** — sharp V-bottom whipsaws: monthly downside gate cracks open, price
+  bounces hard enough to open the weekly upside gate ~1 day later.
+- **The second (upside) move wins ~2:1.** Weekly-up closes first **64.7%**, swing-down
+  first **29.4%**, neither **5.9%** — the weekly gate wins despite a *shorter* horizon (its
+  week vs the swing gate's whole month). Echoes intraday double-GG (Study #7): once price
+  whipsaws down then reclaims, the up move keeps going.
+- **Swing-down completion COLLAPSES vs baseline.** With a coexisting opposite weekly-up the
+  downside swing gate completes only **43.8%** (n=16) vs **69.1%** with no coexisting
+  weekly-up (n=110) / **65.9%** baseline (n=126) — a ~22pp drop. It also **retraces above
+  its put trigger 94%** of the time after the weekly gate opens. *Confound (honest):*
+  coexisting episodes are pre-selected for NOT plunging straight through, biasing downside
+  completion lower.
+- **Weekly-up completion is essentially unchanged** by the opposite headwind: **69.2%**
+  with a live swing-down (n=13) vs **60.7%** without / **60.8%** baseline — within noise at
+  n=13. The monthly downside conflict does **not** suppress the weekly upside gate.
+- **Net:** when these two opposite-timeframe gates coexist, bet the **weekly upside** gate,
+  not the monthly downside one. n is small — directional, not precise. Data at
+  `site/data/cross-tf-gg-conflict.json`.
+
+---
+
+### 10. PO dots as a long-term accumulation strategy (vs SPY benchmarks)
+
+`backtest_po_dots_buyhold.py` · SPY daily `ind_1d`, 2000-01-03 → 2026-04-09 (6,583
+sessions), **102 leaving-accumulation (buy) dots / 164 leaving-distribution (sell) dots**.
+Dots execute at the next session's open. Real SPY dividends (110 ex-dates from Yahoo,
+`spy_dividends.json`) reinvested at the ex-date close while holding shares. Cash run under
+two regimes: 0% and the prevailing 13-week T-bill yield (^IRX daily, `tbill_irx.json`,
+mean 2.00% over the period); headline numbers below are the 0% regime.
+Three capital models, each with its own like-for-like benchmark; strategies unitized like
+a fund so TWR/vol/Sharpe/maxDD are contribution-clean. Data: `analyst/po_dots_buyhold.json`.
+
+| Model ($ flow) | Benchmark | Accumulate-only | Full exit on sell dot | Sell one lot |
+|---|---|---|---|---|
+| A: $1k/month → cash, deploy all on buy dot | DCA XIRR **11.20%** (5.49x) | XIRR **11.11%** (5.41x) | XIRR 6.72% (2.65x) | XIRR 8.95% (3.79x) |
+| B: $10k fresh per buy dot | even-spaced DCA XIRR 11.18% | XIRR **11.17%** | XIRR 6.48% | XIRR 9.12% |
+| C: $100k lump, deploy 20% of cash per dot | lump-sum **7.87%/yr** (7.30x) | **8.46%/yr** (8.44x) | 0.76%/yr (1.22x) | 5.12%/yr (3.71x) |
+
+**Key findings**:
+- **Buy dots ≈ DCA, no timing alpha.** Waiting for the dot to deploy cash matches
+  immediate monthly investing almost exactly (model A: 11.11% vs 11.20% XIRR; model B
+  per-dollar: 11.17% vs 11.18%). The dip-buying benefit is fully offset by 0%-cash drag
+  while waiting (~4 buy dots/yr, clustered in bear years: 2002 had 12, 2008/2022 had 8).
+- **Selling on the opposite dot destroys 2–6 pp/yr.** Full exit cuts time-in-market to
+  42% and the XIRR from ~11.2% to ~6.5–6.7%; one-lot selling lands in between. Sharpe
+  drops too (0.60 → 0.35–0.37 full exit) — lower vol does not pay for the lost return.
+- **The sell→rebuy round trip has no edge.** Actual full-exit round trips (first sell dot
+  while long → next buy dot, n=38): rebuy cheaper only **47.4%** of the time, median price
+  change **+0.21%** (mean **+2.74%** against you), median **116 days** out of the market.
+  Worst: exited 2020-06-12, re-entered 2021-09-23 **+42.7%** higher after 468 days out.
+  (A naive pairing using the *last* sell dot before each buy shows rebuys 95% cheaper at
+  −4% median — an artifact; the strategy exits at the *first* sell dot, which fires early
+  in ongoing uptrends as momentum merely cools below +61.8.)
+- **Model C's lump-tranching win is start-date luck.** The +0.60 pp/yr edge over lump-sum
+  exists only for the 2000 (dot-com top) start; starting 2003/2010/2013/2016 the dots
+  strategy loses by 0.33–2.44 pp/yr. Time in market dominates.
+
+**Start-year sensitivity** (`backtest_po_dots_start_sensitivity.py`, all 22 start years
+2000–2021, every window ending 2026-04; `analyst/po_dots_start_sensitivity.csv`):
+
+| Variant (accumulate-only edge vs its benchmark, pp/yr) | Median | Wins | Range |
+|---|---|---|---|
+| A: hold monthly cash for the dot (vs immediate DCA) | **−0.23** | **0/22** | −1.73 (2020) … −0.09 (2000) |
+| B: per-dollar price timing (vs even-spaced, XIRR) | **+0.39** | **19/22** | −0.22 (2001) … +2.18 (2020) |
+| C: lump in 20% tranches (vs lump-sum day one) | **−0.55** | **5/22** | −5.51 (2019) … +1.26 (2008) |
+| Full exit on sell dot (any model) | −4.9 to −10.5 | **0/22 ×3** | never positive, any start, any model |
+
+- **Clean decomposition**: the dot genuinely *selects good prices* — dollars deployed at
+  dots beat even-spaced dollars in 19 of 22 start years (model B, median +0.39 pp/yr,
+  rising to +1–2.2 pp for 2017–2021 starts). But *waiting in 0% cash for the dot costs
+  more than the better price saves* — model A loses in **all 22** start years, and the
+  loss grows the more bull-heavy the window (−0.09 pp for 2000 → −1.73 pp for 2020).
+- **Model C wins only when the window starts just before a major crash** (2000, 2008
+  +1.26 pp; 2001/2002/2007 marginal) — it is crash insurance, not expected-value edge.
+- **Selling never works from any starting point**: full exit loses 4.4–13.8 pp/yr in all
+  66 start-year × model combinations.
+- **T-bill interest on cash changes no conclusion.** Accruing idle cash at the daily ^IRX
+  yield: model A still loses **all 22** start years (median edge −0.20 vs −0.23 pp/yr at
+  0%; full-period XIRR 11.13% vs DCA 11.20%); model C flips only 2005 marginally positive
+  (6/22 wins, median −0.54 pp/yr); full exit gains ~1.0–1.6 pp/yr (it sits 58–90% in cash)
+  but stays negative in all 66 combinations (median −3.3 to −8.4 pp/yr vs benchmark).
+  Rates were near-zero exactly when the sell variants were in cash longest (2009–2015,
+  2020–2021), so interest can't buy back the missed equity returns.
+- **Net**: leaving-accumulation is a *harmless* deployment trigger (psychologically nice —
+  it buys real dips and matches DCA), but leaving-distribution is **not** a sell signal on
+  the daily timeframe. The asymmetry mirrors the zones' design: accumulation-exit marks
+  washed-out bottoms; distribution-exit mostly marks pauses in bull trends.
+
+---
+
+### 11. Gap up to +1 ATR that holds the full-ATR line — "how far does it go?"
+
+`backtest_spx_gap_above_full_atr.py` · primary: FirstRateData **SPX index**
+1-minute RTH resampled to **10-minute** bars (2008-01→2026-05, 4,612 sessions);
+cross-check: SPY `ind_10m` (2000-01→2026-04, 6,582 sessions). Levels = prior
+daily close + one-session-lagged daily Wilder ATR(14). Data:
+`site/data/spx-gap-above-full-atr.json`, events `analyst/spx_gap_above_full_atr_events.csv`.
+
+**Setup**: the session **opens at or just above +1 ATR** (full daily ATR above
+PDC; headline band open ∈ [+1.000, +1.236) ATR), i.e. a large gap up that prints
+right at the full-ATR line. **Hold condition**: *every* 10-minute RTH close stays
+≥ +1 ATR (price never gives the full-ATR level back on a closing basis). "How far"
+= intraday peak high and extension hit-rates (+123.6% … +300%) measured in ATR
+units above PDC.
+
+- **The setup is RARE.** Opening in the +1 ATR band happens on **~0.17% of SPX
+  sessions** (8 days in 18 yr, headline band; SPY ~0.59%, 39 days in 26 yr).
+  Even pooled, n is small — treat as **directional, not precise** (SPX headline
+  holders n=4; SPY headline holders n=11).
+- **Holding the line ≈ a coin flip** — SPX **50%** of these gap-ups never close
+  below +1 ATR (4/8 headline; 11/18 wide), SPY **28–39%**. But the two branches
+  go to *completely different places*, so the hold is the discriminator, not noise.
+- **When it HOLDS, it's a continuation day.** Intraday peak **median ≈ +1.85 ATR**
+  (SPX +1.84, SPY +1.85, near-identical); reaches **+123.6% ~100%** of the time,
+  **+161.8% ~75–82%**, and only tags **+200%** when the gap *opened* well past
+  +1 ATR (wide band: SPX 36%, SPY 46%). So from a +1 ATR open it typically adds
+  **another ~+0.6–0.85 ATR**, with ~**+2 ATR the practical ceiling** for at-the-line
+  opens. The close is strong — **median ≈ +1.5–1.66 ATR and at/above the open
+  ~100%** of holder days. It does not give the day back.
+- **When it does NOT hold, the gap fades.** Median **trough falls back to ≈ PDC**
+  (≈0 ATR; some go negative), the close is weak (**median ~+0.6–0.8 ATR**) and
+  **below the open ~70–100%** of the time. Losing the +1 ATR line on a 10-minute
+  close is an early, reliable tell that the gap-up is failing.
+- **Net**: a gap that opens at +1 ATR and *holds it on closing 10m bars* tends to
+  grind to **~+1.85 ATR** (tagging +123.6% almost always, +161.8% ~3-in-4) and
+  close near its highs; one that loses the line round-trips toward PDC. The
+  10m-close hold is the single discriminating filter. SPX and SPY agree closely
+  on the conditional outcome despite different gap mechanics (SPX index open is
+  the futures-driven gap; SPY ETF gaps slightly more often) — but **sample is
+  too thin to publish as a hard probability**.
+
+#### 11b. Widened to +0.786 ATR opens — ATR progress by time of day
+
+`backtest_spx_gap_above_0786_intraday.py` · same data/levels as §11. Lowering the
+open threshold from +1 ATR to **+0.786 ATR** widens the universe ~5× (SPX **43**
+events / 19 holders; SPY **163** / 68 holders) and lets the intraday *path* be
+measured. Hold condition re-anchored to the opening level: every 10m close ≥
++0.786 ATR. Data: `site/data/spx-gap-above-0786-intraday.json`.
+
+- **Wider universe, same conditional split.** Gap-up open ≥ +0.786 ATR occurs on
+  **0.93% of SPX sessions** (SPY 2.48%); **~42–44% hold** the line. Holders again
+  peak **median +1.66/+1.84 ATR** (SPY/SPX), close **+1.50/+1.66 ATR**, close ≥
+  open **90–100%**, tag +123.6% ~99–100% and +161.8% ~54–74%. Non-holders fade:
+  trough back toward PDC, close **+0.72/+0.80 ATR**, close ≥ open only ~29–37%.
+  The §11 result survives the 5× larger sample.
+- **The move is front-loaded.** Holders do most of their work in the first
+  ~30–90 min: SPX held-median climbs +1.27 ATR (09:30 bar) → +1.48 (10:00) →
+  ~+1.66 plateau by 12:30–13:00, then a flat grind into the close (~+1.65). SPY
+  held: +1.10 → +1.25 (10:00) → ~+1.45–1.50 plateau. **Roughly two-thirds of the
+  holder day's eventual gain is in by 10:00**; the afternoon is a hold, not a push.
+- **The fork is visible by ~10:00–10:30.** Held and not-held branches open close
+  together (SPX +1.27 vs +1.04 median at 09:30) but diverge within the first hour:
+  the not-held branch **bleeds monotonically** from ~+1.0 ATR down to a +0.55–0.80
+  ATR afternoon trough (decline begins ~10:20), while holders keep climbing. The
+  day's character — continuation vs failed gap — is **set in the first ~60 min**,
+  consistent with the Golden Gate "early triggers are high-conviction" pattern
+  (Study #3). A 10m close back below the opening level early is the actionable tell.
+
+---
+
+### 12. Buy Every IPO? — 5 years of US listings, day-1 vs delayed entry (2026-07-03)
+
+Universe: every operating-company IPO (CS + ADR) on NASDAQ/NYSE/AMEX listed
+2021-07-01 → 2026-06-30, from the Massive IPO reference feed. 882 qualifying
+listings (707 SPAC unit offerings and 276 OTC listings excluded); 705 with usable
+price history (delistings **included** — terminal value = last trade). Valued at
+2026-05-07. Benchmark: SPY over identical dates per position. Page: `/ipo-5yr.html`,
+script `backtest_ipo_5yr.py`, data `site/data/ipo-5yr.json` + `analyst/ipo_study/`.
+
+- **Buying every IPO at day-1 open: XIRR 3.4%/yr vs 15.6%/yr** for the same
+  cashflows in SPY. Median IPO −61% one year after listing; only 19% beat SPY
+  over year 1. 54% of IPOs lost ≥half to date, 26% lost ≥90%, 10% doubled.
+- **The bleed is slow, not a first-week flush**: median vs day-1 close is −2%
+  (+1w), −6% (+1m), −23% (+3m), −40% (+6m), −60% (+1y); 78% below day-1 close
+  a year out. So waiting 1w/1m barely helps; **waiting ~6 months (post-lockup)
+  lifts XIRR to 17.3% vs 17.2% SPY — market-matching, zero alpha**. The median
+  IPO underperforms from *any* entry; the tail carries the portfolio.
+- **Deal size is the strongest filter (monotonic)**: median 1-y raw return
+  −78% (<$25M, a third of all IPOs), −48% ($25–100M), −28% ($100–500M),
+  −12% (≥$500M). Even ≥$500M lags SPY at the median (−15pp excess).
+  $100M+ portfolio: day-1 XIRR 7.8% vs 14.2%; +6m entry 16.0% vs 15.8%.
+- **Industry is predictive (Kruskal–Wallis p=0.0005) but mostly a size proxy**:
+  banks/finance (−19pp median 1-y excess) and mining/energy best; wholesale,
+  transport, services micro-caps worst (−90 to −104pp). Biotech, the largest
+  sector (n=90), medians −60% in year 1.
+- **The IPO pop is not capturable**: median +8.3% issue→day-1 open (mean +46%,
+  micro-cap skewed) goes to allocated buyers; retail starts after it.
+- Every listing-year cohort 2021–2025 looks the same (median 1-y −58% to −66%,
+  beat-SPY 17-25%) — this is structural, not just the 2021–22 bust.
+- **Caveats**: ~144 delisted names (median deal $58M) still lack price history
+  (Stooq IP-block pending) → published numbers are *optimistic*, especially
+  sub-$100M buckets; $100M+ segment missing 76 delisted names (~21%). Price
+  returns both legs (no dividends). Data: local parquet + Massive API (2-yr cap
+  on current tier) + Yahoo (validated to-the-cent) + SEC EDGAR SIC codes.
+
+---
+
 ## Analysis TODO
 - [ ] Validate level-to-level probabilities against our SPY data
 - [ ] Validate gap fill probabilities

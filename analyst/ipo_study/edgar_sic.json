@@ -1,0 +1,3722 @@
+{
+"CURV": {
+"sic": "5600",
+"sic_desc": "Retail-Apparel & Accessory Stores",
+"name": "Torrid Holdings Inc."
+},
+"MITQ": {
+"sic": "3861",
+"sic_desc": "Photographic Equipment & Supplies",
+"name": "MOVING iMAGE TECHNOLOGIES INC."
+},
+"OKLO": {
+"sic": "4911",
+"sic_desc": "Electric Services",
+"name": "Oklo Inc."
+},
+"HCWB": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "HCW Biologics Inc."
+},
+"SERA": {
+"sic": "8071",
+"sic_desc": "Services-Medical Laboratories",
+"name": "SERA PROGNOSTICS, INC."
+},
+"RGC": {
+"sic": "2833",
+"sic_desc": "Medicinal Chemicals & Botanical Products",
+"name": "Regencell Bioscience Holdings Ltd"
+},
+"TCBS": {
+"sic": "6036",
+"sic_desc": "Savings Institutions, Not Federally Chartered",
+"name": "Texas Community Bancshares, Inc."
+},
+"RPID": {
+"sic": "3826",
+"sic_desc": "Laboratory Analytical Instruments",
+"name": "RAPID MICRO BIOSYSTEMS, INC."
+},
+"ERAS": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "Erasca, Inc."
+},
+"SGHT": {
+"sic": "3841",
+"sic_desc": "Surgical & Medical Instruments & Apparatus",
+"name": "Sight Sciences, Inc."
+},
+"TCRX": {
+"sic": "2836",
+"sic_desc": "Biological Products, (No Diagnostic Substances)",
+"name": "TScan Therapeutics, Inc."
+},
+"STVN": {
+"sic": "3841",
+"sic_desc": "Surgical & Medical Instruments & Apparatus",
+"name": "Stevanato Group S.p.A."
+},
+"BLND": {
+"sic": "7370",
+"sic_desc": "Services-Computer Programming, Data Processing, Etc.",
+"name": "Blend Labs, Inc."
+},
+"KLTR": {
+"sic": "7372",
+"sic_desc": "Services-Prepackaged Software",
+"name": "KALTURA INC"
+},
+"VEEE": {
+"sic": "3730",
+"sic_desc": "Ship & Boat Building & Repairing",
+"name": "Twin Vee PowerCats, Co."
+},
+"GAMB": {
+"sic": "7990",
+"sic_desc": "Services-Miscellaneous Amusement & Recreation",
+"name": "Gambling.com Group Ltd"
+},
+"LAW": {
+"sic": "7372",
+"sic_desc": "Services-Prepackaged Software",
+"name": "CS Disco, Inc."
+},
+"VTEX": {
+"sic": "7372",
+"sic_desc": "Services-Prepackaged Software",
+"name": "VTEX"
+},
+"CRBU": {
+"sic": "2836",
+"sic_desc": "Biological Products, (No Diagnostic Substances)",
+"name": "Caribou Biosciences, Inc."
+},
+"SOPH": {
+"sic": "7374",
+"sic_desc": "Services-Computer Processing & Data Preparation",
+"name": "SOPHiA GENETICS SA"
+},
+"ZVIA": {
+"sic": "2086",
+"sic_desc": "Bottled & Canned Soft Drinks & Carbonated Waters",
+"name": "Zevia PBC"
+},
+"CADL": {
+"sic": "2836",
+"sic_desc": "Biological Products, (No Diagnostic Substances)",
+"name": "Candel Therapeutics, Inc."
+},
+"RYAN": {
+"sic": "6411",
+"sic_desc": "Insurance Agents, Brokers & Service",
+"name": "RYAN SPECIALTY HOLDINGS, INC."
+},
+"ABSI": {
+"sic": "8731",
+"sic_desc": "Services-Commercial Physical & Biological Research",
+"name": "Absci Corp"
+},
+"CTKB": {
+"sic": "3826",
+"sic_desc": "Laboratory Analytical Instruments",
+"name": "Cytek Biosciences, Inc."
+},
+"XPOF": {
+"sic": "7990",
+"sic_desc": "Services-Miscellaneous Amusement & Recreation",
+"name": "Xponential Fitness, Inc."
+},
+"CNM": {
+"sic": "5099",
+"sic_desc": "Wholesale-Durable Goods, NEC",
+"name": "Core & Main, Inc."
+},
+"INAB": {
+"sic": "2836",
+"sic_desc": "Biological Products, (No Diagnostic Substances)",
+"name": "IN8BIO, INC."
+},
+"TBLD": {
+"sic": "",
+"sic_desc": "",
+"name": "Thornburg Income Builder Opportunities Trust"
+},
+"DUOL": {
+"sic": "7372",
+"sic_desc": "Services-Prepackaged Software",
+"name": "Duolingo, Inc."
+},
+"RLYB": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "Rallybio Corp"
+},
+"NUVL": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "Nuvalent, Inc."
+},
+"IMRX": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "Immuneering Corp"
+},
+"RXST": {
+"sic": "3851",
+"sic_desc": "Ophthalmic Goods",
+"name": "RxSight, Inc."
+},
+"COOK": {
+"sic": "3630",
+"sic_desc": "Household Appliances",
+"name": "Traeger, Inc."
+},
+"HOOD": {
+"sic": "6211",
+"sic_desc": "Security Brokers, Dealers & Flotation Companies",
+"name": "Robinhood Markets, Inc."
+},
+"RSKD": {
+"sic": "7389",
+"sic_desc": "Services-Business Services, NEC",
+"name": "RISKIFIED LTD."
+},
+"TNYA": {
+"sic": "2836",
+"sic_desc": "Biological Products, (No Diagnostic Substances)",
+"name": "Tenaya Therapeutics, Inc."
+},
+"RANI": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "Rani Therapeutics Holdings, Inc."
+},
+"DOLE": {
+"sic": "0100",
+"sic_desc": "Agricultural Production-Crops",
+"name": "Dole plc"
+},
+"CLYM": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "Climb Bio, Inc."
+},
+"IVVD": {
+"sic": "2836",
+"sic_desc": "Biological Products, (No Diagnostic Substances)",
+"name": "Invivyd, Inc."
+},
+"KTTA": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "Pasithea Therapeutics Corp."
+},
+"DRMA": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "Dermata Therapeutics, Inc."
+},
+"SMRT": {
+"sic": "7373",
+"sic_desc": "Services-Computer Integrated Systems Design",
+"name": "SmartRent, Inc."
+},
+"ICCM": {
+"sic": "3841",
+"sic_desc": "Surgical & Medical Instruments & Apparatus",
+"name": "IceCure Medical Ltd."
+},
+"DDI": {
+"sic": "7374",
+"sic_desc": "Services-Computer Processing & Data Preparation",
+"name": "DoubleDown Interactive Co., Ltd."
+},
+"FCUV": {
+"sic": "3823",
+"sic_desc": "Industrial Instruments For Measurement, Display, and Control",
+"name": "FOCUS UNIVERSAL INC."
+},
+"SRAD": {
+"sic": "7370",
+"sic_desc": "Services-Computer Programming, Data Processing, Etc.",
+"name": "Sportradar Group AG"
+},
+"TYRA": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "Tyra Biosciences, Inc."
+},
+"PRCT": {
+"sic": "3841",
+"sic_desc": "Surgical & Medical Instruments & Apparatus",
+"name": "PROCEPT BioRobotics Corp"
+},
+"DH": {
+"sic": "7372",
+"sic_desc": "Services-Prepackaged Software",
+"name": "Definitive Healthcare Corp."
+},
+"ONON": {
+"sic": "3021",
+"sic_desc": "Rubber & Plastics Footwear",
+"name": "On Holding AG"
+},
+"BROS": {
+"sic": "5810",
+"sic_desc": "Retail-Eating & Drinking Places",
+"name": "Dutch Bros Inc."
+},
+"ACT": {
+"sic": "6411",
+"sic_desc": "Insurance Agents, Brokers & Service",
+"name": "Enact Holdings, Inc."
+},
+"FRSH": {
+"sic": "7372",
+"sic_desc": "Services-Prepackaged Software",
+"name": "Freshworks Inc."
+},
+"ARBK": {
+"sic": "6199",
+"sic_desc": "Finance Services",
+"name": "Argo Blockchain Plc"
+},
+"AKA": {
+"sic": "5961",
+"sic_desc": "Retail-Catalog & Mail-Order Houses",
+"name": "A.K.A. BRANDS HOLDING CORP."
+},
+"TOST": {
+"sic": "7374",
+"sic_desc": "Services-Computer Processing & Data Preparation",
+"name": "Toast, Inc."
+},
+"BRLT": {
+"sic": "3910",
+"sic_desc": "Jewelry, Silverware & Plated Ware",
+"name": "Brilliant Earth Group, Inc."
+},
+"RELY": {
+"sic": "7389",
+"sic_desc": "Services-Business Services, NEC",
+"name": "Remitly Global, Inc."
+},
+"AMPL": {
+"sic": "7372",
+"sic_desc": "Services-Prepackaged Software",
+"name": "Amplitude, Inc."
+},
+"CWAN": {
+"sic": "7372",
+"sic_desc": "Services-Prepackaged Software",
+"name": "Clearwater Analytics Holdings, Inc."
+},
+"OLPX": {
+"sic": "2844",
+"sic_desc": "Perfumes, Cosmetics & Other Toilet Preparations",
+"name": "OLAPLEX HOLDINGS, INC."
+},
+"ECAT": {
+"sic": "",
+"sic_desc": "",
+"name": "BlackRock ESG Capital Allocation Term Trust"
+},
+"WRBY": {
+"sic": "3851",
+"sic_desc": "Ophthalmic Goods",
+"name": "Warby Parker Inc."
+},
+"FWRG": {
+"sic": "5812",
+"sic_desc": "Retail-Eating  Places",
+"name": "First Watch Restaurant Group, Inc."
+},
+"HCTI": {
+"sic": "7373",
+"sic_desc": "Services-Computer Integrated Systems Design",
+"name": "Healthcare Triangle, Inc."
+},
+"CING": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "Cingulate Inc."
+},
+"PYXS": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "Pyxis Oncology, Inc."
+},
+"LTH": {
+"sic": "7997",
+"sic_desc": "Services-Membership Sports & Recreation Clubs",
+"name": "Life Time Group Holdings, Inc."
+},
+"CGTX": {
+"sic": "2836",
+"sic_desc": "Biological Products, (No Diagnostic Substances)",
+"name": "COGNITION THERAPEUTICS INC"
+},
+"CLST": {
+"sic": "6035",
+"sic_desc": "Savings Institution, Federally Chartered",
+"name": "Catalyst Bancorp, Inc."
+},
+"LUCD": {
+"sic": "3841",
+"sic_desc": "Surgical & Medical Instruments & Apparatus",
+"name": "Lucid Diagnostics Inc."
+},
+"INKT": {
+"sic": "2836",
+"sic_desc": "Biological Products, (No Diagnostic Substances)",
+"name": "MiNK Therapeutics, Inc."
+},
+"GTLB": {
+"sic": "7372",
+"sic_desc": "Services-Prepackaged Software",
+"name": "Gitlab Inc."
+},
+"IHS": {
+"sic": "4812",
+"sic_desc": "Radiotelephone Communications",
+"name": "IHS Holding Ltd"
+},
+"CYN": {
+"sic": "7371",
+"sic_desc": "Services-Computer Programming Services",
+"name": "Cyngn Inc."
+},
+"CNTX": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "Context Therapeutics Inc."
+},
+"XLO": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "Xilio Therapeutics, Inc."
+},
+"COCO": {
+"sic": "2080",
+"sic_desc": "Beverages",
+"name": "Vita Coco Company, Inc."
+},
+"PTLO": {
+"sic": "5812",
+"sic_desc": "Retail-Eating  Places",
+"name": "Portillo's Inc."
+},
+"RWAY": {
+"sic": "",
+"sic_desc": "",
+"name": "Runway Growth Finance Corp."
+},
+"ARIS": {
+"sic": "1040",
+"sic_desc": "Gold and Silver Ores",
+"name": "Aris Mining Corp"
+},
+"PANW": {
+"sic": "3577",
+"sic_desc": "Computer Peripheral Equipment, NEC",
+"name": "Palo Alto Networks Inc"
+},
+"AIP": {
+"sic": "3674",
+"sic_desc": "Semiconductors & Related Devices",
+"name": "Arteris, Inc."
+},
+"RENT": {
+"sic": "5990",
+"sic_desc": "Retail-Retail Stores, NEC",
+"name": "Rent the Runway, Inc."
+},
+"GFS": {
+"sic": "3674",
+"sic_desc": "Semiconductors & Related Devices",
+"name": "GLOBALFOUNDRIES Inc."
+},
+"FLNC": {
+"sic": "3690",
+"sic_desc": "Miscellaneous Electrical Machinery, Equipment & Supplies",
+"name": "Fluence Energy, Inc."
+},
+"TRDA": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "Entrada Therapeutics, Inc."
+},
+"BXSL": {
+"sic": "",
+"sic_desc": "",
+"name": "Blackstone Secured Lending Fund"
+},
+"AURA": {
+"sic": "2836",
+"sic_desc": "Biological Products, (No Diagnostic Substances)",
+"name": "Aura Biosciences, Inc."
+},
+"AIRS": {
+"sic": "8011",
+"sic_desc": "Services-Offices & Clinics of  Doctors of  Medicine",
+"name": "Airsculpt Technologies, Inc."
+},
+"BIRD": {
+"sic": "2300",
+"sic_desc": "Apparel & Other Finishd Prods of  Fabrics & Similar Matl",
+"name": "Smartbird, Inc."
+},
+"NRDS": {
+"sic": "7374",
+"sic_desc": "Services-Computer Processing & Data Preparation",
+"name": "NERDWALLET, INC."
+},
+"ARHS": {
+"sic": "5712",
+"sic_desc": "Retail-Furniture Stores",
+"name": "Arhaus, Inc."
+},
+"CMTG": {
+"sic": "6500",
+"sic_desc": "Real Estate",
+"name": "Claros Mortgage Trust, Inc."
+},
+"CDRE": {
+"sic": "3842",
+"sic_desc": "Orthopedic, Prosthetic & Surgical Appliances & Supplies",
+"name": "Cadre Holdings, Inc."
+},
+"TCBX": {
+"sic": "6036",
+"sic_desc": "Savings Institutions, Not Federally Chartered",
+"name": "Third Coast Bancshares, Inc."
+},
+"RIVN": {
+"sic": "3711",
+"sic_desc": "Motor Vehicles & Passenger Car Bodies",
+"name": "Rivian Automotive, Inc. / DE"
+},
+"BJDX": {
+"sic": "3841",
+"sic_desc": "Surgical & Medical Instruments & Apparatus",
+"name": "Bluejay Diagnostics, Inc."
+},
+"BLZE": {
+"sic": "7372",
+"sic_desc": "Services-Prepackaged Software",
+"name": "Backblaze, Inc."
+},
+"EXFY": {
+"sic": "7372",
+"sic_desc": "Services-Prepackaged Software",
+"name": "Expensify, Inc."
+},
+"CINT": {
+"sic": "7371",
+"sic_desc": "Services-Computer Programming Services",
+"name": "CI&T Inc"
+},
+"LVLU": {
+"sic": "5961",
+"sic_desc": "Retail-Catalog & Mail-Order Houses",
+"name": "Lulu's Fashion Lounge Holdings, Inc."
+},
+"BTBD": {
+"sic": "5812",
+"sic_desc": "Retail-Eating  Places",
+"name": "BT Brands, Inc."
+},
+"WEAV": {
+"sic": "7372",
+"sic_desc": "Services-Prepackaged Software",
+"name": "Weave Communications, Inc."
+},
+"DERM": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "Journey Medical Corp"
+},
+"BRZE": {
+"sic": "7372",
+"sic_desc": "Services-Prepackaged Software",
+"name": "Braze, Inc."
+},
+"IREN": {
+"sic": "6199",
+"sic_desc": "Finance Services",
+"name": "IREN Ltd"
+},
+"ANVS": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "Annovis Bio, Inc."
+},
+"FINW": {
+"sic": "6022",
+"sic_desc": "State Commercial Banks",
+"name": "Finwise Bancorp"
+},
+"SG": {
+"sic": "5812",
+"sic_desc": "Retail-Eating  Places",
+"name": "Sweetgreen, Inc."
+},
+"GUG": {
+"sic": "",
+"sic_desc": "",
+"name": "Guggenheim Active Allocation Fund"
+},
+"REFI": {
+"sic": "6798",
+"sic_desc": "Real Estate Investment Trusts",
+"name": "Chicago Atlantic Real Estate Finance, Inc."
+},
+"NRSN": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "NeuroSense Therapeutics Ltd."
+},
+"NU": {
+"sic": "6199",
+"sic_desc": "Finance Services",
+"name": "Nu Holdings Ltd."
+},
+"SIDU": {
+"sic": "4812",
+"sic_desc": "Radiotelephone Communications",
+"name": "Sidus Space Inc."
+},
+"GNTA": {
+"sic": "2836",
+"sic_desc": "Biological Products, (No Diagnostic Substances)",
+"name": "Genenta Science S.p.A."
+},
+"IOT": {
+"sic": "7373",
+"sic_desc": "Services-Computer Integrated Systems Design",
+"name": "Samsara Inc."
+},
+"IMMX": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "Immix Biopharma, Inc."
+},
+"NPFD": {
+"sic": "",
+"sic_desc": "",
+"name": "Nuveen Variable Rate Preferred & Income Fund"
+},
+"MTEK": {
+"sic": "3669",
+"sic_desc": "Communications Equipment, NEC",
+"name": "Maris Tech Ltd."
+},
+"HOUR": {
+"sic": "5961",
+"sic_desc": "Retail-Catalog & Mail-Order Houses",
+"name": "Hour Loop, Inc"
+},
+"FNGR": {
+"sic": "7372",
+"sic_desc": "Services-Prepackaged Software",
+"name": "FingerMotion, Inc."
+},
+"KNSL": {
+"sic": "6331",
+"sic_desc": "Fire, Marine & Casualty Insurance",
+"name": "Kinsale Capital Group, Inc."
+},
+"AZ": {
+"sic": "3569",
+"sic_desc": "General Industrial Machinery & Equipment, NEC",
+"name": "A2Z CUST2MATE SOLUTIONS CORP."
+},
+"AMLX": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "Amylyx Pharmaceuticals, Inc."
+},
+"TPG": {
+"sic": "6282",
+"sic_desc": "Investment Advice",
+"name": "TPG Inc."
+},
+"TKLF": {
+"sic": "5990",
+"sic_desc": "Retail-Retail Stores, NEC",
+"name": "Tokyo Lifestyle Co., Ltd."
+},
+"FGI": {
+"sic": "3430",
+"sic_desc": "Heating Equip, Except Elec & Warm Air; & Plumbing Fixtures",
+"name": "FGI Industries Ltd."
+},
+"LIEN": {
+"sic": "",
+"sic_desc": "",
+"name": "Chicago Atlantic BDC, Inc."
+},
+"CRDO": {
+"sic": "3674",
+"sic_desc": "Semiconductors & Related Devices",
+"name": "Credo Technology Group Holding Ltd"
+},
+"KSCP": {
+"sic": "3669",
+"sic_desc": "Communications Equipment, NEC",
+"name": "Knightscope, Inc."
+},
+"DRCT": {
+"sic": "7310",
+"sic_desc": "Services-Advertising",
+"name": "Direct Digital Holdings, Inc."
+},
+"NVCT": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "Nuvectis Pharma, Inc."
+},
+"AREB": {
+"sic": "3490",
+"sic_desc": "Miscellaneous Fabricated Metal Products",
+"name": "AMERICAN REBEL HOLDINGS INC"
+},
+"SKYX": {
+"sic": "3640",
+"sic_desc": "Electric Lighting & Wiring Equipment",
+"name": "SKYX Platforms Corp."
+},
+"HTCR": {
+"sic": "7374",
+"sic_desc": "Services-Computer Processing & Data Preparation",
+"name": "HeartCore Enterprises, Inc."
+},
+"MDV": {
+"sic": "6798",
+"sic_desc": "Real Estate Investment Trusts",
+"name": "MODIV INDUSTRIAL, INC."
+},
+"AKAN": {
+"sic": "2833",
+"sic_desc": "Medicinal Chemicals & Botanical Products",
+"name": "AKANDA CORP."
+},
+"ONCO": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "Onconetix, Inc."
+},
+"RLTY": {
+"sic": "",
+"sic_desc": "",
+"name": "Cohen & Steers Real Estate Opportunities & Income Fund"
+},
+"ANTX": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "AN2 Therapeutics, Inc."
+},
+"XPON": {
+"sic": "3690",
+"sic_desc": "Miscellaneous Electrical Machinery, Equipment & Supplies",
+"name": "Expion360 Inc."
+},
+"SVRE": {
+"sic": "7371",
+"sic_desc": "Services-Computer Programming Services",
+"name": "SaverOne 2014 Ltd."
+},
+"GNS": {
+"sic": "7372",
+"sic_desc": "Services-Prepackaged Software",
+"name": "Genius Group Ltd"
+},
+"EE": {
+"sic": "4924",
+"sic_desc": "Natural Gas Distribution",
+"name": "Excelerate Energy, Inc."
+},
+"JCSE": {
+"sic": "3990",
+"sic_desc": "Miscellaneous Manufacturing Industries",
+"name": "JE Cleantech Holdings Ltd"
+},
+"TNON": {
+"sic": "3841",
+"sic_desc": "Surgical & Medical Instruments & Apparatus",
+"name": "Tenon Medical, Inc."
+},
+"BLTE": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "BELITE BIO, INC"
+},
+"FTAI": {
+"sic": "7350",
+"sic_desc": "Services-Miscellaneous Equipment Rental & Leasing",
+"name": "FTAI Aviation Ltd."
+},
+"AUST": {
+"sic": "1040",
+"sic_desc": "Gold and Silver Ores",
+"name": "Austin Gold Corp."
+},
+"EDBL": {
+"sic": "0100",
+"sic_desc": "Agricultural Production-Crops",
+"name": "Edible Garden AG Inc"
+},
+"PEPG": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "PepGen Inc."
+},
+"ASNS": {
+"sic": "3669",
+"sic_desc": "Communications Equipment, NEC",
+"name": "ACTELIS NETWORKS INC"
+},
+"HNVR": {
+"sic": "6022",
+"sic_desc": "State Commercial Banks",
+"name": "Hanover Bancorp, Inc. /MD"
+},
+"ACDC": {
+"sic": "1389",
+"sic_desc": "Oil & Gas Field Services, NEC",
+"name": "ProFrac Holding Corp."
+},
+"GV": {
+"sic": "8200",
+"sic_desc": "Services-Educational Services",
+"name": "Visionary Holdings Inc."
+},
+"BNRG": {
+"sic": "3433",
+"sic_desc": "Heating Equipment, Except Electric & Warm Air Furnaces",
+"name": "Brenmiller Energy Ltd."
+},
+"GSUN": {
+"sic": "8200",
+"sic_desc": "Services-Educational Services",
+"name": "Golden Sun Technology Group Ltd."
+},
+"IE": {
+"sic": "1000",
+"sic_desc": "Metal Mining",
+"name": "Ivanhoe Electric Inc."
+},
+"VRAX": {
+"sic": "2835",
+"sic_desc": "In Vitro & In Vivo Diagnostic Substances",
+"name": "Virax Biolabs Group Ltd"
+},
+"MEGL": {
+"sic": "6199",
+"sic_desc": "Finance Services",
+"name": "Magic Empire Global Ltd"
+},
+"ILAG": {
+"sic": "2540",
+"sic_desc": "Partitions, Shelvg, Lockers, & of fice & Store Fixtures",
+"name": "Intelligent Living Application Group Inc."
+},
+"TGL": {
+"sic": "7389",
+"sic_desc": "Services-Business Services, NEC",
+"name": "TREASURE GLOBAL INC"
+},
+"HKD": {
+"sic": "6199",
+"sic_desc": "Finance Services",
+"name": "AMTD Digital Inc."
+},
+"NXTT": {
+"sic": "7374",
+"sic_desc": "Services-Computer Processing & Data Preparation",
+"name": "Next Technology Holding Inc."
+},
+"GWAV": {
+"sic": "5051",
+"sic_desc": "Wholesale-Metals Service Centers & of fices",
+"name": "Greenwave Technology Solutions, Inc."
+},
+"MAIA": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "MAIA Biotechnology, Inc."
+},
+"BIAF": {
+"sic": "8731",
+"sic_desc": "Services-Commercial Physical & Biological Research",
+"name": "bioAffinity Technologies, Inc."
+},
+"REBN": {
+"sic": "5812",
+"sic_desc": "Retail-Eating  Places",
+"name": "Reborn Coffee, Inc."
+},
+"GCT": {
+"sic": "5961",
+"sic_desc": "Retail-Catalog & Mail-Order Houses",
+"name": "GigaCloud Technology Inc"
+},
+"MOB": {
+"sic": "3721",
+"sic_desc": "Aircraft",
+"name": "Mobilicom Ltd"
+},
+"JZ": {
+"sic": "8200",
+"sic_desc": "Services-Educational Services",
+"name": "Jianzhi Education Technology Group Co Ltd"
+},
+"SHPH": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "Shuttle Pharmaceuticals Holdings, Inc."
+},
+"ATXG": {
+"sic": "7330",
+"sic_desc": "Services-Mailing, Reproduction, Commercial Art & Photography",
+"name": "ADDENTAX GROUP CORP."
+},
+"CRBG": {
+"sic": "6311",
+"sic_desc": "Life Insurance",
+"name": "Corebridge Financial, Inc."
+},
+"NXL": {
+"sic": "3845",
+"sic_desc": "Electromedical & Electrotherapeutic Apparatus",
+"name": "Nexalin Technology, Inc."
+},
+"LASE": {
+"sic": "3690",
+"sic_desc": "Miscellaneous Electrical Machinery, Equipment & Supplies",
+"name": "Laser Photonics Corp"
+},
+"DFH": {
+"sic": "1531",
+"sic_desc": "Operative Builders",
+"name": "Dream Finders Homes, Inc."
+},
+"PRME": {
+"sic": "2836",
+"sic_desc": "Biological Products, (No Diagnostic Substances)",
+"name": "Prime Medicine, Inc."
+},
+"MBLY": {
+"sic": "7372",
+"sic_desc": "Services-Prepackaged Software",
+"name": "Mobileye Global Inc."
+},
+"BMN": {
+"sic": "",
+"sic_desc": "",
+"name": "BlackRock 2037 Municipal Target Term Trust"
+},
+"SNAL": {
+"sic": "7372",
+"sic_desc": "Services-Prepackaged Software",
+"name": "Snail, Inc."
+},
+"ACRV": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "Acrivon Therapeutics, Inc."
+},
+"ASPI": {
+"sic": "2890",
+"sic_desc": "Miscellaneous Chemical Products",
+"name": "ASP Isotopes Inc."
+},
+"ATAT": {
+"sic": "7011",
+"sic_desc": "Hotels & Motels",
+"name": "Atour Lifestyle Holdings Ltd"
+},
+"RAYA": {
+"sic": "3621",
+"sic_desc": "Motors & Generators",
+"name": "Erayak Power Solution Group Inc."
+},
+"LOB": {
+"sic": "6022",
+"sic_desc": "State Commercial Banks",
+"name": "Live Oak Bancshares, Inc."
+},
+"ZYME": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "Zymeworks Inc."
+},
+"LIPO": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "LIPELLA PHARMACEUTICALS INC."
+},
+"COYA": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "Coya Therapeutics, Inc."
+},
+"SKWD": {
+"sic": "6331",
+"sic_desc": "Fire, Marine & Casualty Insurance",
+"name": "Skyward Specialty Insurance Group, Inc."
+},
+"CVKD": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "Cadrenal Therapeutics, Inc."
+},
+"GNLX": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "GENELUX Corp"
+},
+"ASST": {
+"sic": "6199",
+"sic_desc": "Finance Services",
+"name": "Strive, Inc."
+},
+"LICN": {
+"sic": "8742",
+"sic_desc": "Services-Management Consulting Services",
+"name": "Lichen International Ltd"
+},
+"GPCR": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "Structure Therapeutics Inc."
+},
+"MLYS": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "Mineralys Therapeutics, Inc."
+},
+"HSAI": {
+"sic": "3569",
+"sic_desc": "General Industrial Machinery & Equipment, NEC",
+"name": "Hesai Group"
+},
+"NXT": {
+"sic": "3674",
+"sic_desc": "Semiconductors & Related Devices",
+"name": "Nextpower Inc."
+},
+"GXAI": {
+"sic": "7372",
+"sic_desc": "Services-Prepackaged Software",
+"name": "GAXOS.AI INC."
+},
+"BMR": {
+"sic": "7372",
+"sic_desc": "Services-Prepackaged Software",
+"name": "Beamr Imaging Ltd."
+},
+"AIXI": {
+"sic": "7372",
+"sic_desc": "Services-Prepackaged Software",
+"name": "Xiao-I Corp"
+},
+"ICG": {
+"sic": "3674",
+"sic_desc": "Semiconductors & Related Devices",
+"name": "Intchains Group Ltd"
+},
+"IZM": {
+"sic": "5731",
+"sic_desc": "Retail-Radio, Tv & Consumer Electronics Stores",
+"name": "ICZOOM Group Inc."
+},
+"OMH": {
+"sic": "6531",
+"sic_desc": "Real Estate Agents & Managers (For Others)",
+"name": "Ohmyhome Ltd"
+},
+"MGRX": {
+"sic": "8090",
+"sic_desc": "Services-Misc Health & Allied Services, NEC",
+"name": "MANGOCEUTICALS, INC."
+},
+"VCIG": {
+"sic": "8744",
+"sic_desc": "Services-Facilities Support Management Services",
+"name": "VCI Global Ltd"
+},
+"BANL": {
+"sic": "5172",
+"sic_desc": "Wholesale-Petroleum & Petroleum Products (No Bulk Stations)",
+"name": "CBL International Ltd"
+},
+"CHSN": {
+"sic": "2000",
+"sic_desc": "Food and Kindred Products",
+"name": "Chanson International Holding"
+},
+"HLP": {
+"sic": "3569",
+"sic_desc": "General Industrial Machinery & Equipment, NEC",
+"name": "Hongli Group Inc."
+},
+"ZJYL": {
+"sic": "3842",
+"sic_desc": "Orthopedic, Prosthetic & Surgical Appliances & Supplies",
+"name": "Jin Medical International Ltd."
+},
+"MGIH": {
+"sic": "2750",
+"sic_desc": "Commercial Printing",
+"name": "Millennium Group International Holdings Ltd"
+},
+"ARBB": {
+"sic": "7373",
+"sic_desc": "Services-Computer Integrated Systems Design",
+"name": "ARB IOT Group Ltd"
+},
+"WAI": {
+"sic": "7389",
+"sic_desc": "Services-Business Services, NEC",
+"name": "Top KingWin Ltd"
+},
+"SFWL": {
+"sic": "4210",
+"sic_desc": "Trucking & Courier Services (No Air)",
+"name": "SHENGFENG DEVELOPMENT Ltd"
+},
+"LRE": {
+"sic": "1531",
+"sic_desc": "Operative Builders",
+"name": "LEAD REAL ESTATE CO., LTD"
+},
+"MWG": {
+"sic": "3990",
+"sic_desc": "Miscellaneous Manufacturing Industries",
+"name": "Multi Ways Holdings Ltd"
+},
+"ISPR": {
+"sic": "2111",
+"sic_desc": "Cigarettes",
+"name": "Ispire Technology Inc."
+},
+"GDTC": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "CytoMed Therapeutics Ltd"
+},
+"TPET": {
+"sic": "1311",
+"sic_desc": "Crude Petroleum & Natural Gas",
+"name": "Trio Petroleum Corp"
+},
+"JYD": {
+"sic": "4731",
+"sic_desc": "Arrangement of  Transportation of  Freight & Cargo",
+"name": "Jayud Global Logistics Ltd"
+},
+"TRNR": {
+"sic": "3600",
+"sic_desc": "Electronic & Other Electrical Equipment (No Computer Equip)",
+"name": "Interactive Strength, Inc."
+},
+"KVUE": {
+"sic": "2844",
+"sic_desc": "Perfumes, Cosmetics & Other Toilet Preparations",
+"name": "Kenvue Inc."
+},
+"CWD": {
+"sic": "6500",
+"sic_desc": "Real Estate",
+"name": "CaliberCos Inc."
+},
+"OBK": {
+"sic": "6022",
+"sic_desc": "State Commercial Banks",
+"name": "Origin Bancorp, Inc."
+},
+"EQBK": {
+"sic": "6022",
+"sic_desc": "State Commercial Banks",
+"name": "EQUITY BANCSHARES INC"
+},
+"ATMU": {
+"sic": "3714",
+"sic_desc": "Motor Vehicle Parts & Accessories",
+"name": "Atmus Filtration Technologies Inc."
+},
+"COE": {
+"sic": "8200",
+"sic_desc": "Services-Educational Services",
+"name": "51Talk Online Education Group"
+},
+"STEL": {
+"sic": "6021",
+"sic_desc": "National Commercial Banks",
+"name": "Stellar Bancorp, Inc."
+},
+"CAVA": {
+"sic": "5812",
+"sic_desc": "Retail-Eating  Places",
+"name": "CAVA GROUP, INC."
+},
+"AZTR": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "Azitra, Inc."
+},
+"BOF": {
+"sic": "2000",
+"sic_desc": "Food and Kindred Products",
+"name": "BranchOut Food Inc."
+},
+"GENK": {
+"sic": "5812",
+"sic_desc": "Retail-Eating  Places",
+"name": "GEN Restaurant Group, Inc."
+},
+"SVV": {
+"sic": "5900",
+"sic_desc": "Retail-Miscellaneous Retail",
+"name": "Savers Value Village, Inc."
+},
+"KGS": {
+"sic": "4922",
+"sic_desc": "Natural Gas Transmission",
+"name": "Kodiak Gas Services, Inc."
+},
+"INTS": {
+"sic": "2836",
+"sic_desc": "Biological Products, (No Diagnostic Substances)",
+"name": "INTENSITY THERAPEUTICS, INC."
+},
+"VTMX": {
+"sic": "6500",
+"sic_desc": "Real Estate",
+"name": "Vesta Real Estate Corporation, S.A.B. de C.V."
+},
+"APGE": {
+"sic": "2836",
+"sic_desc": "Biological Products, (No Diagnostic Substances)",
+"name": "Apogee Therapeutics, Inc."
+},
+"SGMT": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "Sagimet Biosciences Inc."
+},
+"ODD": {
+"sic": "2844",
+"sic_desc": "Perfumes, Cosmetics & Other Toilet Preparations",
+"name": "Oddity Tech Ltd"
+},
+"BGLC": {
+"sic": "8071",
+"sic_desc": "Services-Medical Laboratories",
+"name": "BioNexus Gene Lab Corp"
+},
+"PRZO": {
+"sic": "3728",
+"sic_desc": "Aircraft Parts & Auxiliary Equipment, NEC",
+"name": "ParaZero Technologies Ltd."
+},
+"CTNT": {
+"sic": "5010",
+"sic_desc": "Wholesale-Motor Vehicles & Motor Vehicle Parts & Supplies",
+"name": "CHEETAH NET SUPPLY CHAIN SERVICE INC."
+},
+"MIRA": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "MIRA PHARMACEUTICALS, INC."
+},
+"NRXS": {
+"sic": "3845",
+"sic_desc": "Electromedical & Electrotherapeutic Apparatus",
+"name": "Neuraxis, INC"
+},
+"ANL": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "Adlai Nortye Ltd."
+},
+"NWGL": {
+"sic": "2400",
+"sic_desc": "Lumber & Wood Products (No Furniture)",
+"name": "CL Workshop Group Ltd"
+},
+"SPPL": {
+"sic": "8744",
+"sic_desc": "Services-Facilities Support Management Services",
+"name": "SIMPPLE LTD."
+},
+"ARM": {
+"sic": "3674",
+"sic_desc": "Semiconductors & Related Devices",
+"name": "ARM HOLDINGS PLC /UK"
+},
+"NMRA": {
+"sic": "2836",
+"sic_desc": "Biological Products, (No Diagnostic Substances)",
+"name": "Neumora Therapeutics, Inc."
+},
+"SRBK": {
+"sic": "6036",
+"sic_desc": "Savings Institutions, Not Federally Chartered",
+"name": "SR Bancorp, Inc."
+},
+"CART": {
+"sic": "7389",
+"sic_desc": "Services-Business Services, NEC",
+"name": "Maplebear Inc."
+},
+"KVYO": {
+"sic": "7372",
+"sic_desc": "Services-Prepackaged Software",
+"name": "Klaviyo, Inc."
+},
+"TURB": {
+"sic": "3690",
+"sic_desc": "Miscellaneous Electrical Machinery, Equipment & Supplies",
+"name": "Turbo Energy, S.A."
+},
+"MDBH": {
+"sic": "6199",
+"sic_desc": "Finance Services",
+"name": "MDB Capital Holdings, LLC"
+},
+"DASH": {
+"sic": "7389",
+"sic_desc": "Services-Business Services, NEC",
+"name": "DoorDash, Inc."
+},
+"VSME": {
+"sic": "7311",
+"sic_desc": "Services-Advertising Agencies",
+"name": "VS MEDIA Holdings Ltd"
+},
+"MSS": {
+"sic": "5411",
+"sic_desc": "Retail-Grocery Stores",
+"name": "Maison Solutions Inc."
+},
+"LRHC": {
+"sic": "6531",
+"sic_desc": "Real Estate Agents & Managers (For Others)",
+"name": "La Rosa Holdings Corp."
+},
+"BQ": {
+"sic": "5990",
+"sic_desc": "Retail-Retail Stores, NEC",
+"name": "Boqii Holding Ltd"
+},
+"PMEC": {
+"sic": "7340",
+"sic_desc": "Services-To Dwellings & Other Buildings",
+"name": "Primech Holdings Ltd"
+},
+"BIRK": {
+"sic": "3140",
+"sic_desc": "Footwear, (No Rubber)",
+"name": "Birkenstock Holding plc"
+},
+"ATPC": {
+"sic": "8000",
+"sic_desc": "Services-Health Services",
+"name": "Agape ATP Corp"
+},
+"WBUY": {
+"sic": "5900",
+"sic_desc": "Retail-Miscellaneous Retail",
+"name": "WEBUY GLOBAL LTD"
+},
+"NCL": {
+"sic": "3089",
+"sic_desc": "Plastics Products, NEC",
+"name": "Northann Corp."
+},
+"ABVX": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "Abivax S.A."
+},
+"AIRE": {
+"sic": "6500",
+"sic_desc": "Real Estate",
+"name": "reAlpha Tech Corp."
+},
+"ATGL": {
+"sic": "7371",
+"sic_desc": "Services-Computer Programming Services",
+"name": "Alpha Technology Group Ltd"
+},
+"SHIM": {
+"sic": "1600",
+"sic_desc": "Heavy Construction Other Than Bldg Const - Contractors",
+"name": "Shimmick Corp"
+},
+"PAPL": {
+"sic": "6199",
+"sic_desc": "Finance Services",
+"name": "Pineapple Financial Inc."
+},
+"LXEO": {
+"sic": "2836",
+"sic_desc": "Biological Products, (No Diagnostic Substances)",
+"name": "Lexeo Therapeutics, Inc."
+},
+"GVH": {
+"sic": "4731",
+"sic_desc": "Arrangement of  Transportation of  Freight & Cargo",
+"name": "Globavend Holdings Ltd"
+},
+"HG": {
+"sic": "6331",
+"sic_desc": "Fire, Marine & Casualty Insurance",
+"name": "Hamilton Insurance Group, Ltd."
+},
+"RR": {
+"sic": "3569",
+"sic_desc": "General Industrial Machinery & Equipment, NEC",
+"name": "RICHTECH ROBOTICS INC."
+},
+"DDC": {
+"sic": "2000",
+"sic_desc": "Food and Kindred Products",
+"name": "DDC Enterprise Ltd"
+},
+"ELAB": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "PMGC Holdings Inc."
+},
+"FEBO": {
+"sic": "3634",
+"sic_desc": "Electric Housewares & Fans",
+"name": "Fenbo Holdings Ltd"
+},
+"GSIW": {
+"sic": "6200",
+"sic_desc": "Security & Commodity Brokers, Dealers, Exchanges & Services",
+"name": "Garden Stage Ltd"
+},
+"MYND": {
+"sic": "3577",
+"sic_desc": "Computer Peripheral Equipment, NEC",
+"name": "Mynd.ai, Inc."
+},
+"INHD": {
+"sic": "5990",
+"sic_desc": "Retail-Retail Stores, NEC",
+"name": "INNO HOLDINGS INC."
+},
+"ZKH": {
+"sic": "5200",
+"sic_desc": "Retail-Building Materials, Hardware, Garden Supply",
+"name": "ZKH Group Ltd"
+},
+"ROMA": {
+"sic": "8742",
+"sic_desc": "Services-Management Consulting Services",
+"name": "Roma Green Finance Ltd"
+},
+"SDHC": {
+"sic": "1531",
+"sic_desc": "Operative Builders",
+"name": "Smith Douglas Homes Corp."
+},
+"SYNX": {
+"sic": "3651",
+"sic_desc": "Household Audio & Video Equipment",
+"name": "Silynxcom Ltd."
+},
+"PSBD": {
+"sic": "",
+"sic_desc": "",
+"name": "Palmer Square Capital BDC Inc."
+},
+"SUGP": {
+"sic": "7381",
+"sic_desc": "Services-Detective, Guard & Armored Car Services",
+"name": "SU Group Holdings Ltd"
+},
+"JL": {
+"sic": "5600",
+"sic_desc": "Retail-Apparel & Accessory Stores",
+"name": "J-Long Group Ltd"
+},
+"MSDL": {
+"sic": "",
+"sic_desc": "",
+"name": "Morgan Stanley Direct Lending Fund"
+},
+"HAO": {
+"sic": "7311",
+"sic_desc": "Services-Advertising Agencies",
+"name": "Haoxi Health Technology Ltd"
+},
+"CGON": {
+"sic": "2836",
+"sic_desc": "Biological Products, (No Diagnostic Substances)",
+"name": "CG Oncology, Inc."
+},
+"BTSG": {
+"sic": "8082",
+"sic_desc": "Services-Home Health Care Services",
+"name": "BrightSpring Health Services, Inc."
+},
+"YIBO": {
+"sic": "3577",
+"sic_desc": "Computer Peripheral Equipment, NEC",
+"name": "Planet Image International Ltd"
+},
+"AVBP": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "ArriVent BioPharma, Inc."
+},
+"NCDL": {
+"sic": "",
+"sic_desc": "",
+"name": "Nuveen Churchill Direct Lending Corp."
+},
+"AS": {
+"sic": "2300",
+"sic_desc": "Apparel & Other Finishd Prods of  Fabrics & Similar Matl",
+"name": "Amer Sports, Inc."
+},
+"ANRO": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "Alto Neuroscience, Inc."
+},
+"GUTS": {
+"sic": "3841",
+"sic_desc": "Surgical & Medical Instruments & Apparatus",
+"name": "FRACTYL HEALTH, INC."
+},
+"AHR": {
+"sic": "6798",
+"sic_desc": "Real Estate Investment Trusts",
+"name": "American Healthcare REIT, Inc."
+},
+"PMNT": {
+"sic": "2300",
+"sic_desc": "Apparel & Other Finishd Prods of  Fabrics & Similar Matl",
+"name": "Perfect Moment Ltd."
+},
+"KYTX": {
+"sic": "2836",
+"sic_desc": "Biological Products, (No Diagnostic Substances)",
+"name": "Kyverna Therapeutics, Inc."
+},
+"TBBB": {
+"sic": "5411",
+"sic_desc": "Retail-Grocery Stores",
+"name": "BBB FOODS INC"
+},
+"TELO": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "Telomir Pharmaceuticals, Inc."
+},
+"MGX": {
+"sic": "2836",
+"sic_desc": "Biological Products, (No Diagnostic Substances)",
+"name": "Metagenomi Therapeutics, Inc."
+},
+"UMAC": {
+"sic": "3663",
+"sic_desc": "Radio & Tv Broadcasting & Communications Equipment",
+"name": "Unusual Machines, Inc."
+},
+"AXIL": {
+"sic": "2844",
+"sic_desc": "Perfumes, Cosmetics & Other Toilet Preparations",
+"name": "Axil Brands, Inc."
+},
+"SMXT": {
+"sic": "1700",
+"sic_desc": "Construction - Special Trade Contractors",
+"name": "SolarMax Technology, Inc."
+},
+"LGCL": {
+"sic": "7370",
+"sic_desc": "Services-Computer Programming, Data Processing, Etc.",
+"name": "Lucas GC Ltd"
+},
+"RYDE": {
+"sic": "7389",
+"sic_desc": "Services-Business Services, NEC",
+"name": "Ryde Group Ltd"
+},
+"INTJ": {
+"sic": "8742",
+"sic_desc": "Services-Management Consulting Services",
+"name": "Intelligent Group Ltd"
+},
+"ALAB": {
+"sic": "3674",
+"sic_desc": "Semiconductors & Related Devices",
+"name": "Astera Labs, Inc."
+},
+"LOBO": {
+"sic": "3751",
+"sic_desc": "Motorcycles, Bicycles & Parts",
+"name": "LOBO TECHNOLOGIES LTD."
+},
+"RDDT": {
+"sic": "7374",
+"sic_desc": "Services-Computer Processing & Data Preparation",
+"name": "Reddit, Inc."
+},
+"AUNA": {
+"sic": "8011",
+"sic_desc": "Services-Offices & Clinics of  Doctors of  Medicine",
+"name": "AUNA S.A."
+},
+"UBXG": {
+"sic": "7370",
+"sic_desc": "Services-Computer Programming, Data Processing, Etc.",
+"name": "U-BX Technology Ltd."
+},
+"MMA": {
+"sic": "7380",
+"sic_desc": "Services-Miscellaneous Business Services",
+"name": "MIXED MARTIAL ARTS GROUP LTD"
+},
+"BOLD": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "Boundless Bio, Inc."
+},
+"MAMO": {
+"sic": "3790",
+"sic_desc": "Miscellaneous Transportation Equipment",
+"name": "Massimo Group"
+},
+"ZBAO": {
+"sic": "6411",
+"sic_desc": "Insurance Agents, Brokers & Service",
+"name": "Zhibao Technology Inc."
+},
+"CTNM": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "Contineum Therapeutics, Inc."
+},
+"CDTG": {
+"sic": "4950",
+"sic_desc": "Sanitary Services",
+"name": "CDT Environmental Technology Investment Holdings Ltd"
+},
+"MNDR": {
+"sic": "7372",
+"sic_desc": "Services-Prepackaged Software",
+"name": "Mobile-health Network Solutions"
+},
+"PACS": {
+"sic": "8051",
+"sic_desc": "Services-Skilled Nursing Care Facilities",
+"name": "PACS Group, Inc."
+},
+"SKYE": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "Skye Bioscience, Inc."
+},
+"ULS": {
+"sic": "8734",
+"sic_desc": "Services-Testing Laboratories",
+"name": "UL Solutions Inc."
+},
+"TWG": {
+"sic": "2090",
+"sic_desc": "Miscellaneous Food Preparations & Kindred Products",
+"name": "Top Wealth Group Holding Ltd"
+},
+"CTRI": {
+"sic": "4923",
+"sic_desc": "Natural Gas Transmisison & Distribution",
+"name": "Centuri Holdings, Inc."
+},
+"IBTA": {
+"sic": "7310",
+"sic_desc": "Services-Advertising",
+"name": "Ibotta, Inc."
+},
+"MTEN": {
+"sic": "3442",
+"sic_desc": "Metal Doors, Sash, Frames, Moldings & Trim",
+"name": "Mingteng International Corp Inc."
+},
+"YYGH": {
+"sic": "7363",
+"sic_desc": "Services-Help Supply Services",
+"name": "YY Group Holding Ltd."
+},
+"TRSG": {
+"sic": "3530",
+"sic_desc": "Construction, Mining & Materials Handling Machinery & Equip",
+"name": "Tungray Technologies Inc"
+},
+"NCI": {
+"sic": "2300",
+"sic_desc": "Apparel & Other Finishd Prods of  Fabrics & Similar Matl",
+"name": "Neo-Concept International Group Holdings Ltd"
+},
+"RBRK": {
+"sic": "7372",
+"sic_desc": "Services-Prepackaged Software",
+"name": "Rubrik, Inc."
+},
+"MRX": {
+"sic": "6200",
+"sic_desc": "Security & Commodity Brokers, Dealers, Exchanges & Services",
+"name": "Marex Group plc"
+},
+"KMCM": {
+"sic": "1000",
+"sic_desc": "Metal Mining",
+"name": "Titan Holdings Corp."
+},
+"LOAR": {
+"sic": "3728",
+"sic_desc": "Aircraft Parts & Auxiliary Equipment, NEC",
+"name": "Loar Holdings Inc."
+},
+"ZONE": {
+"sic": "2842",
+"sic_desc": "Specialty Cleaning, Polishing and Sanitation Preparations",
+"name": "CleanCore Solutions, Inc."
+},
+"VIK": {
+"sic": "4400",
+"sic_desc": "Water Transportation",
+"name": "Viking Holdings Ltd"
+},
+"NNE": {
+"sic": "4911",
+"sic_desc": "Electric Services",
+"name": "Nano Nuclear Energy Inc."
+},
+"SVCO": {
+"sic": "7372",
+"sic_desc": "Services-Prepackaged Software",
+"name": "Silvaco Group, Inc."
+},
+"PAL": {
+"sic": "4700",
+"sic_desc": "Transportation Services",
+"name": "Proficient Auto Logistics, Inc"
+},
+"JDZG": {
+"sic": "8200",
+"sic_desc": "Services-Educational Services",
+"name": "JIADE Ltd"
+},
+"RAY": {
+"sic": "3630",
+"sic_desc": "Household Appliances",
+"name": "Raytech Holding Ltd"
+},
+"BTOC": {
+"sic": "4220",
+"sic_desc": "Public Warehousing & Storage",
+"name": "Armlogi Holding Corp."
+},
+"HDL": {
+"sic": "5812",
+"sic_desc": "Retail-Eating  Places",
+"name": "SUPER HI INTERNATIONAL HOLDING LTD."
+},
+"KBDC": {
+"sic": "",
+"sic_desc": "",
+"name": "Kayne Anderson BDC, Inc."
+},
+"BOW": {
+"sic": "6331",
+"sic_desc": "Fire, Marine & Casualty Insurance",
+"name": "Bowhead Specialty Holdings Inc."
+},
+"FLYE": {
+"sic": "3711",
+"sic_desc": "Motor Vehicles & Passenger Car Bodies",
+"name": "Fly-E Group, Inc."
+},
+"GAUZ": {
+"sic": "3690",
+"sic_desc": "Miscellaneous Electrical Machinery, Equipment & Supplies",
+"name": "Gauzy Ltd."
+},
+"LIF": {
+"sic": "7374",
+"sic_desc": "Services-Computer Processing & Data Preparation",
+"name": "Life360, Inc."
+},
+"RAPP": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "Rapport Therapeutics, Inc."
+},
+"WAY": {
+"sic": "7373",
+"sic_desc": "Services-Computer Integrated Systems Design",
+"name": "Waystar Holding Corp."
+},
+"PCSC": {
+"sic": "8071",
+"sic_desc": "Services-Medical Laboratories",
+"name": "Perceptive Capital Solutions Corp"
+},
+"TEM": {
+"sic": "7370",
+"sic_desc": "Services-Computer Programming, Data Processing, Etc.",
+"name": "Tempus AI, Inc."
+},
+"SILA": {
+"sic": "6798",
+"sic_desc": "Real Estate Investment Trusts",
+"name": "Sila Realty Trust, Inc."
+},
+"SPMC": {
+"sic": "",
+"sic_desc": "",
+"name": "Sound Point Meridian Capital, Inc."
+},
+"RECT": {
+"sic": "3420",
+"sic_desc": "Cutlery, Handtools & General Hardware",
+"name": "Rectitude Holdings Ltd."
+},
+"WBTN": {
+"sic": "2741",
+"sic_desc": "Miscellaneous Publishing",
+"name": "WEBTOON Entertainment Inc."
+},
+"TBN": {
+"sic": "1311",
+"sic_desc": "Crude Petroleum & Natural Gas",
+"name": "Tamboran Resources Corp"
+},
+"LSH": {
+"sic": "4731",
+"sic_desc": "Arrangement of  Transportation of  Freight & Cargo",
+"name": "Lakeside Holding Ltd"
+},
+"ALMS": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "ALUMIS INC."
+},
+"LB": {
+"sic": "6792",
+"sic_desc": "Oil Royalty Traders",
+"name": "LandBridge Co LLC"
+},
+"EHGO": {
+"sic": "7359",
+"sic_desc": "Services-Equipment Rental & Leasing, NEC",
+"name": "EShallGo Inc."
+},
+"ICON": {
+"sic": "4412",
+"sic_desc": "Deep Sea Foreign Transportation of  Freight",
+"name": "Icon Energy Corp"
+},
+"QMMM": {
+"sic": "7311",
+"sic_desc": "Services-Advertising Agencies",
+"name": "QMMM Holdings Ltd"
+},
+"ARDT": {
+"sic": "8062",
+"sic_desc": "Services-General Medical & Surgical Hospitals, NEC",
+"name": "Ardent Health, Inc."
+},
+"TWFG": {
+"sic": "6411",
+"sic_desc": "Insurance Agents, Brokers & Service",
+"name": "TWFG, Inc."
+},
+"PDCC": {
+"sic": "",
+"sic_desc": "",
+"name": "Pearl Diver Credit Co Inc."
+},
+"ARTV": {
+"sic": "2836",
+"sic_desc": "Biological Products, (No Diagnostic Substances)",
+"name": "Artiva Biotherapeutics, Inc."
+},
+"NVA": {
+"sic": "1040",
+"sic_desc": "Gold and Silver Ores",
+"name": "Nova Minerals Corp"
+},
+"ORKT": {
+"sic": "7372",
+"sic_desc": "Services-Prepackaged Software",
+"name": "ORANGEKLOUD TECHNOLOGY INC."
+},
+"CON": {
+"sic": "8093",
+"sic_desc": "Services-Specialty Outpatient Facilities, NEC",
+"name": "Concentra Group Holdings Parent, Inc."
+},
+"LINE": {
+"sic": "6798",
+"sic_desc": "Real Estate Investment Trusts",
+"name": "Lineage, Inc."
+},
+"NIPG": {
+"sic": "7990",
+"sic_desc": "Services-Miscellaneous Amusement & Recreation",
+"name": "NIP Group Inc."
+},
+"OSTX": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "OS Therapies Inc"
+},
+"ACTU": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "ACTUATE THERAPEUTICS, INC."
+},
+"YXT": {
+"sic": "7372",
+"sic_desc": "Services-Prepackaged Software",
+"name": "YXT.COM GROUP HOLDING Ltd"
+},
+"RITR": {
+"sic": "6510",
+"sic_desc": "Real Estate Operators (No Developers) & Lessors",
+"name": "Reitar Logtech Holdings Ltd"
+},
+"WRD": {
+"sic": "7373",
+"sic_desc": "Services-Computer Integrated Systems Design",
+"name": "WeRide Inc."
+},
+"WOK": {
+"sic": "3841",
+"sic_desc": "Surgical & Medical Instruments & Apparatus",
+"name": "WORK Medical Technology Group LTD"
+},
+"JBDI": {
+"sic": "3412",
+"sic_desc": "Metal Shipping Barrels, Drums, Kegs & Pails",
+"name": "JBDI Holdings Ltd"
+},
+"SPAI": {
+"sic": "3842",
+"sic_desc": "Orthopedic, Prosthetic & Surgical Appliances & Supplies",
+"name": "Safe Pro Group Inc."
+},
+"AZI": {
+"sic": "7500",
+"sic_desc": "Services-Automotive Repair, Services & Parking",
+"name": "Autozi Internet Technology (Global) Ltd."
+},
+"PMAX": {
+"sic": "7380",
+"sic_desc": "Services-Miscellaneous Business Services",
+"name": "Powell Max Ltd"
+},
+"XCH": {
+"sic": "3690",
+"sic_desc": "Miscellaneous Electrical Machinery, Equipment & Supplies",
+"name": "XCHG Ltd"
+},
+"TDTH": {
+"sic": "7389",
+"sic_desc": "Services-Business Services, NEC",
+"name": "Trident Digital Tech Holdings Ltd"
+},
+"GLXG": {
+"sic": "8700",
+"sic_desc": "Services-Engineering, Accounting, Research, Management",
+"name": "Galaxy Payroll Group Ltd"
+},
+"ZBIO": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "Zenas BioPharma, Inc."
+},
+"MBX": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "MBX Biosciences, Inc."
+},
+"BCAX": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "Bicara Therapeutics Inc."
+},
+"IBO": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "IMPACT BIOMEDICAL INC."
+},
+"KAPA": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "Kairos Pharma, LTD."
+},
+"HCWC": {
+"sic": "5411",
+"sic_desc": "Retail-Grocery Stores",
+"name": "HEALTHY CHOICE WELLNESS CORP."
+},
+"GLE": {
+"sic": "7374",
+"sic_desc": "Services-Computer Processing & Data Preparation",
+"name": "Global Engine Group Holding Ltd"
+},
+"PC": {
+"sic": "5812",
+"sic_desc": "Retail-Eating  Places",
+"name": "Premium Catering (Holdings) Ltd"
+},
+"GRDN": {
+"sic": "5912",
+"sic_desc": "Retail-Drug Stores and Proprietary Stores",
+"name": "Guardian Pharmacy Services, Inc."
+},
+"BIOA": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "BioAge Labs, Inc."
+},
+"BKV": {
+"sic": "1311",
+"sic_desc": "Crude Petroleum & Natural Gas",
+"name": "BKV Corp"
+},
+"IBG": {
+"sic": "2080",
+"sic_desc": "Beverages",
+"name": "Innovation Beverage Group Ltd"
+},
+"ZJK": {
+"sic": "3452",
+"sic_desc": "Bolts, Nuts, Screws, Rivets & Washers",
+"name": "ZJK Industrial Co., Ltd."
+},
+"LGCY": {
+"sic": "8200",
+"sic_desc": "Services-Educational Services",
+"name": "Legacy Education Inc."
+},
+"HTLM": {
+"sic": "5712",
+"sic_desc": "Retail-Furniture Stores",
+"name": "HomesToLife Ltd"
+},
+"ZENA": {
+"sic": "7372",
+"sic_desc": "Services-Prepackaged Software",
+"name": "ZenaTech, Inc."
+},
+"WCT": {
+"sic": "7372",
+"sic_desc": "Services-Prepackaged Software",
+"name": "Wellchange Holdings Co Ltd"
+},
+"SARO": {
+"sic": "3724",
+"sic_desc": "Aircraft Engines & Engine Parts",
+"name": "StandardAero, Inc."
+},
+"CLIK": {
+"sic": "7361",
+"sic_desc": "Services-Employment Agencies",
+"name": "Click Holdings Ltd."
+},
+"FVR": {
+"sic": "6798",
+"sic_desc": "Real Estate Investment Trusts",
+"name": "FrontView REIT, Inc."
+},
+"CBNA": {
+"sic": "6021",
+"sic_desc": "National Commercial Banks",
+"name": "CHAIN BRIDGE BANCORP INC"
+},
+"FLX": {
+"sic": "4210",
+"sic_desc": "Trucking & Courier Services (No Air)",
+"name": "BingEx Ltd"
+},
+"SKK": {
+"sic": "1623",
+"sic_desc": "Water, Sewer, Pipeline, Comm & Power Line Construction",
+"name": "SKK Holdings Ltd"
+},
+"KLC": {
+"sic": "8351",
+"sic_desc": "Services-Child Day Care Services",
+"name": "KinderCare Learning Companies, Inc."
+},
+"SKYQ": {
+"sic": "4955",
+"sic_desc": "Hazardous Waste Management",
+"name": "Sky Quarry Inc."
+},
+"CAMP": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "Camp4 Therapeutics Corp"
+},
+"STFS": {
+"sic": "7310",
+"sic_desc": "Services-Advertising",
+"name": "Star Fashion Culture Holdings Ltd"
+},
+"UPB": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "Upstream Bio, Inc."
+},
+"CBLL": {
+"sic": "3845",
+"sic_desc": "Electromedical & Electrotherapeutic Apparatus",
+"name": "Ceribell, Inc."
+},
+"PTLE": {
+"sic": "5172",
+"sic_desc": "Wholesale-Petroleum & Petroleum Products (No Bulk Stations)",
+"name": "PTL Ltd"
+},
+"SFHG": {
+"sic": "2750",
+"sic_desc": "Commercial Printing",
+"name": "SAMFINE CREATION HOLDINGS GROUP Ltd"
+},
+"SPHL": {
+"sic": "1520",
+"sic_desc": "General Bldg Contractors - Residential Bldgs",
+"name": "SPRINGVIEW HOLDINGS LTD"
+},
+"ORIS": {
+"sic": "0100",
+"sic_desc": "Agricultural Production-Crops",
+"name": "ORIENTAL RISE HOLDINGS Ltd"
+},
+"LBGJ": {
+"sic": "3580",
+"sic_desc": "Refrigeration & Service Industry Machinery",
+"name": "Li Bang International Corp Inc."
+},
+"HUHU": {
+"sic": "3360",
+"sic_desc": "Nonferrous Foundries (Castings)",
+"name": "HUHUTECH International Group Inc."
+},
+"SNYR": {
+"sic": "2833",
+"sic_desc": "Medicinal Chemicals & Botanical Products",
+"name": "Synergy CHC Corp."
+},
+"ROLR": {
+"sic": "7900",
+"sic_desc": "Services-Amusement & Recreation Services",
+"name": "High Roller Technologies, Inc."
+},
+"FGL": {
+"sic": "1700",
+"sic_desc": "Construction - Special Trade Contractors",
+"name": "Founder Group Ltd"
+},
+"INGM": {
+"sic": "5045",
+"sic_desc": "Wholesale-Computers & Peripheral Equipment & Software",
+"name": "Ingram Micro Holding Corp"
+},
+"SEPN": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "Septerna, Inc."
+},
+"GELS": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "Gelteq Ltd"
+},
+"TLX": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "Telix Pharmaceuticals Ltd"
+},
+"CGTL": {
+"sic": "5045",
+"sic_desc": "Wholesale-Computers & Peripheral Equipment & Software",
+"name": "Creative Global Technology Holdings Ltd"
+},
+"NCEW": {
+"sic": "4731",
+"sic_desc": "Arrangement of  Transportation of  Freight & Cargo",
+"name": "New Century Logistics (BVI) Ltd"
+},
+"MSW": {
+"sic": "1700",
+"sic_desc": "Construction - Special Trade Contractors",
+"name": "Ming Shing Group Holdings Ltd"
+},
+"WYHG": {
+"sic": "2013",
+"sic_desc": "Sausages & Other Prepared Meat Products",
+"name": "Wing Yip Food Holdings Group Ltd"
+},
+"NTCL": {
+"sic": "7372",
+"sic_desc": "Services-Prepackaged Software",
+"name": "NetClass Technology Inc"
+},
+"BRIA": {
+"sic": "2300",
+"sic_desc": "Apparel & Other Finishd Prods of  Fabrics & Similar Matl",
+"name": "BrilliA Inc"
+},
+"GRO": {
+"sic": "1400",
+"sic_desc": "Mining & Quarrying of  Nonmetallic Minerals (No Fuels)",
+"name": "Brazil Potash Corp."
+},
+"PONY": {
+"sic": "7373",
+"sic_desc": "Services-Computer Integrated Systems Design",
+"name": "Pony AI Inc."
+},
+"VENU": {
+"sic": "7900",
+"sic_desc": "Services-Amusement & Recreation Services",
+"name": "Venu Holding Corp"
+},
+"JUNS": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "JUPITER NEUROSCIENCES, INC."
+},
+"ZSPC": {
+"sic": "7372",
+"sic_desc": "Services-Prepackaged Software",
+"name": "zSpace, Inc."
+},
+"LNKS": {
+"sic": "3670",
+"sic_desc": "Electronic Components & Accessories",
+"name": "Linkers Industries Ltd"
+},
+"NAMI": {
+"sic": "8200",
+"sic_desc": "Services-Educational Services",
+"name": "Jinxin Technology Holding Co"
+},
+"TTAN": {
+"sic": "7372",
+"sic_desc": "Services-Prepackaged Software",
+"name": "ServiceTitan, Inc."
+},
+"AVR": {
+"sic": "3842",
+"sic_desc": "Orthopedic, Prosthetic & Surgical Appliances & Supplies",
+"name": "Anteris Technologies Global Corp."
+},
+"YAAS": {
+"sic": "7372",
+"sic_desc": "Services-Prepackaged Software",
+"name": "Youxin Technology Ltd"
+},
+"YSXT": {
+"sic": "7500",
+"sic_desc": "Services-Automotive Repair, Services & Parking",
+"name": "YSX Tech Co., Ltd"
+},
+"LSE": {
+"sic": "3533",
+"sic_desc": "Oil & Gas Field Machinery & Equipment",
+"name": "Leishen Energy Holding Co., Ltd."
+},
+"HIT": {
+"sic": "6411",
+"sic_desc": "Insurance Agents, Brokers & Service",
+"name": "Health In Tech, Inc."
+},
+"ONEG": {
+"sic": "1520",
+"sic_desc": "General Bldg Contractors - Residential Bldgs",
+"name": "OneConstruction Group Ltd"
+},
+"INLF": {
+"sic": "3569",
+"sic_desc": "General Industrial Machinery & Equipment, NEC",
+"name": "INLIF Ltd"
+},
+"ZYBT": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "Zhengye Biotechnology Holding Ltd"
+},
+"CEPO": {
+"sic": "6770",
+"sic_desc": "Blank Checks",
+"name": "Cantor Equity Partners I, Inc."
+},
+"DGNX": {
+"sic": "7374",
+"sic_desc": "Services-Computer Processing & Data Preparation",
+"name": "Diginex Ltd"
+},
+"MASK": {
+"sic": "7371",
+"sic_desc": "Services-Computer Programming Services",
+"name": "3 E Network Technology Group Ltd"
+},
+"MIMI": {
+"sic": "7389",
+"sic_desc": "Services-Business Services, NEC",
+"name": "Mint Inc Ltd"
+},
+"UFG": {
+"sic": "5172",
+"sic_desc": "Wholesale-Petroleum & Petroleum Products (No Bulk Stations)",
+"name": "Uni-Fuels Holdings Ltd"
+},
+"HKPD": {
+"sic": "5122",
+"sic_desc": "Wholesale-Drugs, Proprietaries & Druggists' Sundries",
+"name": "Cellyan Biotechnology Co., Ltd"
+},
+"FLOC": {
+"sic": "3533",
+"sic_desc": "Oil & Gas Field Machinery & Equipment",
+"name": "Flowco Holdings Inc."
+},
+"PCLA": {
+"sic": "3640",
+"sic_desc": "Electric Lighting & Wiring Equipment",
+"name": "PicoCELA Inc."
+},
+"TOPP": {
+"sic": "4210",
+"sic_desc": "Trucking & Courier Services (No Air)",
+"name": "Toppoint Holdings Inc."
+},
+"DXST": {
+"sic": "4950",
+"sic_desc": "Sanitary Services",
+"name": "Decent Holding Inc."
+},
+"VG": {
+"sic": "4924",
+"sic_desc": "Natural Gas Distribution",
+"name": "Venture Global, Inc."
+},
+"AAPG": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "ASCENTAGE PHARMA GROUP INTERNATIONAL"
+},
+"SFD": {
+"sic": "2011",
+"sic_desc": "Meat Packing Plants",
+"name": "SMITHFIELD FOODS INC"
+},
+"BBNX": {
+"sic": "3841",
+"sic_desc": "Surgical & Medical Instruments & Apparatus",
+"name": "Beta Bionics, Inc."
+},
+"CSAI": {
+"sic": "7370",
+"sic_desc": "Services-Computer Programming, Data Processing, Etc.",
+"name": "CLOUDASTRUCTURE, INC."
+},
+"MAZE": {
+"sic": "2836",
+"sic_desc": "Biological Products, (No Diagnostic Substances)",
+"name": "Maze Therapeutics, Inc."
+},
+"INR": {
+"sic": "1311",
+"sic_desc": "Crude Petroleum & Natural Gas",
+"name": "INFINITY NATURAL RESOURCES, INC."
+},
+"FBGL": {
+"sic": "1520",
+"sic_desc": "General Bldg Contractors - Residential Bldgs",
+"name": "FBS Global Ltd"
+},
+"CJMB": {
+"sic": "7389",
+"sic_desc": "Services-Business Services, NEC",
+"name": "CALLAN JMB INC."
+},
+"HCAI": {
+"sic": "3990",
+"sic_desc": "Miscellaneous Manufacturing Industries",
+"name": "Huachen AI Parking Management Technology Holding Co., Ltd"
+},
+"PLUT": {
+"sic": "6200",
+"sic_desc": "Security & Commodity Brokers, Dealers, Exchanges & Services",
+"name": "Plutus Financial Group Ltd"
+},
+"SION": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "Sionna Therapeutics, Inc."
+},
+"TTAM": {
+"sic": "1400",
+"sic_desc": "Mining & Quarrying of  Nonmetallic Minerals (No Fuels)",
+"name": "Titan America SA"
+},
+"SAIL": {
+"sic": "7372",
+"sic_desc": "Services-Prepackaged Software",
+"name": "SailPoint, Inc."
+},
+"AARD": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "Aardvark Therapeutics, Inc."
+},
+"XHLD": {
+"sic": "7389",
+"sic_desc": "Services-Business Services, NEC",
+"name": "TEN Holdings, Inc."
+},
+"KRMN": {
+"sic": "3728",
+"sic_desc": "Aircraft Parts & Auxiliary Equipment, NEC",
+"name": "Karman Holdings Inc."
+},
+"NPB": {
+"sic": "6022",
+"sic_desc": "State Commercial Banks",
+"name": "NORTHPOINTE BANCSHARES INC"
+},
+"NNNN": {
+"sic": "2835",
+"sic_desc": "In Vitro & In Vivo Diagnostic Substances",
+"name": "Anbio Biotechnology"
+},
+"WGRX": {
+"sic": "5122",
+"sic_desc": "Wholesale-Drugs, Proprietaries & Druggists' Sundries",
+"name": "Wellgistics Health, Inc."
+},
+"BMGL": {
+"sic": "8011",
+"sic_desc": "Services-Offices & Clinics of  Doctors of  Medicine",
+"name": "Basel Medical Group Ltd"
+},
+"LZMH": {
+"sic": "7371",
+"sic_desc": "Services-Computer Programming Services",
+"name": "LZ Technology Holdings Ltd"
+},
+"STAK": {
+"sic": "3533",
+"sic_desc": "Oil & Gas Field Machinery & Equipment",
+"name": "STAK Inc."
+},
+"WETO": {
+"sic": "4100",
+"sic_desc": "Local & Suburban Transit & Interurban Hwy Passenger Trans",
+"name": "Wetour Robotics Ltd"
+},
+"LUD": {
+"sic": "3317",
+"sic_desc": "Steel Pipe & Tubes",
+"name": "Luda Technology Group Ltd"
+},
+"PN": {
+"sic": "5045",
+"sic_desc": "Wholesale-Computers & Peripheral Equipment & Software",
+"name": "PN Smart Energy Ltd"
+},
+"BIYA": {
+"sic": "7361",
+"sic_desc": "Services-Employment Agencies",
+"name": "Baiya International Group Inc."
+},
+"ADVB": {
+"sic": "8071",
+"sic_desc": "Services-Medical Laboratories",
+"name": "Advanced Biomed Inc."
+},
+"TBH": {
+"sic": "6199",
+"sic_desc": "Finance Services",
+"name": "Brag House Holdings, Inc."
+},
+"KMTS": {
+"sic": "3841",
+"sic_desc": "Surgical & Medical Instruments & Apparatus",
+"name": "KESTRA MEDICAL TECHNOLOGIES, LTD."
+},
+"SAGT": {
+"sic": "7372",
+"sic_desc": "Services-Prepackaged Software",
+"name": "SAGTEC GLOBAL Ltd"
+},
+"MCRP": {
+"sic": "3714",
+"sic_desc": "Motor Vehicle Parts & Accessories",
+"name": "Micropolis AI Robotics"
+},
+"MWYN": {
+"sic": "5141",
+"sic_desc": "Wholesale-Groceries, General Line",
+"name": "Marwynn Holdings, Inc."
+},
+"RCT": {
+"sic": "5990",
+"sic_desc": "Retail-Retail Stores, NEC",
+"name": "RedCloud Holdings plc"
+},
+"FATN": {
+"sic": "7372",
+"sic_desc": "Services-Prepackaged Software",
+"name": "Fatpipe Inc/UT"
+},
+"ACVA": {
+"sic": "7389",
+"sic_desc": "Services-Business Services, NEC",
+"name": "ACV Auctions Inc."
+},
+"LGPS": {
+"sic": "1531",
+"sic_desc": "Operative Builders",
+"name": "LOGPROSTYLE INC."
+},
+"EPSM": {
+"sic": "5180",
+"sic_desc": "Wholesale-Beer, Wine & Distilled Alcoholic Beverages",
+"name": "Epsium Enterprise Ltd"
+},
+"NTHI": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "NEONC TECHNOLOGIES HOLDINGS, INC."
+},
+"WFF": {
+"sic": "3990",
+"sic_desc": "Miscellaneous Manufacturing Industries",
+"name": "WF Holding Ltd"
+},
+"CRWV": {
+"sic": "7372",
+"sic_desc": "Services-Prepackaged Software",
+"name": "CoreWeave, Inc."
+},
+"NCT": {
+"sic": "4412",
+"sic_desc": "Deep Sea Foreign Transportation of  Freight",
+"name": "Intercont (Cayman) Ltd"
+},
+"NMAX": {
+"sic": "4833",
+"sic_desc": "Television Broadcasting Stations",
+"name": "Newsmax Inc."
+},
+"ENGS": {
+"sic": "1731",
+"sic_desc": "Electrical Work",
+"name": "Energys Group Ltd"
+},
+"WXM": {
+"sic": "1700",
+"sic_desc": "Construction - Special Trade Contractors",
+"name": "WF International Ltd."
+},
+"WTF": {
+"sic": "6200",
+"sic_desc": "Security & Commodity Brokers, Dealers, Exchanges & Services",
+"name": "Waton Financial Ltd"
+},
+"SMA": {
+"sic": "6798",
+"sic_desc": "Real Estate Investment Trusts",
+"name": "SmartStop Self Storage REIT, Inc."
+},
+"LHSW": {
+"sic": "7372",
+"sic_desc": "Services-Prepackaged Software",
+"name": "Lianhe Sowell International Group Ltd"
+},
+"BLIV": {
+"sic": "7373",
+"sic_desc": "Services-Computer Integrated Systems Design",
+"name": "BeLive Holdings"
+},
+"RYET": {
+"sic": "7372",
+"sic_desc": "Services-Prepackaged Software",
+"name": "Ruanyun Edai Technology Inc."
+},
+"IOTR": {
+"sic": "4899",
+"sic_desc": "Communications Services, NEC",
+"name": "iOThree Ltd"
+},
+"ATHR": {
+"sic": "7372",
+"sic_desc": "Services-Prepackaged Software",
+"name": "Aether Holdings, Inc."
+},
+"CUPR": {
+"sic": "3842",
+"sic_desc": "Orthopedic, Prosthetic & Surgical Appliances & Supplies",
+"name": "Cuprina Holdings (Cayman) LTD"
+},
+"MB": {
+"sic": "5812",
+"sic_desc": "Retail-Eating  Places",
+"name": "MASTERBEEF GROUP"
+},
+"HXHX": {
+"sic": "4210",
+"sic_desc": "Trucking & Courier Services (No Air)",
+"name": "Haoxin Holdings Ltd"
+},
+"FCHL": {
+"sic": "7990",
+"sic_desc": "Services-Miscellaneous Amusement & Recreation",
+"name": "Fitness Champs Holdings Ltd"
+},
+"CHA": {
+"sic": "5810",
+"sic_desc": "Retail-Eating & Drinking Places",
+"name": "Chagee Holdings Ltd."
+},
+"EDHL": {
+"sic": "7310",
+"sic_desc": "Services-Advertising",
+"name": "Everbright Digital Holding Ltd."
+},
+"AIRO": {
+"sic": "3721",
+"sic_desc": "Aircraft",
+"name": "AIRO Group Holdings, Inc."
+},
+"TMDE": {
+"sic": "5172",
+"sic_desc": "Wholesale-Petroleum & Petroleum Products (No Bulk Stations)",
+"name": "TMD Energy Ltd"
+},
+"PFAI": {
+"sic": "0700",
+"sic_desc": "Agricultural Services",
+"name": "Pinnacle Food Group Ltd"
+},
+"SSII": {
+"sic": "3841",
+"sic_desc": "Surgical & Medical Instruments & Apparatus",
+"name": "SS Innovations International, Inc."
+},
+"PHOE": {
+"sic": "1700",
+"sic_desc": "Construction - Special Trade Contractors",
+"name": "Phoenix Asia Holdings Ltd"
+},
+"YB": {
+"sic": "6411",
+"sic_desc": "Insurance Agents, Brokers & Service",
+"name": "Yuanbao Inc."
+},
+"SDM": {
+"sic": "7380",
+"sic_desc": "Services-Miscellaneous Business Services",
+"name": "Smart Digital Group Ltd"
+},
+"CEPT": {
+"sic": "6770",
+"sic_desc": "Blank Checks",
+"name": "Cantor Equity Partners II, Inc."
+},
+"AII": {
+"sic": "6331",
+"sic_desc": "Fire, Marine & Casualty Insurance",
+"name": "American Integrity Insurance Group, Inc."
+},
+"APUS": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "Apimeds Pharmaceuticals US, Inc."
+},
+"OMSE": {
+"sic": "3533",
+"sic_desc": "Oil & Gas Field Machinery & Equipment",
+"name": "OMS Energy Technologies Inc."
+},
+"ANTA": {
+"sic": "6221",
+"sic_desc": "Commodity Contracts Brokers & Dealers",
+"name": "Antalpha Platform Holding Co"
+},
+"ETOR": {
+"sic": "6211",
+"sic_desc": "Security Brokers, Dealers & Flotation Companies",
+"name": "eToro Group Ltd."
+},
+"ARAI": {
+"sic": "7340",
+"sic_desc": "Services-To Dwellings & Other Buildings",
+"name": "Arrive AI Inc."
+},
+"LHAI": {
+"sic": "6531",
+"sic_desc": "Real Estate Agents & Managers (For Others)",
+"name": "Linkhome Holdings Inc."
+},
+"OFAL": {
+"sic": "8711",
+"sic_desc": "Services-Engineering Services",
+"name": "OFA Group"
+},
+"HNGE": {
+"sic": "7374",
+"sic_desc": "Services-Computer Processing & Data Preparation",
+"name": "Hinge Health, Inc."
+},
+"MNTN": {
+"sic": "7310",
+"sic_desc": "Services-Advertising",
+"name": "MNTN, Inc."
+},
+"FTRK": {
+"sic": "7900",
+"sic_desc": "Services-Amusement & Recreation Services",
+"name": "Fast Track Group"
+},
+"PTNM": {
+"sic": "2844",
+"sic_desc": "Perfumes, Cosmetics & Other Toilet Preparations",
+"name": "Pitanium Ltd"
+},
+"CRCL": {
+"sic": "6199",
+"sic_desc": "Finance Services",
+"name": "Circle Internet Group, Inc."
+},
+"OMDA": {
+"sic": "8000",
+"sic_desc": "Services-Health Services",
+"name": "Omada Health, Inc."
+},
+"JEM": {
+"sic": "5600",
+"sic_desc": "Retail-Apparel & Accessory Stores",
+"name": "707 Cayman Holdings Ltd."
+},
+"VOYG": {
+"sic": "3760",
+"sic_desc": "Guided Missiles & Space Vehicles & Parts",
+"name": "Voyager Technologies, Inc./TX"
+},
+"ASIC": {
+"sic": "6331",
+"sic_desc": "Fire, Marine & Casualty Insurance",
+"name": "Ategrity Specialty Insurance Co Holdings"
+},
+"CHYM": {
+"sic": "6199",
+"sic_desc": "Finance Services",
+"name": "Chime Financial, Inc."
+},
+"VNTG": {
+"sic": "4731",
+"sic_desc": "Arrangement of  Transportation of  Freight & Cargo",
+"name": "Vantage Corp (Singapore)"
+},
+"MENS": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "Jyong Biotech Ltd."
+},
+"EGG": {
+"sic": "8742",
+"sic_desc": "Services-Management Consulting Services",
+"name": "ENIGMATIG LTD"
+},
+"SLDE": {
+"sic": "6331",
+"sic_desc": "Fire, Marine & Casualty Insurance",
+"name": "Slide Insurance Holdings, Inc."
+},
+"CAI": {
+"sic": "8071",
+"sic_desc": "Services-Medical Laboratories",
+"name": "Caris Life Sciences, Inc."
+},
+"FMFC": {
+"sic": "3100",
+"sic_desc": "Leather & Leather Products",
+"name": "Kandal M Venture Ltd"
+},
+"HCHL": {
+"sic": "5812",
+"sic_desc": "Retail-Eating  Places",
+"name": "Happy City Holdings Ltd"
+},
+"JCAP": {
+"sic": "6153",
+"sic_desc": "Short-Term Business Credit Institutions",
+"name": "Jefferson Capital, Inc. / DE"
+},
+"JLHL": {
+"sic": "8711",
+"sic_desc": "Services-Engineering Services",
+"name": "Julong Holding Ltd"
+},
+"GRAN": {
+"sic": "6199",
+"sic_desc": "Finance Services",
+"name": "Grande Group Ltd/HK"
+},
+"CV": {
+"sic": "3845",
+"sic_desc": "Electromedical & Electrotherapeutic Apparatus",
+"name": "CapsoVision, Inc"
+},
+"EMPG": {
+"sic": "2844",
+"sic_desc": "Perfumes, Cosmetics & Other Toilet Preparations",
+"name": "Empro Group Inc."
+},
+"MAMK": {
+"sic": "2390",
+"sic_desc": "Miscellaneous Fabricated Textile Products",
+"name": "MaxsMaking Inc."
+},
+"TLIH": {
+"sic": "5080",
+"sic_desc": "Wholesale-Machinery, Equipment & Supplies",
+"name": "Ten-League International Holdings Ltd"
+},
+"ANPA": {
+"sic": "7380",
+"sic_desc": "Services-Miscellaneous Business Services",
+"name": "Rich Sparkle Holdings Ltd"
+},
+"MSGY": {
+"sic": "1700",
+"sic_desc": "Construction - Special Trade Contractors",
+"name": "Masonglory Ltd"
+},
+"DLXY": {
+"sic": "5172",
+"sic_desc": "Wholesale-Petroleum & Petroleum Products (No Bulk Stations)",
+"name": "Delixy Holdings Ltd"
+},
+"LAWR": {
+"sic": "7370",
+"sic_desc": "Services-Computer Programming, Data Processing, Etc.",
+"name": "Robot Consulting Co., Ltd."
+},
+"BMHL": {
+"sic": "6199",
+"sic_desc": "Finance Services",
+"name": "Bluemount Holdings Ltd"
+},
+"KMRK": {
+"sic": "3944",
+"sic_desc": "Games, Toys & Children's Vehicles (No Dolls & Bicycles)",
+"name": "K-TECH SOLUTIONS CO LTD"
+},
+"MGRT": {
+"sic": "7371",
+"sic_desc": "Services-Computer Programming Services",
+"name": "Mega Fortune Co Ltd"
+},
+"TDIC": {
+"sic": "8741",
+"sic_desc": "Services-Management Services",
+"name": "Dreamland Ltd"
+},
+"CARL": {
+"sic": "3841",
+"sic_desc": "Surgical & Medical Instruments & Apparatus",
+"name": "CARLSMED, INC."
+},
+"CRE": {
+"sic": "2750",
+"sic_desc": "Commercial Printing",
+"name": "Cre8 Enterprise Ltd"
+},
+"NIQ": {
+"sic": "7370",
+"sic_desc": "Services-Computer Programming, Data Processing, Etc.",
+"name": "NIQ Global Intelligence plc"
+},
+"MH": {
+"sic": "2741",
+"sic_desc": "Miscellaneous Publishing",
+"name": "McGraw Hill, Inc."
+},
+"ARX": {
+"sic": "6411",
+"sic_desc": "Insurance Agents, Brokers & Service",
+"name": "Accelerant Holdings"
+},
+"AMBQ": {
+"sic": "3674",
+"sic_desc": "Semiconductors & Related Devices",
+"name": "Ambiq Micro, Inc."
+},
+"YMAT": {
+"sic": "3949",
+"sic_desc": "Sporting & Athletic Goods, NEC",
+"name": "J-Star Holding Co., Ltd."
+},
+"SI": {
+"sic": "3841",
+"sic_desc": "Surgical & Medical Instruments & Apparatus",
+"name": "SHOULDER INNOVATIONS, INC."
+},
+"FIG": {
+"sic": "7372",
+"sic_desc": "Services-Prepackaged Software",
+"name": "Figma, Inc."
+},
+"CTW": {
+"sic": "7374",
+"sic_desc": "Services-Computer Processing & Data Preparation",
+"name": "CTW Cayman"
+},
+"FLY": {
+"sic": "3760",
+"sic_desc": "Guided Missiles & Space Vehicles & Parts",
+"name": "Firefly Aerospace Inc."
+},
+"CFND": {
+"sic": "",
+"sic_desc": "",
+"name": "C1 Fund Inc."
+},
+"WYFI": {
+"sic": "6199",
+"sic_desc": "Finance Services",
+"name": "WhiteFiber, Inc."
+},
+"HTFL": {
+"sic": "3841",
+"sic_desc": "Surgical & Medical Instruments & Apparatus",
+"name": "Heartflow, Inc."
+},
+"DKI": {
+"sic": "7372",
+"sic_desc": "Services-Prepackaged Software",
+"name": "DarkIris Inc."
+},
+"EFTY": {
+"sic": "8742",
+"sic_desc": "Services-Management Consulting Services",
+"name": "ETOILES CAPITAL GROUP CO., LTD"
+},
+"MAGH": {
+"sic": "1731",
+"sic_desc": "Electrical Work",
+"name": "Magnitude International Ltd"
+},
+"RYOJ": {
+"sic": "8742",
+"sic_desc": "Services-Management Consulting Services",
+"name": "rYojbaba Co., Ltd."
+},
+"NUTR": {
+"sic": "4700",
+"sic_desc": "Transportation Services",
+"name": "NUSATRIP Inc"
+},
+"BLSH": {
+"sic": "6199",
+"sic_desc": "Finance Services",
+"name": "Bullish"
+},
+"NSRX": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "Nasus Pharma Ltd"
+},
+"BUUU": {
+"sic": "7900",
+"sic_desc": "Services-Amusement & Recreation Services",
+"name": "BUUU Group Ltd"
+},
+"MIAX": {
+"sic": "6211",
+"sic_desc": "Security Brokers, Dealers & Flotation Companies",
+"name": "MIAMI INTERNATIONAL HOLDINGS, INC."
+},
+"YMT": {
+"sic": "7374",
+"sic_desc": "Services-Computer Processing & Data Preparation",
+"name": "Yimutian Inc."
+},
+"ETS": {
+"sic": "4210",
+"sic_desc": "Trucking & Courier Services (No Air)",
+"name": "Elite Express Holding Inc."
+},
+"CEPF": {
+"sic": "6770",
+"sic_desc": "Blank Checks",
+"name": "Cantor Equity Partners IV, Inc."
+},
+"TGHL": {
+"sic": "7374",
+"sic_desc": "Services-Computer Processing & Data Preparation",
+"name": "GrowHub Ltd"
+},
+"CURX": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "Curanex Pharmaceuticals Inc"
+},
+"ELOG": {
+"sic": "4731",
+"sic_desc": "Arrangement of  Transportation of  Freight & Cargo",
+"name": "Eastern International Ltd."
+},
+"THH": {
+"sic": "7990",
+"sic_desc": "Services-Miscellaneous Amusement & Recreation",
+"name": "TryHard Holdings Ltd"
+},
+"PMI": {
+"sic": "3841",
+"sic_desc": "Surgical & Medical Instruments & Apparatus",
+"name": "Picard Medical, Inc."
+},
+"KLAR": {
+"sic": "6199",
+"sic_desc": "Finance Services",
+"name": "Klarna Group plc"
+},
+"LBRX": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "LB PHARMACEUTICALS INC"
+},
+"FIGR": {
+"sic": "6163",
+"sic_desc": "Loan Brokers",
+"name": "Figure Technology Solutions, Inc."
+},
+"LGN": {
+"sic": "1700",
+"sic_desc": "Construction - Special Trade Contractors",
+"name": "Legence Corp."
+},
+"FOFO": {
+"sic": "8742",
+"sic_desc": "Services-Management Consulting Services",
+"name": "Hang Feng Technology Innovation Co., Ltd."
+},
+"BRCB": {
+"sic": "5810",
+"sic_desc": "Retail-Eating & Drinking Places",
+"name": "Black Rock Coffee Bar, Inc."
+},
+"GEMI": {
+"sic": "6199",
+"sic_desc": "Finance Services",
+"name": "Gemini Space Station, Inc."
+},
+"VIA": {
+"sic": "7372",
+"sic_desc": "Services-Prepackaged Software",
+"name": "Via Transportation, Inc."
+},
+"CHOW": {
+"sic": "7372",
+"sic_desc": "Services-Prepackaged Software",
+"name": "ChowChow Cloud International Holdings Ltd"
+},
+"STUB": {
+"sic": "7990",
+"sic_desc": "Services-Miscellaneous Amusement & Recreation",
+"name": "StubHub Holdings, Inc."
+},
+"WBI": {
+"sic": "1389",
+"sic_desc": "Oil & Gas Field Services, NEC",
+"name": "WaterBridge Infrastructure LLC"
+},
+"NTSK": {
+"sic": "7372",
+"sic_desc": "Services-Prepackaged Software",
+"name": "Netskope Inc"
+},
+"PLTS": {
+"sic": "7372",
+"sic_desc": "Services-Prepackaged Software",
+"name": "Platinum Analytics Cayman Ltd"
+},
+"PTRN": {
+"sic": "5961",
+"sic_desc": "Retail-Catalog & Mail-Order Houses",
+"name": "Pattern Group Inc."
+},
+"MGN": {
+"sic": "0200",
+"sic_desc": "Agricultural Prod-Livestock & Animal Specialties",
+"name": "Megan Holdings Ltd."
+},
+"AEXA": {
+"sic": "6770",
+"sic_desc": "Blank Checks",
+"name": "American Exceptionalism Acquisition Corp. A"
+},
+"KNRX": {
+"sic": "7370",
+"sic_desc": "Services-Computer Programming, Data Processing, Etc.",
+"name": "KNOREX LTD."
+},
+"AGRZ": {
+"sic": "0100",
+"sic_desc": "Agricultural Production-Crops",
+"name": "Agroz Inc."
+},
+"FRMI": {
+"sic": "6798",
+"sic_desc": "Real Estate Investment Trusts",
+"name": "Fermi Inc."
+},
+"NP": {
+"sic": "6411",
+"sic_desc": "Insurance Agents, Brokers & Service",
+"name": "Neptune Insurance Holdings Inc."
+},
+"CBK": {
+"sic": "6022",
+"sic_desc": "State Commercial Banks",
+"name": "Commercial Bancgroup, Inc."
+},
+"CCHH": {
+"sic": "5812",
+"sic_desc": "Retail-Eating  Places",
+"name": "CCH Holdings Ltd"
+},
+"TTRX": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "Turn Therapeutics Inc."
+},
+"POM": {
+"sic": "5900",
+"sic_desc": "Retail-Miscellaneous Retail",
+"name": "POMDOCTOR Ltd"
+},
+"ALH": {
+"sic": "3580",
+"sic_desc": "Refrigeration & Service Industry Machinery",
+"name": "Alliance Laundry Holdings Inc."
+},
+"LFS": {
+"sic": "8200",
+"sic_desc": "Services-Educational Services",
+"name": "LEIFRAS Co., Ltd."
+},
+"PXED": {
+"sic": "8200",
+"sic_desc": "Services-Educational Services",
+"name": "Phoenix Education Partners, Inc."
+},
+"YDDL": {
+"sic": "5090",
+"sic_desc": "Wholesale-Misc Durable Goods",
+"name": "One & one Green Technologies. INC"
+},
+"RPGL": {
+"sic": "7372",
+"sic_desc": "Services-Prepackaged Software",
+"name": "Republic Power Group Ltd"
+},
+"OWLS": {
+"sic": "7372",
+"sic_desc": "Services-Prepackaged Software",
+"name": "OBOOK HOLDINGS INC."
+},
+"SLGB": {
+"sic": "4731",
+"sic_desc": "Arrangement of  Transportation of  Freight & Cargo",
+"name": "Smart Logistics Global Ltd"
+},
+"SEV": {
+"sic": "3711",
+"sic_desc": "Motor Vehicles & Passenger Car Bodies",
+"name": "Aptera Motors Corp"
+},
+"ACCL": {
+"sic": "8742",
+"sic_desc": "Services-Management Consulting Services",
+"name": "Acco Group Holdings Ltd"
+},
+"AHMA": {
+"sic": "7900",
+"sic_desc": "Services-Amusement & Recreation Services",
+"name": "AMBITIONS ENTERPRISE MANAGEMENT CO. L.L.C"
+},
+"BGIN": {
+"sic": "6199",
+"sic_desc": "Finance Services",
+"name": "BGIN BLOCKCHAIN Ltd"
+},
+"MCTA": {
+"sic": "8090",
+"sic_desc": "Services-Misc Health & Allied Services, NEC",
+"name": "Charming Medical Ltd"
+},
+"NPT": {
+"sic": "5160",
+"sic_desc": "Wholesale-Chemicals & Allied Products",
+"name": "Texxon Holding Ltd"
+},
+"AGCC": {
+"sic": "5180",
+"sic_desc": "Wholesale-Beer, Wine & Distilled Alcoholic Beverages",
+"name": "Agencia Comercial Spirits Ltd."
+},
+"MPLT": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "MapLight Therapeutics, Inc."
+},
+"NOMA": {
+"sic": "7900",
+"sic_desc": "Services-Amusement & Recreation Services",
+"name": "Nomadar Corp."
+},
+"NAVN": {
+"sic": "7372",
+"sic_desc": "Services-Prepackaged Software",
+"name": "Navan, Inc."
+},
+"BETA": {
+"sic": "3721",
+"sic_desc": "Aircraft",
+"name": "BETA Technologies, Inc."
+},
+"CEPV": {
+"sic": "6770",
+"sic_desc": "Blank Checks",
+"name": "Cantor Equity Partners V, Inc."
+},
+"MEHA": {
+"sic": "2833",
+"sic_desc": "Medicinal Chemicals & Botanical Products",
+"name": "Functional Brands Inc."
+},
+"XZO": {
+"sic": "7372",
+"sic_desc": "Services-Prepackaged Software",
+"name": "Exzeo Group, Inc."
+},
+"ELWT": {
+"sic": "4899",
+"sic_desc": "Communications Services, NEC",
+"name": "Elauwit Connection, Inc."
+},
+"AERO": {
+"sic": "4512",
+"sic_desc": "Air Transportation, Scheduled",
+"name": "Grupo Aeromexico, S.A.B. de C.V."
+},
+"EVMN": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "Evommune, Inc."
+},
+"BLLN": {
+"sic": "8071",
+"sic_desc": "Services-Medical Laboratories",
+"name": "BillionToOne, Inc."
+},
+"POAS": {
+"sic": "3823",
+"sic_desc": "Industrial Instruments For Measurement, Display, and Control",
+"name": "PHAOS TECHNOLOGY HOLDINGS (CAYMAN) Ltd"
+},
+"WSHP": {
+"sic": "5900",
+"sic_desc": "Retail-Miscellaneous Retail",
+"name": "WeShop Holdings Ltd"
+},
+"GLOO": {
+"sic": "7374",
+"sic_desc": "Services-Computer Processing & Data Preparation",
+"name": "Gloo Holdings, Inc."
+},
+"PARK": {
+"sic": "8090",
+"sic_desc": "Services-Misc Health & Allied Services, NEC",
+"name": "Park Dental Partners, Inc."
+},
+"SMJF": {
+"sic": "5030",
+"sic_desc": "Wholesale-Lumber & Other Construction Materials",
+"name": "SMJ International Holdings Inc."
+},
+"RGNT": {
+"sic": "3842",
+"sic_desc": "Orthopedic, Prosthetic & Surgical Appliances & Supplies",
+"name": "REGENTIS BIOMATERIALS LTD."
+},
+"CDNL": {
+"sic": "1600",
+"sic_desc": "Heavy Construction Other Than Bldg Const - Contractors",
+"name": "Cardinal Infrastructure Group Inc."
+},
+"LMRI": {
+"sic": "8071",
+"sic_desc": "Services-Medical Laboratories",
+"name": "Lumexa Imaging Holdings, Inc."
+},
+"WLTH": {
+"sic": "6199",
+"sic_desc": "Finance Services",
+"name": "WEALTHFRONT CORP"
+},
+"ANDG": {
+"sic": "7389",
+"sic_desc": "Services-Business Services, NEC",
+"name": "Andersen Group Inc."
+},
+"MDLN": {
+"sic": "3841",
+"sic_desc": "Surgical & Medical Instruments & Apparatus",
+"name": "Medline Inc."
+},
+"FJET": {
+"sic": "4512",
+"sic_desc": "Air Transportation, Scheduled",
+"name": "Starfighters Space, Inc."
+},
+"BUDA": {
+"sic": "2080",
+"sic_desc": "Beverages",
+"name": "BUDA JUICE, INC."
+},
+"AKTS": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "Aktis Oncology, Inc."
+},
+"GCDT": {
+"sic": "3585",
+"sic_desc": "Air-Cond & Warm Air Heatg Equip & Comm & Indl Refrig Equip",
+"name": "Green Circle Decarbonize Technology Ltd"
+},
+"BTGO": {
+"sic": "6199",
+"sic_desc": "Finance Services",
+"name": "BITGO HOLDINGS, INC."
+},
+"HLXC": {
+"sic": "6770",
+"sic_desc": "Blank Checks",
+"name": "Helix Acquisition Corp. III"
+},
+"EQPT": {
+"sic": "7359",
+"sic_desc": "Services-Equipment Rental & Leasing, NEC",
+"name": "EquipmentShare.com Inc"
+},
+"VTIX": {
+"sic": "3577",
+"sic_desc": "Computer Peripheral Equipment, NEC",
+"name": "Virtuix Holdings Inc."
+},
+"LIFE": {
+"sic": "6411",
+"sic_desc": "Insurance Agents, Brokers & Service",
+"name": "Ethos Technologies Inc."
+},
+"YSS": {
+"sic": "3760",
+"sic_desc": "Guided Missiles & Space Vehicles & Parts",
+"name": "York Space Systems Inc."
+},
+"PICS": {
+"sic": "6141",
+"sic_desc": "Personal Credit Institutions",
+"name": "PicS N.V."
+},
+"VHUB": {
+"sic": "3590",
+"sic_desc": "Misc Industrial & Commercial Machinery & Equipment",
+"name": "VenHub Global, Inc."
+},
+"PLYX": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "Polaryx Therapeutics, Inc."
+},
+"OBAI": {
+"sic": "4899",
+"sic_desc": "Communications Services, NEC",
+"name": "Our Bond, Inc."
+},
+"MANE": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "Veradermics, Inc"
+},
+"CEPS": {
+"sic": "6770",
+"sic_desc": "Blank Checks",
+"name": "Cantor Equity Partners VI, Inc."
+},
+"FPS": {
+"sic": "3620",
+"sic_desc": "Electrical Industrial Apparatus",
+"name": "Forgent Power Solutions, Inc."
+},
+"EIKN": {
+"sic": "2836",
+"sic_desc": "Biological Products, (No Diagnostic Substances)",
+"name": "Eikon Therapeutics, Inc."
+},
+"BOBS": {
+"sic": "5712",
+"sic_desc": "Retail-Furniture Stores",
+"name": "Bob's Discount Furniture, Inc."
+},
+"SGP": {
+"sic": "3841",
+"sic_desc": "Surgical & Medical Instruments & Apparatus",
+"name": "SpyGlass Pharma, Inc."
+},
+"AGMB": {
+"sic": "2836",
+"sic_desc": "Biological Products, (No Diagnostic Substances)",
+"name": "Agomab Therapeutics NV"
+},
+"OFRM": {
+"sic": "2000",
+"sic_desc": "Food and Kindred Products",
+"name": "Once Upon a Farm, PBC"
+},
+"JAGU": {
+"sic": "1000",
+"sic_desc": "Metal Mining",
+"name": "Jaguar Uranium Corp."
+},
+"AGBK": {
+"sic": "6029",
+"sic_desc": "Commercial Banks, NEC",
+"name": "AGI Inc"
+},
+"MWH": {
+"sic": "1600",
+"sic_desc": "Heavy Construction Other Than Bldg Const - Contractors",
+"name": "SOLV Energy, Inc."
+},
+"APC": {
+"sic": "5172",
+"sic_desc": "Wholesale-Petroleum & Petroleum Products (No Bulk Stations)",
+"name": "ARKO Petroleum Corp."
+},
+"ROC": {
+"sic": "7372",
+"sic_desc": "Services-Prepackaged Software",
+"name": "Rank One Computing Corp"
+},
+"FVAV": {
+"sic": "6770",
+"sic_desc": "Blank Checks",
+"name": "Fortress Value Acquisition Corp. V"
+},
+"GENB": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "Generate Biomedicines, Inc."
+},
+"MMED": {
+"sic": "3841",
+"sic_desc": "Surgical & Medical Instruments & Apparatus",
+"name": "MiniMed Group, Inc."
+},
+"PAYP": {
+"sic": "7389",
+"sic_desc": "Services-Business Services, NEC",
+"name": "PayPay Corp"
+},
+"SWMR": {
+"sic": "7372",
+"sic_desc": "Services-Prepackaged Software",
+"name": "Swarmer, Inc"
+},
+"JAN": {
+"sic": "6798",
+"sic_desc": "Real Estate Investment Trusts",
+"name": "Janus Living, Inc."
+},
+"GMTL": {
+"sic": "1000",
+"sic_desc": "Metal Mining",
+"name": "Guardian Metal Resources PLC"
+},
+"HMH": {
+"sic": "3533",
+"sic_desc": "Oil & Gas Field Machinery & Equipment",
+"name": "HMH Holding Inc"
+},
+"MAIR": {
+"sic": "3564",
+"sic_desc": "Industrial & Commercial Fans & Blowers & Air Purifing Equip",
+"name": "Madison Air Solutions Corp"
+},
+"ARXS": {
+"sic": "3728",
+"sic_desc": "Aircraft Parts & Auxiliary Equipment, NEC",
+"name": "Arxis, Inc."
+},
+"JATT": {
+"sic": "6770",
+"sic_desc": "Blank Checks",
+"name": "JATT II Acquisition Corp."
+},
+"AVEX": {
+"sic": "3721",
+"sic_desc": "Aircraft",
+"name": "AEVEX Corp."
+},
+"ALMR": {
+"sic": "3826",
+"sic_desc": "Laboratory Analytical Instruments",
+"name": "Alamar Biosciences, Inc."
+},
+"KLRA": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "Kailera Therapeutics, Inc."
+},
+"YSWY": {
+"sic": "5411",
+"sic_desc": "Retail-Grocery Stores",
+"name": "Yesway, Inc."
+},
+"NHP": {
+"sic": "6798",
+"sic_desc": "Real Estate Investment Trusts",
+"name": "National Healthcare Properties, Inc."
+},
+"ELMT": {
+"sic": "3490",
+"sic_desc": "Miscellaneous Fabricated Metal Products",
+"name": "Elmet Group Co."
+},
+"XE": {
+"sic": "3443",
+"sic_desc": "Fabricated Plate Work (Boiler Shops)",
+"name": "X-Energy, Inc."
+},
+"PSUS": {
+"sic": "",
+"sic_desc": "",
+"name": "Pershing Square USA, Ltd."
+},
+"SBMT": {
+"sic": "1040",
+"sic_desc": "Gold and Silver Ores",
+"name": "SILVER BOW MINING CORP."
+},
+"AVLN": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "Avalyn Pharma Inc."
+},
+"COAG": {
+"sic": "2836",
+"sic_desc": "Biological Products, (No Diagnostic Substances)",
+"name": "Hemab Therapeutics Holdings, Inc."
+},
+"SPTX": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "Seaport Therapeutics, Inc."
+},
+"REA": {
+"sic": "1000",
+"sic_desc": "Metal Mining",
+"name": "Rare Earths Americas, Inc."
+},
+"HAWK": {
+"sic": "7374",
+"sic_desc": "Services-Computer Processing & Data Preparation",
+"name": "HawkEye 360, Inc."
+},
+"SUJA": {
+"sic": "2080",
+"sic_desc": "Beverages",
+"name": "SUJA LIFE, INC."
+},
+"ODTX": {
+"sic": "2836",
+"sic_desc": "Biological Products, (No Diagnostic Substances)",
+"name": "Odyssey Therapeutics, Inc."
+},
+"MOBI": {
+"sic": "3841",
+"sic_desc": "Surgical & Medical Instruments & Apparatus",
+"name": "Mobia Medical, Inc."
+},
+"AIAI": {
+"sic": "7374",
+"sic_desc": "Services-Computer Processing & Data Preparation",
+"name": "AIAI Holdings Corp"
+},
+"FRVO": {
+"sic": "4911",
+"sic_desc": "Electric Services",
+"name": "Fervo Energy Co"
+},
+"MWC": {
+"sic": "7371",
+"sic_desc": "Services-Computer Programming Services",
+"name": "Micware Co., Ltd."
+},
+"GMRS": {
+"sic": "4700",
+"sic_desc": "Transportation Services",
+"name": "GMR Solutions Inc."
+},
+"CBRS": {
+"sic": "3674",
+"sic_desc": "Semiconductors & Related Devices",
+"name": "Cerebras Systems Inc."
+},
+"EROK": {
+"sic": "6792",
+"sic_desc": "Oil Royalty Traders",
+"name": "EagleRock Land, LLC"
+},
+"BXDC": {
+"sic": "6500",
+"sic_desc": "Real Estate",
+"name": "Blackstone Digital Infrastructure Trust Inc."
+},
+"VIDA": {
+"sic": "7372",
+"sic_desc": "Services-Prepackaged Software",
+"name": "VIDA Global Inc."
+},
+"AMAN": {
+"sic": "6770",
+"sic_desc": "Blank Checks",
+"name": "Amanat Acquisition Corp."
+},
+"RACC": {
+"sic": "6770",
+"sic_desc": "Blank Checks",
+"name": "Research Alliance Corp III"
+},
+"LCLN": {
+"sic": "6282",
+"sic_desc": "Investment Advice",
+"name": "Lincoln International, Inc."
+},
+"CNXU": {
+"sic": "3842",
+"sic_desc": "Orthopedic, Prosthetic & Surgical Appliances & Supplies",
+"name": "Conexeu Sciences Inc."
+},
+"FISN": {
+"sic": "4911",
+"sic_desc": "Electric Services",
+"name": "DEEP FISSION, INC."
+},
+"AADX": {
+"sic": "3728",
+"sic_desc": "Aircraft Parts & Auxiliary Equipment, NEC",
+"name": "Applied Aerospace & Defense, Inc."
+},
+"LFTO": {
+"sic": "7374",
+"sic_desc": "Services-Computer Processing & Data Preparation",
+"name": "Liftoff Mobile, Inc."
+},
+"SSMR": {
+"sic": "1040",
+"sic_desc": "Gold and Silver Ores",
+"name": "Sunshine Silver Mining & Refining Co"
+},
+"QNT": {
+"sic": "7373",
+"sic_desc": "Services-Computer Integrated Systems Design",
+"name": "Quantinuum Inc."
+},
+"INIO": {
+"sic": "3621",
+"sic_desc": "Motors & Generators",
+"name": "INNIO N.V."
+},
+"WHK": {
+"sic": "1311",
+"sic_desc": "Crude Petroleum & Natural Gas",
+"name": "WhiteHawk Minerals Corp."
+},
+"EROC": {
+"sic": "3620",
+"sic_desc": "Electrical Industrial Apparatus",
+"name": "ERock, Inc."
+},
+"PBLS": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "Parabilis Medicines, Inc."
+},
+"CAES": {
+"sic": "6770",
+"sic_desc": "Blank Checks",
+"name": "Cantor Equity Partners VII, Inc."
+},
+"FRBT": {
+"sic": "6022",
+"sic_desc": "State Commercial Banks",
+"name": "Forbright, Inc."
+},
+"SPCX": {
+"sic": "7370",
+"sic_desc": "Services-Computer Programming, Data Processing, Etc.",
+"name": "SPACE EXPLORATION TECHNOLOGIES CORP"
+},
+"KARD": {
+"sic": "2834",
+"sic_desc": "Pharmaceutical Preparations",
+"name": "Kardigan, Inc."
+},
+"FCBM": {
+"sic": "6022",
+"sic_desc": "State Commercial Banks",
+"name": "First Carolina Financial Services, Inc."
+},
+"DSC": {
+"sic": "7370",
+"sic_desc": "Services-Computer Programming, Data Processing, Etc.",
+"name": "DSC Holdings Ltd."
+},
+"DPC": {
+"sic": "3360",
+"sic_desc": "Nonferrous Foundries (Castings)",
+"name": "DPC Holdings Ltd"
+},
+"SIND": {
+"sic": "1040",
+"sic_desc": "Gold and Silver Ores",
+"name": "Sinda Ltd."
+}
+}

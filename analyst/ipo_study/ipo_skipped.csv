@@ -1,0 +1,178 @@
+ticker,listing_date,exchange,issuer
+ARYE,2021-07-13,XNAS,ARYA Sciences Acquisition Corp V
+IMGO,2021-07-14,XNAS,Imago BioSciences Inc
+SHCO,2021-07-15,XNYS,Soho House  Co Inc
+BRDG,2021-07-16,XNYS,Bridge Investment Group Holdings Inc
+PYCR,2021-07-20,XNAS,Paycor HCM Inc
+BASE,2021-07-20,XNAS,Couchbase Inc
+OB,2021-07-22,XNAS,Outbrain Inc
+INST,2021-07-22,XNYS,Instructure Holdings Inc
+SNPO,2021-07-27,XNAS,Snap One Holdings Corp
+DALS,2021-07-27,XNAS,DA32 Life Science Tech Acquisition Corp
+ICVX,2021-07-28,XNAS,Icosavax Inc
+MLNK,2021-07-28,XNYS,MeridianLink Inc
+OMGA,2021-07-28,XNAS,Omega Therapeutics Inc
+PWSC,2021-07-28,XNYS,PowerSchool Holdings Inc
+WEBR,2021-08-05,XNYS,Weber Inc
+MIO,2021-08-06,XNYS,Pioneer Municipal High Income Opportunities Fund Inc
+EZFL,2021-08-09,XNAS,EzFill Holdings Inc
+KTTA,2021-08-10,XNAS,Pasithea Therapeutics Corp
+SSBK,2021-08-12,XNAS,Southern States Bancshares Inc
+DATS,2021-08-13,XNAS,DatChat Inc
+DICE,2021-09-13,XNAS,DICE Therapeutics Inc
+TWKS,2021-09-14,XNAS,Thoughtworks Holding Inc
+FORG,2021-09-16,XNYS,ForgeRock Inc
+THRN,2021-09-21,XNAS,Thorne Healthtech Inc
+SOVO,2021-09-22,XNAS,Sovos Brands Inc
+STER,2021-09-22,XNAS,Sterling Check Corp
+ESMT,2021-09-23,XNYS,Engagesmart Inc
+MEKA,2021-09-27,XNAS,MELI Kaszek Pioneer Corp
+HCTI,2021-09-29,XNAS,Healthcare Triangle Inc
+TDCX,2021-10-01,XNYS,TDCX Inc
+EXAI,2021-10-01,XNAS,Exscientia Plc
+VLCN,2021-10-04,XNAS,Volcon Inc
+THRX,2021-10-05,XNAS,Theseus Pharmaceuticals Inc
+ISO,2021-10-05,XNAS,IsoPlexis Corp
+CING,2021-10-05,XNAS,Cingulate Inc
+SOPA,2021-10-06,XNAS,Society Pass Inc
+AVDX,2021-10-12,XNAS,AvidXchange Holdings Inc
+FNA,2021-10-15,XNYS,Paragon 28 Inc
+SDIG,2021-10-19,XNAS,Stronghold Digital Mining Inc
+VTYX,2021-10-20,XNAS,Ventyx Biosciences Inc
+PX,2021-10-21,XNYS,P10 Inc
+ENFN,2021-10-21,XNYS,Enfusion Inc
+INFA,2021-10-27,XNYS,Informatica Inc
+DTC,2021-10-28,XNYS,Solo Brands Inc
+HRT,2021-10-29,XNYS,HireRight Holdings Corp
+MYNZ,2021-11-02,XNAS,Mainz Biomed N.V.
+RGF,2021-11-04,XNAS,Real Good Food Company Inc The
+IOBT,2021-11-04,XNAS,IO Biotech Inc
+CIAN,2021-11-05,XNYS,Cian Plc
+KIND,2021-11-08,XNYS,Nextdoor Holdings Inc
+TIVC,2021-11-09,XNAS,Tivic Health Systems Inc
+MYNA,2021-11-10,XNAS,Mynaric AG
+PIK,2021-11-10,XNAS,Kidpik Corp
+LITM,2021-11-16,XNAS,Snow Lake Resources Ltd
+AHI,2021-11-17,XNAS,Advanced Health Intelligence Ltd
+USER,2021-11-17,XNYS,UserTesting Inc
+MKUL,2021-11-22,XNAS,Molekule Group Inc
+HCP,2021-12-07,XNAS,HashiCorp Inc
+VCSA,2021-12-07,XNAS,Vacasa Inc
+VINE,2021-12-14,XASE,Fresh Vine Wine Inc
+BNOX,2021-12-16,XNAS,Bionomics Ltd.
+MTEK,2021-12-22,XNAS,Maris Tech Ltd
+HOUR,2021-12-22,XNAS,Hour Loop Inc
+CINC,2022-01-05,XNAS,CinCor Pharma Inc
+VIGL,2022-01-06,XNAS,Vigil Neuroscience Inc
+THAR,2022-01-10,XNAS,Tharimmune Inc
+LIEN,2022-01-24,XNAS,Chicago Atlantic BDC Inc
+DRCT,2022-02-03,XNAS,Direct Digital Holdings Inc
+TCBP,2022-02-07,XNAS,TC BioPharm Holdings plc
+CEAD,2022-02-11,XNAS,CEA Industries Inc
+MHUA,2022-02-16,XNAS,Meihua International Medical Technologies Co Ltd
+AKAN,2022-02-16,XNAS,Akanda Corp
+SVRE,2022-04-12,XNAS,SaverOne 2014 Ltd
+HLVX,2022-04-28,XNAS,HilleVax Inc
+ACDC,2022-05-12,XNAS,ProFrac Holding Corp
+PEV,2022-06-07,XNAS,Phoenix Motor Inc
+LYT,2022-06-14,XNAS,Lytus Technologies Holdings PTV Ltd
+VRAX,2022-07-05,XNAS,Virax Biolabs Group Ltd
+MEGL,2022-07-12,XNAS,Magic Empire Global Ltd
+TGL,2022-07-14,XNAS,Treasure Global Inc
+EFSH,2022-08-03,XASE,1847 Holdings LLC
+BIAF,2022-08-09,XNAS,BioAffinity Technologies Inc
+LUXH,2022-08-11,XNAS,LuxUrban Hotels Inc
+YOSH,2022-09-07,XNAS,Yoshiharu Global Co
+THRD,2022-09-14,XNAS,Third Harmonic Bio Inc
+RAYA,2022-12-06,XNAS,Erayak Power Solution Group Inc
+MGOL,2022-12-28,XNAS,MGO Global Inc
+QSG,2023-01-19,XNAS,QuantaSing Group Ltd
+BREA,2023-01-27,XNAS,Brera Holdings PLC
+VCIG,2023-03-22,XNAS,VCI Global Ltd
+WAI,2023-03-30,XNAS,Top KingWin Ltd
+SYT,2023-03-31,XNAS,SYLA Technologies Co Ltd
+LRE,2023-03-31,XNAS,Lead Real Estate Co Ltd
+WLGS,2023-04-20,XNAS,WANG  LEE Group Inc.
+SLRN,2023-05-05,XNAS,Acelyrin Inc
+SGE,2023-05-16,XASE,Strong Global Entertainment Inc
+TSBX,2023-07-21,XNAS,Turnstone Biologics Corp
+WRNT,2023-07-25,XNAS,Warrantee Inc
+ELWS,2023-07-25,XNAS,Earlyworks Co Ltd
+JNVR,2023-07-25,XNAS,Janover Inc
+PXDT,2023-08-01,XNAS,Pixie Dust Technologies Inc
+HRYU,2023-08-01,XNAS,Hanryu Holdings Inc
+SRM,2023-08-04,XNAS,SRM Entertainment Inc
+FTEL,2023-08-08,XNAS,Fitell Corp
+LQR,2023-08-10,XNAS,LQR House Inc
+SPGC,2023-08-15,XNAS,Sacks Parente Golf Inc
+ANL,2023-08-18,XNAS,Adlai Nortye Ltd.
+FFWM,2023-08-22,XNYS,First Foundation Inc
+IVP,2023-08-30,XNAS,Inspire Veterinary Partners Inc.
+SWIN,2023-09-01,XNAS,Solowin Holdings
+RYZB,2023-09-15,XNAS,RayzeBio Inc.
+DTCK,2023-09-15,XNAS,Davis Commodities Ltd.
+APRN,2023-09-25,XNAS,Blue Apron Holdings Inc
+SHIM,2023-10-31,XNAS,Shimmick Corp.
+CRGX,2023-11-10,XNAS,CARGO Therapeutics Inc
+SGN,2023-11-14,XASE,Signing Day Sports Inc
+ROMA,2023-12-19,XNAS,Roma Green Finance Ltd
+ZRSP,2023-12-27,XNAS,Zerospo
+SUBL,2024-01-31,XNAS,BioLingus Cayman Ltd.
+HLXB,2024-02-09,XNAS,Helix Acquisition Corp. II
+SCRP,2024-02-13,XNAS,Scripps Safe Inc
+CHRO,2024-02-16,XASE,Channel Therapeutics Corporation
+CDTG,2024-04-08,XNAS,CDT Environmental Technology Investment Holdings Ltd
+JUNE,2024-04-16,XNAS,Junee Ltd
+ONDR,2024-04-23,XASE,Sushi Ginza Onodera Inc.
+KMCM,2024-04-25,XASE,Key Mining Corp.
+ZK,2024-05-10,XNYS,ZEEKR Intelligent Technology Holding Ltd.
+WRD,2024-08-21,XNAS,WeRide Inc.
+PMAX,2024-08-28,XNAS,Powell Max Ltd.
+SUNH,2024-10-21,XNAS,Xuhang Holdings Ltd
+CGTL,2024-11-18,XNAS,Creative Global Technology Holdings Ltd.
+NCEW,2024-11-21,XNAS,New Century Logistics BVI Ltd.
+NTCL,2024-11-26,XNAS,NetClass Technology Inc
+DGNX,2025-01-07,XNAS,Diginex Ltd.
+MVRK,2025-01-22,XNAS,Maverick Lifestyle Inc.
+BIYA,2025-03-05,XNAS,Baiya International Group Inc.
+FATN,2025-03-20,XNAS,Fatpipe Inc.
+TOPW,2025-03-28,XNAS,Top Win International Ltd
+FCHL,2025-04-16,XNAS,Fitness Champs Holdings Ltd.
+AIRO,2025-04-17,XNAS,AIRO Group Holdings Inc.
+LHAI,2025-05-15,XNAS,Linkhome Holdings Inc.
+HSFZ,2025-07-03,XNAS,Global Thrive Fulfill Group Inc.
+RSHL,2025-09-26,XNAS,Rise Smart Group Holdings Ltd.
+AIGO,2026-01-22,XNAS,Aigo Hold Ltd
+HAWK,2026-05-07,XNYS,HawkEye 360 Inc.
+SUJA,2026-05-07,XNAS,Suja Life Inc.
+ODTX,2026-05-08,XNAS,Odyssey Therapeutics Inc
+MOBI,2026-05-08,XNAS,Mobia Medical Inc.
+AIAI,2026-05-11,XNAS,AIAI Holdings Corp
+FRVO,2026-05-13,XNAS,Fervo Energy Co.
+MWC,2026-05-13,XNAS,Micware Co. Ltd.
+GMRS,2026-05-13,XNYS,GMR Solutions Inc.
+CBRS,2026-05-14,XNAS,Cerebras Systems Inc
+EROK,2026-05-14,XNYS,EagleRock Land LLC
+BXDC,2026-05-14,XNYS,Blackstone Digital Infrastructure Trust Inc.
+VIDA,2026-05-15,XASE,VIDA Global Inc.
+AMAN,2026-05-19,XNAS,Amanat Acquisition Corp
+RACC,2026-05-20,XNAS,Research Alliance Corp III
+LCLN,2026-05-20,XNYS,Lincoln International Inc.
+CNXU,2026-05-21,XNAS,Conexeu Sciences Inc.
+FISN,2026-05-29,XNAS,Deep Fission Inc.
+AADX,2026-06-03,XNYS,Applied Aerospace  Defense Inc.
+LFTO,2026-06-04,XNAS,Liftoff Mobile Inc.
+SSMR,2026-06-04,XNYS,Sunshine Silver Mining  Refining Co.
+QNT,2026-06-04,XNAS,Quantinuum Inc.
+INIO,2026-06-04,XNAS,Innio N.V.
+WHK,2026-06-09,XNYS,WhiteHawk Minerals Corp.
+EROC,2026-06-10,XNYS,ERock Inc.
+PBLS,2026-06-10,XNAS,Parabilis Medicines Inc.
+CAES,2026-06-11,XNAS,Cantor Equity Partners VII Inc.
+FRBT,2026-06-11,XNAS,Forbright Inc.
+SPCX,2026-06-12,XNAS,Space Exploration Technologies Corp.
+KARD,2026-06-18,XNAS,Kardigan Inc.
+FCBM,2026-06-18,XNYS,First Carolina Financial Services Inc
+DSC,2026-06-25,XNAS,DSC Holdings Ltd.
+DPC,2026-06-25,XNYS,DPC Holdings PLC
+SIND,2026-06-26,XNYS,Sinda Ltd.
