@@ -147,6 +147,7 @@ ul.takeaways li b{color:var(--text)}
       <li><b>The edge cell: non-tech, ≥$250M, bought ~6 months in</b> — 20.6%/yr vs SPY's 16.3% on the same cashflow dates.</li>
       <li><b>A −10% stop helps only if the freed cash goes back to work.</b> On the edge-cell entry, stopped-out dollars reinvested equally into the remaining open positions end at <b>$1.69 per $1 (26.8%/yr) vs $1.50 (20.7%) with no stop and $1.38 (16.3%) for SPY</b> — but parked in cash they end at $1.27, <em>worse</em> than no stop. ~3 in 4 positions stop out and returns concentrate in the surviving tail. Promising, not proven.</li>
       <li><b>Don't chase pops, don't buy the dip to issue price.</b> "Back at the IPO price" is adverse selection — dip-buyers underperform the simple wait in every cohort, and a stop <em>at</em> issue fires late (~−30%) on 75% of entries.</li>
+      <li><b>Leave the stop where it is.</b> Raising it to breakeven is the worst variant tested (12.1%/yr — below even SPY); a 10% trailing stop prints 31.5%/yr but ends with <b>97% of the book in one ticker</b> — a lottery artifact. The fixed stop works <em>because</em> it never rises under a winner.</li>
     </ul>
   </div>
 
@@ -157,6 +158,26 @@ ul.takeaways li b{color:var(--text)}
     <div class="legend" id="cv-strat-leg"></div>
     <div class="chartnote">↻ cash redeployment: when a position stops out (or delists), its proceeds are split <b>equally across that portfolio's still-open positions</b> at that day's close — nothing sits in cash. The SPY line never sells; it holds the same contributed dollars to the end.</div>
     <div class="callout" id="cv-strat-note"></div>
+  </div>
+
+  <div class="card">
+    <h3>Tuning the stop — what helps, what breaks it</h3>
+    <div class="ck">Same strategy, same entries; only the stop rule and the redeployment target change. All variants fully reinvested to <b>2026-05-07</b>; "top position" = biggest single name in the terminal book.</div>
+    <table class="kv">
+      <tr><th>stop rule</th><th>cash →</th><th>per $1</th><th>/yr</th><th>stopped</th><th>top pos.</th></tr>
+      <tr><td>none</td><td>—</td><td>$1.50</td><td class="pos">+20.7%</td><td>—</td><td>10%</td></tr>
+      <tr><td>fixed −10%</td><td>all open</td><td>$1.69</td><td class="pos">+26.8%</td><td>74%</td><td>26%</td></tr>
+      <tr><td><b style="color:var(--text)">fixed −10%</b></td><td><b style="color:var(--text)">winners &gt;+10%</b></td><td><b style="color:var(--text)">$1.74</b></td><td class="pos"><b>+28.3%</b></td><td>74%</td><td>29%</td></tr>
+      <tr><td>breakeven after +10%</td><td>all open</td><td>$1.27</td><td class="neg">+12.1%</td><td>82%</td><td>18%</td></tr>
+      <tr><td>trail −10% off high</td><td>all open</td><td>$1.83</td><td class="neu">+30.7%</td><td>96%</td><td class="neg">54%</td></tr>
+      <tr><td>trail −10% off high</td><td>winners &gt;+10%</td><td>$1.86</td><td class="neu">+31.5%</td><td>96%</td><td class="neg">97%</td></tr>
+      <tr><td>SPY, same $ &amp; dates</td><td>—</td><td>$1.38</td><td>+16.3%</td><td>—</td><td>—</td></tr>
+    </table>
+    <div class="callout">
+      <b>Redeploying only into positions already +10% above entry</b> adds ~1.5pp/yr over spreading it across everything, and the end book stays diversified (FTAI 29%, NU 10%, ACT 8%…) — coherent with the momentum logic, but small enough to be noise at n=114.
+      <br><br><b>Moving the stop up backfires in both flavors.</b> Breakeven-after-+10% is the <em>worst</em> variant tested: in IPO-land, "+10% then a pullback through entry" is the normal path of eventual winners, so the breakeven stop scratches you out of exactly the names that would carry the portfolio. The 10% trail posts the biggest headline number, but it stops out <b>96% of positions in a median 23 days</b> and cascades the cash into whatever entered most recently — the terminal book is <b>97% a single ticker</b>. That's an accidental all-in bet, not a strategy; shift the window a month and the number is whatever that one stock did.
+      <br><br>The fixed −10% stop works <b>because it's asymmetric</b>: tight underneath a fresh entry (cuts the year-one bleeders fast), but it never rises — so a winner is never sold on a routine 20–30% pullback, and the right tail, which is all of this strategy's alpha, stays in the book.
+    </div>
   </div>
 
   <div class="tiles" id="tiles"></div>
