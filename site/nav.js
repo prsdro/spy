@@ -25,6 +25,7 @@
     {label:'MGG×Weekday', href:'/spx-multiday-gg-dow.html'},
     {label:'Swing', href:'/swing-gg.html'},
     {label:'Bet Sizing', href:'/bet-sizing.html'},
+    {label:'Box Options', href:'/bilbo-box-options.html'},
     // {label:'IPOs', href:'/ipo-5yr.html'},  // hidden from menu; page stays live at /ipo-5yr.html
     {label:'Cheat Sheet', href:'/cheatsheet.html'},
     {label:'Data', href:'/data/'},
