@@ -29,6 +29,7 @@
     {label:'Box Options', href:'/bilbo-box-options.html'},
     {label:'Paper Acct', href:'/bilbo-paper.html'},
     // {label:'IPOs', href:'/ipo-5yr.html'},  // hidden from menu; page stays live at /ipo-5yr.html
+    {label:'Manual', href:'/trading-manual.html'},
     {label:'Cheat Sheet', href:'/cheatsheet.html'},
     {label:'Data', href:'/data/'},
   ];

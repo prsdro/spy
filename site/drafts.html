@@ -239,11 +239,11 @@
 
       <a class="study-card" id="bilbo-golden-gate" href="/bilbo-golden-gate.html">
         <div class="head">
-          <span class="name">Bilbo Golden Gate <span style="font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--draft);letter-spacing:.06em;text-transform:uppercase;margin-left:.4rem">Demoted from Core</span></span>
+          <span class="name">Bilbo Golden Gate <span style="font-family:'JetBrains Mono',monospace;font-size:.6rem;color:#4ade80;letter-spacing:.06em;text-transform:uppercase;margin-left:.4rem">Restored 2026-07-11</span></span>
           <span class="arrow">&rarr;</span>
         </div>
         <div class="reason">
-          <strong>Look-ahead bias confirmed.</strong> The 1h Phase Oscillator is sampled from the not-yet-closed current hour bar &mdash; up to 60 min of forward leakage via <code>merge_asof(direction="backward")</code> against left-labeled HTF bars. Point-in-time-safe rerun shows the flagship <strong>90.3% bear (PO Low+Falling)</strong> cohort is closer to <strong>~85%</strong>, the bull <strong>75.9%</strong> drops to <strong>~71%</strong>, and the worst &ldquo;Mid+Falling/Mid+Rising&rdquo; buckets partly invert (50.9% &rarr; 63.0%, 54.5% &rarr; 69.6%). Needs full rebuild with bar-end PO joins before it goes back in the playbook. See <code>audit-reruns/codex_gg_bug_review_2026-04-26.md</code> &amp; <code>opus_gg_bug_review_2026-04-26.md</code>.
+          <strong>Look-ahead bias found, fixed, and rebuilt.</strong> The 1h PO was sampled from the not-yet-closed hour bar (up to 60 min of forward leakage). The join was fixed 2026-04-26 and the <a href="/bilbo-golden-gate.html" style="color:var(--accent)">page now carries the corrected rerun</a>: bear Low+Falling 90.3% &rarr; <strong>85.1%</strong>, bull High+Rising 77.1% &rarr; <strong>71.0%</strong>, mid-zone slope splits inverted (no signal). Back in the day-trading list. Still unverified pre-fix satellites: <a href="/bilbo-10m.html" style="color:var(--accent)">10m-vs-60m comparison</a> and <a href="/bilbo-continuation.html" style="color:var(--accent)">continuation ladder</a>.
         </div>
       </a>
 

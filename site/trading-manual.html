@@ -1,0 +1,2062 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Trading Manual | Milkman Trades</title>
+<meta name="description" content="The full SPY/SPX trading methodology used on this site — Saty Mahajan's indicator system (ATR Levels, Pivot Ribbon, Phase Oscillator), setups, probabilities, and operating rules.">
+<script src="/nav.js" defer></script>
+<style>
+ body{margin:0;background:#0b0e14;color:#e5edf7;font-family:ui-sans-serif,system-ui,sans-serif;line-height:1.65;font-size:16px}
+ .wrap{max-width:820px;margin:0 auto;padding:28px 18px 80px}
+ h1{font-size:clamp(24px,5vw,34px);letter-spacing:-.02em;line-height:1.2;margin:.4em 0}
+ h2{font-size:22px;margin:2.2em 0 .5em;color:#dbeafe;border-bottom:1px solid #1f2a44;padding-bottom:6px}
+ h3{font-size:17.5px;margin:1.6em 0 .4em;color:#facc15}
+ h4{font-size:15.5px;margin:1.4em 0 .3em;color:#93c5fd}
+ p, li{color:#cbd7e6}
+ strong{color:#e5edf7} em{color:#93a4b8}
+ hr{border:0;border-top:1px solid #1f2a44;margin:2.2em 0}
+ ul,ol{padding-left:1.3em} li{margin:6px 0}
+ table{border-collapse:collapse;font-size:13.5px;margin:16px 0;display:block;overflow-x:auto}
+ td,th{padding:7px 10px;border:1px solid #1f2a44;text-align:left;vertical-align:top}
+ th{background:#0f1524;color:#93a4b8}
+ code{background:#0f1524;border:1px solid #1f2a44;border-radius:4px;padding:1px 5px;font-size:13px}
+ a{color:#60a5fa}
+ .lede{color:#b6c5d8;font-size:16.5px;max-width:70ch}
+ .toc{background:#0f1524;border:1px solid #1f2a44;border-radius:12px;padding:14px 18px;margin:22px 0;font-size:14px}
+ .toc ul{margin:4px 0;padding-left:1.1em} .toc>ul{padding-left:.2em;list-style:none}
+ .toc a{color:#93a4b8;text-decoration:none} .toc a:hover{color:#60a5fa}
+ .foot{color:#7b8ba1;font-size:13px;border-top:1px solid #1f2a44;margin-top:44px;padding-top:14px}
+</style></head><body><div class="wrap">
+<h1>The Trading Manual</h1>
+<p class="lede">This is the complete written system behind everything on this site: Saty Mahajan's
+indicator suite (ATR Levels, Pivot Ribbon, Phase Oscillator) and the level-to-level SPY/SPX framework
+built on it — vocabulary, setups, historical probabilities from our own backtests, and the operating
+rules used live. It is research support and trade-planning education, not financial advice.</p>
+<div class="toc"><strong style="color:#dbeafe">Contents</strong><div class="toc">
+<ul>
+<li><a href="#standalone-spyspx-trading-knowledge-manual">Standalone SPY/SPX Trading Knowledge Manual</a><ul>
+<li><a href="#0-live-trading-operating-rules">0. Live-trading operating rules</a></li>
+<li><a href="#1-vocabulary-and-notation">1. Vocabulary and notation</a><ul>
+<li><a href="#products">Products</a></li>
+<li><a href="#sessiontime-terms">Session/time terms</a></li>
+<li><a href="#atr-level-notation">ATR level notation</a></li>
+<li><a href="#optionstrade-lifecycle">Options/trade lifecycle</a></li>
+<li><a href="#chart-shorthand">Chart shorthand</a></li>
+</ul>
+</li>
+<li><a href="#2-core-saty-indicators">2. Core Saty indicators</a><ul>
+<li><a href="#21-saty-atr-levels">2.1 Saty ATR Levels</a></li>
+<li><a href="#22-saty-pivot-ribbon-pro">2.2 Saty Pivot Ribbon Pro</a></li>
+<li><a href="#23-saty-phase-oscillator">2.3 Saty Phase Oscillator</a></li>
+<li><a href="#24-compression-squeeze">2.4 Compression / Squeeze</a></li>
+<li><a href="#25-vwap-raf-volume-vix-gamma">2.5 VWAP, RAF, volume, VIX, gamma</a></li>
+<li><a href="#26-unusual-whales-periscope-net-gamma-exposure">2.6 Unusual Whales Periscope net gamma exposure</a></li>
+</ul>
+</li>
+<li><a href="#3-daily-market-preparation-framework">3. Daily market preparation framework</a></li>
+<li><a href="#4-primary-setup-map">4. Primary setup map</a><ul>
+<li><a href="#trend-continuation">Trend continuation</a></li>
+<li><a href="#breakout-expansion">Breakout / expansion</a></li>
+<li><a href="#mean-reversion">Mean reversion</a></li>
+<li><a href="#reversalexhaustion">Reversal/exhaustion</a></li>
+<li><a href="#income-credit-spread">Income / credit spread</a></li>
+</ul>
+</li>
+<li><a href="#5-golden-gate-system">5. Golden Gate system</a><ul>
+<li><a href="#51-definition-and-mechanics">5.1 Definition and mechanics</a></li>
+<li><a href="#52-level-to-level-probabilities">5.2 Level-to-level probabilities</a></li>
+<li><a href="#53-bilbo-golden-gate-1h-po-filter">5.3 Bilbo Golden Gate: 1h PO filter</a></li>
+<li><a href="#54-10m-vs-60m-po">5.4 10m vs 60m PO</a></li>
+<li><a href="#55-entry-optimization">5.5 Entry optimization</a></li>
+<li><a href="#56-invalidation">5.6 Invalidation</a></li>
+<li><a href="#57-timing-subway">5.7 Timing / Subway</a></li>
+</ul>
+</li>
+<li><a href="#6-trigger-box-system">6. Trigger Box system</a><ul>
+<li><a href="#61-definition">6.1 Definition</a></li>
+<li><a href="#62-hold-time-implications">6.2 Hold-time implications</a></li>
+<li><a href="#63-trigger-box-credit-spreads">6.3 Trigger Box credit spreads</a></li>
+</ul>
+</li>
+<li><a href="#7-call-trigger-confirmation-and-callput-reversal">7. Call trigger confirmation and call→put reversal</a><ul>
+<li><a href="#71-call-trigger-confirmation">7.1 Call trigger confirmation</a></li>
+<li><a href="#72-call-trigger-put-trigger-morning-reversal">7.2 Call trigger → put trigger morning reversal</a></li>
+</ul>
+</li>
+<li><a href="#8-gap-framework">8. Gap framework</a><ul>
+<li><a href="#81-concepts">8.1 Concepts</a></li>
+<li><a href="#82-midpoint-fill-rates">8.2 Midpoint fill rates</a></li>
+<li><a href="#83-same-day-full-gap-fill-table">8.3 Same-day full gap-fill table</a></li>
+<li><a href="#84-operational-use">8.4 Operational use</a></li>
+</ul>
+</li>
+<li><a href="#9-compression-expansion-bilbo-box">9. Compression / expansion / Bilbo Box</a><ul>
+<li><a href="#91-10m-compression-expansion">9.1 10m compression → expansion</a></li>
+<li><a href="#92-bilbo-box-breakout">9.2 Bilbo Box breakout</a></li>
+</ul>
+</li>
+<li><a href="#10-mean-reversion-systems">10. Mean reversion systems</a><ul>
+<li><a href="#101-1-atr-rtm">10.1 ±1 ATR RTM</a></li>
+<li><a href="#102-price-vs-daily-21-ema-reversion">10.2 Price vs daily 21 EMA reversion</a></li>
+<li><a href="#103-4h-po-rollover-opex-window">10.3 4h PO rollover + OpEx window</a></li>
+</ul>
+</li>
+<li><a href="#11-saty-discretionary-setup-foundations">11. Saty discretionary setup foundations</a><ul>
+<li><a href="#111-orb-opening-range-breakout">11.1 ORB — Opening Range Breakout</a></li>
+<li><a href="#112-vomy-ivomy">11.2 Vomy / iVomy</a></li>
+<li><a href="#113-supportresistance-and-supplydemand">11.3 Support/resistance and supply/demand</a></li>
+<li><a href="#114-power-play-failed-breakout-divergences-patterns">11.4 Power Play, failed breakout, divergences, patterns</a></li>
+</ul>
+</li>
+<li><a href="#12-multiday-and-swing-golden-gate">12. Multiday and swing Golden Gate</a><ul>
+<li><a href="#121-weekly-atr-multiday-gg">12.1 Weekly ATR / multiday GG</a></li>
+<li><a href="#122-monthly-atr-swing-gg">12.2 Monthly ATR / swing GG</a></li>
+</ul>
+</li>
+<li><a href="#13-trade-construction-playbooks">13. Trade construction playbooks</a><ul>
+<li><a href="#131-day-mode-golden-gate-longshort">13.1 Day-mode Golden Gate long/short</a></li>
+<li><a href="#132-bilbo-golden-gate-momentum-continuation">13.2 Bilbo Golden Gate momentum continuation</a></li>
+<li><a href="#133-trigger-box-debitcredit-plan">13.3 Trigger Box debit/credit plan</a></li>
+<li><a href="#134-compression-expansion-breakout">13.4 Compression expansion breakout</a></li>
+<li><a href="#135-gap-fill-midpoint-fill">13.5 Gap fill / midpoint fill</a></li>
+<li><a href="#136-orb-continuation">13.6 ORB continuation</a></li>
+<li><a href="#137-vomy-ivomy">13.7 Vomy / iVomy</a></li>
+<li><a href="#138-1-atr-rtm">13.8 ±1 ATR RTM</a></li>
+<li><a href="#139-4h-po-opex-rollover-put-plan">13.9 4h PO / OpEx rollover put plan</a></li>
+<li><a href="#1310-callput-morning-reversal">13.10 Call→put morning reversal</a></li>
+</ul>
+</li>
+<li><a href="#14-backtested-edges-quick-table">14. Backtested edges quick table</a></li>
+<li><a href="#15-options-execution-and-risk-translation">15. Options execution and risk translation</a><ul>
+<li><a href="#0dte-1dte-implications">0DTE / 1DTE implications</a></li>
+<li><a href="#debit-trades">Debit trades</a></li>
+<li><a href="#credit-spreads">Credit spreads</a></li>
+<li><a href="#position-sizing">Position sizing</a></li>
+</ul>
+</li>
+<li><a href="#16-caveats-and-data-quality-notes">16. Caveats and data-quality notes</a></li>
+<li><a href="#17-standalone-setup-scoring-rubric">17. Standalone setup scoring rubric</a><ul>
+<li><a href="#directional-confluence">Directional confluence</a></li>
+<li><a href="#trade-quality-buckets">Trade-quality buckets</a></li>
+<li><a href="#minimum-trade-ticket">Minimum trade ticket</a></li>
+</ul>
+</li>
+<li><a href="#18-compact-live-analysis-template">18. Compact live-analysis template</a></li>
+<li><a href="#19-one-screen-decision-hierarchy">19. One-screen decision hierarchy</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<h1 id="standalone-spyspx-trading-knowledge-manual">Standalone SPY/SPX Trading Knowledge Manual</h1>
+<p>This is a self-contained trading knowledge manual. It is designed to be read, shared, or used on its own. All pertinent setup definitions, indicator rules, probability tables, operating caveats, and live-analysis templates are included directly here.</p>
+<p>This is research support and trade-planning education, not financial advice. Historical SPY statistics and extracted trading doctrine are not guarantees. SPX options execution, spreads, settlement, implied volatility, greeks, slippage, and trader discipline can dominate the underlying move edge.</p>
+<p>Scope: individual trade reviews, one-off recaps, private notes, personal references, and external dependencies are intentionally excluded.</p>
+<hr />
+<h2 id="0-live-trading-operating-rules">0. Live-trading operating rules</h2>
+<p>When analyzing SPX/SPY, use this sequence:</p>
+<ol>
+<li><strong>State the product and timeframe</strong>: SPX/SPY/ES, RTH vs premarket, 1m/3m/10m/1h/4h/daily context.</li>
+<li><strong>Separate facts from thesis</strong>:</li>
+<li>Facts: price relative to PDC, ATR grid, VWAP, ribbon/EMA stack, PO state, compression, time of day.</li>
+<li>Thesis: likely path, active setup, directional bias.</li>
+<li><strong>Use if/then plans, not predictions</strong>:</li>
+<li>If price reclaims/holds X, target Y.</li>
+<li>If price loses/closes through X, thesis invalidates.</li>
+<li><strong>Always name</strong>:</li>
+<li>Setup</li>
+<li>Preconditions</li>
+<li>Entry trigger</li>
+<li>Invalidation</li>
+<li>Target ladder</li>
+<li>Confidence / caveats</li>
+<li><strong>Never treat an edge as certainty</strong>. A 70–90% historical stat still fails.</li>
+<li><strong>Prefer level-to-level thinking</strong>. The system is built around hops through ATR levels, not one-shot full-ATR predictions.</li>
+<li><strong>Respect time decay</strong>. Early RTH triggers are much higher quality than late-day triggers, especially bullish Golden Gates.</li>
+<li><strong>Mark stats vs doctrine</strong>:</li>
+</ol>
+<hr />
+<h2 id="1-vocabulary-and-notation">1. Vocabulary and notation</h2>
+<h3 id="products">Products</h3>
+<ul>
+<li><strong>SPX</strong>: S&amp;P 500 cash index; cash-settled options; often used for 0DTE/1DTE premium trades.</li>
+<li><strong>SPY</strong>: S&amp;P 500 ETF; underlying used for the 25-year backtested statistics.</li>
+<li><strong>ES / /ES</strong>: S&amp;P futures; useful for overnight/premarket context.</li>
+<li><strong>QQQ / NDX / /NQ</strong>: Nasdaq variants.</li>
+<li><strong>IWM / RUT</strong>: Russell variants.</li>
+<li><strong>VIX / VVIX / VX</strong>: volatility context.</li>
+</ul>
+<h3 id="sessiontime-terms">Session/time terms</h3>
+<ul>
+<li><strong>Premarket</strong>: 4:00–9:30 ET.</li>
+<li><strong>RTH</strong>: 9:30–16:00 ET.</li>
+<li><strong>Opening range</strong>: first 5m or 10m of RTH.</li>
+<li><strong>Power hour</strong>: 15:00–16:00 ET.</li>
+<li><strong>OpEx / weekly / monthly / quad witching</strong>: option-expiration context.</li>
+<li><strong>0DTE / 1DTE</strong>: days to expiration.</li>
+</ul>
+<h3 id="atr-level-notation">ATR level notation</h3>
+<ul>
+<li><strong>PDC / central pivot / previous close</strong>: zero-line for daily ATR levels.</li>
+<li><strong>Trigger</strong>: ±23.6% ATR from previous close. Upper = call trigger. Lower = put trigger.</li>
+<li><strong>Golden Gate entry / GG open</strong>: ±38.2% ATR. The Golden Gate <strong>opens</strong> here.</li>
+<li><strong>Midrange</strong>: ±50% ATR.</li>
+<li><strong>Golden Gate completion / Golden Fib</strong>: ±61.8% ATR. The Golden Gate <strong>completes</strong> here.</li>
+<li><strong>Full ATR</strong>: ±100% ATR.</li>
+<li><strong>Extensions</strong>: ±123.6%, ±161.8%, ±200%, ±261.8%, ±300%.</li>
+</ul>
+<p>Critical terminology: <strong>hitting the trigger does not mean the Golden Gate opened</strong>. Trigger is 23.6%; GG opens at 38.2%; GG completes at 61.8%.</p>
+<h3 id="optionstrade-lifecycle">Options/trade lifecycle</h3>
+<ul>
+<li><strong>BTO / STC</strong>: buy to open / sell to close.</li>
+<li><strong>STO / BTC</strong>: sell to open / buy to close.</li>
+<li><strong>PCS / CCS</strong>: put credit spread / call credit spread.</li>
+<li><strong>Partials / scale out</strong>: take profit in pieces.</li>
+<li><strong>Runners</strong>: final portion left for extension.</li>
+<li><strong>ITM</strong>: in the money.</li>
+</ul>
+<h3 id="chart-shorthand">Chart shorthand</h3>
+<ul>
+<li><strong>HOD / LOD</strong>: high/low of day.</li>
+<li><strong>HOW / LOW</strong>: high/low of week.</li>
+<li><strong>Reclaim</strong>: regain a level/EMA.</li>
+<li><strong>Lose/lost</strong>: break below a level/EMA.</li>
+<li><strong>Hold</strong>: test and respect a level.</li>
+<li><strong>Break and hold</strong>: breakout plus confirmation.</li>
+<li><strong>Stacked bullish</strong>: shorter EMAs above longer EMAs.</li>
+<li><strong>Stacked bearish</strong>: shorter EMAs below longer EMAs.</li>
+<li><strong>Curling / flattening</strong>: EMA slope changing direction or losing slope.</li>
+</ul>
+<hr />
+<h2 id="2-core-saty-indicators">2. Core Saty indicators</h2>
+<h3 id="21-saty-atr-levels">2.1 Saty ATR Levels</h3>
+<p><strong>Standalone construction:</strong></p>
+<ul>
+<li>Anchor: previous period close.</li>
+<li>Volatility unit: 14-period ATR using Wilder/RMA smoothing.</li>
+<li>Day mode: previous regular-session close plus daily ATR.</li>
+<li>Multiday mode: previous weekly close plus weekly ATR.</li>
+<li>Swing mode: previous monthly close plus monthly ATR.</li>
+<li>Position mode: previous quarterly close plus quarterly ATR.</li>
+<li>Long-term mode: previous yearly close plus yearly ATR.</li>
+<li>The same Fibonacci ladder is mirrored above and below the anchor.</li>
+<li>All levels are potential support/resistance, targets, or invalidation zones.</li>
+</ul>
+<p><strong>Formula concept:</strong></p>
+<p><code>text
+upper_level = previous_close + ATR14 * level_multiplier
+lower_level = previous_close - ATR14 * level_multiplier</code></p>
+<p>Where level multipliers include 0.236, 0.382, 0.500, 0.618, 0.786, 1.000, 1.236, 1.618, 2.000, 2.618, and 3.000.</p>
+<p><strong>Definition:</strong> ATR-based Fibonacci grid using the previous period close and the 14-period ATR from a higher timeframe. Day mode uses daily ATR, multiday uses weekly, swing uses monthly, position uses quarterly, long-term uses yearly.</p>
+<p><strong>Key levels:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th style="text-align: right;">Distance from previous close</th>
+<th>Live-use meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Trigger</td>
+<td style="text-align: right;">±23.6% ATR</td>
+<td>First long/short trigger zone</td>
+</tr>
+<tr>
+<td>GG entry / GG open</td>
+<td style="text-align: right;">±38.2% ATR</td>
+<td>Golden Gate opens</td>
+</tr>
+<tr>
+<td>Midrange</td>
+<td style="text-align: right;">±50% ATR</td>
+<td>Intermediate target; watch R:R</td>
+</tr>
+<tr>
+<td>GG completion / Golden Fib</td>
+<td style="text-align: right;">±61.8% ATR</td>
+<td>Main Golden Gate target</td>
+</tr>
+<tr>
+<td>Full ATR</td>
+<td style="text-align: right;">±100% ATR</td>
+<td>Large daily move; cumulative probability low</td>
+</tr>
+<tr>
+<td>Extensions</td>
+<td style="text-align: right;">±123.6%, ±161.8%, ±200%</td>
+<td>Momentum extension zones</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Implementation notes:</strong></p>
+<ul>
+<li>ATR uses Wilder/RMA smoothing, not SMA: <code>ewm(alpha=1/period, adjust=False)</code>.</li>
+<li>Intraday ATR tables use daily ATR reference, matching TradingView <code>request.security(ticker, 'D', ta.atr(14))</code> behavior.</li>
+<li>Daily/weekly candles use RTH data only.</li>
+<li>Bad tick clipping caps bar wicks at 2% beyond the candle body to remove phantom prints while preserving real volatility.</li>
+</ul>
+<p><strong>Operating rule:</strong> use the ATR grid as support/resistance and target ladder. Do not jump straight from PDC to full ATR unless the setup supports it.</p>
+<h3 id="22-saty-pivot-ribbon-pro">2.2 Saty Pivot Ribbon Pro</h3>
+<p><strong>Definition:</strong> multi-layer EMA cloud/ribbon system showing trend structure, pullback zones, compression candles, and conviction signals.</p>
+<p><strong>EMA layers:</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">EMA</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">8</td>
+<td>Fast EMA; short-term trend/pullback reference</td>
+</tr>
+<tr>
+<td style="text-align: right;">13</td>
+<td>Pullback overlap EMA; used in slow cloud variant and Vomy/iVomy logic</td>
+</tr>
+<tr>
+<td style="text-align: right;">21</td>
+<td>Pivot EMA; core trend reference</td>
+</tr>
+<tr>
+<td style="text-align: right;">34</td>
+<td>Often used as stop/reference in Saty trade examples</td>
+</tr>
+<tr>
+<td style="text-align: right;">48</td>
+<td>Slow EMA; major trend/cloud reference</td>
+</tr>
+<tr>
+<td style="text-align: right;">200</td>
+<td>Long-term trend anchor</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Cloud/ribbon reading:</strong></p>
+<ul>
+<li>Fast cloud: EMA 8 vs EMA 21; green when 8 ≥ 21, red when 8 &lt; 21.</li>
+<li>Slow cloud: EMA 13/48 or 21/48; blue/aqua bullish, orange bearish.</li>
+<li>Ribbon flip: fast cloud changes color; potential trend change.</li>
+<li>Conviction arrows: 13/48 EMA cross, slower but higher-confidence trend confirmation.</li>
+<li>Candle bias:</li>
+<li>Green: up candle above EMA48.</li>
+<li>Red: down candle below EMA48.</li>
+<li>Blue: down candle above EMA48 = pullback in bullish trend.</li>
+<li>Orange: up candle below EMA48 = bounce in bearish trend.</li>
+<li>Gray/violet: compression candles.</li>
+</ul>
+<p><strong>Saty doctrine:</strong> trade with the trend; wait for confirmation; do not chase; prefer pullback-to-ribbon entries; avoid sideways/entangled ribbons.</p>
+<h3 id="23-saty-phase-oscillator">2.3 Saty Phase Oscillator</h3>
+<p><strong>Definition:</strong> range-normalized momentum oscillator measuring distance from EMA21, normalized by ATR.</p>
+<p>Formula:</p>
+<p><code>text
+raw_signal = ((price - EMA21) / (3 * ATR14)) * 100
+oscillator = EMA(raw_signal, 3)</code></p>
+<p><strong>Zones:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Zone</th>
+<th style="text-align: right;">Range</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Extended Up</td>
+<td style="text-align: right;">&gt; +100</td>
+<td>Overbought extreme</td>
+</tr>
+<tr>
+<td>Distribution</td>
+<td style="text-align: right;">+61.8 to +100</td>
+<td>Potential topping/profit-taking zone</td>
+</tr>
+<tr>
+<td>Neutral Up</td>
+<td style="text-align: right;">+23.6 to +61.8</td>
+<td>Healthy uptrend territory</td>
+</tr>
+<tr>
+<td>Neutral</td>
+<td style="text-align: right;">-23.6 to +23.6</td>
+<td>No clear momentum</td>
+</tr>
+<tr>
+<td>Neutral Down</td>
+<td style="text-align: right;">-61.8 to -23.6</td>
+<td>Healthy downtrend territory</td>
+</tr>
+<tr>
+<td>Accumulation</td>
+<td style="text-align: right;">-100 to -61.8</td>
+<td>Potential bottoming zone</td>
+</tr>
+<tr>
+<td>Extended Down</td>
+<td style="text-align: right;">&lt; -100</td>
+<td>Oversold extreme</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Signals:</strong></p>
+<ul>
+<li>Leaving accumulation: crosses above -61.8; potential long/reversal.</li>
+<li>Leaving distribution: crosses below +61.8; potential short/take-profit.</li>
+<li>Leaving extreme down: crosses above -100; strong reversal signal.</li>
+<li>Leaving extreme up: crosses below +100; strong reversal signal.</li>
+<li>Rising/falling state matters; high+rising vs high+falling and low+falling vs low+rising can change GG odds.</li>
+</ul>
+<p><strong>Caveat:</strong> 60m PO has a known accuracy gap versus TradingView because extended-hours data inflates hourly ATR; 10m PO accuracy is much better. Still, 60m PO was more predictive in the historical Bilbo GG tests; treat this as useful but audit-sensitive.</p>
+<h3 id="24-compression-squeeze">2.4 Compression / Squeeze</h3>
+<p>Compression is detected when Bollinger Band width is small relative to ATR:</p>
+<ul>
+<li>BB width = <code>2 * stdev(21)</code>.</li>
+<li>Compression active when BB width &lt; <code>2 * ATR(14)</code>.</li>
+<li>Expansion confirmed when BB width grows and exceeds about <code>1.854 * ATR</code> threshold.</li>
+</ul>
+<p>Saty-style terminology also maps Squeeze/Squeeze Pro:</p>
+<ul>
+<li>Red dots = squeeze on.</li>
+<li>Green dots = squeeze fired.</li>
+<li>Pro intensity colors: black/narrow, red/normal, orange/wide, green/fired.</li>
+<li>“5–10 dots” is a heuristic for enough compression to matter.</li>
+</ul>
+<h3 id="25-vwap-raf-volume-vix-gamma">2.5 VWAP, RAF, volume, VIX, gamma</h3>
+<p>Use these as context/confluence, not as standalone rules unless the setup requires them:</p>
+<ul>
+<li><strong>VWAP</strong>: intraday volume-weighted mean; useful for ORB, mean reversion, and institutional trend context.</li>
+<li><strong>Ready Aim Fire Pro / RAF</strong>: signal dashboard; conviction arrow is tied to the 13/48 confirmation concept.</li>
+<li><strong>Volume oscillator</strong>: volume momentum; declining volume + wicks can mark exhaustion.</li>
+<li><strong>VIX key levels</strong>: volatility regime/context.</li>
+<li><strong>Gamma levels</strong>: possible pin/resistance/support zones around OpEx and large strikes.</li>
+</ul>
+<h3 id="26-unusual-whales-periscope-net-gamma-exposure">2.6 Unusual Whales Periscope net gamma exposure</h3>
+<p>Periscope net gamma exposure is a strike-by-strike map of market-maker gamma positioning. Use it to judge expected dealer hedging behavior around SPX strikes, not as a standalone bullish/bearish signal.</p>
+<p><strong>What the bars mean</strong></p>
+<ul>
+<li><strong>Green / positive gamma bar</strong>: market makers are net long options at that strike. Customers are net sellers of options there. The exact customer call/put mix is less important than the dealer gamma sign.</li>
+<li><strong>Red / negative gamma bar</strong>: market makers are net short options at that strike. Customers are net buyers of options there.</li>
+</ul>
+<p><strong>Mechanical implication</strong></p>
+<ul>
+<li><strong>Positive net gamma is suppressive</strong>. Dealers tend to fade movement as price approaches or moves around that strike: sell rips, buy dips. The result is pinning, dampening, magnet behavior, and lower realized volatility near the strike.</li>
+<li><strong>Negative net gamma is accelerative</strong>. Dealers tend to hedge with the move: buy strength and sell weakness. The result is trend extension, faster air-pocket movement, and higher realized volatility if price enters or breaks through that zone.</li>
+</ul>
+<p><strong>Important nuance</strong></p>
+<p>Positive gamma does not mean bullish. Negative gamma does not mean bearish. Gamma sign describes how dealer hedging is likely to respond after price moves. Direction still comes from price action, level interaction, trend/ribbon state, PO state, catalysts, and trade setup confirmation.</p>
+<p><strong>How to read the ladder</strong></p>
+<ol>
+<li>Mark spot price on the strike ladder.</li>
+<li>Identify the nearest large positive bars above and below spot. These are gamma walls, pin zones, or dampening zones.</li>
+<li>Identify the nearest large negative bars above and below spot. These are acceleration zones or air pockets.</li>
+<li>Mark sign flips between adjacent strikes. A flip from positive to negative can create a regime boundary: below it, price may chop/pin; above it, price may accelerate, or vice versa.</li>
+<li>Compare the profile above spot versus below spot:</li>
+<li>Positive gamma overhead: upside may be capped or slow unless price accepts above the wall.</li>
+<li>Positive gamma below: downside may be supported or magnetized back upward unless price rejects through it.</li>
+<li>Negative gamma overhead: upside breakout can run quickly if price accepts into it.</li>
+<li>Negative gamma below: downside flush can extend quickly if price loses support into it.</li>
+<li>Tie the gamma zones to the normal trading map: PDC, daily trigger, GG open, GG completion, full ATR, VWAP, ORB high/low, premarket high/low, pivot ribbon, and known support/resistance.</li>
+</ol>
+<p><strong>Interpretation patterns</strong></p>
+<ul>
+<li><strong>Spot inside a strong positive gamma cluster</strong>: expect chop, pinning, failed breakouts, smaller range, and better odds for mean-reversion tactics unless a clean acceptance break occurs.</li>
+<li><strong>Spot between a positive wall above and negative pocket below</strong>: upside is dampened, but downside can accelerate if support breaks. Bear trades improve only after the break; shorts into support before the break are lower quality.</li>
+<li><strong>Spot between negative overhead and positive below</strong>: upside can squeeze if resistance is reclaimed; downside may be cushioned near the positive wall.</li>
+<li><strong>Large positive bar exactly at a round strike near spot</strong>: that strike can become the day’s magnet, especially near expiration.</li>
+<li><strong>Stacked negative bars with little positive support</strong>: do not assume nearby supports will hold mechanically; flushes can overshoot.</li>
+<li><strong>Mixed small bars with no dominant wall</strong>: gamma is secondary; prioritize ATR grid, ORB, VWAP, ribbon, and PO.</li>
+</ul>
+<p><strong>Trading use</strong></p>
+<ul>
+<li>Use positive gamma walls as potential targets, chop/pin areas, take-profit zones, or places to demand stronger confirmation before chasing continuation.</li>
+<li>Use negative gamma pockets as areas where a confirmed break can travel faster than normal; do not fade them blindly.</li>
+<li>For long calls, prefer a clean reclaim and hold above the nearest positive wall before expecting continuation through it.</li>
+<li>For puts, prefer a clean loss and hold below the nearest positive floor before expecting acceleration lower.</li>
+<li>If price is trapped between two positive walls, expect compression and smaller targets.</li>
+<li>If price breaks from a positive zone into a negative zone, expect volatility expansion and faster level-to-level movement.</li>
+</ul>
+<p><strong>Live-read template</strong></p>
+<p>When using a Periscope gamma screenshot, answer in this order:</p>
+<ol>
+<li>Current spot relative to the ladder.</li>
+<li>Biggest positive walls by strike.</li>
+<li>Biggest negative air pockets by strike.</li>
+<li>Local regime: suppressive, accelerative, mixed, or flip-zone.</li>
+<li>Bull trigger, target, invalidation.</li>
+<li>Bear trigger, target, invalidation.</li>
+<li>Any overlap with ATR trigger/GG levels, ORB, VWAP, PDC, or pivot/ribbon structure.</li>
+</ol>
+<p><strong>Caveats</strong></p>
+<ul>
+<li>Expiry matters. Same-day gamma can shift quickly and is most relevant for intraday flow. Longer-dated exposure is smoother and less reactive.</li>
+<li>The profile changes intraday as customers trade options. A morning gamma read can be stale later in the session.</li>
+<li>Walls are probabilistic, not absolute. A strong catalyst, trend day, failed auction, or volatility shock can blow through any wall.</li>
+<li>Magnitude is useful mainly for ranking strikes within the same profile; do not overcompare different expiries or different products.</li>
+<li>Gamma gives expected hedging pressure after movement. It does not replace setup confirmation.</li>
+</ul>
+<hr />
+<h2 id="3-daily-market-preparation-framework">3. Daily market preparation framework</h2>
+<p>Before evaluating a trade, build the morning/context map:</p>
+<ol>
+<li><strong>Higher timeframe context</strong></li>
+<li>Daily trend: price vs daily 21 EMA, daily PO zone/rising/falling.</li>
+<li>4h PO: extended/distribution/accumulation/rollover.</li>
+<li>1h PO: especially for Bilbo GG and call→put reversal filters.</li>
+<li>10m ribbon: trend/sideways/compression.</li>
+<li><strong>Levels</strong></li>
+<li>PDC / previous close.</li>
+<li>Daily call/put triggers (±23.6%).</li>
+<li>Daily GG open levels (±38.2%).</li>
+<li>Daily 50%, 61.8%, 78.6%, full ATR.</li>
+<li>Premarket high/low.</li>
+<li>Opening range high/low after 5m/10m.</li>
+<li>VWAP.</li>
+<li>Support/resistance and supply/demand zones.</li>
+<li><strong>Regime</strong></li>
+<li>Trend day: ribbon stacked, pullbacks hold.</li>
+<li>Compression: squeeze/box forming; wait for expansion direction.</li>
+<li>Chop: price around PDC/VWAP, entangled ribbon; avoid or use credit/income logic.</li>
+<li>Event/expiration: OpEx, CPI/Fed, quad witching, gamma/pin context.</li>
+<li><strong>Primary setup map</strong></li>
+<li>Do not chase random candles. Identify which setup is active.</li>
+<li>If no primary setup is active, do nothing.</li>
+</ol>
+<p>Saty doctrine: identify market condition first, then apply the matching primary setup; “FOMO is stupid.” Doing nothing is often the best course.</p>
+<hr />
+<h2 id="4-primary-setup-map">4. Primary setup map</h2>
+<h3 id="trend-continuation">Trend continuation</h3>
+<ul>
+<li>Golden Gate continuation.</li>
+<li>Bilbo Golden Gate.</li>
+<li>ORB continuation.</li>
+<li>Vomy/iVomy ribbon continuation.</li>
+<li>Pivot/ribbon pullback.</li>
+</ul>
+<h3 id="breakout-expansion">Breakout / expansion</h3>
+<ul>
+<li>Trigger break and hold.</li>
+<li>10m compression → expansion.</li>
+<li>Bilbo Box break (1h and up only).</li>
+<li>Opening range break.</li>
+<li>Resistance/support break and retest.</li>
+</ul>
+<h3 id="mean-reversion">Mean reversion</h3>
+<ul>
+<li>±1 ATR RTM.</li>
+<li>Gap fill / midpoint fill.</li>
+<li>Price vs daily 21 EMA extreme reversion.</li>
+<li>4h PO leaving extreme/distribution/accumulation.</li>
+</ul>
+<h3 id="reversalexhaustion">Reversal/exhaustion</h3>
+<ul>
+<li>Call trigger → put trigger morning reversal.</li>
+<li>4h PO rollover + OpEx window.</li>
+<li>Bull/bear divergences.</li>
+<li>Failed breakout.</li>
+<li>H pattern / Head &amp; Shoulders / wedges / Wyckoff.</li>
+</ul>
+<h3 id="income-credit-spread">Income / credit spread</h3>
+<ul>
+<li>Trigger Box held for 30m/1h and selling opposite-side spreads at ±61.8 or ±100.</li>
+<li>Avoid spread structures when trend/volatility can quickly invalidate the box.</li>
+</ul>
+<hr />
+<h2 id="5-golden-gate-system">5. Golden Gate system</h2>
+<h3 id="51-definition-and-mechanics">5.1 Definition and mechanics</h3>
+<p>The Golden Gate is the path from ±38.2% ATR to ±61.8% ATR:</p>
+<ul>
+<li>Bull GG opens when price reaches +38.2% ATR.</li>
+<li>Bull GG completes when price reaches +61.8% ATR.</li>
+<li>Bear GG opens when price reaches -38.2% ATR.</li>
+<li>Bear GG completes when price reaches -61.8% ATR.</li>
+</ul>
+<p>Ideal doctrine: clear trend, EMAs stacked in the direction of the move, and entry at/near the ribbon if possible. Take profit at the 61.8 level / Golden Fib.</p>
+<h3 id="52-level-to-level-probabilities">5.2 Level-to-level probabilities</h3>
+<p>Day-mode, within the same day:</p>
+<table>
+<thead>
+<tr>
+<th>Move</th>
+<th style="text-align: right;">Historical probability</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Close → ±Trigger</td>
+<td style="text-align: right;">99.2% in either direction in the current study set; older framing also cites 80% in a different level-to-level definition</td>
+</tr>
+<tr>
+<td>Trigger → ±38.2%</td>
+<td style="text-align: right;">78.6% bull / 79.0% bear pooled; <strong>67.0% / 69.8% for the live cohort</strong> (open before trigger, cross intraday)</td>
+</tr>
+<tr>
+<td>38.2% → 61.8%</td>
+<td style="text-align: right;">62.5% bull / 65.4% bear pooled; <strong>52.0% / 56.6% for the live cohort</strong> (open before 38.2, cross intraday)</td>
+</tr>
+<tr>
+<td>61.8% → 78.6%</td>
+<td style="text-align: right;">60%</td>
+</tr>
+<tr>
+<td>78.6% → full ATR</td>
+<td style="text-align: right;">55%</td>
+</tr>
+<tr>
+<td>Close → full ATR cumulative</td>
+<td style="text-align: right;">~2%</td>
+</tr>
+<tr>
+<td>Bull GG baseline completion</td>
+<td style="text-align: right;">62.5% (2,139/3,421)</td>
+</tr>
+<tr>
+<td>Bear GG baseline completion</td>
+<td style="text-align: right;">65.4% (2,090/3,196)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Cohort honesty (2026-04-26 rerun):</strong> the pooled numbers mix three populations — days that <em>gap open</em> beyond the target (trivially 100%), days that open between the levels, and days that approach the level intraday. A trader watching price approach the level live faces the intraday-cross cohort, not the pooled number. For the GG leg that is 52.0% bull (1,224/2,355) and 56.6% bear (1,325/2,339). Use the live-cohort numbers for trade decisions; the pooled numbers only describe the full historical population.</p>
+<h3 id="53-bilbo-golden-gate-1h-po-filter">5.3 Bilbo Golden Gate: 1h PO filter</h3>
+<p>The 60-minute Phase Oscillator filter changes GG completion odds. <strong>These are the corrected numbers</strong>: the original study had a look-ahead bug (10m triggers were classified by the still-unfinished 1h candle's PO — up to 60 minutes of forward leakage). It was fixed on 2026-04-26 (point-in-time-safe join: only fully closed 1h bars visible at trigger time) and fully rerun on the 2000–2025 window.</p>
+<p>Bull GG completion by 1h PO state (corrected):</p>
+<table>
+<thead>
+<tr>
+<th>1h PO state</th>
+<th style="text-align: right;">Completion</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>High + Rising</td>
+<td style="text-align: right;">71.0% (137/193)</td>
+</tr>
+<tr>
+<td>High + Falling</td>
+<td style="text-align: right;">73.8% (124/168)</td>
+</tr>
+<tr>
+<td>Mid + Rising</td>
+<td style="text-align: right;">60.5% (n=2,195)</td>
+</tr>
+<tr>
+<td>Mid + Falling</td>
+<td style="text-align: right;">63.0% (n=817)</td>
+</tr>
+<tr>
+<td>Baseline</td>
+<td style="text-align: right;">62.5%</td>
+</tr>
+</tbody>
+</table>
+<p>Bear GG completion by 1h PO state (corrected):</p>
+<table>
+<thead>
+<tr>
+<th>1h PO state</th>
+<th style="text-align: right;">Completion</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Low + Falling</td>
+<td style="text-align: right;">85.1% (120/141)</td>
+</tr>
+<tr>
+<td>Low + Rising</td>
+<td style="text-align: right;">86.6% (129/149)</td>
+</tr>
+<tr>
+<td>Mid + Falling</td>
+<td style="text-align: right;">61.2% (n=2,103)</td>
+</tr>
+<tr>
+<td>Mid + Rising</td>
+<td style="text-align: right;">69.6% (n=773)</td>
+</tr>
+<tr>
+<td>Baseline</td>
+<td style="text-align: right;">65.4%</td>
+</tr>
+</tbody>
+</table>
+<p>What survived the fix, and what did not:</p>
+<ul>
+<li><strong>Extreme-zone edge survived, smaller</strong>: bear Low-zone Bilbo still completes ~85–87% vs 65.4% baseline (+20pp); bull High-zone ~71–74% vs 62.5% (+9–11pp). Bear Bilbo remains the standout configuration.</li>
+<li><strong>The mid-zone slope splits were a look-ahead artifact.</strong> Pre-fix, counter-slope mid buckets looked like "avoid" cells (bull Mid+Falling 51.5%, bear Mid+Rising 54.2%). Post-fix they partly <em>inverted</em> (63.0% and 69.6%). Do not use 1h PO slope in the mid zone as a filter in either direction.</li>
+<li>Extreme-zone sample sizes shrank materially under the honest join (bull High+Rising n=372 → 193; bear Low+Falling n=265 → 141): the setup is rarer than previously published.</li>
+</ul>
+<p>Continuation beyond 61.8 (to 78.6 / full ATR / 123.6) was published from the same pre-fix pipeline and has <strong>not</strong> been rerun with the corrected join — treat those ladder numbers as unverified and do not size on them.</p>
+<h3 id="54-10m-vs-60m-po">5.4 10m vs 60m PO</h3>
+<p>The published claim that the 60m PO was 5–12x more predictive than the 10m PO for GG completion came from a page whose mapped study did not reproduce it, and it predates the look-ahead fix. Treat "prefer 60m PO over 10m for Bilbo" as <strong>unverified</strong> pending a corrected rerun; the corrected §5.3 tables above are the only Bilbo numbers with a clean join.</p>
+<h3 id="55-entry-optimization">5.5 Entry optimization</h3>
+<table>
+<thead>
+<tr>
+<th>Entry method</th>
+<th>Result / interpretation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Immediate at 38.2</td>
+<td>63–65% completion, +10% ATR EV; appears on all GG days</td>
+</tr>
+<tr>
+<td>10m EMA8 pullback</td>
+<td>62–63%, +10–12% EV; appears 97%</td>
+</tr>
+<tr>
+<td>10m EMA21 pullback</td>
+<td>58%, +8% EV; appears 88%</td>
+</tr>
+<tr>
+<td>1h EMA21 pullback</td>
+<td>42%, +7–9% EV; appears 57–62%; best R:R 2.3–3.2x</td>
+</tr>
+<tr>
+<td>50% midpoint</td>
+<td>60%, negative EV (-3%); reward too small vs risk</td>
+</tr>
+<tr>
+<td>Trigger pullback</td>
+<td>43–48% completion but 38.2% ATR reward</td>
+</tr>
+</tbody>
+</table>
+<p>Saty doctrine favors entries at ribbon pullbacks when possible; the backtest says immediate and EMA8/EMA21 pullbacks have similar hit rates, while deeper 1h EMA21 pullbacks have better R:R but lower completion.</p>
+<h3 id="56-invalidation">5.6 Invalidation</h3>
+<p>The trigger (23.6%) is the key stop/kill level once GG is active:</p>
+<ul>
+<li>Trigger holds: 84–89% GG completion.</li>
+<li>10m close back through trigger: 45–51% completion.</li>
+<li>Delta: -39pp; strongest level-based invalidation signal.</li>
+</ul>
+<p>Other warnings:</p>
+<ul>
+<li>1h EMA21 break: -20 to -28pp delta.</li>
+<li>10m EMA48 break: -18 to -20pp delta.</li>
+<li>10m EMA21 break: only -6pp, weaker.</li>
+<li>10m EMA8 break: noise.</li>
+</ul>
+<p>Operational rule: if in a GG trade, a 10m close back through trigger is a major de-risk/cut signal.</p>
+<h3 id="57-timing-subway">5.7 Timing / Subway</h3>
+<p>GG completion by trigger hour:</p>
+<table>
+<thead>
+<tr>
+<th>Trigger time</th>
+<th style="text-align: right;">Bull GG completion</th>
+<th style="text-align: right;">Bear GG completion</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Open</td>
+<td style="text-align: right;">86%</td>
+<td style="text-align: right;">88%</td>
+</tr>
+<tr>
+<td>09:30</td>
+<td style="text-align: right;">63%</td>
+<td style="text-align: right;">64%</td>
+</tr>
+<tr>
+<td>10:00</td>
+<td style="text-align: right;">57%</td>
+<td style="text-align: right;">60%</td>
+</tr>
+<tr>
+<td>11:00</td>
+<td style="text-align: right;">55%</td>
+<td style="text-align: right;">56%</td>
+</tr>
+<tr>
+<td>12:00</td>
+<td style="text-align: right;">48%</td>
+<td style="text-align: right;">56%</td>
+</tr>
+<tr>
+<td>13:00</td>
+<td style="text-align: right;">39%</td>
+<td style="text-align: right;">56%</td>
+</tr>
+<tr>
+<td>14:00</td>
+<td style="text-align: right;">41%</td>
+<td style="text-align: right;">48%</td>
+</tr>
+<tr>
+<td>15:00</td>
+<td style="text-align: right;">16%</td>
+<td style="text-align: right;">30%</td>
+</tr>
+</tbody>
+</table>
+<p>Key: open triggers are highest conviction; bearish GGs remain more viable later than bullish; late bullish triggers are weak.</p>
+<hr />
+<h2 id="6-trigger-box-system">6. Trigger Box system</h2>
+<h3 id="61-definition">6.1 Definition</h3>
+<p>A trigger box day opens between PDC and a trigger:</p>
+<ul>
+<li><strong>Bearish trigger box</strong>: open below PDC but above put trigger. Occurs 22.6% of days (n=1,462).</li>
+<li><strong>Bullish trigger box</strong>: open above PDC but below call trigger. Occurs 26.3% of days (n=1,698).</li>
+</ul>
+<p>Saty doctrine: in a trend, break of call trigger can justify calls; break of put trigger can justify puts; stops can be just below/above the trigger; scale at midrange and ±1 ATR. 2–4 DTE on SPY was noted as a preference in the extracted doctrine.</p>
+<h3 id="62-hold-time-implications">6.2 Hold-time implications</h3>
+<p>GG open rates / day outcome once the box holds:</p>
+<table>
+<thead>
+<tr>
+<th>Condition</th>
+<th style="text-align: right;">Bull GG open</th>
+<th style="text-align: right;">Bear GG open</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Baseline</td>
+<td style="text-align: right;">57.3%</td>
+<td style="text-align: right;">59.0%</td>
+</tr>
+<tr>
+<td>Box held 30m</td>
+<td style="text-align: right;">72.6%</td>
+<td style="text-align: right;">71.6%</td>
+</tr>
+<tr>
+<td>Box held 1h</td>
+<td style="text-align: right;">82.2%</td>
+<td style="text-align: right;">80.2%</td>
+</tr>
+</tbody>
+</table>
+<p>If GG has not triggered after hold:</p>
+<ul>
+<li>After 30m: 59–62% still trigger later.</li>
+<li>After 1h: 55–60%.</li>
+<li>After 2h: ~50% coin flip.</li>
+<li>After 2.5h: below 50% for bullish.</li>
+<li>After 5h / 2:30 PM: effectively over (~25–31%).</li>
+</ul>
+<p>When PDC is reclaimed in first hour:</p>
+<ul>
+<li>73% reach opposite trigger.</li>
+<li>49% reach opposite GG entry (38.2%).</li>
+</ul>
+<h3 id="63-trigger-box-credit-spreads">6.3 Trigger Box credit spreads</h3>
+<p>Win rate here means price does <strong>not</strong> reach the sold-side target level.</p>
+<p>Sell call spreads from bearish box:</p>
+<table>
+<thead>
+<tr>
+<th>Condition</th>
+<th style="text-align: right;">+38.2</th>
+<th style="text-align: right;">+61.8</th>
+<th style="text-align: right;">+100</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>All days</td>
+<td style="text-align: right;">66.6%</td>
+<td style="text-align: right;">84.6%</td>
+<td style="text-align: right;">96.1%</td>
+</tr>
+<tr>
+<td>Held 30m</td>
+<td style="text-align: right;">79.7%</td>
+<td style="text-align: right;">90.6%</td>
+<td style="text-align: right;">97.8%</td>
+</tr>
+<tr>
+<td>Held 1h</td>
+<td style="text-align: right;">85.8%</td>
+<td style="text-align: right;">93.6%</td>
+<td style="text-align: right;">98.7%</td>
+</tr>
+</tbody>
+</table>
+<p>Sell put spreads from bullish box:</p>
+<table>
+<thead>
+<tr>
+<th>Condition</th>
+<th style="text-align: right;">-38.2</th>
+<th style="text-align: right;">-61.8</th>
+<th style="text-align: right;">-100</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>All days</td>
+<td style="text-align: right;">64.8%</td>
+<td style="text-align: right;">79.9%</td>
+<td style="text-align: right;">92.6%</td>
+</tr>
+<tr>
+<td>Held 30m</td>
+<td style="text-align: right;">76.0%</td>
+<td style="text-align: right;">87.7%</td>
+<td style="text-align: right;">96.0%</td>
+</tr>
+<tr>
+<td>Held 1h</td>
+<td style="text-align: right;">82.6%</td>
+<td style="text-align: right;">92.0%</td>
+<td style="text-align: right;">97.5%</td>
+</tr>
+</tbody>
+</table>
+<p>Two approaches:</p>
+<ul>
+<li>±100: 97–99% win, lower premium.</li>
+<li>±61.8: 88–93% win, more premium but worse loss ratio.</li>
+</ul>
+<p>Use ±38.2 as stop concept. Setup fires ~10% of trading days.</p>
+<hr />
+<h2 id="7-call-trigger-confirmation-and-callput-reversal">7. Call trigger confirmation and call→put reversal</h2>
+<h3 id="71-call-trigger-confirmation">7.1 Call trigger confirmation</h3>
+<p>Setup: open inside trigger box, then first 3-minute close above the call trigger. Target: +38.2% ATR.</p>
+<p>Universe:</p>
+<ul>
+<li>49.4% of days open inside the box.</li>
+<li>62.3% of those get a confirmed trigger close.</li>
+</ul>
+<p>Outcomes:</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th style="text-align: right;">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Overall hit rate</td>
+<td style="text-align: right;">73.8% (1,496 / 2,027)</td>
+</tr>
+<tr>
+<td>Clean run hit rate, no close back below trigger</td>
+<td style="text-align: right;">97.1% (747 / 769)</td>
+</tr>
+<tr>
+<td>Invalidated hit rate, closed back below trigger</td>
+<td style="text-align: right;">59.5% (749 / 1,258)</td>
+</tr>
+<tr>
+<td>Edge from invalidation filter</td>
+<td style="text-align: right;">+37.6pp</td>
+</tr>
+<tr>
+<td>Median time to target</td>
+<td style="text-align: right;">18 minutes / 6 bars</td>
+</tr>
+</tbody>
+</table>
+<p>By time:</p>
+<ul>
+<li>09:30 trigger: 81.4% hit.</li>
+<li>10:00: 76.2%.</li>
+<li>10:30: 73.0%.</li>
+<li>11:00: 73.3%.</li>
+<li>14:00: 74.0%.</li>
+<li>15:30: 29.1%.</li>
+</ul>
+<p>Key: a 3-minute close back below the trigger is a powerful kill signal; clean trades before 14:00 were near-100% in this study.</p>
+<h3 id="72-call-trigger-put-trigger-morning-reversal">7.2 Call trigger → put trigger morning reversal</h3>
+<p>Setup: SPY reaches daily call trigger before noon, later crosses below PDC, then reaches daily put trigger before noon. Outcomes measured from put-trigger touch through RTH close.</p>
+<table>
+<thead>
+<tr>
+<th>Outcome after put trigger</th>
+<th style="text-align: right;">Rate</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Back to PDC</td>
+<td style="text-align: right;">73.7%</td>
+</tr>
+<tr>
+<td>Back to call trigger</td>
+<td style="text-align: right;">43.3%</td>
+</tr>
+<tr>
+<td>Downside GG opens (-38.2%)</td>
+<td style="text-align: right;">75.3%</td>
+</tr>
+<tr>
+<td>Downside GG completes (-61.8%)</td>
+<td style="text-align: right;">43.6%</td>
+</tr>
+<tr>
+<td>Reaches -1 ATR</td>
+<td style="text-align: right;">18.5%</td>
+</tr>
+</tbody>
+</table>
+<p>1h PO filter at put-trigger touch:</p>
+<table>
+<thead>
+<tr>
+<th>1h state</th>
+<th style="text-align: right;">PDC recovery</th>
+<th style="text-align: right;">Downside GG open</th>
+<th style="text-align: right;">GG complete</th>
+<th style="text-align: right;">-1 ATR</th>
+<th style="text-align: right;">Close below put</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bullish expansion</td>
+<td style="text-align: right;">77.7%</td>
+<td style="text-align: right;">69.6%</td>
+<td style="text-align: right;">32.4%</td>
+<td style="text-align: right;">14.2%</td>
+<td style="text-align: right;">34.5%</td>
+</tr>
+<tr>
+<td>Compression</td>
+<td style="text-align: right;">67.1%</td>
+<td style="text-align: right;">75.8%</td>
+<td style="text-align: right;">46.8%</td>
+<td style="text-align: right;">19.6%</td>
+<td style="text-align: right;">44.7%</td>
+</tr>
+<tr>
+<td>Bearish expansion</td>
+<td style="text-align: right;">82.8%</td>
+<td style="text-align: right;">79.3%</td>
+<td style="text-align: right;">47.1%</td>
+<td style="text-align: right;">20.1%</td>
+<td style="text-align: right;">40.2%</td>
+</tr>
+</tbody>
+</table>
+<p>Interpretation:</p>
+<ul>
+<li>This reversal often creates both a PDC recovery and downside GG open; do not force a single clean outcome.</li>
+<li>PDC mean reversion is much more reliable than a full move back to call trigger.</li>
+<li>Hourly PO compression is the most bearish filter: lowest PDC recovery and highest close-below-put rate.</li>
+<li>Bullish hourly expansion suppresses downside continuation.</li>
+</ul>
+<hr />
+<h2 id="8-gap-framework">8. Gap framework</h2>
+<h3 id="81-concepts">8.1 Concepts</h3>
+<ul>
+<li>Gap fill: price returns to prior close.</li>
+<li>Midpoint fill: price reaches halfway back through the gap.</li>
+<li>Small gaps are more likely to fill quickly.</li>
+<li>Counter-trend gaps fill faster than pro-trend gaps.</li>
+</ul>
+<h3 id="82-midpoint-fill-rates">8.2 Midpoint fill rates</h3>
+<p>Gap up midpoint fill rates day 1:</p>
+<table>
+<thead>
+<tr>
+<th>Gap size</th>
+<th style="text-align: right;">All</th>
+<th style="text-align: right;">EMA21 bearish</th>
+<th style="text-align: right;">EMA21 bullish</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&lt;0.25%</td>
+<td style="text-align: right;">94%</td>
+<td style="text-align: right;">99%</td>
+<td style="text-align: right;">93%</td>
+</tr>
+<tr>
+<td>0.25–0.5%</td>
+<td style="text-align: right;">83%</td>
+<td style="text-align: right;">96%</td>
+<td style="text-align: right;">77%</td>
+</tr>
+<tr>
+<td>0.5–1%</td>
+<td style="text-align: right;">73%</td>
+<td style="text-align: right;">85%</td>
+<td style="text-align: right;">66%</td>
+</tr>
+<tr>
+<td>1–2%</td>
+<td style="text-align: right;">57%</td>
+<td style="text-align: right;">67%</td>
+<td style="text-align: right;">49%</td>
+</tr>
+<tr>
+<td>2%+</td>
+<td style="text-align: right;">62%</td>
+<td style="text-align: right;">68%</td>
+<td style="text-align: right;">57%</td>
+</tr>
+</tbody>
+</table>
+<p>Gap down midpoint fill rates:</p>
+<table>
+<thead>
+<tr>
+<th>Gap size</th>
+<th style="text-align: right;">All</th>
+<th style="text-align: right;">EMA21 bearish</th>
+<th style="text-align: right;">EMA21 bullish</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&lt;0.25%</td>
+<td style="text-align: right;">95%</td>
+<td style="text-align: right;">92%</td>
+<td style="text-align: right;">96%</td>
+</tr>
+<tr>
+<td>0.25–0.5%</td>
+<td style="text-align: right;">88%</td>
+<td style="text-align: right;">84%</td>
+<td style="text-align: right;">91%</td>
+</tr>
+<tr>
+<td>0.5–1%</td>
+<td style="text-align: right;">77%</td>
+<td style="text-align: right;">71%</td>
+<td style="text-align: right;">86%</td>
+</tr>
+<tr>
+<td>1–2%</td>
+<td style="text-align: right;">70%</td>
+<td style="text-align: right;">66%</td>
+<td style="text-align: right;">80%</td>
+</tr>
+</tbody>
+</table>
+<p>Key: tiny gaps (&lt;0.25%) are near-certain midpoint fills; counter-trend gaps fill faster; large gap-ups in compression plus bull trend resist filling.</p>
+<h3 id="83-same-day-full-gap-fill-table">8.3 Same-day full gap-fill table</h3>
+<p>Full gap fill means price returns all the way to the prior close during the same session. These rates are different from midpoint-fill rates above.</p>
+<table>
+<thead>
+<tr>
+<th>Gap size</th>
+<th style="text-align: right;">Gap-up full fill</th>
+<th style="text-align: right;">Gap-down full fill</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&lt;0.10%</td>
+<td style="text-align: right;">92.0%</td>
+<td style="text-align: right;">92.9%</td>
+</tr>
+<tr>
+<td>0.10–0.25%</td>
+<td style="text-align: right;">76.5%</td>
+<td style="text-align: right;">78.9%</td>
+</tr>
+<tr>
+<td>0.25–0.50%</td>
+<td style="text-align: right;">58.6%</td>
+<td style="text-align: right;">62.9%</td>
+</tr>
+<tr>
+<td>0.50–0.75%</td>
+<td style="text-align: right;">44.6%</td>
+<td style="text-align: right;">47.7%</td>
+</tr>
+<tr>
+<td>0.75–1.00%</td>
+<td style="text-align: right;">40.2%</td>
+<td style="text-align: right;">34.2%</td>
+</tr>
+<tr>
+<td>1.00–1.50%</td>
+<td style="text-align: right;">28.3%</td>
+<td style="text-align: right;">36.7%</td>
+</tr>
+<tr>
+<td>1.50–2.00%</td>
+<td style="text-align: right;">20.0%</td>
+<td style="text-align: right;">31.1%</td>
+</tr>
+<tr>
+<td>2.00–3.00%</td>
+<td style="text-align: right;">27.5%</td>
+<td style="text-align: right;">41.5%</td>
+</tr>
+<tr>
+<td>3.00%+</td>
+<td style="text-align: right;">43.8%</td>
+<td style="text-align: right;">15.0%</td>
+</tr>
+</tbody>
+</table>
+<p>Key distinction: midpoint fill is much easier than full fill. A small gap can have a very high midpoint-fill rate while a full fill becomes materially less reliable once the gap exceeds roughly 0.25–0.50%.</p>
+<h3 id="84-operational-use">8.4 Operational use</h3>
+<p>Use gaps as a contextual magnet, not an automatic trade:</p>
+<ul>
+<li>If gap is small and counter-trend, gap/midpoint fill can be primary target.</li>
+<li>If gap is pro-trend and ribbon/PO support continuation, avoid fading too early.</li>
+<li>Combine gap target with PDC, VWAP, premarket high/low, and ATR levels.</li>
+<li>If price rejects a supply/demand zone and gap remains below/above, gap fill becomes a target; scale at intermediate support/resistance.</li>
+</ul>
+<hr />
+<h2 id="9-compression-expansion-bilbo-box">9. Compression / expansion / Bilbo Box</h2>
+<h3 id="91-10m-compression-expansion">9.1 10m compression → expansion</h3>
+<p>Setup: 10m PO enters compression / Bollinger squeeze for at least 30 minutes. Expansion direction is measured from compression range midpoint over 120 minutes after expansion.</p>
+<p>Total events: 6,116; 3,311 bullish and 2,805 bearish.</p>
+<p>Baseline:</p>
+<ul>
+<li>54.1% bullish expansions; 45.9% bearish.</li>
+<li>Expansion direction correct 91% of the time, measured by max profit &gt; max drawdown.</li>
+<li>Bullish mean profit 0.58%, mean net +0.31%.</li>
+<li>Bearish mean profit 0.69%, mean net +0.35%.</li>
+</ul>
+<p>EMA 21/48 trend predicts direction:</p>
+<table>
+<thead>
+<tr>
+<th>Compression duration</th>
+<th style="text-align: right;">21&gt;48 → Bull%</th>
+<th style="text-align: right;">21&lt;48 → Bull%</th>
+<th style="text-align: right;">Edge</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>30–50m</td>
+<td style="text-align: right;">63.5%</td>
+<td style="text-align: right;">42.5%</td>
+<td style="text-align: right;">+21pp</td>
+</tr>
+<tr>
+<td>60–110m</td>
+<td style="text-align: right;">68.2%</td>
+<td style="text-align: right;">34.8%</td>
+<td style="text-align: right;">+33pp</td>
+</tr>
+<tr>
+<td>120–170m</td>
+<td style="text-align: right;">78.6%</td>
+<td style="text-align: right;">30.2%</td>
+<td style="text-align: right;">+48pp</td>
+</tr>
+<tr>
+<td>180m+</td>
+<td style="text-align: right;">83.7%</td>
+<td style="text-align: right;">22.9%</td>
+<td style="text-align: right;">+61pp</td>
+</tr>
+</tbody>
+</table>
+<p>Compression length increases reliability:</p>
+<table>
+<thead>
+<tr>
+<th>Duration</th>
+<th style="text-align: right;">N</th>
+<th style="text-align: right;">Mean profit</th>
+<th style="text-align: right;">Net &gt; 0</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>30–50m</td>
+<td style="text-align: right;">1,795</td>
+<td style="text-align: right;">0.607%</td>
+<td style="text-align: right;">76.1%</td>
+</tr>
+<tr>
+<td>60–110m</td>
+<td style="text-align: right;">2,256</td>
+<td style="text-align: right;">0.625%</td>
+<td style="text-align: right;">81.4%</td>
+</tr>
+<tr>
+<td>120–170m</td>
+<td style="text-align: right;">1,119</td>
+<td style="text-align: right;">0.640%</td>
+<td style="text-align: right;">83.6%</td>
+</tr>
+<tr>
+<td>180m+</td>
+<td style="text-align: right;">946</td>
+<td style="text-align: right;">0.680%</td>
+<td style="text-align: right;">86.2%</td>
+</tr>
+</tbody>
+</table>
+<p>ATR position at expansion:</p>
+<ul>
+<li>Above +61.8%: 91% bullish.</li>
+<li>Trigger–38.2%: 81% bullish.</li>
+<li>Bull trigger box: 67% bullish.</li>
+<li>Bear trigger box: 38% bullish / 62% bearish.</li>
+<li>Below -61.8%: 89% bearish.</li>
+</ul>
+<p>Operational rule: long compression + aligned EMA21/48 + supportive ATR position = strong directional clue. Time of day matters less than trend and ATR position.</p>
+<h3 id="92-bilbo-box-breakout">9.2 Bilbo Box breakout</h3>
+<p>Definition: Bilbo Box is the range of the first 5 compression bars. Once the box locks, break-watch begins; price trading outside the range is the break. Tested variants:</p>
+<ul>
+<li>Immediate at boundary.</li>
+<li>Close-outside confirmation.</li>
+<li>Retest.</li>
+</ul>
+<p>Sample: 50,889 break events across 3m/10m/1h/4h/1d, 2000–2026. <strong>Live use is hourly and up only</strong>: the intraday frames (3m/10m) showed only marginal texture (~51% hit, ~+0.03R median) with no usable standalone edge, and are excluded from the playbook.</p>
+<p>10-bar Net-R median (tradable frames):</p>
+<table>
+<thead>
+<tr>
+<th>TF</th>
+<th style="text-align: right;">N</th>
+<th style="text-align: right;">Immediate</th>
+<th style="text-align: right;">Close</th>
+<th style="text-align: right;">Retest</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1h</td>
+<td style="text-align: right;">3,399</td>
+<td style="text-align: right;">+0.04</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">-0.02</td>
+</tr>
+<tr>
+<td>4h</td>
+<td style="text-align: right;">936</td>
+<td style="text-align: right;">+0.03</td>
+<td style="text-align: right;">+0.05</td>
+<td style="text-align: right;">-0.01</td>
+</tr>
+<tr>
+<td>1d</td>
+<td style="text-align: right;">279</td>
+<td style="text-align: right;">+0.06</td>
+<td style="text-align: right;">+0.09</td>
+<td style="text-align: right;">0.00</td>
+</tr>
+</tbody>
+</table>
+<p>Takeaways:</p>
+<ol>
+<li>Take the break; do not wait for retest. Retest underperforms everywhere.</li>
+<li>Do not wait for textbook 5-bar formation; short boxes (1–4 bars) carried more edge than full 5-bar boxes.</li>
+<li>Higher timeframes favor bull side; shorting daily compression breaks was negative expectation due to SPY upward drift.</li>
+<li>Stops at opposite boundary; realistic TP 0.5–1.0R.</li>
+<li>Even on 1h+, the raw signal is modest (+0.04 to +0.09R median). Stack with trend/time/volatility filters; do not trade it standalone at size.</li>
+</ol>
+<p>Caveats: 1h PO/data issue; 1d sample underpowered; ambiguous outside bars excluded. A follow-up higher-timeframe PO study found same-direction PO expansion does NOT improve Bilbo outcomes (tested on intraday cohorts) — do not treat PO confirmation as a green-light.</p>
+<hr />
+<h2 id="10-mean-reversion-systems">10. Mean reversion systems</h2>
+<h3 id="101-1-atr-rtm">10.1 ±1 ATR RTM</h3>
+<p>Saty doctrine: RTM / return-to-mean works around ±1 ATR extremes, Phase Oscillator extremes, ribbon distance, and exhaustion. It is both-directional and should be paired with context, not blindly faded.</p>
+<p>Operational pattern:</p>
+<ul>
+<li>Identify extension into ±1 ATR / extended PO / far-from-ribbon condition.</li>
+<li>Look for exhaustion: wicks, declining volume, squeeze fired at extreme, PO curling/leaving extreme.</li>
+<li>Prefer reversal back toward nearer ATR levels, VWAP, EMA/ribbon, or PDC rather than demanding full reversal.</li>
+<li>Prefer lower-timeframe PO divergence from an extreme before entry.</li>
+<li>If trend is strong and ribbon remains clean, a ±1 ATR touch may become continuation, not reversion.</li>
+<li>Manage quickly; lotto/no-stop examples exist in Saty, but for systematic use define invalidation.</li>
+</ul>
+<p>Risk doctrine:</p>
+<ul>
+<li>Mean reversion plays are inherently riskier than trend-continuation plays because they fight the current move until proven otherwise.</li>
+<li>Newer traders should not play these at all. PATIENCE is the edge: wait for extremes, exhaustion, and confirmation instead of trying to top-tick or bottom-tick the move.</li>
+<li>Lower-timeframe Phase Oscillator divergence off extremes is preferred before considering the trade.</li>
+<li>Size small; these are quick tactical fades, not conviction trend holds.</li>
+<li>Take profits quick when the ribbon is thicc.</li>
+</ul>
+<h3 id="102-price-vs-daily-21-ema-reversion">10.2 Price vs daily 21 EMA reversion</h3>
+<p>Absolute extremes over 25 years:</p>
+<ul>
+<li>Max above daily EMA21: +7.21%.</li>
+<li>Max below: -18.53%.</li>
+<li>Median: +0.68%; SPY naturally rests slightly above EMA21.</li>
+<li>83.7% of days close within ±2% of EMA21.</li>
+</ul>
+<p>Mean reversion by deviation:</p>
+<table>
+<thead>
+<tr>
+<th>Deviation</th>
+<th style="text-align: right;">1d</th>
+<th style="text-align: right;">5d</th>
+<th style="text-align: right;">10d</th>
+<th style="text-align: right;">20d</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&gt; +5%</td>
+<td style="text-align: right;">-0.73%</td>
+<td style="text-align: right;">-0.88%</td>
+<td style="text-align: right;">-0.58%</td>
+<td style="text-align: right;">+0.43%</td>
+</tr>
+<tr>
+<td>&lt; -5%</td>
+<td style="text-align: right;">+0.24%</td>
+<td style="text-align: right;">+0.78%</td>
+<td style="text-align: right;">+0.97%</td>
+<td style="text-align: right;">+3.31%</td>
+</tr>
+<tr>
+<td>&lt; -7%</td>
+<td style="text-align: right;">+0.50%</td>
+<td style="text-align: right;">+1.75%</td>
+<td style="text-align: right;">+2.64%</td>
+<td style="text-align: right;">+5.36%</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>4% above EMA21 zone:</p>
+</blockquote>
+<ul>
+<li>50 episodes.</li>
+<li>100% touched EMA21 within 28 days; median 8 days.</li>
+<li>Peak day forward returns: 1d -0.83%, 3d -1.02%.</li>
+<li>Practical signal: 4h PO declining while daily PO still rising (n=38): 1d -0.42%, 2d -0.81%, 3d -0.85%.</li>
+<li>Strongest signal: 4h PO big drop delta &lt; -10 (n=7): 1d -1.64%, 2d -1.29%.</li>
+</ul>
+<h3 id="103-4h-po-rollover-opex-window">10.3 4h PO rollover + OpEx window</h3>
+<p>Signal: 4h PO peak ≥80, then crosses below 80 (leaving distribution). Baseline sample: 118 signals over 25 years; baseline ≥1% 5d hit rate = 50.8%.</p>
+<p>Within OpEx Friday + post-OpEx 1–5 day window:</p>
+<table>
+<thead>
+<tr>
+<th>Horizon</th>
+<th style="text-align: right;">N</th>
+<th style="text-align: right;">≥0.5%</th>
+<th style="text-align: right;">≥1.0%</th>
+<th style="text-align: right;">≥1.5%</th>
+<th style="text-align: right;">≥2.0%</th>
+<th style="text-align: right;">Median</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1d</td>
+<td style="text-align: right;">26</td>
+<td style="text-align: right;">42%</td>
+<td style="text-align: right;">19%</td>
+<td style="text-align: right;">15%</td>
+<td style="text-align: right;">4%</td>
+<td style="text-align: right;">-0.40%</td>
+</tr>
+<tr>
+<td>3d</td>
+<td style="text-align: right;">26</td>
+<td style="text-align: right;">62%</td>
+<td style="text-align: right;">46%</td>
+<td style="text-align: right;">23%</td>
+<td style="text-align: right;">15%</td>
+<td style="text-align: right;">-0.95%</td>
+</tr>
+<tr>
+<td>5d</td>
+<td style="text-align: right;">26</td>
+<td style="text-align: right;">73%</td>
+<td style="text-align: right;">50%</td>
+<td style="text-align: right;">27%</td>
+<td style="text-align: right;">23%</td>
+<td style="text-align: right;">-0.99%</td>
+</tr>
+<tr>
+<td>10d</td>
+<td style="text-align: right;">26</td>
+<td style="text-align: right;">77%</td>
+<td style="text-align: right;">69%</td>
+<td style="text-align: right;">46%</td>
+<td style="text-align: right;">38%</td>
+<td style="text-align: right;">-1.37%</td>
+</tr>
+</tbody>
+</table>
+<p>Extended filter: weekly or monthly ATR position ≥0.618 (n=21): 10d horizon had 62% hit ≥1%, 43% hit ≥1.5%, 38% hit ≥2%, median -1.25%.</p>
+<p>Takeaways:</p>
+<ul>
+<li>Edge plays over days, not necessarily immediate dump.</li>
+<li>OpEx Fri + post-Monday strongest pair.</li>
+<li>Long-dated puts preferred over weeklies when playing the tail.</li>
+<li>Deep extension (wk/mo ATR ≥1.0) underperforms moderate extension at 5d but has fatter left tails at 10d.</li>
+</ul>
+<hr />
+<h2 id="11-saty-discretionary-setup-foundations">11. Saty discretionary setup foundations</h2>
+<h3 id="111-orb-opening-range-breakout">11.1 ORB — Opening Range Breakout</h3>
+<p>Definition: 5m or 10m opening range breakout/breakdown, using the opening range, VWAP, trend, and target ladder.</p>
+<p>Doctrine distilled from foundational entries:</p>
+<ul>
+<li>Identify the 5m or 10m opening range.</li>
+<li>Prefer a clear trend/ribbon context.</li>
+<li>Enter on break of the opening range or on retest of a relevant trigger/level after trend confirmation.</li>
+<li>In bearish ORB examples, targets included premarket low, support, and -1 ATR; scaling at each target.</li>
+<li>Manual stops often use 34 EMA or reclaimed trigger/level depending on setup.</li>
+<li>Avoid first-10-minute noise; wait for opening range definition unless the setup is specifically an open trigger/GG.</li>
+</ul>
+<p>Live template:</p>
+<ul>
+<li>Preconditions: OR established; price breaking/holding outside OR; ribbon/VWAP supports direction; no major chop.</li>
+<li>Entry: break and hold OR high/low or retest after break.</li>
+<li>Invalidation: close back inside range or loss/reclaim of key EMA/trigger against trade.</li>
+<li>Targets: PM high/low, PDC, VWAP, ATR trigger/GG levels, support/resistance.</li>
+</ul>
+<h3 id="112-vomy-ivomy">11.2 Vomy / iVomy</h3>
+<p><strong>Vomy</strong>: bearish setup using Pivot Ribbon, 8/13 EMA cross/ribbon flip, squeeze/compression, Phase Oscillator, and ATR targets.<br />
+<strong>iVomy</strong>: inverse/bullish version.</p>
+<p>Vomy doctrine:</p>
+<ul>
+<li>Clear trend preferred, often visible on 3m/10m ribbon.</li>
+<li>Conviction arrow / 13-48 confirmation adds confidence.</li>
+<li>Bear flag breakdown, lower highs/lower lows, or failed reclaim can support short thesis.</li>
+<li>Entry often occurs on pullback into ribbon / rejection at 8 EMA or 13 EMA, not chase.</li>
+<li>Invalidation can be reclaim of 13 EMA or relevant ribbon level against the short.</li>
+<li>Targets: put trigger, -1 ATR, support/gap fill; scale into targets.</li>
+</ul>
+<p>iVomy doctrine:</p>
+<ul>
+<li>Bullish ribbon / inverse ribbon flip.</li>
+<li>Price holds previous close or key support.</li>
+<li>Entry on dip/retest into 8/13 EMA or recovery/close above 13 EMA.</li>
+<li>Targets: 50% ATR, 61.8% Golden Fib, prior high, call trigger/GG ladder.</li>
+<li>Take profit aggressively on lottos; Saty doctrine explicitly says to take profit on lottos at 100%.</li>
+</ul>
+<h3 id="113-supportresistance-and-supplydemand">11.3 Support/resistance and supply/demand</h3>
+<p>Support/resistance doctrine:</p>
+<ul>
+<li>Go long at support if price pulls back and holds.</li>
+<li>Go short at resistance if price rallies and rejects.</li>
+<li>If support breaks, short the retest where old support becomes resistance.</li>
+<li>If resistance breaks, long the retest where old resistance becomes support.</li>
+<li>Scale at the next support/resistance level.</li>
+</ul>
+<p>Supply/demand doctrine:</p>
+<ul>
+<li>Identify zones with multiple rejections or lower-high/lower-low structure.</li>
+<li>Supply + 21 EMA/ribbon resistance can define short entry.</li>
+<li>Invalidation is breakout through high of supply zone.</li>
+<li>Targets can include call/put triggers, gap fill, and nearby support.</li>
+</ul>
+<h3 id="114-power-play-failed-breakout-divergences-patterns">11.4 Power Play, failed breakout, divergences, patterns</h3>
+<p>Use these as secondary setup families unless current context explicitly matches them:</p>
+<ul>
+<li><strong>Power Play / PP</strong>: pivot/ribbon/trend structure setup.</li>
+<li><strong>Failed breakout / FBO</strong>: counter-trend move after breakout fails at support/resistance, often volume-confirmed.</li>
+<li><strong>Bull/Bear divergence</strong>: PO/RSI/MACD divergence with price structure; reversal signal.</li>
+<li><strong>Bull flag / bear flag</strong>: continuation pattern into ribbon/EMA support/resistance.</li>
+<li><strong>H Pattern, Head &amp; Shoulders, wedges, Wyckoff</strong>: structure/pattern context; require level confirmation.</li>
+<li><strong>Time Warp</strong>: multi-timeframe analysis; do not mix timeframes without stating which is primary.</li>
+</ul>
+<hr />
+<h2 id="12-multiday-and-swing-golden-gate">12. Multiday and swing Golden Gate</h2>
+<h3 id="121-weekly-atr-multiday-gg">12.1 Weekly ATR / multiday GG</h3>
+<p>Conditioned on previous day daily PO:</p>
+<ul>
+<li>Bull weekly GG: 65% complete day 1, 84% by day 5.</li>
+<li>Bull Bilbo: prior day PO High+Rising: 74% day 1, 84% by day 5 (n=115).</li>
+<li>Counter bull: prior day PO Mid+Falling: 53% day 1, 78% by day 5.</li>
+<li>Bear weekly GG: 72% complete day 1, 83% by day 5.</li>
+<li>Bear Bilbo: prior day PO Low+Falling: 94% day 1 (n=54), strongest signal in studies.</li>
+<li>Counter bear: prior day PO Mid+Rising: 60% day 1.</li>
+</ul>
+<p><strong>Caveat:</strong> the multiday script was flagged in audit for a current-week variant of the same PO-join observability problem that invalidated the intraday Bilbo numbers (see §5.3), and these conditioned splits have not been rerun with a corrected join. The daily-PO conditioning here uses prior-<em>day</em> values (less exposed than intra-hour joins), but treat the exact percentages — especially the 94% cell (n=54) — as unverified, and note the intraday lesson that counter-slope "avoid" cells can invert once look-ahead is removed.</p>
+<h3 id="122-monthly-atr-swing-gg">12.2 Monthly ATR / swing GG</h3>
+<p>Conditioned on previous week weekly PO:</p>
+<ul>
+<li>Bull monthly swing GG: 10.7% day 1, 35.1% day 5, 54.8% day 10, 73.2% day 20 (n=299).</li>
+<li>Bear monthly swing GG: 33.8% day 1, 58.1% day 5, 67.9% day 10, 76.5% day 20 (n=234).</li>
+<li>Weekly PO adds minimal edge at monthly timeframe.</li>
+<li>Bearish is 3x faster than bullish on day 1.</li>
+<li>Monthly moves take weeks.</li>
+<li>Full ATR only 24% bull / 42% bear by day 20.</li>
+</ul>
+<hr />
+<h2 id="13-trade-construction-playbooks">13. Trade construction playbooks</h2>
+<h3 id="131-day-mode-golden-gate-longshort">13.1 Day-mode Golden Gate long/short</h3>
+<p><strong>Preconditions</strong></p>
+<ul>
+<li>Price reaches ±38.2% ATR.</li>
+<li>Ribbon supports direction: stacked or at least not strongly opposing.</li>
+<li>Time of day is favorable, especially open/first hour.</li>
+<li>1h PO is not counter to direction; ideal Bilbo state if available.</li>
+</ul>
+<p><strong>Entry</strong></p>
+<ul>
+<li>Immediate at ±38.2; or pullback to 10m EMA8/EMA21/ribbon for improved execution.</li>
+</ul>
+<p><strong>Invalidation</strong></p>
+<ul>
+<li>10m close back through ±23.6 trigger is primary kill signal.</li>
+<li>1h EMA21 or 10m EMA48 break are serious warnings.</li>
+</ul>
+<p><strong>Targets</strong></p>
+<ul>
+<li>±50% ATR partial optional.</li>
+<li>±61.8% ATR primary target.</li>
+<li>78.6/full ATR only when Bilbo state/trend supports continuation.</li>
+</ul>
+<p><strong>Avoid</strong></p>
+<ul>
+<li>Late bullish triggers.</li>
+<li>Entangled/sideways ribbon.</li>
+<li>Midpoint entries with poor R:R unless another setup supports it.</li>
+</ul>
+<h3 id="132-bilbo-golden-gate-momentum-continuation">13.2 Bilbo Golden Gate momentum continuation</h3>
+<p><strong>Preconditions</strong></p>
+<ul>
+<li>GG opens at 38.2.</li>
+<li>1h PO state aligns:</li>
+<li>Bull: high+rising or high+falling.</li>
+<li>Bear: low+falling or low+rising.</li>
+<li>Trend/ribbon supports direction.</li>
+</ul>
+<p><strong>Entry</strong></p>
+<ul>
+<li>38.2 immediate or EMA8/ribbon pullback.</li>
+</ul>
+<p><strong>Invalidation</strong></p>
+<ul>
+<li>Trigger close break.</li>
+<li>PO/ribbon reversal against trade.</li>
+</ul>
+<p><strong>Targets</strong></p>
+<ul>
+<li>61.8 minimum target.</li>
+<li>78.6/full ATR extension more justified, especially bearish low+falling.</li>
+</ul>
+<p><strong>Caveat</strong></p>
+<ul>
+<li>Use the corrected §5.3 numbers: extreme-zone edge is real but smaller than originally published (bear low-zone ~85%, bull high-zone ~71–74%), the setup is rarer, and mid-zone slope splits carry no signal. Directional texture, not a reason for oversizing.</li>
+</ul>
+<h3 id="133-trigger-box-debitcredit-plan">13.3 Trigger Box debit/credit plan</h3>
+<p><strong>Debit version</strong></p>
+<ul>
+<li>If price breaks call trigger in bullish context, calls/longs; stop below trigger.</li>
+<li>If price breaks put trigger in bearish context, puts/shorts; stop above trigger.</li>
+<li>Scale 50% at midrange; all/mostly out at ±1 ATR except optional runner.</li>
+</ul>
+<p><strong>Credit version</strong></p>
+<ul>
+<li>If bearish box holds 30–60m, consider call credit spreads above +61.8 or +100.</li>
+<li>If bullish box holds 30–60m, consider put credit spreads below -61.8 or -100.</li>
+<li>Use ±38.2 as stop/invalidating level.</li>
+</ul>
+<h3 id="134-compression-expansion-breakout">13.4 Compression expansion breakout</h3>
+<p><strong>Preconditions</strong></p>
+<ul>
+<li>10m compression for at least 30m.</li>
+<li>EMA21/48 trend aligned.</li>
+<li>ATR position supports expansion direction.</li>
+</ul>
+<p><strong>Entry</strong></p>
+<ul>
+<li>At expansion confirmation / break of compression range.</li>
+<li>For Bilbo Box (1h+ frames only), immediate break beats retest historically.</li>
+</ul>
+<p><strong>Invalidation</strong></p>
+<ul>
+<li>Failure back into box/range.</li>
+<li>Opposite boundary break.</li>
+</ul>
+<p><strong>Targets</strong></p>
+<ul>
+<li>0.5–1R for Bilbo Box.</li>
+<li>ATR level ladder and support/resistance for broader compression expansion.</li>
+</ul>
+<h3 id="135-gap-fill-midpoint-fill">13.5 Gap fill / midpoint fill</h3>
+<p><strong>Preconditions</strong></p>
+<ul>
+<li>Gap size known.</li>
+<li>Trend filter known: gap is counter-trend or pro-trend.</li>
+<li>Price rejects continuation or loses opening direction.</li>
+</ul>
+<p><strong>Entry</strong></p>
+<ul>
+<li>Break of opening range toward gap.</li>
+<li>Failed breakout / rejection at supply/demand.</li>
+<li>PDC magnet confirmed by VWAP/ribbon/PO.</li>
+</ul>
+<p><strong>Invalidation</strong></p>
+<ul>
+<li>Gap continues with trend and holds above/below key level.</li>
+<li>Ribbon strongly supports continuation.</li>
+</ul>
+<p><strong>Targets</strong></p>
+<ul>
+<li>Gap midpoint first.</li>
+<li>Full gap/PDC second.</li>
+</ul>
+<h3 id="136-orb-continuation">13.6 ORB continuation</h3>
+<p><strong>Preconditions</strong></p>
+<ul>
+<li>Opening range defined.</li>
+<li>Clear trend / VWAP / ribbon support.</li>
+<li>Avoid initial 10-minute randomness unless using a separate open trigger setup.</li>
+</ul>
+<p><strong>Entry</strong></p>
+<ul>
+<li>Break and hold opening range high/low.</li>
+<li>Retest of OR boundary or trigger in trend.</li>
+</ul>
+<p><strong>Invalidation</strong></p>
+<ul>
+<li>Close back inside OR.</li>
+<li>Loss/reclaim of EMA/ribbon level against trade.</li>
+</ul>
+<p><strong>Targets</strong></p>
+<ul>
+<li>PM high/low, support/resistance, ATR trigger/GG, ±1 ATR.</li>
+</ul>
+<h3 id="137-vomy-ivomy">13.7 Vomy / iVomy</h3>
+<p><strong>Preconditions</strong></p>
+<ul>
+<li>Ribbon flip/8-13 structure in direction.</li>
+<li>Trend confirmation or conviction arrow.</li>
+<li>Pullback into ribbon or reclaim/rejection at 8/13 EMA.</li>
+</ul>
+<p><strong>Entry</strong></p>
+<ul>
+<li>Vomy short: 8/13 EMA rejection, bear flag breakdown, put trigger break.</li>
+<li>iVomy long: 8/13 EMA reclaim/hold, previous close hold, call trigger path.</li>
+</ul>
+<p><strong>Invalidation</strong></p>
+<ul>
+<li>Reclaim/loss of 13 EMA against trade.</li>
+<li>Failed ribbon flip / sideways market.</li>
+</ul>
+<p><strong>Targets</strong></p>
+<ul>
+<li>Trigger, 50%, 61.8, ±1 ATR, support/resistance/gap fill.</li>
+</ul>
+<h3 id="138-1-atr-rtm">13.8 ±1 ATR RTM</h3>
+<p><strong>Preconditions</strong></p>
+<ul>
+<li>Price extended to ±1 ATR or far from ribbon/EMA.</li>
+<li>PO extreme/leaving extreme, divergence, exhaustion, or fired squeeze.</li>
+<li>Prefer lower-timeframe PO divergence off an extreme before entry.</li>
+<li>Not for newer traders; mean reversion is inherently riskier and PATIENCE is required.</li>
+</ul>
+<p><strong>Entry</strong></p>
+<ul>
+<li>Confirmation of rejection/failed continuation.</li>
+<li>Safer after PO/ribbon confirms, not at first touch in a trend day.</li>
+<li>Size small; these are quick tactical fades, not conviction trend holds.</li>
+</ul>
+<p><strong>Invalidation</strong></p>
+<ul>
+<li>Clean continuation through ±1 ATR with trend/ribbon support.</li>
+<li>No exhaustion; volume expands with trend.</li>
+</ul>
+<p><strong>Targets</strong></p>
+<ul>
+<li>Next ATR level back inward, VWAP, ribbon/EMA, PDC.</li>
+<li>Take profits quick when the ribbon is thicc.</li>
+</ul>
+<h3 id="139-4h-po-opex-rollover-put-plan">13.9 4h PO / OpEx rollover put plan</h3>
+<p><strong>Preconditions</strong></p>
+<ul>
+<li>4h PO peak ≥80 then crosses below 80.</li>
+<li>OpEx Friday or post-OpEx 1–5 day window preferred.</li>
+<li>Weekly/monthly ATR position ≥0.618 strengthens.</li>
+</ul>
+<p><strong>Entry</strong></p>
+<ul>
+<li>Use rejection/rollover confirmation; avoid expecting immediate dump.</li>
+<li>Prefer longer-dated puts if playing 10d tail.</li>
+</ul>
+<p><strong>Invalidation</strong></p>
+<ul>
+<li>4h PO reclaims/rises; price holds trend/ribbon and no downside follow-through.</li>
+</ul>
+<p><strong>Targets</strong></p>
+<ul>
+<li>1% / 1.5% / 2% drawdown bands over 5–10d, plus ATR levels and daily EMA21.</li>
+</ul>
+<h3 id="1310-callput-morning-reversal">13.10 Call→put morning reversal</h3>
+<p><strong>Preconditions</strong></p>
+<ul>
+<li>Call trigger hit before noon.</li>
+<li>Price crosses below PDC.</li>
+<li>Put trigger reached before noon.</li>
+<li>1h PO state assessed.</li>
+</ul>
+<p><strong>Entry</strong></p>
+<ul>
+<li>At put-trigger touch/retest or after PDC loss confirms.</li>
+</ul>
+<p><strong>Invalidation</strong></p>
+<ul>
+<li>PDC reclaim with failure to extend lower.</li>
+<li>Bullish 1h expansion reduces downside continuation.</li>
+</ul>
+<p><strong>Targets</strong></p>
+<ul>
+<li>Downside GG open/complete.</li>
+<li>PDC recovery possibility must be respected.</li>
+<li>-1 ATR only ~18.5% overall; do not assume.</li>
+</ul>
+<hr />
+<h2 id="14-backtested-edges-quick-table">14. Backtested edges quick table</h2>
+<table>
+<thead>
+<tr>
+<th>Edge / study</th>
+<th>Best live-use takeaway</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Level-to-level</td>
+<td>Trigger→38.2 = 67–70% live cohort (79% pooled); 38.2→61.8 = 52–57% live cohort (62.5–65.4% pooled); full ATR cumulative ~2%</td>
+</tr>
+<tr>
+<td>Baseline GG</td>
+<td>Bull GG 62.5%; Bear GG 65.4%</td>
+</tr>
+<tr>
+<td>Bilbo GG (corrected)</td>
+<td>Bull PO high-zone 71–74%; Bear PO low-zone 85–87%; mid-zone slope splits carry no signal</td>
+</tr>
+<tr>
+<td>Bilbo continuation</td>
+<td>Unverified post-fix; do not size on the published ladder</td>
+</tr>
+<tr>
+<td>60m vs 10m PO</td>
+<td>Unverified post-fix; corrected §5.3 tables are the only clean Bilbo numbers</td>
+</tr>
+<tr>
+<td>GG entry</td>
+<td>Immediate/EMA8 entries solid; 1h EMA21 best R:R but lower hit</td>
+</tr>
+<tr>
+<td>GG invalidation</td>
+<td>10m trigger close break cuts completion by ~39pp</td>
+</tr>
+<tr>
+<td>GG timing</td>
+<td>Open triggers ~86–88%; late bull weak</td>
+</tr>
+<tr>
+<td>Trigger Box</td>
+<td>Box held 1h → ~80% GG open</td>
+</tr>
+<tr>
+<td>Trigger Box spreads</td>
+<td>1h-held box: ±61.8 spreads ~92–93.6%; ±100 ~97.5–98.7%</td>
+</tr>
+<tr>
+<td>Gap midpoint</td>
+<td>&lt;0.25% gaps fill midpoint ~94–95% day 1</td>
+</tr>
+<tr>
+<td>Weekly bear Bilbo</td>
+<td>Prior daily PO low+falling bear weekly GG = 94% day-1 (n=54, unverified post-fix)</td>
+</tr>
+<tr>
+<td>Monthly GG</td>
+<td>Bear monthly moves faster; monthly moves take weeks</td>
+</tr>
+<tr>
+<td>Compression expansion</td>
+<td>180m+ compression + bullish EMA21&gt;48 = 83.7% bullish expansion</td>
+</tr>
+<tr>
+<td>4h PO + OpEx</td>
+<td>Extended OpEx rollover has 10d tail edge; not immediate</td>
+</tr>
+<tr>
+<td>Bilbo Box</td>
+<td>1h+ frames only; immediate beats retest; retest underperforms</td>
+</tr>
+<tr>
+<td>Call trigger confirmation</td>
+<td>Clean 3m close above trigger → 38.2 hit 97.1%; median 18m</td>
+</tr>
+<tr>
+<td>Call→put reversal</td>
+<td>PDC recovery 73.7%; downside GG open 75.3%; -1 ATR 18.5%</td>
+</tr>
+<tr>
+<td>EMA21 reversion</td>
+<td>&gt;4% above daily EMA21 touched EMA21 within 28d in 50/50 episodes</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="15-options-execution-and-risk-translation">15. Options execution and risk translation</h2>
+<p>Underlying-level probabilities do not automatically become option-trade probabilities. A setup can hit the underlying target and still produce poor option results if entry is late, implied volatility collapses, spread is wide, or strike selection is poor.</p>
+<h3 id="0dte-1dte-implications">0DTE / 1DTE implications</h3>
+<ul>
+<li>Fast targets matter more than distant targets. If a study says median winner reaches target in 18 minutes, that matters for 0DTE.</li>
+<li>Time decay punishes late-day trades, especially late bullish GG attempts.</li>
+<li>Use tighter invalidation with 0DTE. A 10m close back through trigger can be too slow for far OTM contracts; watch price action and spread behavior.</li>
+<li>Prefer taking partials at the first clean level when options are inflated.</li>
+</ul>
+<h3 id="debit-trades">Debit trades</h3>
+<ul>
+<li>Best for clean directional setups with nearby targets: call-trigger confirmation, early GG, Bilbo GG, ORB continuation, compression expansion.</li>
+<li>Avoid buying premium in chop around PDC/VWAP unless the setup is explicitly a volatility expansion play.</li>
+<li>If the underlying target is only 0.5R away but option premium already expanded, reward/risk may be poor despite good underlying odds.</li>
+</ul>
+<h3 id="credit-spreads">Credit spreads</h3>
+<ul>
+<li>Best when the setup says a level is unlikely to be reached: trigger box held 30–60 minutes, especially selling beyond ±61.8 or ±100.</li>
+<li>Do not sell spreads into active trend expansion against the short strike.</li>
+<li>Define stop around the level that invalidates the box logic, often ±38.2.</li>
+<li>Higher win rate does not equal better expected value if loss size is too large; manage spread width and max loss.</li>
+</ul>
+<h3 id="position-sizing">Position sizing</h3>
+<ul>
+<li>Strong historical edge: still size for failure.</li>
+<li>Audit caveat or small sample: reduce size or treat as context only.</li>
+<li>Late-day, event-driven, or high-IV conditions: reduce size or require extra confirmation.</li>
+<li>If invalidation is vague, the trade is not ready.</li>
+</ul>
+<hr />
+<h2 id="16-caveats-and-data-quality-notes">16. Caveats and data-quality notes</h2>
+<ol>
+<li><strong>Research, not advice</strong>: all stats are historical SPY research, not guarantees.</li>
+<li><strong>SPY vs SPX</strong>: backtests are on SPY; SPX options execution/liquidity/settlement differ.</li>
+<li><strong>1h PO caveat</strong>: hourly Phase Oscillator has TradingView mismatch due to extended-hours ATR inflation. Use 60m PO because it tested predictive, but mark uncertainty.</li>
+<li><strong>Bilbo GG look-ahead fix (2026-04-26)</strong>: the original Bilbo GG study classified 10m triggers by the still-unfinished 1h candle's PO (up to 60 min of forward leakage). §5.3 now carries the corrected rerun. Still unverified post-fix: the continuation-beyond-61.8 ladder, the 60m-vs-10m PO comparison, and the weekly Bilbo conditioned splits in §12.1.</li>
+<li><strong>1d Bilbo Box underpowered</strong>: daily Bilbo Box sample n=279; bullish drift drives much of higher-TF bull edge.</li>
+<li><strong>Upward drift bias</strong>: 25-year SPY history favors bull breaks on higher timeframes.</li>
+<li><strong>Extracted doctrine</strong>: some Saty claims come from OCR/vision extraction of screenshots. Use as doctrine/terminology, not validated quant.</li>
+<li><strong>Avoid example contamination</strong>: example chart tickers, dates, visible panels are not rules unless doctrine text explicitly states them.</li>
+<li><strong>Cohort pooling, not just conflicting numbers</strong>: older level-to-level framings (Trigger→38.2 = 80%, 38.2→61.8 = 69%) pooled gap-over days (trivially 100%) with live intraday crosses. The 2026-04-26 rerun separates them — see §5.2. For live decisions use the intraday-cross cohort: Trigger→38.2 ≈ 67–70%, 38.2→61.8 ≈ 52–57%, full ATR cumulative ~2%.</li>
+<li><strong>Execution matters</strong>: options spreads, 0DTE greeks, slippage, IV, and strike selection can dominate the theoretical underlying move edge.</li>
+</ol>
+<hr />
+<hr />
+<h2 id="17-standalone-setup-scoring-rubric">17. Standalone setup scoring rubric</h2>
+<p>Use this rubric to keep live analysis disciplined. Do not mechanically add scores as if they guarantee an outcome; use them to expose whether a trade has enough confluence.</p>
+<h3 id="directional-confluence">Directional confluence</h3>
+<table>
+<thead>
+<tr>
+<th>Factor</th>
+<th>Bullish read</th>
+<th>Bearish read</th>
+<th>Neutral / avoid</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Price vs PDC</td>
+<td>Above and holding</td>
+<td>Below and holding</td>
+<td>Chopping around PDC</td>
+</tr>
+<tr>
+<td>ATR ladder</td>
+<td>Above call trigger/GG path</td>
+<td>Below put trigger/GG path</td>
+<td>Between levels with no trigger</td>
+</tr>
+<tr>
+<td>VWAP</td>
+<td>Above and reclaiming dips</td>
+<td>Below and rejecting bounces</td>
+<td>Mean-reverting through VWAP</td>
+</tr>
+<tr>
+<td>10m ribbon</td>
+<td>Stacked/up-sloping</td>
+<td>Stacked/down-sloping</td>
+<td>Entangled/flat</td>
+</tr>
+<tr>
+<td>1h PO</td>
+<td>High/rising for bull GG</td>
+<td>Low/falling for bear GG</td>
+<td>Mid against direction</td>
+</tr>
+<tr>
+<td>Compression</td>
+<td>Expansion aligns with trade</td>
+<td>Expansion aligns with short</td>
+<td>Box unresolved</td>
+</tr>
+<tr>
+<td>Time of day</td>
+<td>First hour supports GG</td>
+<td>Bearish can persist later</td>
+<td>Late bullish trigger is weak</td>
+</tr>
+</tbody>
+</table>
+<h3 id="trade-quality-buckets">Trade-quality buckets</h3>
+<ul>
+<li><strong>A setup:</strong> named setup active, level trigger present, higher-timeframe context aligned, invalidation clear, target nearby with acceptable reward/risk.</li>
+<li><strong>B setup:</strong> named setup active but one major confluence missing; size smaller or demand better entry.</li>
+<li><strong>C setup:</strong> mostly thesis, not enough structure; observe or paper-plan only.</li>
+<li><strong>No trade:</strong> no named setup, chop around PDC/VWAP, conflicting ribbon/PO, or invalidation too wide.</li>
+</ul>
+<h3 id="minimum-trade-ticket">Minimum trade ticket</h3>
+<p>Before entering, define:</p>
+<ol>
+<li>Setup name.</li>
+<li>Direction.</li>
+<li>Entry trigger.</li>
+<li>Stop/kill signal.</li>
+<li>First target.</li>
+<li>Second target or runner rule.</li>
+<li>Time stop.</li>
+<li>Why this is not chop.</li>
+<li>What evidence would flip the thesis.</li>
+</ol>
+<hr />
+<h2 id="18-compact-live-analysis-template">18. Compact live-analysis template</h2>
+<p>Use this when the trader sends “SPX” or asks for a live plan:</p>
+<p>```text
+Context
+- Product/timeframe:
+- Price vs PDC:
+- ATR grid: trigger / 38.2 / 50 / 61.8 / full ATR:
+- Premarket high/low:
+- OR high/low:
+- VWAP:
+- Ribbon/EMA stack:
+- PO state: 10m / 1h / 4h / daily:
+- Compression/squeeze:
+- Event context:</p>
+<p>Active setup(s)
+1. Setup:
+   Preconditions met:
+   Missing confirmation:
+   Entry trigger:
+   Invalidation:
+   Targets:
+   Historical edge:
+   Confidence:</p>
+<p>If/then plan
+- Bull case:
+- Bear case:
+- No-trade/chop case:</p>
+<p>Risk notes
+- What would make this wrong:
+- Time-of-day decay:
+- Stats caveat:
+```</p>
+<hr />
+<h2 id="19-one-screen-decision-hierarchy">19. One-screen decision hierarchy</h2>
+<ol>
+<li><strong>Higher TF</strong>: daily/4h/1h PO, daily EMA21 distance, weekly/monthly ATR extension.</li>
+<li><strong>Day levels</strong>: PDC, trigger, 38.2, 50, 61.8, full ATR, PM high/low, OR high/low, VWAP.</li>
+<li><strong>Regime</strong>: trend, compression, chop, event/OpEx.</li>
+<li><strong>Setup</strong>: GG, Bilbo GG, trigger box, gap, ORB, Vomy/iVomy, RTM, compression/Bilbo Box.</li>
+<li><strong>Entry</strong>: exact candle/level condition; no vague chasing.</li>
+<li><strong>Invalidation</strong>: exact level and close requirement.</li>
+<li><strong>Targets</strong>: nearest level-to-level ladder; partials; time expectation.</li>
+<li><strong>Risk</strong>: late-day decay, 0DTE Greeks, audit caveats, no-trade option.</li>
+</ol>
+<p>If none of the above identifies a clean setup: <strong>do nothing</strong>.</p>
+<div class="foot">Milkman Trades · methodology reference · statistics are historical SPY backtests, not certainties.
+See also: <a href="/backtesting-writeup.html">backtesting, biases &amp; the Bilbo Box study story</a> ·
+<a href="/bilbo-box-options.html">the Bilbo Box options study</a></div>
+</div></body></html>

@@ -339,7 +339,7 @@ Saty doctrine: identify market condition first, then apply the matching primary 
 
 - Trigger break and hold.
 - 10m compression → expansion.
-- Bilbo Box break.
+- Bilbo Box break (1h and up only).
 - Opening range break.
 - Resistance/support break and retest.
 
@@ -349,7 +349,6 @@ Saty doctrine: identify market condition first, then apply the matching primary 
 - Gap fill / midpoint fill.
 - Price vs daily 21 EMA extreme reversion.
 - 4h PO leaving extreme/distribution/accumulation.
-- TICK fading at extreme readings.
 
 ### Reversal/exhaustion
 
@@ -386,59 +385,51 @@ Day-mode, within the same day:
 | Move | Historical probability |
 |---|---:|
 | Close → ±Trigger | 99.2% in either direction in the current study set; older framing also cites 80% in a different level-to-level definition |
-| Trigger → ±38.2% | 80% conditional |
-| 38.2% → 61.8% | 69% |
+| Trigger → ±38.2% | 78.6% bull / 79.0% bear pooled; **67.0% / 69.8% for the live cohort** (open before trigger, cross intraday) |
+| 38.2% → 61.8% | 62.5% bull / 65.4% bear pooled; **52.0% / 56.6% for the live cohort** (open before 38.2, cross intraday) |
 | 61.8% → 78.6% | 60% |
 | 78.6% → full ATR | 55% |
 | Close → full ATR cumulative | ~2% |
-| Bull GG baseline completion | 63.0% (n=3,411) |
-| Bear GG baseline completion | 65.0% (n=3,200) |
+| Bull GG baseline completion | 62.5% (2,139/3,421) |
+| Bear GG baseline completion | 65.4% (2,090/3,196) |
 
-For live decisions, prefer the internally consistent level-to-level sequence: Trigger→38.2 = 80%, 38.2→61.8 = 69%, full ATR cumulative is closer to ~2%.
+**Cohort honesty (2026-04-26 rerun):** the pooled numbers mix three populations — days that *gap open* beyond the target (trivially 100%), days that open between the levels, and days that approach the level intraday. A trader watching price approach the level live faces the intraday-cross cohort, not the pooled number. For the GG leg that is 52.0% bull (1,224/2,355) and 56.6% bear (1,325/2,339). Use the live-cohort numbers for trade decisions; the pooled numbers only describe the full historical population.
 
 ### 5.3 Bilbo Golden Gate: 1h PO filter
 
-The 60-minute Phase Oscillator filter materially changes GG completion odds.
+The 60-minute Phase Oscillator filter changes GG completion odds. **These are the corrected numbers**: the original study had a look-ahead bug (10m triggers were classified by the still-unfinished 1h candle's PO — up to 60 minutes of forward leakage). It was fixed on 2026-04-26 (point-in-time-safe join: only fully closed 1h bars visible at trigger time) and fully rerun on the 2000–2025 window.
 
-Bull GG completion by 1h PO state:
-
-| 1h PO state | Completion |
-|---|---:|
-| High + Rising | 77.7% (n=372) |
-| High + Falling | 77.6% (n=107) |
-| Mid + Rising | 63.3% (n=2,256) |
-| Mid + Falling | 51.5% (n=664) |
-| Baseline | 63.0% |
-
-Bear GG completion by 1h PO state:
+Bull GG completion by 1h PO state (corrected):
 
 | 1h PO state | Completion |
 |---|---:|
-| Low + Falling | 90.2% (n=265) |
-| Low + Rising | 88.5% (n=96) |
-| Mid + Falling | 64.0% (n=2,203) |
-| Mid + Rising | 54.2% (n=626) |
-| Baseline | 65.0% |
+| High + Rising | 71.0% (137/193) |
+| High + Falling | 73.8% (124/168) |
+| Mid + Rising | 60.5% (n=2,195) |
+| Mid + Falling | 63.0% (n=817) |
+| Baseline | 62.5% |
 
-Continuation beyond 61.8:
+Bear GG completion by 1h PO state (corrected):
 
-- Bull PO High+Rising: 61.8 = 77.7%, 78.6 = 58.9%, 100 = 39.2%, 123.6 = 23.7%.
-- Bull baseline: 61.8 = 63%, 78.6 = 42.7%, 100 = 25.5%, 123.6 = 12.7%.
-- Bear PO Low+Falling: 61.8 = 90.2%, 78.6 = 80%, 100 = 66%, 123.6 = 43.8%.
-- Bear baseline: 61.8 = 65%, 78.6 = 48.1%, 100 = 31.4%, 123.6 = 18.3%.
+| 1h PO state | Completion |
+|---|---:|
+| Low + Falling | 85.1% (120/141) |
+| Low + Rising | 86.6% (129/149) |
+| Mid + Falling | 61.2% (n=2,103) |
+| Mid + Rising | 69.6% (n=773) |
+| Baseline | 65.4% |
 
-Key: bearish Bilbo is the strongest intraday directional configuration; it had 66% full-ATR reach in the study, higher than baseline GG completion itself.
+What survived the fix, and what did not:
 
-**Audit caveat:** some Bilbo GG percentage claims were flagged during review as requiring rerun confirmation. Preserve the directional lesson, but do not oversell exact percentages if money/risk depends on precision.
+- **Extreme-zone edge survived, smaller**: bear Low-zone Bilbo still completes ~85–87% vs 65.4% baseline (+20pp); bull High-zone ~71–74% vs 62.5% (+9–11pp). Bear Bilbo remains the standout configuration.
+- **The mid-zone slope splits were a look-ahead artifact.** Pre-fix, counter-slope mid buckets looked like "avoid" cells (bull Mid+Falling 51.5%, bear Mid+Rising 54.2%). Post-fix they partly *inverted* (63.0% and 69.6%). Do not use 1h PO slope in the mid zone as a filter in either direction.
+- Extreme-zone sample sizes shrank materially under the honest join (bull High+Rising n=372 → 193; bear Low+Falling n=265 → 141): the setup is rarer than previously published.
+
+Continuation beyond 61.8 (to 78.6 / full ATR / 123.6) was published from the same pre-fix pipeline and has **not** been rerun with the corrected join — treat those ladder numbers as unverified and do not size on them.
 
 ### 5.4 10m vs 60m PO
 
-For GG completion, the 60m PO was 5–12x more predictive than the 10m PO:
-
-- Bull edge: 60m +14.7pp over baseline; 10m only +3.1pp.
-- Bear edge: 60m +25.2pp; 10m only +2.1pp.
-
-Use 60m PO for Bilbo setups, with the hourly TradingView/data caveat noted.
+The published claim that the 60m PO was 5–12x more predictive than the 10m PO for GG completion came from a page whose mapped study did not reproduce it, and it predates the look-ahead fix. Treat "prefer 60m PO over 10m for Bilbo" as **unverified** pending a corrected rerun; the corrected §5.3 tables above are the only Bilbo numbers with a clean join.
 
 ### 5.5 Entry optimization
 
@@ -522,6 +513,33 @@ When PDC is reclaimed in first hour:
 
 - 73% reach opposite trigger.
 - 49% reach opposite GG entry (38.2%).
+
+### 6.3 Trigger Box credit spreads
+
+Win rate here means price does **not** reach the sold-side target level.
+
+Sell call spreads from bearish box:
+
+| Condition | +38.2 | +61.8 | +100 |
+|---|---:|---:|---:|
+| All days | 66.6% | 84.6% | 96.1% |
+| Held 30m | 79.7% | 90.6% | 97.8% |
+| Held 1h | 85.8% | 93.6% | 98.7% |
+
+Sell put spreads from bullish box:
+
+| Condition | -38.2 | -61.8 | -100 |
+|---|---:|---:|---:|
+| All days | 64.8% | 79.9% | 92.6% |
+| Held 30m | 76.0% | 87.7% | 96.0% |
+| Held 1h | 82.6% | 92.0% | 97.5% |
+
+Two approaches:
+
+- ±100: 97–99% win, lower premium.
+- ±61.8: 88–93% win, more premium but worse loss ratio.
+
+Use ±38.2 as stop concept. Setup fires ~10% of trading days.
 
 ---
 
@@ -618,13 +636,23 @@ Gap down midpoint fill rates:
 
 Key: tiny gaps (<0.25%) are near-certain midpoint fills; counter-trend gaps fill faster; large gap-ups in compression plus bull trend resist filling.
 
-### 8.3 Full gap-fill caution
+### 8.3 Same-day full gap-fill table
 
-The verified gap study in this manual is a **midpoint-fill** study: price reaches halfway back through the gap over a 1–7 trading-day window. It is not a same-day full-gap-fill study.
+Full gap fill means price returns all the way to the prior close during the same session. These rates are different from midpoint-fill rates above.
 
-Full gap fill means price returns all the way to the prior close. Treat full gap/PDC as a secondary target after the midpoint unless a separately verified full-fill table is available. Do not reuse midpoint-fill probabilities as full-fill probabilities.
+| Gap size | Gap-up full fill | Gap-down full fill |
+|---|---:|---:|
+| <0.10% | 92.0% | 92.9% |
+| 0.10–0.25% | 76.5% | 78.9% |
+| 0.25–0.50% | 58.6% | 62.9% |
+| 0.50–0.75% | 44.6% | 47.7% |
+| 0.75–1.00% | 40.2% | 34.2% |
+| 1.00–1.50% | 28.3% | 36.7% |
+| 1.50–2.00% | 20.0% | 31.1% |
+| 2.00–3.00% | 27.5% | 41.5% |
+| 3.00%+ | 43.8% | 15.0% |
 
-Key distinction: midpoint fill is much easier than full fill. A small gap can have a very high midpoint-fill rate while a full fill becomes materially less reliable as gap size expands.
+Key distinction: midpoint fill is much easier than full fill. A small gap can have a very high midpoint-fill rate while a full fill becomes materially less reliable once the gap exceeds roughly 0.25–0.50%.
 
 ### 8.4 Operational use
 
@@ -682,22 +710,18 @@ Operational rule: long compression + aligned EMA21/48 + supportive ATR position 
 
 ### 9.2 Bilbo Box breakout
 
-**Draft / verification caution:** the Bilbo Box breakout study is still in draft mode and being verified. Use these findings as exploratory context, not as a final trading rule. Treat the stats with caution until the study is fully audited.
-
 Definition: Bilbo Box is the range of the first 5 compression bars. Once the box locks, break-watch begins; price trading outside the range is the break. Tested variants:
 
 - Immediate at boundary.
 - Close-outside confirmation.
 - Retest.
 
-Sample: 50,889 break events across 3m/10m/1h/4h/1d, 2000–2026.
+Sample: 50,889 break events across 3m/10m/1h/4h/1d, 2000–2026. **Live use is hourly and up only**: the intraday frames (3m/10m) showed only marginal texture (~51% hit, ~+0.03R median) with no usable standalone edge, and are excluded from the playbook.
 
-10-bar Net-R median:
+10-bar Net-R median (tradable frames):
 
 | TF | N | Immediate | Close | Retest |
 |---|---:|---:|---:|---:|
-| 3m | 32,041 | +0.03 | -0.04 | -0.07 |
-| 10m | 7,656 | +0.03 | -0.02 | -0.08 |
 | 1h | 3,399 | +0.04 | 0.00 | -0.02 |
 | 4h | 936 | +0.03 | +0.05 | -0.01 |
 | 1d | 279 | +0.06 | +0.09 | 0.00 |
@@ -705,57 +729,12 @@ Sample: 50,889 break events across 3m/10m/1h/4h/1d, 2000–2026.
 Takeaways:
 
 1. Take the break; do not wait for retest. Retest underperforms everywhere.
-2. Do not wait for textbook 5-bar formation; 1–4 bar boxes carried more edge than full 5-bar boxes on intraday frames.
+2. Do not wait for textbook 5-bar formation; short boxes (1–4 bars) carried more edge than full 5-bar boxes.
 3. Higher timeframes favor bull side; shorting daily compression breaks was negative expectation due to SPY upward drift.
 4. Stops at opposite boundary; realistic TP 0.5–1.0R.
-5. Raw signal is texture, not a standalone exploit: ~51% hit rate, +0.03R median. Stack with trend/time/volatility filters.
+5. Even on 1h+, the raw signal is modest (+0.04 to +0.09R median). Stack with trend/time/volatility filters; do not trade it standalone at size.
 
-Caveats: 1h PO/data issue; 1d sample underpowered; ambiguous outside bars excluded.
-
-#### 9.2.1 Bilbo Box × higher-timeframe Phase Oscillator refinement
-
-Refined studies: HTF PO joins are lookahead-safe (`merge_asof` after shifting HTF timestamps forward by one full bar). The original fixed-window R study is now exploratory only. The actionable rebuild uses the trader's corrected bracket exits: R = **box height** (`box_high - box_low` price range), not time width; T1 = 0.5R, T2 = 1R, T3 = 2R; stop = opposite box side; time stop = 15 bars; same-bar target/stop ambiguity waits for candle close instead of stop-first.
-
-Original fixed-window headline, now superseded for trading decisions: **same-direction PO expansion did not improve Bilbo outcomes**.
-
-| Cut | N | Net-R median | Net+% | Stop% |
-|---|---:|---:|---:|---:|
-| 3m bull baseline | 16,642 | +0.049 | 51.5% | 32.7% |
-| 3m bull + 10m `bull_exp` | 4,849 | +0.042 | 51.1% | 33.4% |
-| 10m bear baseline | 3,691 | -0.012 | 49.2% | 28.7% |
-| 10m bear + 1h `bear_exp` | 1,067 | -0.024 | 49.1% | 28.8% |
-
-Bracket-exit rebuild headline:
-
-| Cohort | N | T1 0.5H | T2 1H | T3 2H | Stop | Timeout |
-|---|---:|---:|---:|---:|---:|---:|
-| 3m bull baseline | 18,067 | 62.4% | 38.7% | 14.0% | 37.6% | 48.4% |
-| 3m bull + 10m compression | 8,752 | 61.9% | 38.0% | 13.1% | 36.7% | 50.2% |
-| 3m bull + 10m low zone | 612 | 60.3% | 34.6% | 11.6% | 43.5% | 44.9% |
-| 10m bear baseline | 5,224 | 59.3% | 36.4% | 14.6% | 29.8% | 55.6% |
-| 10m bear + 1h compression | 2,304 | 60.5% | 38.1% | 16.3% | 29.3% | 54.4% |
-| 10m bear + 1h compression+falling | 1,399 | 62.3% | 38.5% | 16.9% | 26.8% | 56.3% |
-| 10m bear + 1h bull_exp+rising | 411 | 53.0% | 32.1% | 11.9% | 32.1% | 56.0% |
-
-3-contract same-direction PO-confirmed P&L model (3 contracts; one off at T1/T2/T3; no stop move after T1; after T2 final-contract stop moves to the break-side box edge — box top for bull breaks, box bottom for bear breaks; P&L in SPY points summed across contracts):
-
-| Strategy bucket | Trades | T1 | T2 | T3 | Stops | Timeouts | Win% | Total P&L pts | Avg/trade |
-|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| 3m bull + 10m bull_exp+rising | 2,419 | 1,525 (63.0%) | 951 (39.3%) | 327 (13.5%) | 1,031 (42.6%) | 1,061 (43.9%) | 57.1% | +161.8 | +0.067 |
-| 10m bear + 1h bear_exp+falling | 715 | 428 (59.9%) | 251 (35.1%) | 80 (11.2%) | 252 (35.2%) | 383 (53.6%) | 55.4% | +51.4 | +0.072 |
-
-Operational refinement:
-
-1. Do **not** use same-direction PO expansion as a green-light by itself; it mostly reduces sample without improving edge.
-2. Use HTF PO as an **anti-filter**:
-   - Skip 3m bull Bilbo breaks when 10m PO is in low/accumulation: n=572, Net-R median -0.079, Net+ 47.4%, Stop 38.3%.
-   - Skip 10m bear Bilbo breaks when 1h PO is `bull_exp+rising`: n=266, Net-R median -0.172, Net+ 43.6%, Stop 33.8%.
-3. Under the bracket-exit rebuild, **10m bear + 1h compression** survived modestly as constructive (T2 38.1% vs 36.4% baseline; stop 29.3% vs 29.8%); the cleaner sub-bucket is `compression+falling` (T2 38.5%, stop 26.8%).
-4. Under bracket exits, **3m bull + 10m compression is not a green-light**: it lowers stops slightly but also lowers T2/T3 hit rates. The stronger 3m use remains anti-filtering low-zone 10m PO.
-5. Same-direction PO confirmation with trade management is slightly positive in points (`bull_exp+rising` for 3m bull, `bear_exp+falling` for 10m bear), but the edge is modest (+0.063 and +0.096 SPY points/trade respectively).
-6. For future Bilbo studies, lead with N, T1/T2/T3 hit %, stop %, timeout %, and median bars; keep fixed-window R as secondary texture only.
-
-Caveat: the 10m PO cut is cleaner; the 1h PO cut inherits the known wick-clip-era 1h PO accuracy gap versus TradingView, so use 1h state/zone directionally, not tick-for-tick.
+Caveats: 1h PO/data issue; 1d sample underpowered; ambiguous outside bars excluded. A follow-up higher-timeframe PO study found same-direction PO expansion does NOT improve Bilbo outcomes (tested on intraday cohorts) — do not treat PO confirmation as a green-light.
 
 ---
 
@@ -765,6 +744,15 @@ Caveat: the 10m PO cut is cleaner; the 1h PO cut inherits the known wick-clip-er
 
 Saty doctrine: RTM / return-to-mean works around ±1 ATR extremes, Phase Oscillator extremes, ribbon distance, and exhaustion. It is both-directional and should be paired with context, not blindly faded.
 
+Operational pattern:
+
+- Identify extension into ±1 ATR / extended PO / far-from-ribbon condition.
+- Look for exhaustion: wicks, declining volume, squeeze fired at extreme, PO curling/leaving extreme.
+- Prefer reversal back toward nearer ATR levels, VWAP, EMA/ribbon, or PDC rather than demanding full reversal.
+- Prefer lower-timeframe PO divergence from an extreme before entry.
+- If trend is strong and ribbon remains clean, a ±1 ATR touch may become continuation, not reversion.
+- Manage quickly; lotto/no-stop examples exist in Saty, but for systematic use define invalidation.
+
 Risk doctrine:
 
 - Mean reversion plays are inherently riskier than trend-continuation plays because they fight the current move until proven otherwise.
@@ -772,15 +760,6 @@ Risk doctrine:
 - Lower-timeframe Phase Oscillator divergence off extremes is preferred before considering the trade.
 - Size small; these are quick tactical fades, not conviction trend holds.
 - Take profits quick when the ribbon is thicc.
-
-Operational pattern:
-
-- Identify extension into ±1 ATR / extended PO / far-from-ribbon condition.
-- Look for exhaustion: wicks, declining volume, squeeze fired at extreme, PO curling/leaving extreme.
-- Prefer lower-timeframe PO divergence from an extreme before entry.
-- Prefer reversal back toward nearer ATR levels, VWAP, EMA/ribbon, or PDC rather than demanding full reversal.
-- If trend is strong and ribbon remains clean, a ±1 ATR touch may become continuation, not reversion.
-- Manage quickly; lotto/no-stop examples exist in Saty, but for systematic use define invalidation.
 
 ### 10.2 Price vs daily 21 EMA reversion
 
@@ -828,10 +807,6 @@ Takeaways:
 - OpEx Fri + post-Monday strongest pair.
 - Long-dated puts preferred over weeklies when playing the tail.
 - Deep extension (wk/mo ATR ≥1.0) underperforms moderate extension at 5d but has fatter left tails at 10d.
-
-### 10.4 TICK fading
-
-Extracted doctrine: wait until an extreme $TICK reading registers (>+1000 or <-1000), then fade the move; avoid jumping into the froth after the extreme has already hit.
 
 ---
 
@@ -922,6 +897,8 @@ Conditioned on previous day daily PO:
 - Bear Bilbo: prior day PO Low+Falling: 94% day 1 (n=54), strongest signal in studies.
 - Counter bear: prior day PO Mid+Rising: 60% day 1.
 
+**Caveat:** the multiday script was flagged in audit for a current-week variant of the same PO-join observability problem that invalidated the intraday Bilbo numbers (see §5.3), and these conditioned splits have not been rerun with a corrected join. The daily-PO conditioning here uses prior-*day* values (less exposed than intra-hour joins), but treat the exact percentages — especially the 94% cell (n=54) — as unverified, and note the intraday lesson that counter-slope "avoid" cells can invert once look-ahead is removed.
+
 ### 12.2 Monthly ATR / swing GG
 
 Conditioned on previous week weekly PO:
@@ -993,7 +970,7 @@ Conditioned on previous week weekly PO:
 
 **Caveat**
 
-- Audit note on some Bilbo stats; use as strong directional texture, not sole reason for oversizing.
+- Use the corrected §5.3 numbers: extreme-zone edge is real but smaller than originally published (bear low-zone ~85%, bull high-zone ~71–74%), the setup is rarer, and mid-zone slope splits carry no signal. Directional texture, not a reason for oversizing.
 
 ### 13.3 Trigger Box debit/credit plan
 
@@ -1020,7 +997,7 @@ Conditioned on previous week weekly PO:
 **Entry**
 
 - At expansion confirmation / break of compression range.
-- For Bilbo Box, immediate break beats retest historically.
+- For Bilbo Box (1h+ frames only), immediate break beats retest historically.
 
 **Invalidation**
 
@@ -1105,7 +1082,7 @@ Conditioned on previous week weekly PO:
 **Preconditions**
 
 - Price extended to ±1 ATR or far from ribbon/EMA.
-- PO extreme/leaving extreme, divergence, exhaustion, fired squeeze, or TICK extreme.
+- PO extreme/leaving extreme, divergence, exhaustion, or fired squeeze.
 - Prefer lower-timeframe PO divergence off an extreme before entry.
 - Not for newer traders; mean reversion is inherently riskier and PATIENCE is required.
 
@@ -1176,22 +1153,22 @@ Conditioned on previous week weekly PO:
 
 | Edge / study | Best live-use takeaway |
 |---|---|
-| Level-to-level | Trigger→38.2 = 80%; 38.2→61.8 = 69%; full ATR cumulative closer to ~2% |
-| Baseline GG | Bull GG 63%; Bear GG 65% |
-| Bilbo GG | Bull PO high+rising 77.7%; Bear PO low+falling 90.2% |
-| Bilbo continuation | Bear low+falling full ATR 66% |
-| 60m vs 10m PO | 60m PO 5–12x more predictive for GG |
+| Level-to-level | Trigger→38.2 = 67–70% live cohort (79% pooled); 38.2→61.8 = 52–57% live cohort (62.5–65.4% pooled); full ATR cumulative ~2% |
+| Baseline GG | Bull GG 62.5%; Bear GG 65.4% |
+| Bilbo GG (corrected) | Bull PO high-zone 71–74%; Bear PO low-zone 85–87%; mid-zone slope splits carry no signal |
+| Bilbo continuation | Unverified post-fix; do not size on the published ladder |
+| 60m vs 10m PO | Unverified post-fix; corrected §5.3 tables are the only clean Bilbo numbers |
 | GG entry | Immediate/EMA8 entries solid; 1h EMA21 best R:R but lower hit |
 | GG invalidation | 10m trigger close break cuts completion by ~39pp |
 | GG timing | Open triggers ~86–88%; late bull weak |
 | Trigger Box | Box held 1h → ~80% GG open |
 | Trigger Box spreads | 1h-held box: ±61.8 spreads ~92–93.6%; ±100 ~97.5–98.7% |
 | Gap midpoint | <0.25% gaps fill midpoint ~94–95% day 1 |
-| Weekly bear Bilbo | Prior daily PO low+falling bear weekly GG = 94% day-1 |
+| Weekly bear Bilbo | Prior daily PO low+falling bear weekly GG = 94% day-1 (n=54, unverified post-fix) |
 | Monthly GG | Bear monthly moves faster; monthly moves take weeks |
 | Compression expansion | 180m+ compression + bullish EMA21>48 = 83.7% bullish expansion |
 | 4h PO + OpEx | Extended OpEx rollover has 10d tail edge; not immediate |
-| Bilbo Box | Immediate beats retest; retest underperforms |
+| Bilbo Box | 1h+ frames only; immediate beats retest; retest underperforms |
 | Call trigger confirmation | Clean 3m close above trigger → 38.2 hit 97.1%; median 18m |
 | Call→put reversal | PDC recovery 73.7%; downside GG open 75.3%; -1 ATR 18.5% |
 | EMA21 reversion | >4% above daily EMA21 touched EMA21 within 28d in 50/50 episodes |
@@ -1236,12 +1213,12 @@ Underlying-level probabilities do not automatically become option-trade probabil
 1. **Research, not advice**: all stats are historical SPY research, not guarantees.
 2. **SPY vs SPX**: backtests are on SPY; SPX options execution/liquidity/settlement differ.
 3. **1h PO caveat**: hourly Phase Oscillator has TradingView mismatch due to extended-hours ATR inflation. Use 60m PO because it tested predictive, but mark uncertainty.
-4. **Bilbo GG audit warning**: research notes flags several Bilbo claims as `needs_code_fix`; verify reruns before sizing around exact percentages.
+4. **Bilbo GG look-ahead fix (2026-04-26)**: the original Bilbo GG study classified 10m triggers by the still-unfinished 1h candle's PO (up to 60 min of forward leakage). §5.3 now carries the corrected rerun. Still unverified post-fix: the continuation-beyond-61.8 ladder, the 60m-vs-10m PO comparison, and the weekly Bilbo conditioned splits in §12.1.
 5. **1d Bilbo Box underpowered**: daily Bilbo Box sample n=279; bullish drift drives much of higher-TF bull edge.
 6. **Upward drift bias**: 25-year SPY history favors bull breaks on higher timeframes.
 7. **Extracted doctrine**: some Saty claims come from OCR/vision extraction of screenshots. Use as doctrine/terminology, not validated quant.
 8. **Avoid example contamination**: example chart tickers, dates, visible panels are not rules unless doctrine text explicitly states them.
-9. **Conflicting close→trigger number**: one current framing says close→±Trigger was reached on 99.2% of days in either direction; an older level-to-level framing cites 80%. Prefer the internally consistent live sequence of Trigger→38.2 = 80%, 38.2→61.8 = 69%, and full ATR cumulative closer to ~2%, while preserving the conflict if precision matters.
+9. **Cohort pooling, not just conflicting numbers**: older level-to-level framings (Trigger→38.2 = 80%, 38.2→61.8 = 69%) pooled gap-over days (trivially 100%) with live intraday crosses. The 2026-04-26 rerun separates them — see §5.2. For live decisions use the intraday-cross cohort: Trigger→38.2 ≈ 67–70%, 38.2→61.8 ≈ 52–57%, full ATR cumulative ~2%.
 10. **Execution matters**: options spreads, 0DTE greeks, slippage, IV, and strike selection can dominate the theoretical underlying move edge.
 
 ---

@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
-"""Render STANDALONE_TRADING_KNOWLEDGE_MANUAL.md -> site/trading-methodology.html.
-The public methodology page (replaces linking to the GitHub file). Not in nav
-unless Pedro asks. Rerunnable."""
+"""Render STANDALONE_TRADING_KNOWLEDGE_MANUAL.md -> site/trading-manual.html.
+The public trading manual (linked from the homepage Resources section; the
+same document is published at github.com/prsdro/satyland-trading-notes —
+edit there, copy here, rerun). trading-methodology.html redirects here."""
 from pathlib import Path
 
 import markdown
 
 SRC = Path('/root/spy/STANDALONE_TRADING_KNOWLEDGE_MANUAL.md')
-OUT = Path('/root/spy/site/trading-methodology.html')
+OUT = Path('/root/spy/site/trading-manual.html')
 
 md = markdown.Markdown(extensions=['tables', 'toc'])
 body = md.convert(SRC.read_text())
@@ -15,7 +16,7 @@ toc = md.toc
 
 page = f"""<!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>The Trading Methodology | Milkman Trades</title>
+<title>The Trading Manual | Milkman Trades</title>
 <meta name="description" content="The full SPY/SPX trading methodology used on this site — Saty Mahajan's indicator system (ATR Levels, Pivot Ribbon, Phase Oscillator), setups, probabilities, and operating rules.">
 <script src="/nav.js" defer></script>
 <style>
@@ -40,7 +41,7 @@ page = f"""<!doctype html><html lang="en"><head><meta charset="utf-8">
  .toc a{{color:#93a4b8;text-decoration:none}} .toc a:hover{{color:#60a5fa}}
  .foot{{color:#7b8ba1;font-size:13px;border-top:1px solid #1f2a44;margin-top:44px;padding-top:14px}}
 </style></head><body><div class="wrap">
-<h1>The Trading Methodology</h1>
+<h1>The Trading Manual</h1>
 <p class="lede">This is the complete written system behind everything on this site: Saty Mahajan's
 indicator suite (ATR Levels, Pivot Ribbon, Phase Oscillator) and the level-to-level SPY/SPX framework
 built on it — vocabulary, setups, historical probabilities from our own backtests, and the operating

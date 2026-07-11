@@ -361,10 +361,6 @@ body{
 <body>
 <div class="page">
 
-<div style="background:#1a1400;border:1px solid #3d3200;border-radius:6px;padding:.6rem 1rem;margin-bottom:1.5rem;font-size:.75rem;color:#d4a800;font-weight:400;line-height:1.5">
-  <strong style="color:#fbbf24">Draft &mdash;</strong> These backtests have not yet been independently verified. Do not trade based on this data.
-</div>
-
 <a href="/" style="display:inline-flex;align-items:center;gap:.4rem;font-size:.8rem;color:var(--text-dim);text-decoration:none;margin-bottom:.5rem;transition:color .2s" onmouseover="this.style.color='#e8eaed'" onmouseout="this.style.color=''"><svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0h4"/></svg>Home</a>
 <a href="/golden-gate.html" class="back">
   <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
@@ -374,12 +370,12 @@ body{
 <header class="hero reveal">
   <div class="kicker">Study &mdash; The Bilbo Golden Gate</div>
   <h1>The Bilbo Golden Gate:<br>momentum-confirmed triggers<br>complete <em>almost instantly.</em></h1>
-  <p class="lede">The Saty Phase Oscillator on the 60-minute timeframe tells you whether a Golden Gate entry (at 38.2%) has real momentum to complete through 61.8% &mdash; or if it's likely to stall. Across 6,582 trading days and 25 years of SPY data, the difference is dramatic.</p>
+  <p class="lede">The Saty Phase Oscillator on the 60-minute timeframe changes the odds that a Golden Gate entry (at 38.2%) completes through 61.8%. Across 25 years of SPY data (2000&ndash;2025), extreme-zone PO readings shift completion from a ~62&ndash;65% baseline to ~71% (bull) and ~85&ndash;87% (bear).</p>
 </header>
 
-<div role="alert" style="margin:0 0 2.5rem;padding:1rem 1.2rem;background:linear-gradient(180deg,#1a1400 0%,#1f1808 100%);border:1px solid #3d3200;border-left:3px solid #fbbf24;border-radius:6px;color:#e8d9a8;font-size:.88rem;line-height:1.6">
-  <div style="font-family:'JetBrains Mono',monospace;font-size:.65rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#fbbf24;margin-bottom:.4rem">Draft &mdash; Demoted from Core 2026-04-26</div>
-  This study is being rebuilt due to a confirmed <strong style="color:#fbbf24">look-ahead bug</strong> in the 1h Phase Oscillator join: the backtest reads the not-yet-closed current hour bar at trigger time, leaking up to 60&nbsp;min of forward information. Point-in-time-safe reruns show the headline 90% bear cohort is closer to ~85% and the worst buckets partly invert. Treat all numbers below as <em>upper bounds</em> until the rebuild lands. Full reasoning &rarr; <a href="/drafts.html#bilbo-golden-gate" style="color:#fbbf24;text-decoration:underline;text-underline-offset:2px">drafts.html#bilbo-golden-gate</a>.
+<div role="note" style="margin:0 0 2.5rem;padding:1rem 1.2rem;background:linear-gradient(180deg,#0d1a10 0%,#101f14 100%);border:1px solid #1e3d28;border-left:3px solid #4ade80;border-radius:6px;color:#b8e0c2;font-size:.88rem;line-height:1.6">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:.65rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#4ade80;margin-bottom:.4rem">Corrected &amp; Restored &mdash; 2026-07-11</div>
+  The original study had a confirmed <strong style="color:#4ade80">look-ahead bug</strong>: 10m triggers were classified by the still-unfinished 1h candle's PO (up to 60&nbsp;min of forward leakage). It was demoted 2026-04-26, the join was fixed the same day (only fully closed 1h bars visible at trigger time), and every number on this page is now from the corrected rerun. What changed: the bull High+Rising headline dropped 77.1%&nbsp;&rarr;&nbsp;71.0%, bear Low+Falling 90.3%&nbsp;&rarr;&nbsp;85.1%, samples roughly halved &mdash; and the mid-zone slope splits <em>inverted</em>, so PO slope in the mid zone carries no usable signal. Audit trail: <code style="font-size:.8em">audit-reruns/gg_bug_fix_results_2026-04-26.md</code>.
 </div>
 
 <!-- ── Section 1: The Edge ── -->
@@ -387,17 +383,17 @@ body{
   <div class="section-label">01 &mdash; The Edge</div>
 
   <p class="prose">
-    The Golden Gate is the zone between the <strong>38.2%</strong> and <strong>61.8%</strong> ATR levels. It &ldquo;fires&rdquo; when price enters at 38.2% and &ldquo;completes&rdquo; when it reaches 61.8%. On average it completes about 63&ndash;65% of the time. But that average hides a wide range &mdash; depending on what the 60-minute Phase Oscillator is doing at the moment the 38.2% level is hit.
+    The Golden Gate is the zone between the <strong>38.2%</strong> and <strong>61.8%</strong> ATR levels. It &ldquo;fires&rdquo; when price enters at 38.2% and &ldquo;completes&rdquo; when it reaches 61.8%. On average it completes 62.5% of the time (bull) and 65.4% (bear). That average moves &mdash; depending on what the <em>last completed</em> 60-minute Phase Oscillator bar showed at the moment the 38.2% level is hit.
   </p>
 
   <div class="bigstat">
     <div class="bigstat-item">
-      <div class="bigstat-num bull">77.1%</div>
-      <div class="bigstat-label">Bullish GG completion when<br>PO is High &amp; Rising (vs 63% baseline)</div>
+      <div class="bigstat-num bull">71.0%</div>
+      <div class="bigstat-label">Bullish GG completion when<br>PO is High &amp; Rising (vs 62.5% baseline)</div>
     </div>
     <div class="bigstat-item">
-      <div class="bigstat-num bear">90.3%</div>
-      <div class="bigstat-label">Bearish GG completion when<br>PO is Low &amp; Falling (vs 65% baseline)</div>
+      <div class="bigstat-num bear">85.1%</div>
+      <div class="bigstat-label">Bearish GG completion when<br>PO is Low &amp; Falling (vs 65.4% baseline)</div>
     </div>
   </div>
 
@@ -420,7 +416,7 @@ body{
   </div>
 
   <div class="callout">
-    <p><strong>Reading this table:</strong> &ldquo;PO High + Rising&rdquo; means the 60-minute Phase Oscillator was above 61.8 and increasing at the moment the trigger fired. The further the PO is in the direction of the trade, the more likely the Golden Gate completes.</p>
+    <p><strong>Reading this table:</strong> &ldquo;PO High + Rising&rdquo; means the last <em>completed</em> 60-minute Phase Oscillator bar was above 61.8 and increasing when the trigger fired. The edge lives in the extreme zones: bear low-zone ~85&ndash;87%, bull high-zone ~71&ndash;74%. In the mid zone, slope tells you nothing &mdash; the pre-fix &ldquo;avoid counter-slope&rdquo; buckets (bull Mid+Falling 51.6%, bear Mid+Rising 54.3%) were look-ahead artifacts that inverted to 63.0% and 69.6% after the fix. Note the extreme-zone setups are rarer than originally published (n=141&ndash;193 vs 268&ndash;388 pre-fix).</p>
   </div>
 </div>
 
@@ -434,16 +430,16 @@ body{
 
   <div class="bigstat">
     <div class="bigstat-item">
-      <div class="bigstat-num bull">34.8<span style="font-size:.5em;opacity:.6">min</span></div>
+      <div class="bigstat-num bull">35.2<span style="font-size:.5em;opacity:.6">min</span></div>
       <div class="bigstat-label">Mean completion time<br>Bullish, PO High + Rising</div>
     </div>
     <div class="bigstat-item">
-      <div class="bigstat-num bear">24.3<span style="font-size:.5em;opacity:.6">min</span></div>
+      <div class="bigstat-num bear">25.2<span style="font-size:.5em;opacity:.6">min</span></div>
       <div class="bigstat-label">Mean completion time<br>Bearish, PO Low + Falling</div>
     </div>
     <div class="bigstat-item">
-      <div class="bigstat-num" style="color:var(--text-dim)">60<span style="font-size:.5em;opacity:.6">min</span></div>
-      <div class="bigstat-label">Mean completion time<br>Baseline (all triggers)</div>
+      <div class="bigstat-num" style="color:var(--text-dim)">54&ndash;66<span style="font-size:.5em;opacity:.6">min</span></div>
+      <div class="bigstat-label">Mean completion time<br>Baseline (bear / bull)</div>
     </div>
   </div>
 
@@ -462,17 +458,17 @@ body{
   </div>
 
   <div class="callout">
-    <p><strong>Same bar = same 10-minute candle.</strong> When 38.2% and 61.8% are both hit within a single candle, price moved through the entire Golden Gate zone without pausing. This is momentum in its purest form.</p>
+    <p><strong>Same bar = same 10-minute candle (the &ldquo;0 min&rdquo; row), and it matters for execution.</strong> 69% of completed bear Bilbos and 58% of completed bull Bilbos ran through the entire Golden Gate zone within the trigger candle itself. A resting order at the 38.2% level participates in those; an entry taken <em>after watching the trigger bar close</em> does not &mdash; and for late entries the honest completion odds are much closer to baseline. If you trade this, the order has to be waiting at the level.</p>
   </div>
 </div>
 
 <div style="text-align:center;margin:2rem 0 3rem">
   <a href="/bilbo-10m.html" style="display:inline-flex;align-items:center;gap:.5rem;padding:.7rem 1.4rem;background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text);text-decoration:none;font-size:.85rem;font-weight:500;transition:border-color .2s,background .2s" onmouseover="this.style.borderColor='#60a5fa';this.style.background='#181c24'" onmouseout="this.style.borderColor='';this.style.background=''">
-    10m vs 60m PO Comparison
+    10m vs 60m PO Comparison <span style="font-size:.7rem;color:#fbbf24">(pre-fix, unverified)</span>
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
   </a>
   <a href="/bilbo-continuation.html" style="display:inline-flex;align-items:center;gap:.5rem;padding:.7rem 1.4rem;background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text);text-decoration:none;font-size:.85rem;font-weight:500;transition:border-color .2s,background .2s" onmouseover="this.style.borderColor='var(--accent)';this.style.background='#181c24'" onmouseout="this.style.borderColor='';this.style.background=''">
-    Bilbo Continuation
+    Bilbo Continuation <span style="font-size:.7rem;color:#fbbf24">(pre-fix, unverified)</span>
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
   </a>
 </div>
@@ -489,19 +485,20 @@ body{
 
 <script>
 // ── Data ──
+// Corrected 2026-04-26 (point-in-time-safe 1h PO join), rerun 2026-07-11.
 const bullRows = [
-  {label:'PO High + Rising', overall:77.1, h1:64.8, n:388, best:true},
-  {label:'PO High + Falling', overall:78.9, h1:63.6, n:109},
-  {label:'PO Mid + Rising', overall:63.4, h1:42.5, n:2287},
-  {label:'PO Mid + Falling', overall:51.6, h1:32.1, n:672},
-  {label:'Baseline (all)', overall:63.1, h1:43.4, n:3472, baseline:true},
+  {label:'PO High + Rising', overall:71.0, h1:58.0, n:193, best:true},
+  {label:'PO High + Falling', overall:73.8, h1:59.5, n:168},
+  {label:'PO Mid + Rising', overall:60.5, h1:40.0, n:2195},
+  {label:'PO Mid + Falling', overall:63.0, h1:45.0, n:817},
+  {label:'Baseline (all)', overall:62.5, h1:43.3, n:3421, baseline:true},
 ];
 const bearRows = [
-  {label:'PO Low + Falling', overall:90.3, h1:80.8, n:268, best:true},
-  {label:'PO Low + Rising', overall:89.0, h1:79.2, n:100},
-  {label:'PO Mid + Falling', overall:64.2, h1:45.0, n:2233},
-  {label:'PO Mid + Rising', overall:54.3, h1:38.2, n:639},
-  {label:'Baseline (all)', overall:65.2, h1:47.6, n:3254, baseline:true},
+  {label:'PO Low + Falling', overall:85.1, h1:74.5, n:141, best:true},
+  {label:'PO Low + Rising', overall:86.6, h1:78.5, n:149},
+  {label:'PO Mid + Falling', overall:61.2, h1:43.1, n:2103},
+  {label:'PO Mid + Rising', overall:69.6, h1:51.6, n:773},
+  {label:'Baseline (all)', overall:65.4, h1:48.1, n:3196, baseline:true},
 ];
 
 function buildTable(id, rows, color){
@@ -537,54 +534,54 @@ buildTable('bear-table', bearRows, 'bear');
 const speedData = {
   'speed-bull-mo': {
     label:'Bullish &mdash; PO High + Rising',
-    sub:'n=299 completed',
+    sub:'n=137 completed',
     color:'var(--bull)',
-    mean:'34.8 min',
+    mean:'35.2 min',
     rows:[
-      {label:'0 min', cum:43.6},
-      {label:'≤10 min', cum:56.7},
-      {label:'≤20 min', cum:64.4},
+      {label:'0 min', cum:57.7},
+      {label:'≤10 min', cum:65.7},
+      {label:'≤20 min', cum:70.1},
       {label:'≤30 min', cum:73.7},
-      {label:'≤60 min', cum:83.4},
+      {label:'≤60 min', cum:81.8},
     ]
   },
   'speed-bull-base': {
     label:'Bullish &mdash; Baseline',
-    sub:'n=2,192 completed',
+    sub:'n=2,139 completed',
     color:'#4a4f5c',
-    mean:'65.4 min',
+    mean:'65.5 min',
     rows:[
-      {label:'0 min', cum:31.0},
-      {label:'≤10 min', cum:40.4},
-      {label:'≤20 min', cum:49.1},
-      {label:'≤30 min', cum:56.4},
-      {label:'≤60 min', cum:69.0},
+      {label:'0 min', cum:31.9},
+      {label:'≤10 min', cum:41.3},
+      {label:'≤20 min', cum:50.6},
+      {label:'≤30 min', cum:57.1},
+      {label:'≤60 min', cum:69.2},
     ]
   },
   'speed-bear-mo': {
     label:'Bearish &mdash; PO Low + Falling',
-    sub:'n=242 completed',
+    sub:'n=120 completed',
     color:'var(--bear)',
-    mean:'24.3 min',
+    mean:'25.2 min',
     rows:[
-      {label:'0 min', cum:59.0},
-      {label:'≤10 min', cum:69.5},
-      {label:'≤20 min', cum:77.0},
-      {label:'≤30 min', cum:82.8},
-      {label:'≤60 min', cum:89.5},
+      {label:'0 min', cum:69.2},
+      {label:'≤10 min', cum:73.3},
+      {label:'≤20 min', cum:77.5},
+      {label:'≤30 min', cum:80.0},
+      {label:'≤60 min', cum:87.5},
     ]
   },
   'speed-bear-base': {
     label:'Bearish &mdash; Baseline',
-    sub:'n=2,121 completed',
+    sub:'n=2,090 completed',
     color:'#4a4f5c',
-    mean:'54.4 min',
+    mean:'53.8 min',
     rows:[
-      {label:'0 min', cum:32.1},
-      {label:'≤10 min', cum:44.3},
-      {label:'≤20 min', cum:53.3},
-      {label:'≤30 min', cum:61.6},
-      {label:'≤60 min', cum:73.3},
+      {label:'0 min', cum:32.6},
+      {label:'≤10 min', cum:45.2},
+      {label:'≤20 min', cum:54.3},
+      {label:'≤30 min', cum:62.2},
+      {label:'≤60 min', cum:73.5},
     ]
   },
 };
