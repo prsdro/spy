@@ -82,8 +82,8 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans
 <body>
 <div class="page">
 
-<div style="background:#2a0b0b;border:1px solid #5d0f0f;border-radius:6px;padding:.75rem 1rem;margin-bottom:1.5rem;font-size:.8rem;color:#ff8787;font-weight:400;line-height:1.55">
-  <strong style="color:#ff6b6b">Under Re-Verification (2026-04-23) &mdash;</strong> The extension-level (78.6% &rarr; 200%) continuation rates on this page were produced by an analysis not currently in the repo, and extension rates are pending rebuild under the post-audit methodology. The displayed GG-to-61.8% completion rates and sample sizes also predate the audit &mdash; refer to the <a href="/bilbo-golden-gate.html" style="color:#ffb05c">Bilbo Golden Gate</a> page for current values. <strong style="color:#ff6b6b">Do not trade from specific numbers on this page until the rebuild lands.</strong>
+<div style="background:#0d1a10;border:1px solid #1e3d28;border-radius:6px;padding:.75rem 1rem;margin-bottom:1.5rem;font-size:.8rem;color:#b8e0c2;font-weight:400;line-height:1.55">
+  <strong style="color:#4ade80">Corrected &amp; Restored (2026-07-11) &mdash;</strong> Every number on this page was rebuilt with the point-in-time-safe 1h PO join (the look-ahead fix from the 2026-04-26 audit) via <code style="font-size:.85em">scripts/rerun_bilbo_gg_page.py</code> conventions, 2000&ndash;2025 window. The corrected marquee cells reproduce the audited counts (bear Low+Falling 120/141, bull High+Rising 137/193). Extension rates dropped slightly vs the original (bear full-ATR 66% &rarr; 63.8%) but the continuation story holds.
 </div>
 
 <a href="/" style="display:inline-flex;align-items:center;gap:.4rem;font-size:.8rem;color:var(--text-dim);text-decoration:none;margin-bottom:.5rem;transition:color .2s" onmouseover="this.style.color='#e8eaed'" onmouseout="this.style.color=''"><svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0h4"/></svg>Home</a>
@@ -110,21 +110,21 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans
 
   <div class="bigstat">
     <div class="bigstat-item">
-      <div class="bigstat-num" style="color:var(--bear)">66%</div>
-      <div class="bigstat-label">Bearish Bilbo reaches full ATR<br>(vs 31% baseline)</div>
+      <div class="bigstat-num" style="color:var(--bear)">63.8%</div>
+      <div class="bigstat-label">Bearish Bilbo reaches full ATR<br>(vs 32.4% baseline)</div>
     </div>
     <div class="bigstat-item">
-      <div class="bigstat-num" style="color:var(--bear)">44%</div>
-      <div class="bigstat-label">Bearish Bilbo reaches 123.6%<br>(vs 18% baseline)</div>
+      <div class="bigstat-num" style="color:var(--bear)">46.8%</div>
+      <div class="bigstat-label">Bearish Bilbo reaches 123.6%<br>(vs 19.6% baseline)</div>
     </div>
     <div class="bigstat-item">
-      <div class="bigstat-num" style="color:var(--bull)">39%</div>
-      <div class="bigstat-label">Bullish Bilbo reaches full ATR<br>(vs 26% baseline)</div>
+      <div class="bigstat-num" style="color:var(--bull)">34.7%</div>
+      <div class="bigstat-label">Bullish Bilbo reaches full ATR<br>(vs 26.3% baseline)</div>
     </div>
   </div>
 
   <div class="callout">
-    <p><strong>The bearish Bilbo is extraordinary.</strong> When the 1-hour PO is Low + Falling at the moment of Golden Gate entry, the probability of reaching a full ATR move (66%) is <em>higher</em> than the baseline probability of just completing the Golden Gate to 61.8% (65%). Strong bearish momentum doesn't just complete the Golden Gate &mdash; it blows through it.</p>
+    <p><strong>The bearish Bilbo carries the continuation.</strong> When the last completed 1-hour PO bar is Low + Falling at Golden Gate entry, the probability of reaching a full ATR move (63.8%) is nearly the baseline probability of just completing the Golden Gate to 61.8% (65.4%). Strong bearish momentum doesn't just complete the Golden Gate &mdash; it usually keeps going. (Pre-fix this read 66% vs 65%; the corrected join trims it slightly.)</p>
   </div>
 </div>
 
@@ -151,13 +151,13 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans
 <div class="section reveal">
   <div class="section-label">Practical Takeaways</div>
   <p class="prose">
-    <strong>Consider letting Bilbo winners run.</strong> When the 1-hour PO confirms the Golden Gate direction, the standard target of 61.8% leaves significant edge on the table. For a bearish Bilbo, there's a 66% chance of reaching the full ATR &mdash; and even 44% odds of hitting 123.6%. Consider trailing your stop rather than taking profit at the first target.
+    <strong>Consider letting bearish Bilbo winners run.</strong> When the 1-hour PO confirms the Golden Gate direction, the 61.8% target leaves measurable edge on the table. For a bearish Bilbo the corrected odds of reaching the full ATR are 63.8% &mdash; and 46.8% for 123.6%. Consider trailing your stop rather than taking profit at the first target.
   </p>
   <p class="prose">
-    <strong>Counter-trend entries are significantly weaker at every level.</strong> A bullish GG when the PO is mid + falling completes to 61.8% only 52% of the time and reaches the full ATR just 19%. The momentum filter doesn't just improve the first target &mdash; it compounds at every subsequent level.
+    <strong>The mid-zone slope split is NOT a filter.</strong> The pre-fix version of this page showed counter-slope mid buckets as much weaker (bull Mid+Falling 52% to 61.8%). That was a look-ahead artifact: corrected, bull Mid+Falling completes 63.0% and reaches full ATR 28.9% &mdash; indistinguishable from (slightly above) Mid+Rising. Only the extreme-zone buckets separate from baseline.
   </p>
   <p class="prose">
-    <strong>The bearish edge is consistently stronger than bullish.</strong> Bearish Bilbo entries reach extension levels at roughly 2&ndash;3x the baseline rate, while bullish reaches them at 1.5&ndash;2x. Selling pressure carries further and more reliably than buying pressure.
+    <strong>The bearish edge is consistently stronger than bullish.</strong> Corrected, bearish Bilbo entries reach extension levels at roughly 2&ndash;3x the baseline rate (full ATR 63.8% vs 32.4%; 200% 11.3% vs 3.8%), while bullish runs about 1.3&ndash;1.9x (full ATR 34.7% vs 26.3%). Selling pressure carries further and more reliably than buying pressure. Extreme-zone samples are small (n=141&ndash;193 over 25 years) &mdash; expect noise in the deepest extension cells.
   </p>
 </div>
 
@@ -174,19 +174,20 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans
 <script>
 const levels = ['61.8%','78.6%','100%','123.6%','161.8%','200%'];
 
+// Corrected 2026-07-11: point-in-time-safe 1h PO join, 2000-2025 window.
 const bullData = {
-  'high + rising': {n:372, pcts:[77.7,58.9,39.2,23.7,5.6,1.9]},
-  'high + falling':{n:107, pcts:[77.6,60.7,31.8,15.9,4.7,1.9]},
-  baseline:        {n:3411,pcts:[63.0,42.7,25.5,12.7,2.9,0.8]},
-  'mid + rising':  {n:2256,pcts:[63.3,42.8,25.1,11.9,2.4,0.4]},
-  'mid + falling': {n:664, pcts:[51.5,30.4,18.5,8.9,2.7,1.1]},
+  'high + rising': {n:193, pcts:[71.0,56.0,34.7,20.7,7.3,3.1]},
+  'high + falling':{n:168, pcts:[73.8,58.9,36.9,22.6,6.0,3.0]},
+  baseline:        {n:3421,pcts:[62.5,43.2,26.3,14.1,3.9,1.1]},
+  'mid + rising':  {n:2195,pcts:[60.5,40.5,23.9,12.5,3.5,0.8]},
+  'mid + falling': {n:817, pcts:[63.0,44.4,28.9,15.2,3.7,1.0]},
 };
 const bearData = {
-  'low + falling': {n:265, pcts:[90.2,80.0,66.0,43.8,19.2,9.4]},
-  'low + rising':  {n:96,  pcts:[88.5,77.1,66.7,50.0,31.2,12.5]},
-  baseline:        {n:3200,pcts:[65.0,48.1,31.4,18.3,7.7,3.1]},
-  'mid + falling': {n:2203,pcts:[64.0,45.9,27.9,15.1,5.6,2.1]},
-  'mid + rising':  {n:626, pcts:[54.2,37.9,23.5,13.6,6.5,2.4]},
+  'low + falling': {n:141, pcts:[85.1,75.9,63.8,46.8,27.0,11.3]},
+  'low + rising':  {n:149, pcts:[86.6,76.5,64.4,49.7,27.5,16.8]},
+  baseline:        {n:3196,pcts:[65.4,48.7,32.4,19.6,8.9,3.8]},
+  'mid + falling': {n:2103,pcts:[61.2,42.9,27.2,14.9,6.3,2.5]},
+  'mid + rising':  {n:773, pcts:[69.6,54.9,35.2,22.0,9.4,3.6]},
 };
 
 function getBarStyle(key, direction) {

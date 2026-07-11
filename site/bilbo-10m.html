@@ -90,9 +90,8 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans
 <body>
 <div class="page">
 
-<div style="background:#2a0b0b;border:1px solid #5d0f0f;border-radius:6px;padding:.75rem 1rem;margin-bottom:1.5rem;font-size:.8rem;color:#ff8787;font-weight:400;line-height:1.55">
-  <strong style="color:#ff6b6b">Under Re-Verification (2026-04-23) &mdash;</strong> The 10-minute PO comparison column was produced by an ad-hoc variant not currently in the repo and is pending rebuild. The embedded 60-minute PO values on this page also predate the audit (e.g. High+Rising 77.7% should be 77.1%, n=372 should be 388) &mdash; refer to the <a href="/bilbo-golden-gate.html" style="color:#ffb05c">Bilbo Golden Gate</a> page for current 60m values. <strong style="color:#ff6b6b">The directional conclusion (60m &gt; 10m) is plausible but specific numbers are stale.</strong>
-</div>
+<div style="background:#0d1a10;border:1px solid #1e3d28;border-radius:6px;padding:.75rem 1rem;margin-bottom:1.5rem;font-size:.8rem;color:#b8e0c2;font-weight:400;line-height:1.55">
+  <strong style="color:#4ade80">Corrected &amp; Restored (2026-07-11) &mdash;</strong> Rebuilt with point-in-time-safe joins on both timeframes: 60m PO = last fully closed 1h bar (look-ahead fix, 2026-04-26 audit); 10m PO = previous completed 10m bar (the trigger bar's own PO is not knowable at touch time). 2000&ndash;2025 window; 60m marquee cells reproduce the audited counts. The conclusion sharpened: a same-direction 10m PO extreme is not just weaker &mdash; it runs <em>below</em> baseline.</div>
 
 <a href="/" style="display:inline-flex;align-items:center;gap:.4rem;font-size:.8rem;color:var(--text-dim);text-decoration:none;margin-bottom:.5rem;transition:color .2s" onmouseover="this.style.color='#e8eaed'" onmouseout="this.style.color=''"><svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0h4"/></svg>Home</a>
 <a href="/bilbo-golden-gate.html" class="back">
@@ -102,8 +101,8 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans
 
 <header class="hero reveal">
   <div class="kicker">Study &mdash; Timeframe Comparison</div>
-  <h1>The 60-minute PO is the<br>better Bilbo filter.<br><em>The 10-minute PO is noise.</em></h1>
-  <p class="lede">Does the Phase Oscillator timeframe matter for predicting Golden Gate completion? We tested 10-minute vs 60-minute PO snapshots at the moment the 38.2% level is hit. The higher timeframe wins decisively.</p>
+  <h1>The 60-minute PO is the<br>Bilbo filter.<br><em>The 10-minute PO doesn&rsquo;t help.</em></h1>
+  <p class="lede">Does the Phase Oscillator timeframe matter for predicting Golden Gate completion? We tested 10-minute vs 60-minute PO snapshots (both from the last completed bar) at the moment the 38.2% level is hit. The higher timeframe wins decisively &mdash; and the 10m same-direction extreme actually runs below baseline.</p>
 </header>
 
 <!-- Bullish -->
@@ -116,27 +115,27 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans
         <div class="card-title">60-Minute PO</div>
         <div class="card-tf">60m</div>
       </div>
-      <div class="drow best"><div class="dlabel">High + Rising</div><div class="dbar-bg"><div class="dbar" style="width:0%;background:var(--accent)" data-w="77.7"></div></div><div class="dval" style="color:var(--accent)">77.7%</div><div class="dn n-clickable" data-row="bull_PO High + Rising" data-title="Bull 60m PO High + Rising">n=372</div></div>
-      <div class="drow"><div class="dlabel">High + Falling</div><div class="dbar-bg"><div class="dbar" style="width:0%;background:var(--accent);opacity:.6" data-w="77.6"></div></div><div class="dval">77.6%</div><div class="dn n-clickable" data-row="bull_PO High + Falling" data-title="Bull 60m PO High + Falling">n=107</div></div>
-      <div class="drow"><div class="dlabel">Mid + Rising</div><div class="dbar-bg"><div class="dbar" style="width:0%;background:var(--accent);opacity:.4" data-w="63.3"></div></div><div class="dval">63.3%</div><div class="dn n-clickable" data-row="bull_PO Mid + Rising" data-title="Bull 60m PO Mid + Rising">n=2256</div></div>
-      <div class="drow"><div class="dlabel">Mid + Falling</div><div class="dbar-bg"><div class="dbar" style="width:0%;background:var(--accent);opacity:.3" data-w="51.5"></div></div><div class="dval">51.5%</div><div class="dn n-clickable" data-row="bull_PO Mid + Falling" data-title="Bull 60m PO Mid + Falling">n=664</div></div>
-      <div class="drow baseline"><div class="dlabel">Baseline</div><div class="dbar-bg"><div class="dbar" style="width:0%;background:#4a4f5c" data-w="63.0"></div></div><div class="dval" style="color:var(--text-dim)">63.0%</div><div class="dn">n=3411</div></div>
+      <div class="drow best"><div class="dlabel">High + Rising</div><div class="dbar-bg"><div class="dbar" style="width:0%;background:var(--accent)" data-w="71.0"></div></div><div class="dval" style="color:var(--accent)">71.0%</div><div class="dn n-clickable" data-row="bull_PO High + Rising" data-title="Bull 60m PO High + Rising">n=193</div></div>
+      <div class="drow"><div class="dlabel">High + Falling</div><div class="dbar-bg"><div class="dbar" style="width:0%;background:var(--accent);opacity:.6" data-w="73.8"></div></div><div class="dval">73.8%</div><div class="dn n-clickable" data-row="bull_PO High + Falling" data-title="Bull 60m PO High + Falling">n=168</div></div>
+      <div class="drow"><div class="dlabel">Mid + Rising</div><div class="dbar-bg"><div class="dbar" style="width:0%;background:var(--accent);opacity:.4" data-w="60.5"></div></div><div class="dval">60.5%</div><div class="dn n-clickable" data-row="bull_PO Mid + Rising" data-title="Bull 60m PO Mid + Rising">n=2195</div></div>
+      <div class="drow"><div class="dlabel">Mid + Falling</div><div class="dbar-bg"><div class="dbar" style="width:0%;background:var(--accent);opacity:.3" data-w="63.0"></div></div><div class="dval">63.0%</div><div class="dn n-clickable" data-row="bull_PO Mid + Falling" data-title="Bull 60m PO Mid + Falling">n=817</div></div>
+      <div class="drow baseline"><div class="dlabel">Baseline</div><div class="dbar-bg"><div class="dbar" style="width:0%;background:#4a4f5c" data-w="62.5"></div></div><div class="dval" style="color:var(--text-dim)">62.5%</div><div class="dn">n=3421</div></div>
     </div>
     <div class="compare-card c10">
       <div class="card-head">
         <div class="card-title">10-Minute PO</div>
         <div class="card-tf">10m</div>
       </div>
-      <div class="drow best"><div class="dlabel">High + Rising</div><div class="dbar-bg"><div class="dbar" style="width:0%;background:var(--blue)" data-w="66.1"></div></div><div class="dval" style="color:var(--blue)">66.1%</div><div class="dn">n=985</div></div>
-      <div class="drow"><div class="dlabel">High + Falling</div><div class="dbar-bg"><div class="dbar" style="width:0%;background:var(--blue);opacity:.6" data-w="39.0"></div></div><div class="dval">39.0%</div><div class="dn">n=41</div></div>
-      <div class="drow"><div class="dlabel">Mid + Rising</div><div class="dbar-bg"><div class="dbar" style="width:0%;background:var(--blue);opacity:.4" data-w="62.4"></div></div><div class="dval">62.4%</div><div class="dn">n=1908</div></div>
-      <div class="drow"><div class="dlabel">Mid + Falling</div><div class="dbar-bg"><div class="dbar" style="width:0%;background:var(--blue);opacity:.3" data-w="61.1"></div></div><div class="dval">61.1%</div><div class="dn">n=475</div></div>
-      <div class="drow baseline"><div class="dlabel">Baseline</div><div class="dbar-bg"><div class="dbar" style="width:0%;background:#4a4f5c" data-w="63.0"></div></div><div class="dval" style="color:var(--text-dim)">63.0%</div><div class="dn">n=3411</div></div>
+      <div class="drow best"><div class="dlabel">High + Rising</div><div class="dbar-bg"><div class="dbar" style="width:0%;background:var(--blue)" data-w="52.6"></div></div><div class="dval" style="color:var(--blue)">52.6%</div><div class="dn">n=439</div></div>
+      <div class="drow"><div class="dlabel">High + Falling</div><div class="dbar-bg"><div class="dbar" style="width:0%;background:var(--blue);opacity:.6" data-w="79.8"></div></div><div class="dval">79.8%</div><div class="dn">n=258</div></div>
+      <div class="drow"><div class="dlabel">Mid + Rising</div><div class="dbar-bg"><div class="dbar" style="width:0%;background:var(--blue);opacity:.4" data-w="59.2"></div></div><div class="dval">59.2%</div><div class="dn">n=1781</div></div>
+      <div class="drow"><div class="dlabel">Mid + Falling</div><div class="dbar-bg"><div class="dbar" style="width:0%;background:var(--blue);opacity:.3" data-w="68.9"></div></div><div class="dval">68.9%</div><div class="dn">n=937</div></div>
+      <div class="drow baseline"><div class="dlabel">Baseline</div><div class="dbar-bg"><div class="dbar" style="width:0%;background:#4a4f5c" data-w="62.5"></div></div><div class="dval" style="color:var(--text-dim)">62.5%</div><div class="dn">n=3421</div></div>
     </div>
   </div>
 
   <div class="verdict">
-    <div class="big"><span class="v60">+14.7%</span><span class="vs">vs</span><span class="v10">+3.1%</span></div>
+    <div class="big"><span class="v60">+8.5pp</span><span class="vs">vs</span><span class="v10">&minus;9.9pp</span></div>
     <div class="sub">Edge over baseline when PO is High + Rising (bullish)</div>
   </div>
 </div>
@@ -151,27 +150,27 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans
         <div class="card-title">60-Minute PO</div>
         <div class="card-tf">60m</div>
       </div>
-      <div class="drow best"><div class="dlabel">Low + Falling</div><div class="dbar-bg"><div class="dbar" style="width:0%;background:var(--accent)" data-w="90.2"></div></div><div class="dval" style="color:var(--accent)">90.2%</div><div class="dn n-clickable" data-row="bear_PO Low + Falling" data-title="Bear 60m PO Low + Falling">n=265</div></div>
-      <div class="drow"><div class="dlabel">Low + Rising</div><div class="dbar-bg"><div class="dbar" style="width:0%;background:var(--accent);opacity:.6" data-w="88.5"></div></div><div class="dval">88.5%</div><div class="dn n-clickable" data-row="bear_PO Low + Rising" data-title="Bear 60m PO Low + Rising">n=96</div></div>
-      <div class="drow"><div class="dlabel">Mid + Falling</div><div class="dbar-bg"><div class="dbar" style="width:0%;background:var(--accent);opacity:.4" data-w="64.0"></div></div><div class="dval">64.0%</div><div class="dn n-clickable" data-row="bear_PO Mid + Falling" data-title="Bear 60m PO Mid + Falling">n=2203</div></div>
-      <div class="drow"><div class="dlabel">Mid + Rising</div><div class="dbar-bg"><div class="dbar" style="width:0%;background:var(--accent);opacity:.3" data-w="54.2"></div></div><div class="dval">54.2%</div><div class="dn n-clickable" data-row="bear_PO Mid + Rising" data-title="Bear 60m PO Mid + Rising">n=626</div></div>
-      <div class="drow baseline"><div class="dlabel">Baseline</div><div class="dbar-bg"><div class="dbar" style="width:0%;background:#4a4f5c" data-w="65.0"></div></div><div class="dval" style="color:var(--text-dim)">65.0%</div><div class="dn">n=3200</div></div>
+      <div class="drow best"><div class="dlabel">Low + Falling</div><div class="dbar-bg"><div class="dbar" style="width:0%;background:var(--accent)" data-w="85.1"></div></div><div class="dval" style="color:var(--accent)">85.1%</div><div class="dn n-clickable" data-row="bear_PO Low + Falling" data-title="Bear 60m PO Low + Falling">n=141</div></div>
+      <div class="drow"><div class="dlabel">Low + Rising</div><div class="dbar-bg"><div class="dbar" style="width:0%;background:var(--accent);opacity:.6" data-w="86.6"></div></div><div class="dval">86.6%</div><div class="dn n-clickable" data-row="bear_PO Low + Rising" data-title="Bear 60m PO Low + Rising">n=149</div></div>
+      <div class="drow"><div class="dlabel">Mid + Falling</div><div class="dbar-bg"><div class="dbar" style="width:0%;background:var(--accent);opacity:.4" data-w="61.2"></div></div><div class="dval">61.2%</div><div class="dn n-clickable" data-row="bear_PO Mid + Falling" data-title="Bear 60m PO Mid + Falling">n=2103</div></div>
+      <div class="drow"><div class="dlabel">Mid + Rising</div><div class="dbar-bg"><div class="dbar" style="width:0%;background:var(--accent);opacity:.3" data-w="69.6"></div></div><div class="dval">69.6%</div><div class="dn n-clickable" data-row="bear_PO Mid + Rising" data-title="Bear 60m PO Mid + Rising">n=773</div></div>
+      <div class="drow baseline"><div class="dlabel">Baseline</div><div class="dbar-bg"><div class="dbar" style="width:0%;background:#4a4f5c" data-w="65.4"></div></div><div class="dval" style="color:var(--text-dim)">65.4%</div><div class="dn">n=3196</div></div>
     </div>
     <div class="compare-card c10">
       <div class="card-head">
         <div class="card-title">10-Minute PO</div>
         <div class="card-tf">10m</div>
       </div>
-      <div class="drow best"><div class="dlabel">Low + Falling</div><div class="dbar-bg"><div class="dbar" style="width:0%;background:var(--blue)" data-w="67.1"></div></div><div class="dval" style="color:var(--blue)">67.1%</div><div class="dn">n=1072</div></div>
-      <div class="drow"><div class="dlabel">Low + Rising</div><div class="dbar-bg"><div class="dbar" style="width:0%;background:var(--blue);opacity:.6" data-w="51.7"></div></div><div class="dval">51.7%</div><div class="dn">n=60</div></div>
-      <div class="drow"><div class="dlabel">Mid + Falling</div><div class="dbar-bg"><div class="dbar" style="width:0%;background:var(--blue);opacity:.4" data-w="63.0"></div></div><div class="dval">63.0%</div><div class="dn">n=1683</div></div>
-      <div class="drow"><div class="dlabel">Mid + Rising</div><div class="dbar-bg"><div class="dbar" style="width:0%;background:var(--blue);opacity:.3" data-w="69.4"></div></div><div class="dval">69.4%</div><div class="dn">n=376</div></div>
-      <div class="drow baseline"><div class="dlabel">Baseline</div><div class="dbar-bg"><div class="dbar" style="width:0%;background:#4a4f5c" data-w="65.0"></div></div><div class="dval" style="color:var(--text-dim)">65.0%</div><div class="dn">n=3199</div></div>
+      <div class="drow best"><div class="dlabel">Low + Falling</div><div class="dbar-bg"><div class="dbar" style="width:0%;background:var(--blue)" data-w="62.1"></div></div><div class="dval" style="color:var(--blue)">62.1%</div><div class="dn">n=456</div></div>
+      <div class="drow"><div class="dlabel">Low + Rising</div><div class="dbar-bg"><div class="dbar" style="width:0%;background:var(--blue);opacity:.6" data-w="74.8"></div></div><div class="dval">74.8%</div><div class="dn">n=230</div></div>
+      <div class="drow"><div class="dlabel">Mid + Falling</div><div class="dbar-bg"><div class="dbar" style="width:0%;background:var(--blue);opacity:.4" data-w="61.1"></div></div><div class="dval">61.1%</div><div class="dn">n=1699</div></div>
+      <div class="drow"><div class="dlabel">Mid + Rising</div><div class="dbar-bg"><div class="dbar" style="width:0%;background:var(--blue);opacity:.3" data-w="73.3"></div></div><div class="dval">73.3%</div><div class="dn">n=803</div></div>
+      <div class="drow baseline"><div class="dlabel">Baseline</div><div class="dbar-bg"><div class="dbar" style="width:0%;background:#4a4f5c" data-w="65.4"></div></div><div class="dval" style="color:var(--text-dim)">65.4%</div><div class="dn">n=3196</div></div>
     </div>
   </div>
 
   <div class="verdict">
-    <div class="big"><span class="v60">+25.2%</span><span class="vs">vs</span><span class="v10">+2.1%</span></div>
+    <div class="big"><span class="v60">+19.7pp</span><span class="vs">vs</span><span class="v10">&minus;3.3pp</span></div>
     <div class="sub">Edge over baseline when PO is Low + Falling (bearish)</div>
   </div>
 </div>
@@ -181,7 +180,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans
   <div class="section-label">Takeaway</div>
 
   <div class="callout">
-    <p><strong>The 60-minute Phase Oscillator is 5&ndash;12x more predictive</strong> than the 10-minute for Golden Gate completion. The 10m PO captures short-term noise &mdash; the bar-by-bar oscillator swings don't reflect the kind of sustained momentum needed to push price through the entire 38.2%&ndash;61.8% range. The 60m PO filters for genuine directional conviction.</p>
+    <p><strong>Only the 60-minute Phase Oscillator carries the Bilbo signal.</strong> Corrected, a 60m same-direction extreme adds +8.5pp (bull) / +19.7pp (bear) over baseline. The 10m same-direction extreme is <em>below</em> baseline (&minus;9.9pp bull, &minus;3.3pp bear): by the time the 10m PO is pinned at an extreme in the trade direction, the short-term move is stretched and completion odds are worse, not better. (The 10m table's extreme-plus-<em>opposite</em>-slope cells run above baseline &mdash; a curl-back pattern &mdash; but that is a single-sort observation, not a validated filter.)</p>
   </div>
 
   <p class="prose">

@@ -60,17 +60,24 @@ def main():
     print("Merging cross-timeframe EMAs...", flush=True)
     df10_reset = df10.reset_index()
 
+    # Higher/lower-TF bars are left-labeled; shift each frame to bar-end so a
+    # 10m bar only sees fully closed bars from the other timeframe
+    # (look-ahead fix, same pattern as backtest_gg_with_po.py).
+    df1h_reset = df1h.reset_index()
+    df1h_reset["timestamp"] = df1h_reset["timestamp"] + pd.Timedelta(hours=1)
     merged_1h = pd.merge_asof(
         df10_reset[["timestamp"]],
-        df1h.reset_index(),
+        df1h_reset,
         on="timestamp", direction="backward"
     )
     df10["ema_21_1h"] = merged_1h["ema_21_1h"].values
     df10["ema_48_1h"] = merged_1h["ema_48_1h"].values
 
+    df3m_reset = df3m.reset_index()
+    df3m_reset["timestamp"] = df3m_reset["timestamp"] + pd.Timedelta(minutes=3)
     merged_3m = pd.merge_asof(
         df10_reset[["timestamp"]],
-        df3m.reset_index(),
+        df3m_reset,
         on="timestamp", direction="backward"
     )
     df10["ema_8_3m"] = merged_3m["ema_8_3m"].values

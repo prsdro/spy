@@ -112,7 +112,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans
   <div class="section-label">Results</div>
 
   <div class="entry-section">
-    <div class="entry-title"><div class="dot" style="background:var(--bull)"></div> Bullish Golden Gate (n=3,472 entries)</div>
+    <div class="entry-title"><div class="dot" style="background:var(--bull)"></div> Bullish Golden Gate (n=3,454 entries)</div>
     <table class="etable">
       <thead><tr><th>Entry Strategy</th><th>Appears</th><th>GG%</th><th>Reward</th><th>Risk</th><th>R:R</th><th>EV</th></tr></thead>
       <tbody id="bull-tbody"></tbody>
@@ -120,7 +120,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans
   </div>
 
   <div class="entry-section">
-    <div class="entry-title"><div class="dot" style="background:var(--bear)"></div> Bearish Golden Gate (n=3,254 entries)</div>
+    <div class="entry-title"><div class="dot" style="background:var(--bear)"></div> Bearish Golden Gate (n=3,231 entries)</div>
     <table class="etable">
       <thead><tr><th>Entry Strategy</th><th>Appears</th><th>GG%</th><th>Reward</th><th>Risk</th><th>R:R</th><th>EV</th></tr></thead>
       <tbody id="bear-tbody"></tbody>
@@ -138,7 +138,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans
       <div class="bigstat-label">EV of entering immediately<br>at 38.2% (both directions)</div>
     </div>
     <div class="bigstat-item">
-      <div class="bigstat-num" style="color:var(--green)">+6.9%</div>
+      <div class="bigstat-num" style="color:var(--green)">+6.7%</div>
       <div class="bigstat-label">EV of EMA 8 (10m) pullback<br>entry &mdash; competitive</div>
     </div>
     <div class="bigstat-item">
@@ -148,14 +148,14 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans
   </div>
 
   <div class="callout">
-    <p><strong>The immediate entry at 38.2% is hard to beat.</strong> It has a strong completion rate (62&ndash;64%), appears 100% of the time (no missed trades), and delivers +9&ndash;10% ATR EV. The 10-minute EMA 8 pullback is competitive (+6&ndash;8% EV) but appears only 96% of the time, so missed trades eat into the expected advantage.</p>
+    <p><strong>The immediate entry at 38.2% is hard to beat.</strong> It has a strong completion rate (61&ndash;64%), appears 100% of the time (no missed trades), and delivers +9&ndash;10% ATR EV. The 10-minute EMA 8 pullback is competitive (+6&ndash;8% EV) but appears only 96% of the time, so missed trades eat into the expected advantage.</p>
   </div>
 
   <p class="prose">
     <strong>Deep pullback entries require patience and discipline.</strong> Waiting for a pullback to the trigger level sounds attractive &mdash; the reward is 38.2% ATR (huge!) &mdash; but completion drops to 32&ndash;37%. The 50% midpoint entry is actually <strong>negative EV</strong> because the reward is tiny (only 11.8% ATR) while the risk of pulling back to the trigger is large (26.4% ATR).
   </p>
   <p class="prose">
-    <strong>The 1-hour EMA 21 is a sleeper.</strong> It appears 55&ndash;60% of the time with a strong 2.3&ndash;3.1x risk-reward ratio. Completion is lower (33&ndash;36%) but the favorable R:R keeps the EV positive at +3&ndash;5%. This is the patient trader's entry.
+    <strong>The 1-hour EMA 21 is a sleeper, but smaller than first published.</strong> Rerun with only fully closed hourly EMAs visible at decision time (2026-07-11 join fix), it appears 53&ndash;57% of the time with a 2.1&ndash;3.0x risk-reward ratio; completion 31&ndash;35% and EV +1.7&ndash;3.8%. Positive and patient, but thin &mdash; not a headline edge.
   </p>
 </div>
 
@@ -170,27 +170,30 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans
 </div>
 
 <script>
+// Rerun 2026-07-11 with point-in-time-safe 1h EMA joins (the 1h rows
+// previously read the not-yet-closed hour's EMA; all rows re-emitted from
+// the same run for a single vintage).
 const bullRows = [
-  {name:'Immediate (at 38.2%)',     appears:100.0, gg:61.6, reward:23.6, risk:14.6, highlight:true, key:'immediate'},
-  {name:'Pullback to EMA 8 (10m)', appears:96.3,  gg:59.2, reward:27.3, risk:24.6, highlight:true, key:'ema8'},
-  {name:'Pullback to EMA 21 (10m)',appears:87.0,  gg:53.6, reward:31.4, risk:27.5, key:'ema21'},
-  {name:'Pullback to EMA 48 (10m)',appears:68.9,  gg:41.9, reward:36.6, risk:20.7},
-  {name:'Pullback to EMA 21 (1h)', appears:54.6,  gg:36.2, reward:41.4, risk:18.3},
-  {name:'Pullback to EMA 48 (1h)', appears:47.8,  gg:43.8, reward:41.5, risk:38.9},
-  {name:'Pullback to 50% midpoint',appears:91.1,  gg:56.6, reward:11.8, risk:26.4},
-  {name:'Pullback to Call Trigger', appears:62.8,  gg:32.4, reward:38.2, risk:0},
-  {name:'Pullback to Prev Close',  appears:37.8,  gg:17.0, reward:61.8, risk:0},
+  {name:'Immediate (at 38.2%)',     appears:100.0, gg:61.3, reward:23.6, risk:14.6, highlight:true, key:'immediate'},
+  {name:'Pullback to EMA 8 (10m)', appears:96.4,  gg:59.0, reward:27.4, risk:25.1, highlight:true, key:'ema8'},
+  {name:'Pullback to EMA 21 (10m)',appears:86.9,  gg:53.7, reward:31.4, risk:28.0, key:'ema21'},
+  {name:'Pullback to EMA 48 (10m)',appears:68.9,  gg:41.6, reward:36.7, risk:21.4},
+  {name:'Pullback to EMA 21 (1h)', appears:52.8,  gg:35.0, reward:41.4, risk:19.7},
+  {name:'Pullback to EMA 48 (1h)', appears:47.7,  gg:43.8, reward:42.1, risk:41.4},
+  {name:'Pullback to 50% midpoint',appears:90.9,  gg:56.3, reward:11.8, risk:26.4},
+  {name:'Pullback to Call Trigger', appears:62.7,  gg:32.5, reward:38.2, risk:0},
+  {name:'Pullback to Prev Close',  appears:37.7,  gg:17.7, reward:61.8, risk:0},
 ];
 const bearRows = [
-  {name:'Immediate (at 38.2%)',     appears:100.0, gg:64.0, reward:23.6, risk:14.6, highlight:true, key:'immediate'},
-  {name:'Pullback to EMA 8 (10m)', appears:95.9,  gg:59.8, reward:30.2, risk:26.0, highlight:true, key:'ema8'},
-  {name:'Pullback to EMA 21 (10m)',appears:88.0,  gg:54.7, reward:34.3, risk:30.3, key:'ema21'},
-  {name:'Pullback to EMA 48 (10m)',appears:72.2,  gg:42.5, reward:39.6, risk:24.3},
-  {name:'Pullback to EMA 21 (1h)', appears:60.1,  gg:33.1, reward:45.5, risk:14.6},
-  {name:'Pullback to EMA 48 (1h)', appears:54.5,  gg:38.0, reward:40.4, risk:25.9},
-  {name:'Pullback to 50% midpoint',appears:92.7,  gg:58.8, reward:11.8, risk:26.4},
-  {name:'Pullback to Put Trigger',  appears:70.2,  gg:36.8, reward:38.2, risk:0},
-  {name:'Pullback to Prev Close',  appears:41.9,  gg:18.0, reward:61.8, risk:0},
+  {name:'Immediate (at 38.2%)',     appears:100.0, gg:64.3, reward:23.6, risk:14.6, highlight:true, key:'immediate'},
+  {name:'Pullback to EMA 8 (10m)', appears:95.8,  gg:60.2, reward:30.4, risk:27.2, highlight:true, key:'ema8'},
+  {name:'Pullback to EMA 21 (10m)',appears:88.0,  gg:55.0, reward:34.4, risk:31.9, key:'ema21'},
+  {name:'Pullback to EMA 48 (10m)',appears:72.2,  gg:43.0, reward:39.7, risk:25.5},
+  {name:'Pullback to EMA 21 (1h)', appears:57.4,  gg:31.3, reward:45.5, risk:15.2},
+  {name:'Pullback to EMA 48 (1h)', appears:53.4,  gg:37.2, reward:40.3, risk:26.4},
+  {name:'Pullback to 50% midpoint',appears:92.2,  gg:59.0, reward:11.8, risk:26.4},
+  {name:'Pullback to Put Trigger',  appears:70.1,  gg:37.1, reward:38.2, risk:0},
+  {name:'Pullback to Prev Close',  appears:41.6,  gg:18.5, reward:61.8, risk:0},
 ];
 
 function buildTable(id, rows) {

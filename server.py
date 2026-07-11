@@ -1419,12 +1419,17 @@ def _load_study_frames():
             "FROM ind_1h ORDER BY timestamp",
             c, parse_dates=["timestamp"],
         )
+        df1h = df1h.dropna(subset=["phase_oscillator"]).copy()
         df1h = df1h.set_index("timestamp").sort_index()
         df1h["po_prev"] = df1h["phase_oscillator"].shift(1)
 
-        # Merge 1h PO onto 10m bars
+        # Merge 1h PO onto 10m bars. ind_1h rows are left-labeled (a row
+        # stamped 09:00 contains the hour closing at 10:00), so shift to
+        # bar-end before the backward merge — a 10m bar must only ever see
+        # fully closed 1h PO values (same fix as backtest_gg_with_po.py).
         df10r = df10.reset_index()
         df1hr = df1h.reset_index()
+        df1hr["timestamp"] = df1hr["timestamp"] + pd.Timedelta(hours=1)
         merged = pd.merge_asof(
             df10r[["timestamp"]],
             df1hr[["timestamp", "phase_oscillator", "po_prev", "compression"]],

@@ -169,6 +169,8 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans
 </div>
 
 <script>
+// 2026-07-11: 1h EMA rows rerun with the point-in-time-safe join (only
+// fully closed hourly bars visible at each 10m close); impact was <1pp.
 // Waterfall data: "deepest pullback reached" -> completion rate
 // Framed as: "if the WORST the GG did was pull back to X, it completed Y% of the time"
 const bullData = [
@@ -176,8 +178,8 @@ const bullData = [
   {label:'Pulled to EMA 8 (10m)', pct:64.4, n:3222, group:'ema', dateKey:'bull_pulled_ema8'},
   {label:'Pulled to EMA 21 (10m)', pct:62.0, n:2750, group:'ema', dateKey:'bull_pulled_ema21'},
   {label:'Pulled to EMA 48 (10m)', pct:55.8, n:2076, group:'ema', divider:'Hourly EMAs'},
-  {label:'Pulled to EMA 21 (1h)', pct:52.5, n:1618, group:'hourly'},
-  {label:'Pulled to EMA 48 (1h)', pct:56.3, n:1493, group:'hourly', divider:'ATR Levels'},
+  {label:'Pulled to EMA 21 (1h)', pct:52.3, n:1585, group:'hourly'},
+  {label:'Pulled to EMA 48 (1h)', pct:56.4, n:1485, group:'hourly', divider:'ATR Levels'},
   {label:'Pulled to Call Trigger', pct:45.5, n:1882, group:'atr', dateKey:'bull_pulled_trigger'},
   {label:'Pulled to Prev Close', pct:36.4, n:1069, group:'atr'},
   {label:'Pulled to Put Trigger', pct:32.0, n:608, group:'atr', dateKey:'bull_broke_trigger'},
@@ -188,8 +190,8 @@ const bearData = [
   {label:'Pulled to EMA 8 (10m)', pct:66.3, n:3004, group:'ema', dateKey:'bear_pulled_ema8'},
   {label:'Pulled to EMA 21 (10m)', pct:64.2, n:2655, group:'ema', dateKey:'bear_pulled_ema21'},
   {label:'Pulled to EMA 48 (10m)', pct:58.4, n:2102, group:'ema', divider:'Hourly EMAs'},
-  {label:'Pulled to EMA 21 (1h)', pct:51.7, n:1672, group:'hourly'},
-  {label:'Pulled to EMA 48 (1h)', pct:50.8, n:1598, group:'hourly', divider:'ATR Levels'},
+  {label:'Pulled to EMA 21 (1h)', pct:52.3, n:1619, group:'hourly'},
+  {label:'Pulled to EMA 48 (1h)', pct:51.3, n:1561, group:'hourly', divider:'ATR Levels'},
   {label:'Pulled to Put Trigger', pct:50.8, n:2021, group:'atr', dateKey:'bear_pulled_trigger'},
   {label:'Pulled to Prev Close', pct:39.7, n:1119, group:'atr'},
   {label:'Pulled to Call Trigger', pct:33.5, n:556, group:'atr', dateKey:'bear_broke_trigger'},

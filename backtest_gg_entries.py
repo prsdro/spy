@@ -48,7 +48,11 @@ def main():
         conn, parse_dates=["timestamp"]
     )
     df1h = df1h.set_index("timestamp").sort_index()
-    merged = pd.merge_asof(df10.reset_index()[["timestamp"]], df1h.reset_index(), on="timestamp", direction="backward")
+    # ind_1h bars are left-labeled (row 09:00 = hour closing 10:00); shift to
+    # bar-end so 10m bars only see fully closed 1h EMAs (look-ahead fix).
+    df1h_reset = df1h.reset_index()
+    df1h_reset["timestamp"] = df1h_reset["timestamp"] + pd.Timedelta(hours=1)
+    merged = pd.merge_asof(df10.reset_index()[["timestamp"]], df1h_reset, on="timestamp", direction="backward")
     df10["ema_21_1h"] = merged["ema_21_1h"].values
     df10["ema_48_1h"] = merged["ema_48_1h"].values
 
