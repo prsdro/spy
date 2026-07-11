@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ES Compression Drift | Milkman Trades</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥛</text></svg>">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0c0e12;--card:#11131a;--card2:#161922;--border:#1c1f2a;--border2:#252938;
+  --t:#e4e5e9;--t2:#b0b3c0;--t3:#7a7e90;
+  --bull:#1cd48a;--bullD:#0e5c3c;--bear:#ef6c00;--bearD:#6e3200;
+  --acc:#fbbf24;--accD:#5c4500;--red:#ef4444;--blue:#60a5fa;
+}
+html{font-size:14px}
+body{background:#060709;color:var(--t);font-family:'DM Sans',system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;padding:2rem 1rem 4rem}
+.save-bar{width:1200px;display:flex;justify-content:flex-end;margin-bottom:.75rem}
+.save-btn{padding:.5rem 1.2rem;background:var(--acc);color:#000;border:none;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:.75rem;font-weight:600;cursor:pointer;letter-spacing:.03em;transition:opacity .15s}
+.save-btn:hover{opacity:.85}
+.save-btn:active{transform:scale(.97)}
+.poster{width:1200px;background:var(--bg);border:1px solid var(--border);border-radius:8px;overflow:hidden;position:relative}
+.hdr{padding:1.8rem 2rem 1.4rem;background:linear-gradient(135deg,#0e1018 0%,#12151f 100%);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-end}
+.hdr-left h1{font-family:'JetBrains Mono',monospace;font-size:1.5rem;font-weight:700;letter-spacing:-.01em;line-height:1;margin-bottom:.35rem}
+.hdr-left h1 span{color:var(--acc)}
+.hdr-left .sub{font-size:.8rem;color:var(--t3);font-weight:300}
+.hdr-right{text-align:right}
+.hdr-right .draft{font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:500;color:#a08000;background:#1a1600;padding:.2em .5em;border-radius:3px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:.3rem;display:inline-block}
+.hdr-right .url{font-size:.75rem;color:var(--t3)}
+.hdr-right .back{font-size:.65rem;color:var(--blue);text-decoration:none;margin-right:.8rem}
+.hdr-right .back:hover{text-decoration:underline}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.sec{border-right:1px solid var(--border);border-bottom:1px solid var(--border);padding:1.4rem 1.6rem}
+.sec:nth-child(even){border-right:none}
+.sec.full{grid-column:1/-1;border-right:none}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:.6rem;font-weight:600;color:var(--acc);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.6rem}
+.sec-title{font-size:1rem;font-weight:700;margin-bottom:.8rem;line-height:1.2}
+.stats{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:.8rem}
+.stat{flex:1;min-width:100px;background:var(--card);border:1px solid var(--border);border-radius:5px;padding:.6rem .7rem}
+.stat-val{font-family:'JetBrains Mono',monospace;font-size:1.4rem;font-weight:700;line-height:1}
+.stat-label{font-size:.75rem;color:var(--t3);margin-top:.2rem;line-height:1.3}
+.bull{color:var(--bull)}.bear{color:var(--bear)}.acc{color:var(--acc)}.red{color:var(--red)}
+.mtable{width:100%;border-collapse:collapse;font-size:.7rem;margin:.5rem 0}
+.mtable th{font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:500;color:var(--t3);text-align:right;padding:.3rem .4rem;border-bottom:1px solid var(--border);letter-spacing:.04em;text-transform:uppercase}
+.mtable th:first-child{text-align:left}
+.mtable td{padding:.3rem .4rem;border-bottom:1px solid #13151d;text-align:right;font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--t2)}
+.mtable td:first-child{text-align:left;font-family:'DM Sans',sans-serif;color:var(--t);font-weight:400}
+.mtable tr.hi td{font-weight:600}
+.mtable tr.hi .bull{color:var(--bull)}
+.mtable tr.dim td{color:var(--t3)}
+.blist{list-style:none;font-size:.85rem;color:var(--t2);line-height:1.7}
+.blist li::before{content:'>';color:var(--acc);font-weight:700;margin-right:.4rem}
+.blist li.no::before{content:'\2715';color:var(--red)}
+.blist .key{color:var(--t);font-weight:500}
+.blist .val{font-family:'JetBrains Mono',monospace;font-weight:600}
+.ftr{padding:.8rem 2rem;border-top:1px solid var(--border);font-size:.6rem;color:var(--t3);display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace}
+.divlbl{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--t3);letter-spacing:.08em;text-transform:uppercase;margin:.6rem 0 .3rem}
+@media(max-width:767px){
+  body{padding:1rem .5rem 3rem}
+  .save-bar{width:100%;flex-wrap:wrap;gap:.4rem}
+  .poster{width:100%}
+  .hdr{flex-direction:column;align-items:flex-start;gap:.6rem;padding:1.2rem 1rem 1rem}
+  .hdr-left h1{font-size:1.1rem}
+  .hdr-left .sub{font-size:.72rem}
+  .hdr-right{text-align:left}
+  .grid{grid-template-columns:1fr}
+  .sec{border-right:none !important;padding:1.1rem 1rem}
+  .sec-title{font-size:.95rem}
+  .stats{flex-direction:column}
+  .stat{min-width:0}
+  .stat-val{font-size:1.2rem}
+  .mtable{font-size:.68rem}
+  .mtable th,.mtable td{padding:.25rem .35rem}
+  .ftr{flex-direction:column;gap:.4rem;text-align:center;font-size:.55rem;padding:.7rem 1rem}
+  svg{max-width:100%;height:auto}
+}
+</style>
+<script src="/nav.js"></script>
+<script src="/mobile-png.js"></script>
+</head>
+<body>
+
+<div class="save-bar">
+  <button class="save-btn save-mobile-btn" onclick="saveMobilePNG()" style="background:#60a5fa;margin-right:.5rem">Mobile PNG</button>
+  <button class="save-btn" onclick="savePNG()">&#11015; Save as PNG</button>
+</div>
+
+<div class="poster" id="poster">
+
+<div class="hdr">
+  <div class="hdr-left">
+    <h1>Milkman Trades &mdash; <span>Compression Drift Continuation</span></h1>
+    <div class="sub">ES &amp; NQ futures, 3-minute chart &mdash; 18 years (2008&ndash;2026) + NQ holdout + 2026 forward test</div>
+  </div>
+  <div class="hdr-right">
+    <div class="draft">System v1.0 &mdash; Frozen 2026-07-10</div><br>
+    <a class="back" href="cheatsheet.html">&larr; Master Sheet</a>
+    <span class="url">milkmantrades.com</span>
+  </div>
+</div>
+
+<div class="grid">
+
+<!-- 01: The pattern at a glance -->
+<div class="sec full">
+  <div class="sec-num">01 &mdash; The Pattern at a Glance</div>
+  <div class="sec-title">Squeeze drifts one way &rarr; expansion fires the same way &rarr; go with it</div>
+  <svg viewBox="0 0 1080 190" width="100%" height="190" font-family="'JetBrains Mono',monospace">
+    <!-- initial 5-bar range box -->
+    <rect x="30" y="96" width="88" height="46" fill="none" stroke="#7a7e90" stroke-dasharray="4 3" rx="2"/>
+    <text x="30" y="162" font-size="11" fill="#7a7e90">first 5 squeeze bars set the range</text>
+    <!-- initial candles (gray) -->
+    <g fill="#7a7e90">
+      <rect x="38" y="104" width="9" height="24"/><rect x="54" y="110" width="9" height="22"/>
+      <rect x="70" y="102" width="9" height="26"/><rect x="86" y="112" width="9" height="20"/>
+      <rect x="102" y="106" width="9" height="24"/>
+    </g>
+    <!-- drift candles creeping up (dim green) -->
+    <g fill="#12805c">
+      <rect x="128" y="100" width="9" height="24"/><rect x="144" y="94" width="9" height="24"/>
+      <rect x="160" y="90" width="9" height="22"/><rect x="176" y="84" width="9" height="24"/>
+      <rect x="192" y="80" width="9" height="22"/><rect x="208" y="72" width="9" height="24"/>
+      <rect x="224" y="68" width="9" height="22"/><rect x="240" y="62" width="9" height="22"/>
+    </g>
+    <path d="M132 92 L246 56" stroke="#1cd48a" stroke-width="1" stroke-dasharray="3 3" fill="none"/>
+    <text x="128" y="46" font-size="11" fill="#1cd48a">new highs keep printing: breach &ge;0.5&times;ATR up, low side holds &lt;0.25 = DRIFT UP</text>
+    <!-- expansion bar -->
+    <rect x="264" y="26" width="11" height="44" fill="#1cd48a"/>
+    <text x="252" y="16" font-size="11" fill="#1cd48a" font-weight="700">expansion bar fires UP = aligned &rarr; TRADE</text>
+    <!-- entry arrow -->
+    <line x1="290" y1="24" x2="290" y2="70" stroke="#fbbf24" stroke-width="2"/>
+    <polygon points="290,16 285,26 295,26" fill="#fbbf24"/>
+    <text x="302" y="34" font-size="11" fill="#fbbf24">enter next 3m open, long</text>
+    <text x="302" y="50" font-size="11" fill="#ef4444">stop = entry &minus; 1&times;(3m ATR14)</text>
+    <text x="302" y="66" font-size="11" fill="#b0b3c0">hold to stop or session close &mdash; nothing else</text>
+    <!-- right side: the skip cases -->
+    <g transform="translate(640,0)">
+      <text x="0" y="16" font-size="11" fill="#7a7e90" font-weight="700">SKIP THESE</text>
+      <!-- opposed -->
+      <g fill="#12805c">
+        <rect x="0" y="76" width="8" height="18"/><rect x="13" y="70" width="8" height="18"/>
+        <rect x="26" y="64" width="8" height="18"/><rect x="39" y="58" width="8" height="18"/>
+      </g>
+      <rect x="54" y="66" width="10" height="38" fill="#ef6c00"/>
+      <text x="74" y="82" font-size="11" fill="#ef6c00">drift up, expansion fires DOWN (anti-drift)</text>
+      <text x="74" y="96" font-size="11" fill="#7a7e90">suspect print &mdash; no trade either way</text>
+      <!-- flat -->
+      <rect x="0" y="126" width="62" height="26" fill="none" stroke="#7a7e90" stroke-dasharray="4 3" rx="2"/>
+      <g fill="#7a7e90">
+        <rect x="4" y="132" width="7" height="14"/><rect x="15" y="130" width="7" height="16"/>
+        <rect x="26" y="134" width="7" height="12"/><rect x="37" y="131" width="7" height="14"/>
+        <rect x="48" y="133" width="7" height="13"/>
+      </g>
+      <rect x="66" y="118" width="10" height="30" fill="#1cd48a"/>
+      <text x="86" y="134" font-size="11" fill="#b0b3c0">flat squeeze break: continued in testing but</text>
+      <text x="86" y="148" font-size="11" fill="#b0b3c0">FAILED the NQ holdout as a system &mdash; skip</text>
+    </g>
+  </svg>
+</div>
+
+<!-- 02: Setup checklist -->
+<div class="sec">
+  <div class="sec-num">02 &mdash; Setup (all five must be true)</div>
+  <div class="sec-title">The signal checklist</div>
+  <ul class="blist">
+    <li><span class="key">Squeeze:</span> Saty compression ON for <span class="val acc">&ge;8 consecutive 3m bars</span> (RTH 09:30&ndash;15:59 ET; a single 1-bar flicker off doesn't reset the count).</li>
+    <li><span class="key">Mark the first 5 squeeze bars' high/low.</span> That range is the reference.</li>
+    <li><span class="key">Drift:</span> later squeeze bars breach one side by <span class="val acc">&ge;0.5&times;ATR</span> while the other side holds within <span class="val acc">0.25&times;ATR</span>. Breach side = drift direction. (ATR = 3m ATR14, always.)</li>
+    <li><span class="key">Expansion fires in the drift direction:</span> first bar with compression OFF closes past the midpoint of the last 5 squeeze bars' range, on the drift side.</li>
+    <li><span class="key">Volatility gate:</span> 3m ATR14 <span class="val acc">&ge;2.0 pts (ES)</span> / <span class="val acc">&ge;2.6 pts (NQ)</span>. Below the gate the edge measured smaller than round-trip friction &mdash; skip.</li>
+  </ul>
+</div>
+
+<!-- 03: Execution -->
+<div class="sec">
+  <div class="sec-num">03 &mdash; Execution (nothing discretionary)</div>
+  <div class="sec-title">Entry, stop, exit</div>
+  <ul class="blist">
+    <li><span class="key">Entry:</span> market at the <span class="val">next 3m bar's open</span> after the expansion bar closes. Everything is known at that close &mdash; no anticipation, no chasing mid-bar.</li>
+    <li><span class="key">Stop:</span> <span class="val red">1&times; the 3m ATR14</span> (value at the expansion bar), intrabar. NOT the daily ATR: median stop &asymp; 3.5 ES pts (~$173/contract), IQR 2.6&ndash;5.1, p90 &asymp;7.</li>
+    <li><span class="key">Exit:</span> the stop, or <span class="val">market-on-close</span> of the same session. No target, no trail, no partials &mdash; measured worse every way tested; the P&amp;L lives in the runners held to the bell.</li>
+    <li><span class="key">Sizing:</span> contracts = risk budget &divide; (ATR &times; $/pt). Risk scales 1:1 with ATR, so size down automatically on hot days.</li>
+    <li><span class="key">One trade per signal;</span> new signals while in a trade are independent &mdash; take them only if your risk budget allows the overlap.</li>
+  </ul>
+</div>
+
+<!-- 04: What to expect -->
+<div class="sec">
+  <div class="sec-num">04 &mdash; What to Expect (per instrument)</div>
+  <div class="sec-title">This is a low-win-rate runner system</div>
+  <div class="stats">
+    <div class="stat"><div class="stat-val red">~21%</div><div class="stat-label">win rate &mdash; 4 of 5 trades stop out at &minus;1 ATR</div></div>
+    <div class="stat"><div class="stat-val bull">+$45&ndash;49</div><div class="stat-label">net per trade after costs (1 ES / 1 NQ contract)</div></div>
+    <div class="stat"><div class="stat-val acc">~135/yr</div><div class="stat-label">signals per instrument (ATR-gated, 2008&ndash;2026 avg)</div></div>
+  </div>
+  <ul class="blist">
+    <li><span class="key">Expect losing streaks and losing months at any size.</span> Forward 2026 ran &minus;$13.0k (Feb) to +$31.5k (Jun) on 1 ES + 1 NQ.</li>
+    <li><span class="key">Shorts measured stronger than longs</span> on both instruments (ES +1.28 vs +0.56 pts/trade) &mdash; take both sides.</li>
+    <li><span class="key">Start on MES/MNQ.</span> 18-yr max drawdown was 1,522 NQ pts &mdash; about $30k on a full contract, $3k on a micro.</li>
+  </ul>
+</div>
+
+<!-- 05: Evidence -->
+<div class="sec">
+  <div class="sec-num">05 &mdash; Why We Trust It (evidence chain)</div>
+  <div class="sec-title">Three gates, in order, no re-fitting between them</div>
+  <table class="mtable">
+    <thead><tr><th>Gate</th><th>Sample</th><th>N</th><th>Net/Trade</th><th>t (day-clust)</th></tr></thead>
+    <tbody>
+      <tr><td>Discovery (in-sample)</td><td>ES 2008&ndash;26</td><td>2,558</td><td>+0.91 pts</td><td>+2.93</td></tr>
+      <tr class="hi"><td>Pre-registered holdout</td><td>NQ 2008&ndash;26</td><td>4,450</td><td class="bull">+2.46 pts</td><td class="bull">+2.85 &mdash; PASS</td></tr>
+      <tr><td>Forward (unseen data)</td><td>ES+NQ Feb&ndash;Jul 2026</td><td>273</td><td>+$83</td><td>+0.66 (in line)</td></tr>
+    </tbody>
+  </table>
+  <div style="margin-top:.5rem;font-size:.72rem;color:var(--t3);line-height:1.5">
+    Holdout specs &amp; pass lines were frozen in writing before NQ was touched. Forward window is too
+    short for significance by construction (an 18-yr t=2.85 edge projects t&asymp;0.45 over 5.5 months) &mdash;
+    it checks "did it break," and it didn't. Same rules replicate directionally on 1m and 10m charts;
+    net of friction the 3m is strongest (t 1.46 / 3.04 / 1.07).
+  </div>
+</div>
+
+<!-- 06: Do not add -->
+<div class="sec full">
+  <div class="sec-num">06 &mdash; Measured &amp; Rejected (don't add these back)</div>
+  <div class="sec-title">Every one of these was tested and made it worse</div>
+  <ul class="blist">
+    <li class="no"><span class="key">Fading the drift / expecting mean reversion:</span> the original hypothesis. Across 10,648 episodes the drift direction kept winning after expansion &mdash; stronger drift, stronger continuation (top quartile +0.113 ATR by bar 3, t=4.3).</li>
+    <li class="no"><span class="key">Trading anti-drift expansions</span> (either direction): weakest group, not statistically separable as a fade. Treat as "stand aside."</li>
+    <li class="no"><span class="key">Flat-squeeze breakouts as a system:</span> best per-event stats in-sample, then failed the pre-registered NQ holdout (t=1.42, shorts &asymp;0). Chart context only.</li>
+    <li class="no"><span class="key">10m confluence filter</span> (same-direction = trade / opposite = skip / squeeze = half size): would have roughly halved total P&amp;L on both instruments; buckets not separable (t 0.5&ndash;1.9). Run it unfiltered.</li>
+    <li class="no"><span class="key">Profit targets, trailing stops, fixed-bar exits:</span> all reduced net vs stop-else-close. The skew IS the strategy.</li>
+  </ul>
+</div>
+
+</div><!-- /grid -->
+
+<div class="sec full" style="background:linear-gradient(135deg,#0f1118,#131620);border-bottom:none">
+  <div class="sec-num" style="color:var(--acc)">&#9733; Bottom Line</div>
+  <div class="sec-title">The whole system in three lines</div>
+  <ul class="blist">
+    <li><span class="key">Squeeze &ge;8 bars drifting one way + expansion firing that same way + 3m ATR &ge; 2 ES pts &rarr; <span class="val bull">enter next open with the drift</span>.</span></li>
+    <li><span class="key">Risk 1&times;3m ATR, hold to stop or the closing bell.</span> Touch nothing in between.</li>
+    <li><span class="key">Accept the ~21% win rate</span> (of 4,450 NQ holdout trades) &mdash; the edge is in the runners, and every "improvement" tested so far shrank it.</li>
+  </ul>
+</div>
+
+<div class="ftr">
+  <span>milkmantrades.com &middot; Compression/PO by Saty Mahajan &middot; spec: analyst/po_comp_drift_STRATEGY.md</span>
+  <span>ES/NQ futures &middot; costs incl. (0.31 / 0.405 pts RT) &middot; System v1.0 frozen 2026-07-10</span>
+</div>
+
+</div><!-- /poster -->
+
+<script>
+function savePNG() {
+  var btn = document.querySelector('.save-btn:not(.save-mobile-btn)');
+  btn.textContent = 'Rendering...';
+  html2canvas(document.getElementById('poster'), {
+    scale: 2,
+    backgroundColor: '#0c0e12',
+    useCORS: true,
+  }).then(function(canvas) {
+    var a = document.createElement('a');
+    a.download = 'compression-drift-continuation.png';
+    a.href = canvas.toDataURL('image/png');
+    a.click();
+    btn.textContent = '✓ Saved';
+    setTimeout(function() { btn.textContent = '⬇ Save as PNG'; }, 2000);
+  });
+}
+</script>
+</body>
+</html>

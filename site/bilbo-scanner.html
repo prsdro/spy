@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bilbo Box Scanner | Milkman Trades</title>
+<meta name="description" content="Live scanner for hourly Bilbo Box compression across the S&P 500 and Nasdaq-100. Boxes forming, armed boxes awaiting a break, and fresh breakouts.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥛</text></svg>">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0c0e12;
+  --surface:#13161c;
+  --surface-2:#181c24;
+  --border:#1e2230;
+  --text:#e8eaed;
+  --text-dim:#6b7280;
+  --text-mid:#9ca3af;
+  --accent:#fbbf24;
+  --bull:#1cd48a;
+  --bull-bg:#0a1f15;
+  --bear:#ef6c00;
+  --bear-bg:#1f1208;
+  --blue:#38bdf8;
+  --blue-bg:#082331;
+  --violet:#a78bfa;
+}
+html{font-size:15px}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
+body::before{content:'';position:fixed;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(255,255,255,.018),transparent 46%);pointer-events:none}
+.page{max-width:1020px;margin:0 auto;padding:3rem 1.5rem 5rem}
+
+.back{display:inline-flex;align-items:center;gap:.4rem;font-size:.8rem;color:var(--text-dim);text-decoration:none;margin-bottom:.5rem;transition:color .2s}
+.back:hover{color:var(--text)}
+.back svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2}
+
+.hero{margin-bottom:2rem}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:.75rem}
+.kicker .live-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--bull);margin-right:.45rem;vertical-align:1px;animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+h1{font-size:2.1rem;font-weight:700;letter-spacing:-.01em;line-height:1.14;text-wrap:balance;margin-bottom:.9rem}
+h1 em{font-style:normal;background:linear-gradient(135deg,var(--accent),var(--bear));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.lede{max-width:720px;font-size:.95rem;color:var(--text-mid);font-weight:300;line-height:1.7;text-wrap:pretty}
+.lede strong{color:var(--text);font-weight:500}
+.lede a{color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(251,191,36,.35)}
+
+.statusbar{display:flex;flex-wrap:wrap;gap:.6rem 1.6rem;align-items:baseline;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.75rem 1.1rem;margin-bottom:1.4rem;font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--text-dim)}
+.statusbar b{color:var(--text);font-weight:500}
+.statusbar .cnt-break{color:var(--accent)}
+.statusbar .cnt-armed{color:var(--violet)}
+.statusbar .cnt-form{color:var(--blue)}
+.stale{display:none;background:var(--bear-bg);border:1px solid #3d2108;border-radius:6px;padding:.55rem 1rem;margin-bottom:1.2rem;font-size:.78rem;color:var(--bear)}
+
+.filters{display:flex;flex-wrap:wrap;gap:.45rem;align-items:center;margin-bottom:1.6rem}
+.chipset{display:flex;gap:.3rem;background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:.22rem}
+.chip{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--text-dim);background:none;border:none;border-radius:5px;padding:.3rem .6rem;cursor:pointer;transition:all .15s;white-space:nowrap}
+.chip:hover{color:var(--text)}
+.chip.on{background:var(--surface-2);color:var(--accent)}
+.search{font-family:'JetBrains Mono',monospace;font-size:.72rem;background:var(--surface);border:1px solid var(--border);border-radius:7px;color:var(--text);padding:.5rem .7rem;width:130px;outline:none}
+.search::placeholder{color:var(--text-dim)}
+.search:focus{border-color:#2a3044}
+
+.section{margin-bottom:2.6rem}
+.section-label{font-family:'JetBrains Mono',monospace;font-size:.65rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim);padding-bottom:.6rem;border-bottom:1px solid var(--border);margin-bottom:.4rem;display:flex;justify-content:space-between;align-items:baseline}
+.section-label .n{color:var(--text-mid)}
+.section-label.lbl-break{color:var(--accent)}
+.section-label.lbl-armed{color:var(--violet)}
+.section-label.lbl-form{color:var(--blue)}
+.section-note{font-size:.72rem;color:var(--text-dim);margin-bottom:.6rem;line-height:1.5}
+
+.tblwrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.8rem}
+th{font-family:'JetBrains Mono',monospace;font-size:.6rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--text-dim);text-align:right;padding:.55rem .5rem;border-bottom:1px solid var(--border);white-space:nowrap}
+th:first-child,th.l{text-align:left}
+td{padding:.5rem .5rem;border-bottom:1px solid #151820;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+td:first-child,td.l{text-align:left}
+tr:hover td{background:rgba(255,255,255,.015)}
+.sym a{color:var(--text);font-weight:600;text-decoration:none;border-bottom:1px dotted #2a3044}
+.sym a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+.co{color:var(--text-dim);font-size:.68rem;font-weight:300;max-width:150px;overflow:hidden;text-overflow:ellipsis;display:inline-block;vertical-align:bottom;white-space:nowrap}
+.mono{font-family:'JetBrains Mono',monospace}
+.dim{color:var(--text-dim)}
+.mid{color:var(--text-mid)}
+.dir-up{color:var(--bull);font-weight:700}
+.dir-dn{color:var(--bear);font-weight:700}
+.bars-badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:.65rem;padding:.05rem .4rem;border-radius:4px;background:var(--surface-2);color:var(--text-mid)}
+.bars-badge.edge{background:#1a2a10;color:#c9f76f}
+.sess{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.05em;padding:.05rem .4rem;border-radius:4px}
+.sess.rth{background:#1a2a10;color:#c9f76f}
+.sess.pre{background:var(--surface-2);color:var(--text-mid)}
+.sess.ah{background:var(--bear-bg);color:var(--bear)}
+tr.eth-break td{opacity:.55}
+.idx-tag{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:.55rem;letter-spacing:.05em;padding:.02rem .3rem;border-radius:3px;background:var(--surface-2);color:var(--text-dim);margin-left:.35rem;vertical-align:1px}
+
+.rangebar{display:inline-flex;align-items:center;gap:.45rem}
+.rangebar .track{position:relative;width:92px;height:4px;border-radius:2px;background:var(--surface-2);border:1px solid var(--border)}
+.rangebar .marker{position:absolute;top:50%;transform:translate(-50%,-50%);width:8px;height:8px;border-radius:50%;border:2px solid var(--bg)}
+.rangebar .ov{font-family:'JetBrains Mono',monospace;font-size:.65rem}
+
+.empty{padding:1.4rem .5rem;font-size:.8rem;color:var(--text-dim);font-style:italic}
+
+.callout{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1rem 1.1rem;margin:1.5rem 0}
+.callout p{font-size:.82rem;color:var(--text-mid);line-height:1.65;margin-bottom:.5rem}
+.callout p:last-child{margin-bottom:0}
+.callout strong{color:var(--text);font-weight:500}
+.callout a{color:var(--accent);text-decoration:none}
+
+.foot{font-size:.7rem;color:var(--text-dim);line-height:1.7;margin-top:2.5rem;padding-top:1.4rem;border-top:1px solid var(--border)}
+.foot a{color:var(--text-dim);text-decoration:underline;text-underline-offset:2px}
+
+@media(max-width:640px){
+  .page{padding:2rem .8rem 4rem}
+  h1{font-size:1.6rem}
+  .co{display:none}
+}
+</style>
+<script src="/nav.js"></script>
+</head>
+<body>
+<div class="page">
+  <a class="back" href="/"><svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>All studies</a>
+
+  <div class="hero">
+    <div class="kicker"><span class="live-dot"></span>Live Scanner &middot; 1H &middot; Top 25 Most Liquid</div>
+    <h1>Bilbo Box <em>Scanner</em></h1>
+    <p class="lede">The <strong>25 most liquid names</strong> in the S&amp;P 500 and Nasdaq-100 (ranked by
+    20-day average dollar volume), scanned on <strong>hourly compression</strong>. The Bilbo Box is the range
+    of the first five compression bars; once it locks, the first trade outside the box is the break. Immediate
+    entry on the break was the winning variant in the
+    <a href="/bilbo-box-breakout.html">Bilbo Box Breakout study</a> (50,889 SPY breaks), with the edge
+    concentrated in <strong>1&ndash;4 bar boxes</strong>.</p>
+  </div>
+
+  <div class="statusbar" id="statusbar">loading&hellip;</div>
+  <div class="stale" id="stale"></div>
+
+  <div class="filters">
+    <div class="chipset" id="f-idx">
+      <button class="chip on" data-v="all">All</button>
+      <button class="chip" data-v="sp500">S&amp;P 500</button>
+      <button class="chip" data-v="ndx">NDX-100</button>
+    </div>
+    <div class="chipset" id="f-dir">
+      <button class="chip on" data-v="all">Both dirs</button>
+      <button class="chip" data-v="up">Up ↑</button>
+      <button class="chip" data-v="down">Down ↓</button>
+    </div>
+    <div class="chipset" id="f-bars">
+      <button class="chip on" data-v="all">All boxes</button>
+      <button class="chip" data-v="edge">1&ndash;4 bars</button>
+    </div>
+    <input class="search" id="f-q" type="text" placeholder="ticker…" autocomplete="off">
+  </div>
+
+  <div class="section">
+    <div class="section-label lbl-break"><span>Fresh Breakouts</span><span class="n" id="n-break"></span></div>
+    <div class="section-note">First trade outside a locked box within the last 7 hourly bars. RTH breaks first, then newest. The box's opposite boundary is the study's stop reference (1R = box width).
+    <strong style="color:var(--text-mid)">Session matters:</strong> in the study's 3,477 1h breaks, RTH-session breaks carried the whole edge (median +0.12R, n=1,479); premarket breaks were flat (+0.02R, n=1,471); after-hours breaks were negative (&minus;0.17R, n=527). Only RTH breaks fire alerts; ETH rows are dimmed. <strong style="color:var(--text-mid)">Telegram is stricter than this table:</strong> a break only alerts once its bar has closed, out of compression, with the CLOSE outside the box (no wick-only alerts), on a box &le;3&times;ATR wide.</div>
+    <div class="tblwrap"><table id="t-break"></table></div>
+  </div>
+
+  <div class="section">
+    <div class="section-label lbl-armed"><span>Armed Boxes</span><span class="n" id="n-armed"></span></div>
+    <div class="section-note">Box locked, no break yet. Break-watch stays live for 20 bars after lock; a fresh compression start kills the pending box. <span style="color:var(--accent)">⚡</span> = live price within 0.25&times;ATR of a boundary &mdash; a touch is plausible within the hour. Telegram pre-alerts only for quality boxes: out of compression, &le;3&times;ATR wide, price within 0.15&times;ATR, during RTH.</div>
+    <div class="tblwrap"><table id="t-armed"></table></div>
+  </div>
+
+  <div class="section">
+    <div class="section-label lbl-form"><span>Boxes Forming</span><span class="n" id="n-form"></span></div>
+    <div class="section-note">Currently in compression, box still growing (locks at 5 bars or when compression ends, whichever comes first).</div>
+    <div class="tblwrap"><table id="t-form"></table></div>
+  </div>
+
+  <div class="section">
+    <div class="section-label"><span>Idle &mdash; No Active Box</span><span class="n" id="n-idle"></span></div>
+    <div class="section-note">Watched names with no live box lifecycle right now. A dot in the comp column means the stock is inside a compression run whose box already resolved.</div>
+    <div class="tblwrap"><table id="t-idle"></table></div>
+  </div>
+
+  <div class="callout">
+    <p><strong>How to read it.</strong> The range bar shows where price sits inside the box
+    (<span style="color:var(--bull)">●</span> above midpoint / breaking up,
+    <span style="color:var(--bear)">●</span> below / breaking down). Width is the box height in
+    hourly ATR-14 multiples &mdash; tighter boxes were the better setups in the study.
+    <span class="bars-badge edge">1&ndash;4</span> marks early-exit boxes, where the measured edge concentrated.
+    <span class="sess rth">RTH</span> breaks are the tradeable ones per the study; <span class="sess pre">PRE</span>
+    breaks showed no edge and <span class="sess ah">AH</span> breaks were net losers &mdash; boxes still form and
+    lock on extended-hours bars (exactly as in the backtest), but only an RTH-session break is a signal.</p>
+    <p><strong>Caveats.</strong> Bars are extended-hours hourly (top-of-hour 04:00&ndash;19:00 ET starts,
+    16/day), the same grid as the SPY backtest and TV charts with ETH on. Primary data is Massive 1h
+    aggregates with SIP-filtered wicks; if that source degrades the scanner falls back to Yahoo per ticker,
+    where pre/post wicks are unreliable and the bar <em>body</em> is used as the extreme outside RTH. Wicks
+    are clipped at 2% beyond the body (the standard bad-tick rule from the studies). The last bar is in
+    progress during the session &mdash; a "break" can un-print if the bar reverses before it closes. This is
+    a watchlist builder, not a signal service.</p>
+  </div>
+
+  <div class="foot">
+    Refreshes automatically &mdash; next in <span id="countdown">60</span>s. Scanner runs server-side on a cron during RTH.
+    Times shown in Central Time. Methodology: <a href="/bilbo-box-breakout.html">Bilbo Box Breakout study</a>.
+  </div>
+</div>
+
+<script>
+const F = {idx:'all', dir:'all', bars:'all', q:''};
+let DATA = null;
+
+const fmt$ = v => v >= 1000 ? v.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}) : v.toFixed(2);
+const ctTime = iso => new Date(iso).toLocaleString('en-US',{timeZone:'America/Chicago',month:'numeric',day:'numeric',hour:'numeric',minute:'2-digit',hour12:true});
+
+function tvLink(sym){ return `https://www.tradingview.com/chart/?symbol=${encodeURIComponent(sym)}`; }
+
+function rangeBar(t){
+  const w = t.box_high - t.box_low;
+  if (!w || w <= 0) return '';
+  let frac = (t.last_price - t.box_low) / w;
+  const below = frac < 0, above = frac > 1;
+  frac = Math.max(0, Math.min(1, frac));
+  const color = t.status === 'breakout'
+    ? (t.break_dir === 'up' ? 'var(--bull)' : 'var(--bear)')
+    : (frac >= 0.5 ? 'var(--bull)' : 'var(--bear)');
+  const ovL = below ? `<span class="ov" style="color:var(--bear)">◂</span>` : '';
+  const ovR = above ? `<span class="ov" style="color:var(--bull)">▸</span>` : '';
+  return `<span class="rangebar">${ovL}<span class="track"><span class="marker" style="left:${(frac*100).toFixed(0)}%;background:${color}"></span></span>${ovR}</span>`;
+}
+
+function symCell(t){
+  const tags = (t.sp500?'<span class="idx-tag">SPX</span>':'') + (t.ndx?'<span class="idx-tag">NDX</span>':'');
+  return `<td class="l"><span class="sym"><a href="${tvLink(t.sym)}" target="_blank" rel="noopener">${t.sym}</a></span>${tags} <span class="co">${t.name||''}</span></td>`;
+}
+function barsBadge(n){ return `<span class="bars-badge${n<=4?' edge':''}">${n}</span>`; }
+function widthCell(t){
+  const atr = t.box_width_atr != null ? t.box_width_atr.toFixed(2)+'×' : '–';
+  return `<td class="mono"><span class="mid">${atr}</span> <span class="dim">${t.box_width_pct?.toFixed(2)}%</span></td>`;
+}
+function boxCell(t){ return `<td class="mono dim">${fmt$(t.box_low)} – ${fmt$(t.box_high)}</td>`; }
+
+function passes(t){
+  if (F.idx === 'sp500' && !t.sp500) return false;
+  if (F.idx === 'ndx' && !t.ndx) return false;
+  if (F.bars === 'edge' && t.box_bars > 4) return false;
+  if (F.q && !t.sym.toUpperCase().startsWith(F.q) && !(t.name||'').toUpperCase().includes(F.q)) return false;
+  return true;
+}
+
+function render(){
+  if (!DATA) return;
+  const rows = DATA.tickers.filter(passes);
+
+  // Breakouts
+  let bk = rows.filter(t => t.status === 'breakout');
+  if (F.dir !== 'all') bk = bk.filter(t => t.break_dir === F.dir);
+  const sessRank = s => s === 'rth' ? 0 : s === 'premarket' ? 1 : 2;
+  bk.sort((a,b) => sessRank(a.break_session) - sessRank(b.break_session)
+                || a.bars_since_break - b.bars_since_break
+                || a.box_width_atr - b.box_width_atr);
+  const sessBadge = s => s === 'rth' ? '<span class="sess rth">RTH</span>'
+    : s === 'premarket' ? '<span class="sess pre">PRE</span>'
+    : '<span class="sess ah">AH</span>';
+  document.getElementById('n-break').textContent = bk.length;
+  document.getElementById('t-break').innerHTML = bk.length ? `
+    <tr><th class="l">Ticker</th><th>Dir</th><th>Session</th><th>Box bars</th><th>Box range</th><th>Width (ATR·%)</th><th>Last</th><th>Position</th><th>Broke (CT)</th><th>Bars ago</th></tr>` +
+    bk.map(t => `<tr${t.break_session!=='rth'?' class="eth-break"':''}>${symCell(t)}
+      <td class="${t.break_dir==='up'?'dir-up':'dir-dn'}">${t.break_dir==='up'?'↑ UP':'↓ DOWN'}</td>
+      <td>${sessBadge(t.break_session)}</td>
+      <td>${barsBadge(t.box_bars)}</td>${boxCell(t)}${widthCell(t)}
+      <td class="mono" style="color:var(--text)">${fmt$(t.last_price)}</td>
+      <td>${rangeBar(t)}</td>
+      <td class="mono dim">${ctTime(t.break_ts)}</td>
+      <td class="mono ${t.bars_since_break===0?'dir-up':'dim'}">${t.bars_since_break===0?'NOW':t.bars_since_break}</td></tr>`).join('')
+    : '<tr><td class="empty l">No breakouts matching filters.</td></tr>';
+
+  // Armed
+  const ar = rows.filter(t => t.status === 'locked')
+    .sort((a,b) => a.bars_since_lock - b.bars_since_lock || a.box_width_atr - b.box_width_atr);
+  document.getElementById('n-armed').textContent = ar.length;
+  document.getElementById('t-armed').innerHTML = ar.length ? `
+    <tr><th class="l">Ticker</th><th>Box bars</th><th>Box range</th><th>Width (ATR·%)</th><th>Last</th><th>Position</th><th>Locked at (CT)</th><th>Watch left</th></tr>` +
+    ar.map(t => `<tr>${symCell(t)}
+      <td>${barsBadge(t.box_bars)}</td>${boxCell(t)}${widthCell(t)}
+      <td class="mono" style="color:var(--text)">${fmt$(t.last_price)}</td>
+      <td>${t.near_break?`<span title="within ${t.near_dist_atr}×ATR of box ${t.near_break==='up'?'high':'low'}" style="color:var(--accent)">⚡</span> `:''}${rangeBar(t)}</td>
+      <td class="mono dim">${ctTime(t.lock_ts)}</td>
+      <td class="mono dim">${t.watch_bars_left} bars</td></tr>`).join('')
+    : '<tr><td class="empty l">No armed boxes matching filters.</td></tr>';
+
+  // Forming
+  const fo = rows.filter(t => t.status === 'forming')
+    .sort((a,b) => b.box_bars - a.box_bars || a.sym.localeCompare(b.sym));
+  document.getElementById('n-form').textContent = fo.length;
+  document.getElementById('t-form').innerHTML = fo.length ? `
+    <tr><th class="l">Ticker</th><th>Bars so far</th><th>Range so far</th><th>Width (ATR·%)</th><th>Last</th><th>Position</th><th>Started (CT)</th></tr>` +
+    fo.map(t => `<tr>${symCell(t)}
+      <td>${barsBadge(t.box_bars)}</td>${boxCell(t)}${widthCell(t)}
+      <td class="mono" style="color:var(--text)">${fmt$(t.last_price)}</td>
+      <td>${rangeBar(t)}</td>
+      <td class="mono dim">${ctTime(t.box_start_ts)}</td></tr>`).join('')
+    : '<tr><td class="empty l">No boxes forming matching filters.</td></tr>';
+
+  // Idle
+  const id_ = rows.filter(t => t.status === 'none')
+    .sort((a,b) => (b.dollar_vol||0) - (a.dollar_vol||0));
+  document.getElementById('n-idle').textContent = id_.length;
+  document.getElementById('t-idle').innerHTML = id_.length ? `
+    <tr><th class="l">Ticker</th><th>Last</th><th>ATR-14 (1h)</th><th>20d $ vol</th><th>Comp</th></tr>` +
+    id_.map(t => `<tr>${symCell(t)}
+      <td class="mono" style="color:var(--text)">${fmt$(t.last_price)}</td>
+      <td class="mono dim">${t.atr14?.toFixed(2)}</td>
+      <td class="mono dim">${t.dollar_vol ? '$'+(t.dollar_vol/1e9).toFixed(1)+'B' : '–'}</td>
+      <td>${t.in_compression ? '<span style="color:var(--blue)">●</span>' : '<span class="dim">–</span>'}</td></tr>`).join('')
+    : '<tr><td class="empty l">Every watched name has an active box.</td></tr>';
+}
+
+function renderStatus(){
+  const c = DATA.counts;
+  document.getElementById('statusbar').innerHTML =
+    `<span>updated <b>${DATA.generated_ct}</b></span>` +
+    `<span>scanned <b>${DATA.scanned}</b>/${DATA.universe_size} in ${DATA.elapsed_sec}s</span>` +
+    `<span class="cnt-break">breakouts <b>${c.breakout}</b></span>` +
+    `<span class="cnt-armed">armed <b>${c.locked}</b></span>` +
+    `<span class="cnt-form">forming <b>${c.forming}</b></span>` +
+    `<span>idle <b>${c.none}</b></span>` +
+    (DATA.errors.length ? `<span>errors <b>${DATA.errors.length}</b></span>` : '');
+
+  const stale = document.getElementById('stale');
+  const ageMin = (Date.now() - new Date(DATA.generated_utc).getTime()) / 60000;
+  const now = new Date();
+  const et = new Date(now.toLocaleString('en-US',{timeZone:'America/New_York'}));
+  const mins = et.getHours()*60 + et.getMinutes();
+  const rth = et.getDay() >= 1 && et.getDay() <= 5 && mins >= 570 && mins <= 970;
+  if (rth && ageMin > 20){
+    stale.style.display = 'block';
+    stale.innerHTML = `<strong>Stale data:</strong> last scan was ${Math.round(ageMin)} minutes ago. The cron may not be running.`;
+  } else if (!rth){
+    stale.style.display = 'block';
+    stale.style.background = 'var(--surface)'; stale.style.borderColor = 'var(--border)'; stale.style.color = 'var(--text-dim)';
+    stale.innerHTML = `Market closed — showing the last scan. States are as of the final hourly bar.`;
+  } else {
+    stale.style.display = 'none';
+  }
+}
+
+async function load(){
+  try{
+    const r = await fetch('/data/bilbo-scanner.json?t=' + Date.now());
+    DATA = await r.json();
+    renderStatus();
+    render();
+  }catch(e){
+    document.getElementById('statusbar').innerHTML = `<span style="color:var(--bear)">failed to load scan data — ${e.message}</span>`;
+  }
+}
+
+document.querySelectorAll('.chipset').forEach(set => {
+  set.addEventListener('click', e => {
+    const b = e.target.closest('.chip'); if (!b) return;
+    set.querySelectorAll('.chip').forEach(c => c.classList.remove('on'));
+    b.classList.add('on');
+    const key = set.id.replace('f-','');
+    F[key] = b.dataset.v;
+    render();
+  });
+});
+document.getElementById('f-q').addEventListener('input', e => {
+  F.q = e.target.value.trim().toUpperCase(); render();
+});
+
+let tick = 60;
+setInterval(() => {
+  tick--;
+  if (tick <= 0){ tick = 60; load(); }
+  document.getElementById('countdown').textContent = tick;
+}, 1000);
+load();
+</script>
+</body>
+</html>

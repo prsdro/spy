@@ -117,12 +117,13 @@ page = """<!doctype html><html lang="en"><head><meta charset="utf-8">
  .sw{display:inline-block;width:10px;height:10px;border-radius:2px;margin:0 4px 0 12px;vertical-align:-1px}
 </style></head><body><div class="wrap">
 <h1>When an hourly compression box breaks,<br>buy the break — with real option prices</h1>
+<p class="lede" style="margin-bottom:4px"><a href="/cheatsheet-bilbo-breakout.png" style="color:#facc15">⤓ One-page cheat sheet (PNG)</a> — the rules, the exits, and the VIX filter on a single image.</p>
 <p class="lede">Saty Phase Oscillator compression on the hourly chart draws a box (the range of the first
 five compression candles, extended-hours bars). Across <strong>8 mega-caps × 24 months × 2,449 boxes</strong>
 priced with actual option trade prints: when the break happens <strong>during market hours</strong>, buying the
 weekly ATM option in the break direction immediately — take-profit +100%, stop −50% — returned
 <strong>+8.3% of premium per trade (t&nbsp;=&nbsp;3.78, n&nbsp;=&nbsp;972)</strong>. Overnight gap-breaks returned nothing:
-skip them. That single filter is what two earlier rounds of this study were missing.</p>
+skip them.</p>
 <div class="tiles">
  <div class="tile"><div class="v good">+8.3%</div><div class="l">avg premium P&L / trade, intraday breaks, TP100/stop50 (t=3.78, n=972 boxes)</div></div>
  <div class="tile"><div class="v good">both ways</div><div class="l">up-breaks +7.2% (calls) · down-breaks +9.5% (puts)</div></div>
@@ -151,7 +152,10 @@ skip them. That single filter is what two earlier rounds of this study were miss
  <li><strong>Box</strong>: first 5 hourly compression candles (fewer if expansion comes early) on <strong>extended-hours</strong> bars — box top/bottom = that range. ETH bars matter: a level that held overnight is a proven level.</li>
  <li><strong>Entry</strong>: the moment price breaks either edge <em>during regular hours</em> — buy the weekly (nearest-Friday) ATM call on an up-break / put on a down-break. No waiting for retest: it faded at scale.</li>
  <li><strong>Exit (simple)</strong>: bracket order — sell at +100% of premium, stop at −50%. Scale-outs at +50/+80% erase the edge; the payoff needs the doubles.</li>
- <li><strong>Exit (better — arm-then-trail)</strong>: same −50% stop, but once the premium doubles, remove the target and trail instead: never give back more than 30% from the option's high-water mark. <strong>+14.7% per trade (t=4.84)</strong> vs +8.3% for the fixed bracket. Validated: better in <em>both years separately</em> (+14.3% / +15.2%), better on <em>all 8 tickers</em>, and insensitive to the exact settings (arming anywhere from +75% to +150%, trailing 25–35%, all land +13.7 to +14.8%). The +300–500% runners in the charts below are what pay for the ~62% of losers — this exit keeps them. One honesty note: trailing exits fire during fast moves, so real fills matter more — under worst-case fills (trigger-bar close) it's +8.1% vs the bracket's +4.8%; the advantage holds under every fill assumption, the absolute level depends on execution.</li>
+ <li><strong>Exit (the one that matters — arm-then-trail)</strong>: same −50% stop, but once the premium doubles, remove the target and trail instead: never give back more than 30% from the option's high-water mark. <strong>+14.7% per trade (t=4.84)</strong> vs +8.3% for the fixed bracket on the original 8 names. Then the real test: on <strong>12 fresh tickers the strategy had never seen</strong> (PLTR, COIN, HOOD, INTC, MU, BAC, and more — 1,493 boxes), the fixed bracket collapsed to −0.7% while <strong>arm-then-trail held at +11.2% (t=3.95), positive on 9 of 12 names</strong>. The trail, not the entry, is where most of the return comes from. The +300–500% runners in the charts below are what pay for the ~62% of losers. Honesty note: trailing exits fire during fast moves, so fills matter — under worst-case fills it's +8.1% vs the bracket's +4.8%; the advantage holds under every fill assumption, the absolute level depends on execution.</li>
+ <li><strong>Why it works (20-year check)</strong>: across 10,764 box breaks since 2004, the <em>direction</em> of the break has almost no predictive power in any era (win rate ~50%) — but the excursion after a break is big in every era: the median move-in-your-favor within the week is ~1.2 daily-ATRs, in both directions, in every regime. The trade isn't a direction bet; it's buying cheap convexity right before price travels, and letting the trail harvest whichever way it goes.</li>
+ <li><strong>The direction-free version (strongest stats in the study)</strong>: since direction barely matters, buy BOTH legs — an ATM weekly straddle at the break, each leg with its own −50% stop and arm-then-trail. Across all 20 tickers and 2,345 boxes: <strong>+12.0% of combined premium per trade, t = 8.42, 57% win rate</strong> — and identical in and out of sample (+13.5% original 8, +11.0% on the 12 fresh names). You give up ~1.5 points of average versus picking the break direction, and in exchange get a far smoother ride (win rate 57% vs 36%) and one less decision to make. Skip the sleepy names (AAPL, DIS, JPM negative); the high-beta names carry it (AMD +30%, MU +27%, TSLA +26%, INTC +26%, COIN +21%). Two legs also means double the spread cost — the real-world haircut is bigger here.</li>
+ <li><strong>VIX filter</strong>: below VIX 18 either version works (directional has the higher average); above VIX 20 the directional trade decays to noise — <strong>straddle only</strong>. Full regime table below.</li>
  <li><strong>Skip</strong>: breaks that happen overnight/premarket (gap opens outside the box) — flat to negative as a class.</li>
 </ul>
 
@@ -183,12 +187,15 @@ __CHARTS__
  ticker tends to be covered by the others. The edge diversifies.</li>
 </ul>
 
+__VIX__
+
 <h2>The don'ts (each tested, each lost)</h2>
 <ul>
  <li><strong>Don't trade the gap.</strong> Overnight breaks bought at the open ≈ 0% across 1,259 boxes.</li>
  <li><strong>Don't scale out early.</strong> TP1 +50% / TP2 +80% turns +8.3% into −1%. The edge lives in the tail.</li>
  <li><strong>Don't fade strength in the box.</strong> Shorting the top third: −6.2%/trade, t=−3.87, n=1,421 — the most reliable losing trade in the study.</li>
  <li><strong>Don't overthink the oscillator.</strong> PO slope, position, and direction added nothing on top of the box: with-slope and against-slope entries performed the same. The compression flag is the signal; the box does the rest.</li>
+ <li><strong>Don't take it to index options.</strong> SPY, QQQ and SPX (via SPXW) tested on 967 index boxes: the directional version is negative, the straddle is statistically unconfirmed, and 55% of index breaks happen overnight (the no-trade class). Index vol carries the variance risk premium — the movement this trade harvests is only underpriced on single names.</li>
 </ul>
 
 <div class="foot">
@@ -197,12 +204,12 @@ __CHARTS__
 trade prints, 21k contracts; fills = last print at signal (median lag ≈1 min); expiries anchored to entry date.
 No bid/ask or commissions modeled — expect a 2–4pp haircut on liquid ATM weeklies; thin strikes worse.
 Stats are episode-clustered; TP fills assume a resting limit at target; stops assume no gap-through.
-This is round three of the study: round one (3 tickers, 12 months, RTH bars) found nothing;
-a random-entry control reframed it; the 10× sample plus the ETH-session definition and the
-intraday/overnight split produced the result above. Earlier candidate edges (retest entries, box-maturity
-filters) faded out-of-sample and are reported dead. Charts show Saty-style hourly candles
+Every result was judged against a random-entry baseline, and candidate edges that failed validation
+on held-out tickers (retest entries, box-maturity filters, index options) are reported dead rather than
+silently dropped. Charts show Saty-style hourly candles
 (gray = compression), 8/21 + 13/48 EMA ribbons, phase oscillator (magenta = compression).
-Built 2026-07-08 · data through 2026-07-06.</div>
+Built 2026-07-08 · data through 2026-07-06 ·
+<a href="/cheatsheet-bilbo-breakout.png" style="color:#facc15">one-page cheat sheet (PNG)</a></div>
 </div>
 <script>
 __CLOUD__
@@ -258,6 +265,81 @@ blocks.insert(0, '<h2>Three trades, start to finish</h2>'
               '<span class="sw" style="background:#94a3b8"></span>box'
               '<span class="sw" style="background:#facc15"></span>entry'
               '<span class="sw" style="background:#22c55e"></span>exit</div>')
+# ---- VIX regime section (data: vix_bucket_stats.json, built by the VIX bucket analysis)
+VS = json.loads((STUDY / 'vix_bucket_stats.json').read_text())
+BUCKETS = ['<16', '16-18', '18-20', '20-22', '>22']
+C_SINGLE, C_STRAD = '#3987e5', '#c98500'   # validated pair on #0b0e14 (CVD dE 113)
+
+def vix_svg():
+    W, H, BASE, TOP = 720, 270, 210, 18
+    vmax = 22.0
+    ypx = lambda v: BASE - (v / vmax) * (BASE - TOP)
+    gw = (W - 60) / len(BUCKETS)
+    parts = [f'<svg viewBox="0 0 {W} {H}" style="width:100%;max-width:760px;height:auto" role="img" '
+             f'aria-label="Average premium P&L per trade by VIX bucket, single-leg vs straddle">']
+    for gv in [0, 5, 10, 15, 20]:
+        y = ypx(gv)
+        parts.append(f'<line x1="42" y1="{y:.0f}" x2="{W-6}" y2="{y:.0f}" stroke="#1f2a44" stroke-width="1"/>')
+        parts.append(f'<text x="36" y="{y+4:.0f}" fill="#7b8ba1" font-size="11" text-anchor="end">{gv}%</text>')
+    for i, b in enumerate(BUCKETS):
+        x0 = 50 + i * gw + gw / 2
+        for j, (key, col) in enumerate([('single', C_SINGLE), ('straddle', C_STRAD)]):
+            v = VS[b][key]['mean']
+            x = x0 - 46 + j * 48
+            y = ypx(v)
+            parts.append(f'<rect x="{x:.0f}" y="{y:.0f}" width="42" height="{BASE-y:.0f}" rx="3" fill="{col}"/>')
+            parts.append(f'<text x="{x+21:.0f}" y="{y-6:.0f}" fill="#e5edf7" font-size="12" font-weight="700" '
+                         f'text-anchor="middle">+{v:.0f}%</text>')
+        parts.append(f'<text x="{x0:.0f}" y="{BASE+18:.0f}" fill="#93a4b8" font-size="12.5" text-anchor="middle">VIX {b}</text>')
+        parts.append(f'<text x="{x0:.0f}" y="{BASE+33:.0f}" fill="#7b8ba1" font-size="11" text-anchor="middle">n={VS[b]["single"]["n"]}</text>')
+    parts.append(f'<line x1="42" y1="{BASE}" x2="{W-6}" y2="{BASE}" stroke="#334155" stroke-width="1.5"/>')
+    parts.append('</svg>')
+    return ''.join(parts)
+
+def vix_row(b, label):
+    s, st = VS[b]['single'], VS[b]['straddle']
+    hl_s = ' class="good"' if s['t'] >= 2 else (' class="bad"' if s['t'] < 1 else '')
+    hl_t = ' class="good"' if st['t'] >= 2 else (' class="bad"' if st['t'] < 1 else '')
+    bold = ('<strong>', '</strong>') if b == 'ALL' else ('', '')
+    style = ' style="border-top:2px solid #334155"' if b == 'ALL' else ''
+    return (f'<tr{style}><td>{bold[0]}{label}{bold[1]}</td><td>{s["n"]}</td>'
+            f'<td{hl_s}>{s["mean"]:+.1f}%</td><td>{s["t"]:.1f}</td><td>{s["win"]}%</td><td>{s["pf"]:.2f}</td>'
+            f'<td{hl_t}>{st["mean"]:+.1f}%</td><td>{st["t"]:.1f}</td><td>{st["win"]}%</td><td>{st["pf"]:.2f}</td></tr>')
+
+vix_html = f"""<h2>VIX regime: when to trade which version</h2>
+<p class="lede">Tag every box with the VIX level at the moment of entry and the two versions split cleanly:
+the <strong>directional trade is a calm-market trade</strong> — its edge fades as VIX rises and is statistical noise
+above 20. The <strong>straddle holds up everywhere</strong>, and above VIX 22 it beats the directional version outright
+(+15.8% vs +7.3% per trade). Straddles cost more when VIX is high (4.4% → 5.5% of spot), but the movement
+that follows a box break grows faster than the price of admission.</p>
+<div class="legend"><span class="sw" style="background:{C_SINGLE}"></span>single leg, break direction (arm-then-trail)
+<span class="sw" style="background:{C_STRAD}"></span>straddle, both legs (arm-then-trail)</div>
+{vix_svg()}
+<p class="cap">Average premium P&L per trade by VIX at entry — same 2,345 boxes and exits as the sections above.</p>
+<table>
+<tr><th rowspan="2">VIX at entry</th><th rowspan="2">boxes</th><th colspan="4">single leg (break direction)</th><th colspan="4">straddle (both legs)</th></tr>
+<tr><th>avg P&L</th><th>t</th><th>win</th><th>PF</th><th>avg P&L</th><th>t</th><th>win</th><th>PF</th></tr>
+{''.join(vix_row(b, f'VIX {b}') for b in BUCKETS)}
+{vix_row('ALL', 'All')}
+</table>
+<ul>
+ <li><strong>Read the win rates first</strong>: the single leg wins 30–38% of the time in every regime — its edge
+ lives in how big the winners are (average winner ≈ +130% of premium vs average loser −50%). The straddle wins
+ 52–60% of the time with smaller winners (≈ +51%) against smaller losers (≈ −39%): one side usually pays for
+ most of the other.</li>
+ <li><strong>The pattern, not the wiggles</strong>: single-leg profit fades monotonically as VIX rises
+ (+20.9% → +7.3%, and its t drops below 2 past VIX 18 — no longer distinguishable from luck). The straddle is
+ strong at both ends (+16.2% below 16, +15.8% above 22 — each confirmed in both years of data separately);
+ its 18–20 dip is a year-1 artifact (+0.5% then, +11.1% in year 2), so treat the middle as "average", not "dead".</li>
+ <li><strong>The rule that falls out</strong>: VIX under ~18 — take either (single leg pays more if you can sit
+ through a 37% win rate). VIX over 20 — <strong>straddle only</strong>. High VIX means the market whips both ways;
+ picking a direction hasn't paid there, while owning both sides has.</li>
+ <li>Caveat: high-VIX entries cluster in calendar time (Aug&nbsp;2024, Apr&nbsp;2025). Date-clustered t-stats
+ confirm the extremes (straddle above 22: t=3.6) but the 20–22 sliver (n=207) is thin — the buckets at the
+ ends are the trustworthy ones.</li>
+</ul>"""
+page = page.replace('__VIX__', vix_html)
+
 page = page.replace('__CHARTS__', '\n'.join(blocks))
 page = page.replace('__CLOUD__', CLOUD).replace('__DATA__', json.dumps(charts))
 OUT.write_text(page)

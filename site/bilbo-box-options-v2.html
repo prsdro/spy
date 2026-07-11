@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bilbo Box Options — Study v2 | Milkman Trades</title>
+<meta name="description" content="Updated Bilbo Box options study: close-confirmed entries, real quote fills, production gates, new trail exits. Equity curve and Monte Carlo at 4% sizing.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥛</text></svg>">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0c0e12; --surface:#13161c; --surface-2:#181c24; --border:#1e2230;
+  --text:#e8eaed; --text-dim:#6b7280; --text-mid:#9ca3af;
+  --accent:#fbbf24; --bull:#1cd48a; --bull-bg:#0a1f15;
+  --bear:#ef6c00; --bear-bg:#1f1208; --blue:#38bdf8; --violet:#a78bfa;
+  --grid:#1a1e28;
+}
+html{font-size:15px}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
+body::before{content:'';position:fixed;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(255,255,255,.018),transparent 46%);pointer-events:none}
+.page{max-width:1020px;margin:0 auto;padding:3rem 1.5rem 5rem}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:.75rem}
+.draft{display:inline-block;background:var(--bear-bg);color:var(--bear);border:1px solid #3d2108;border-radius:5px;padding:.1rem .5rem;margin-left:.6rem;letter-spacing:.08em}
+h1{font-size:2.1rem;font-weight:700;letter-spacing:-.01em;line-height:1.14;text-wrap:balance;margin-bottom:.9rem}
+h1 em{font-style:normal;background:linear-gradient(135deg,var(--accent),var(--bear));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.lede{max-width:760px;font-size:.95rem;color:var(--text-mid);font-weight:300;line-height:1.7;text-wrap:pretty;margin-bottom:1.4rem}
+.lede strong{color:var(--text);font-weight:500}
+.lede a{color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(251,191,36,.35)}
+h2{font-size:1.15rem;font-weight:700;margin:2.6rem 0 .8rem;letter-spacing:-.01em}
+h2 .sub{font-family:'JetBrains Mono',monospace;font-size:.65rem;font-weight:400;color:var(--text-dim);margin-left:.6rem;letter-spacing:.05em}
+p.body{max-width:760px;font-size:.9rem;color:var(--text-mid);margin-bottom:1rem}
+p.body b{color:var(--text)}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.7rem;margin:1.2rem 0}
+.tile{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.9rem 1rem}
+.tile .tl{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);margin-bottom:.35rem}
+.tile .tv{font-size:1.5rem;font-weight:700;letter-spacing:-.01em;line-height:1.1}
+.tile .ts{font-size:.68rem;color:var(--text-dim);margin-top:.25rem;font-family:'JetBrains Mono',monospace}
+.pos{color:var(--bull)} .neg{color:var(--bear)}
+.rules{max-width:780px;margin:.4rem 0 1.1rem}
+.rules li{margin:.45rem 0 .45rem 1.2rem;font-size:.9rem;color:var(--text-mid)}
+.rules li b{color:var(--text)}
+h3.rh{font-size:.9rem;font-weight:700;color:var(--text);margin:1.3rem 0 .2rem;letter-spacing:-.005em}
+.chartcard{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1.1rem 1.1rem .7rem;margin:1rem 0}
+.chartcard .ct{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--text-dim);margin-bottom:.7rem}
+.chartcard .legend{display:flex;gap:1.2rem;font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--text-mid);margin-bottom:.4rem}
+.legend .sw{display:inline-block;width:14px;height:3px;border-radius:2px;vertical-align:middle;margin-right:.4rem}
+.chartcard svg{display:block;width:100%;height:auto}
+.tooltip{position:fixed;pointer-events:none;background:var(--surface-2);border:1px solid var(--border);border-radius:6px;padding:.4rem .6rem;font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--text);z-index:10;display:none;box-shadow:0 4px 16px rgba(0,0,0,.4)}
+.caveats{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--bear);border-radius:8px;padding:1rem 1.2rem;margin-top:2.4rem;max-width:820px}
+.caveats h3{font-size:.85rem;margin-bottom:.5rem}
+.caveats li{margin:.3rem 0 .3rem 1.1rem;font-size:.8rem;color:var(--text-mid)}
+.footer-note{margin-top:2rem;font-size:.74rem;color:var(--text-dim);max-width:760px}
+@media(max-width:640px){h1{font-size:1.6rem}.tile .tv{font-size:1.2rem}}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="kicker">Study · updated 2026-07-10<span class="draft">draft — not linked from home</span></div>
+  <h1>Bilbo Box <em>Options</em> — v2</h1>
+  <p class="lede">Full rebuild of the compression-box options study after the bias audit. Every entry
+    waits for a <strong>confirmed candle close</strong> (nothing a live trader couldn&rsquo;t have known in the
+    moment), every fill is priced from <strong>real historical option quotes</strong> at the actual
+    timestamps, and the exit rule was chosen using only 2019&ndash;22 data, then tested untouched on
+    2023&ndash;26. The system is now trading forward on the
+    <a href="/bilbo-paper.html">paper account</a>.</p>
+
+  <h2>The rules <span class="sub">full instructions &mdash; everything needed to trade it</span></h2>
+
+  <h3 class="rh">Universe &amp; timeframe</h3>
+  <ul class="rules">
+    <li>20 liquid large-cap names: AMZN, NVDA, MSFT, AAPL, META, GOOGL, TSLA, AMD, PLTR, AVGO, NFLX, MU, COIN, SMCI, HOOD, INTC, UBER, BAC, JPM, DIS.</li>
+    <li>Hourly candles built on the on-the-hour grid including extended hours (04:00&ndash;20:00 ET), but signals are only acted on during regular hours.</li>
+    <li>&ldquo;Daily ATR&rdquo; below means the 14-day average true range as of the prior day&rsquo;s close.</li>
+  </ul>
+
+  <h3 class="rh">The setup &mdash; the &ldquo;box&rdquo;</h3>
+  <ul class="rules">
+    <li>Wait for the Saty Phase Oscillator to enter <b>compression</b> on the hourly chart (grey candles).</li>
+    <li>The box is the high and low of the <b>first 5 compression candles</b> (or fewer, if compression ends sooner). After the 5th grey candle the box is <b>frozen</b> &mdash; later grey candles don&rsquo;t widen it.</li>
+  </ul>
+
+  <h3 class="rh">The entry signal</h3>
+  <ul class="rules">
+    <li>An hourly candle that <b>closes</b> (a) out of compression AND (b) <b>above the box high</b>. Wait for the candle close &mdash; a poke that closes back inside the box is not a signal.</li>
+    <li><b>Long only.</b> Breaks below the box are not shorted (tested: the short side is zero-to-negative under every management tried).</li>
+    <li>Only take signals whose hourly close lands 10:00&ndash;15:00 ET, Monday&ndash;Friday.</li>
+    <li>Enter promptly after the confirming close (within ~5 minutes).</li>
+  </ul>
+
+  <h3 class="rh">Three gates &mdash; skip the trade unless ALL pass</h3>
+  <ul class="rules">
+    <li><b>Volume:</b> the signal candle&rsquo;s volume is at least the median volume of the same clock-hour over the prior 20 sessions.</li>
+    <li><b>Trend:</b> the stock is <b>above its daily 21 EMA</b> (as of yesterday&rsquo;s close). Below it, these breakouts historically carry no edge.</li>
+    <li><b>Market quality:</b> the option you&rsquo;re buying has a live two-sided quote with a bid-ask spread of 5% of mid or less. No bid, or a wide market = no trade.</li>
+  </ul>
+
+  <h3 class="rh">The position</h3>
+  <ul class="rules">
+    <li>Buy <b>one call, about one strike out of the money</b> &mdash; the strike nearest to (current price + 0.75 &times; daily ATR) &mdash; expiring <b>about 28 days out</b> (nearest expiry in the 21&ndash;37 day window).</li>
+    <li><b>Size: option premium of 3&ndash;5% of the account.</b> One position per signal; no adds, no averaging down.</li>
+  </ul>
+
+  <h3 class="rh">Exits &mdash; keyed to the STOCK price, never the option premium</h3>
+  <ul class="rules">
+    <li><b>Invalidation:</b> a 5-minute close <b>below the box low</b> &rarr; sell immediately.</li>
+    <li><b>Trail:</b> once the stock has moved <b>+1.0 &times; daily ATR</b> in your favor from entry (&ldquo;armed&rdquo;), sell on any 5-minute close at or below <b>entry price + 25% of the peak gain</b>. In other words you tolerate giving back up to 75% of the open move &mdash; that looseness is what catches the big runs.</li>
+    <li><b>Time cap:</b> still open after <b>10 trading days</b> &rarr; sell.</li>
+    <li><b>Never</b> use premium-based stops, profit targets, or &ldquo;cut losers at end of day 1&rdquo; &mdash; every premium-managed variant tested made results worse.</li>
+  </ul>
+
+  <h2>Headline <span class="sub">1,031 gated trades · 2019&ndash;2026 · 20 megacap names</span></h2>
+  <div class="tiles" id="head-tiles"></div>
+
+  <h2>Equity curve <span class="sub">$10,000 start &middot; 4% of account per trade</span></h2>
+  <p class="body">Starting from <b>$10,000</b>, each trade puts 4% of the account into premium.
+    Fills are modeled halfway between the quote midpoint and the ask (buying) or the bid (selling).
+    Log scale.</p>
+  <div class="chartcard">
+    <svg id="eq-svg"></svg>
+  </div>
+  <div class="tiles" id="eq-tiles"></div>
+
+  <h2>Monte Carlo <span class="sub">10,000 paths &middot; 150 trades (~1 yr) &middot; $10,000 start &middot; 4% sizing</span></h2>
+  <p class="body">What might the next ~year of this system look like, starting from <b>$10,000</b>?
+    Each simulated path draws whole trading <b>days</b> at random (with replacement) from the
+    7&frac12;-year record &mdash; drawing days rather than single trades keeps the way wins and losses
+    cluster together. The outer band holds 90% of the 10,000 paths, the inner band 50%, and the
+    line is the median path.</p>
+  <div class="chartcard">
+    <svg id="mc-svg"></svg>
+  </div>
+  <div class="tiles" id="mc-tiles"></div>
+
+  <div class="caveats">
+    <h3>Read before trading it</h3>
+    <ul>
+      <li><b>The typical trade loses money; the win rate is only ~41%.</b> The loose trail pays for a minority of large winners with strings of small losers &mdash; you have to be able to sit through them. Total loss of the premium happened on ~0.2% of trades.</li>
+      <li>The exit rule passed a genuine out-of-sample test, but the <b>choice of strike and expiration was made looking at the whole record</b> &mdash; so treat the exact +12%-per-trade figure as somewhat flattered. The stronger claim is that both halves of the record (2019&ndash;22 and 2023&ndash;26) were independently profitable.</li>
+      <li>The equity curve compounds trades <b>one after another</b>; in reality several positions are open at once, so the path math is a simplification.</li>
+      <li>This is long-only momentum in megacaps: expect it to bleed in bear markets. 2022 was the worst stretch of the record.</li>
+      <li>No live track record yet &mdash; the forward paper record accrues at <a href="/bilbo-paper.html" style="color:var(--accent)">/bilbo-paper.html</a>.</li>
+    </ul>
+  </div>
+  <p class="footer-note">Research, not advice. Fills from ThetaData historical NBBO minute quotes; costs modeled as stated; dividends/assignment ignored (calls sold before expiry).</p>
+</div>
+<div class="tooltip" id="tt"></div>
+
+<script src="/nav.js"></script>
+<script>
+const $=id=>document.getElementById(id);
+const tt=$('tt');
+const fmt=(v,dp=1)=>(v>=0?'+':'')+v.toFixed(dp)+'%';
+const START=10000;
+const usd=m=>{const v=m*START;
+  if(v>=1e6) return '$'+(v/1e6).toFixed(v>=1e7?1:2)+'M';
+  if(v>=1e5) return '$'+Math.round(v/1e3)+'k';
+  if(v>=2e4) return '$'+(v/1e3).toFixed(1)+'k';
+  return '$'+Math.round(v).toLocaleString('en-US');};
+
+async function main(){
+  const j=await (await fetch('/data/bilbo-box-options-v2.json?t='+Date.now())).json();
+
+  $('head-tiles').innerHTML=[
+    ['Avg per trade', fmt(j.half.mean,1), 'pos', `on premium · t=${j.half.tclust}`],
+    ['Median trade', fmt(j.half.med,1), 'neg', 'losers outnumber winners'],
+    ['Win rate', j.half.win+'%', '', 'big winners, small losers'],
+    ['2019–22 / 2023–26', `${fmt(j.era.e1_half,1)} / ${fmt(j.era.e2_half,1)}`, '', 'per trade, each era'],
+    ['Full premium losses', j.half.wipe+'%', '', 'of trades'],
+  ].map(([l,v,c,s])=>`<div class="tile"><div class="tl">${l}</div><div class="tv ${c}">${v}</div><div class="ts">${s}</div></div>`).join('');
+
+  drawEquity(j);
+  $('eq-tiles').innerHTML=[
+    ['Final account', usd(j.final_eq_half), 'pos', 'from $10,000'],
+    ['Max drawdown', j.maxdd_half+'%', '', 'peak to trough'],
+    ['Trades', j.half.n, '', '2019–2026'],
+  ].map(([l,v,c,s])=>`<div class="tile"><div class="tl">${l}</div><div class="tv ${c}">${v}</div><div class="ts">${s}</div></div>`).join('');
+
+  drawMC(j.mc);
+  $('mc-tiles').innerHTML=[
+    ['Median, 150 trades', usd(j.mc.terminal.p50), j.mc.terminal.p50>=1?'pos':'neg', fmt(100*(j.mc.terminal.p50-1),0)],
+    ['5th percentile', usd(j.mc.terminal.p5), j.mc.terminal.p5>=1?'pos':'neg', `${fmt(100*(j.mc.terminal.p5-1),0)} · 1-in-20 worst year`],
+    ['95th percentile', usd(j.mc.terminal.p95), 'pos', `${fmt(100*(j.mc.terminal.p95-1),0)} · 1-in-20 best year`],
+    ['P(down after 150)', j.mc.p_loss+'%', '', 'paths ending below $10,000'],
+    ['Median max DD', j.mc.maxdd.p50+'%', '', `worst 1-in-20: ${j.mc.maxdd.p5}%`],
+  ].map(([l,v,c,s])=>`<div class="tile"><div class="tl">${l}</div><div class="tv ${c}">${v}</div><div class="ts">${s}</div></div>`).join('');
+}
+
+function axes(W,H,M,ymin,ymax,ylog,yfmt){
+  const Y=v=>{const t=ylog?(Math.log(v)-Math.log(ymin))/(Math.log(ymax)-Math.log(ymin)):(v-ymin)/(ymax-ymin);
+    return M.t+(H-M.t-M.b)*(1-t);}
+  let ticks=[];
+  if(ylog){ for(let v=Math.pow(10,Math.floor(Math.log10(ymin))); v<=ymax*1.01; v*=10)
+      for(const m of [1,2,5]){ const x=v*m; if(x>=ymin&&x<=ymax) ticks.push(x);} }
+  else { const n=4; for(let i=0;i<=n;i++) ticks.push(ymin+(ymax-ymin)*i/n); }
+  const g=ticks.map(v=>`<line x1="${M.l}" x2="${W-M.r}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--grid)"/>`+
+    `<text x="${M.l-6}" y="${Y(v)+3}" text-anchor="end" font-size="10" fill="var(--text-dim)" font-family="JetBrains Mono">${yfmt(v)}</text>`).join('');
+  return {Y,g};
+}
+
+function drawEquity(j){
+  const c=j.curve, W=920, H=300, M={l:60,r:14,t:12,b:26};
+  const ymin=Math.min(1,...c.map(p=>p.eq))*.9, ymax=Math.max(...c.map(p=>p.eq))*1.1;
+  const {Y,g}=axes(W,H,M,ymin,ymax,true,v=>usd(v));
+  const X=i=>M.l+(W-M.l-M.r)*i/(c.length-1);
+  const path=c.map((p,i)=>(i?'L':'M')+X(i).toFixed(1)+' '+Y(p.eq).toFixed(1)).join(' ');
+  // year ticks
+  let yrs='',seen={};
+  c.forEach((p,i)=>{const y=p.d.slice(0,4); if(!seen[y]){seen[y]=1;
+    yrs+=`<text x="${X(i)}" y="${H-8}" font-size="10" fill="var(--text-dim)" font-family="JetBrains Mono">${y}</text>`;}});
+  const svg=$('eq-svg');
+  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  svg.innerHTML=g+yrs+
+    `<path d="${path}" fill="none" stroke="var(--accent)" stroke-width="2"/>`+
+    `<rect x="${M.l}" y="${M.t}" width="${W-M.l-M.r}" height="${H-M.t-M.b}" fill="transparent" id="eq-hit"/>`+
+    `<line id="eq-x" y1="${M.t}" y2="${H-M.b}" stroke="var(--text-dim)" stroke-dasharray="2 3" visibility="hidden"/>`;
+  const hit=$('eq-hit');
+  hit.addEventListener('mousemove',e=>{
+    const r=svg.getBoundingClientRect(), fx=(e.clientX-r.left)/r.width*W;
+    const i=Math.max(0,Math.min(c.length-1,Math.round((fx-M.l)/(W-M.l-M.r)*(c.length-1))));
+    const xl=$('eq-x'); xl.setAttribute('x1',X(i)); xl.setAttribute('x2',X(i)); xl.setAttribute('visibility','visible');
+    tt.innerHTML=`${c[i].d} · ${c[i].t}<br>trade ${fmt(c[i].r)}<br>account ${usd(c[i].eq)}`;
+    tt.style.display='block'; tt.style.left=(e.clientX+12)+'px'; tt.style.top=(e.clientY+12)+'px';});
+  svg.addEventListener('mouseleave',()=>{tt.style.display='none';$('eq-x').setAttribute('visibility','hidden');});
+}
+
+function drawMC(mc){
+  const n=mc.fan.p50.length, W=920, H=300, M={l:64,r:14,t:12,b:26};
+  const ymin=Math.min(...mc.fan.p5)*.95, ymax=Math.max(...mc.fan.p95)*1.05;
+  const {Y,g}=axes(W,H,M,ymin,ymax,false,v=>usd(v));
+  const X=i=>M.l+(W-M.l-M.r)*i/(n-1);
+  const line=a=>a.map((v,i)=>(i?'L':'M')+X(i).toFixed(1)+' '+Y(v).toFixed(1)).join(' ');
+  const band=(lo,hi)=>line(hi)+' '+lo.map((v,i)=>{const k=lo.length-1-i;
+    return 'L'+X(k).toFixed(1)+' '+Y(lo[k]).toFixed(1);}).join(' ')+' Z';
+  const xt=[0,50,100,150].map(v=>`<text x="${X(v)}" y="${H-8}" font-size="10" fill="var(--text-dim)" font-family="JetBrains Mono" text-anchor="middle">${v}</text>`).join('');
+  const one=`<line x1="${M.l}" x2="${W-M.r}" y1="${Y(1)}" y2="${Y(1)}" stroke="var(--text-dim)" stroke-dasharray="2 3"/>`;
+  const svg=$('mc-svg');
+  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  svg.innerHTML=g+xt+one+
+    `<path d="${band(mc.fan.p5,mc.fan.p95)}" fill="rgba(251,191,36,.10)"/>`+
+    `<path d="${band(mc.fan.p25,mc.fan.p75)}" fill="rgba(251,191,36,.20)"/>`+
+    `<path d="${line(mc.fan.p50)}" fill="none" stroke="var(--accent)" stroke-width="2"/>`+
+    `<text x="${W-M.r-4}" y="${Y(mc.fan.p95[n-1])-4}" text-anchor="end" font-size="10" fill="var(--text-dim)" font-family="JetBrains Mono">p95</text>`+
+    `<text x="${W-M.r-4}" y="${Y(mc.fan.p50[n-1])-4}" text-anchor="end" font-size="10" fill="var(--accent)" font-family="JetBrains Mono">median</text>`+
+    `<text x="${W-M.r-4}" y="${Y(mc.fan.p5[n-1])+12}" text-anchor="end" font-size="10" fill="var(--text-dim)" font-family="JetBrains Mono">p5</text>`+
+    `<rect x="${M.l}" y="${M.t}" width="${W-M.l-M.r}" height="${H-M.t-M.b}" fill="transparent" id="mc-hit"/>`;
+  $('mc-hit').addEventListener('mousemove',e=>{
+    const r=svg.getBoundingClientRect(), fx=(e.clientX-r.left)/r.width*W;
+    const i=Math.max(0,Math.min(n-1,Math.round((fx-M.l)/(W-M.l-M.r)*(n-1))));
+    tt.innerHTML=`after ${i} trades<br>p95 ${usd(mc.fan.p95[i])} · p75 ${usd(mc.fan.p75[i])}<br>`+
+      `median ${usd(mc.fan.p50[i])}<br>p25 ${usd(mc.fan.p25[i])} · p5 ${usd(mc.fan.p5[i])}`;
+    tt.style.display='block'; tt.style.left=(e.clientX+12)+'px'; tt.style.top=(e.clientY+12)+'px';});
+  svg.addEventListener('mouseleave',()=>tt.style.display='none');
+}
+main();
+</script>
+</body>
+</html>

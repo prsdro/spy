@@ -1,0 +1,261 @@
+{
+ "ltf10": {
+  "single_trail_sl50": {
+   "n": 1017,
+   "mean": 0.0492,
+   "t": 1.55,
+   "win": 0.327,
+   "pf": 1.15
+  },
+  "single_sl50_orig8": {
+   "n": 430,
+   "mean": 0.0714,
+   "t": 1.56,
+   "win": 0.358,
+   "pf": 1.22
+  },
+  "single_sl50_new12": {
+   "n": 587,
+   "mean": 0.0329,
+   "t": 0.75,
+   "win": 0.305,
+   "pf": 1.09
+  },
+  "single_trail_sl35": {
+   "n": 1017,
+   "mean": 0.0822,
+   "t": 2.8,
+   "win": 0.276,
+   "pf": 1.32
+  },
+  "straddle_sl50": {
+   "n": 1014,
+   "mean": 0.1033,
+   "t": 4.79,
+   "win": 0.551,
+   "pf": 1.6
+  },
+  "straddle_sl50_orig8": {
+   "n": 430,
+   "mean": 0.1379,
+   "t": 4.39,
+   "win": 0.6,
+   "pf": 1.92
+  },
+  "straddle_sl50_new12": {
+   "n": 584,
+   "mean": 0.0779,
+   "t": 2.65,
+   "win": 0.515,
+   "pf": 1.41
+  },
+  "vs_D": {
+   "shared_eps": 420,
+   "ltf_only_eps": 597,
+   "d_only_eps": 1306,
+   "median_min_earlier": 140.0,
+   "median_fill_edge_boxh": 0.234,
+   "fill_better_pct": 0.7
+  }
+ },
+ "ltf10po": {
+  "single_trail_sl50": {
+   "n": 1050,
+   "mean": 0.0932,
+   "t": 2.79,
+   "win": 0.343,
+   "pf": 1.28
+  },
+  "single_sl50_orig8": {
+   "n": 449,
+   "mean": 0.0996,
+   "t": 2.18,
+   "win": 0.372,
+   "pf": 1.32
+  },
+  "single_sl50_new12": {
+   "n": 601,
+   "mean": 0.0884,
+   "t": 1.87,
+   "win": 0.321,
+   "pf": 1.26
+  },
+  "single_trail_sl35": {
+   "n": 1050,
+   "mean": 0.1178,
+   "t": 3.82,
+   "win": 0.292,
+   "pf": 1.47
+  },
+  "straddle_sl50": {
+   "n": 1047,
+   "mean": 0.119,
+   "t": 5.69,
+   "win": 0.57,
+   "pf": 1.73
+  },
+  "straddle_sl50_orig8": {
+   "n": 449,
+   "mean": 0.1467,
+   "t": 4.96,
+   "win": 0.608,
+   "pf": 2.07
+  },
+  "straddle_sl50_new12": {
+   "n": 598,
+   "mean": 0.0981,
+   "t": 3.37,
+   "win": 0.542,
+   "pf": 1.54
+  },
+  "vs_D": {
+   "shared_eps": 455,
+   "ltf_only_eps": 595,
+   "d_only_eps": 1271,
+   "median_min_earlier": 140.0,
+   "median_fill_edge_boxh": 0.248,
+   "fill_better_pct": 0.723
+  }
+ },
+ "ltf30": {
+  "single_trail_sl50": {
+   "n": 964,
+   "mean": 0.0901,
+   "t": 2.59,
+   "win": 0.34,
+   "pf": 1.27
+  },
+  "single_sl50_orig8": {
+   "n": 407,
+   "mean": 0.1071,
+   "t": 2.26,
+   "win": 0.378,
+   "pf": 1.35
+  },
+  "single_sl50_new12": {
+   "n": 557,
+   "mean": 0.0777,
+   "t": 1.58,
+   "win": 0.312,
+   "pf": 1.22
+  },
+  "single_trail_sl35": {
+   "n": 964,
+   "mean": 0.0926,
+   "t": 3.05,
+   "win": 0.281,
+   "pf": 1.37
+  },
+  "straddle_sl50": {
+   "n": 959,
+   "mean": 0.1078,
+   "t": 4.8,
+   "win": 0.551,
+   "pf": 1.63
+  },
+  "straddle_sl50_orig8": {
+   "n": 407,
+   "mean": 0.1274,
+   "t": 4.18,
+   "win": 0.6,
+   "pf": 1.88
+  },
+  "straddle_sl50_new12": {
+   "n": 552,
+   "mean": 0.0934,
+   "t": 2.93,
+   "win": 0.514,
+   "pf": 1.49
+  },
+  "vs_D": {
+   "shared_eps": 426,
+   "ltf_only_eps": 538,
+   "d_only_eps": 1300,
+   "median_min_earlier": 120.0,
+   "median_fill_edge_boxh": 0.177,
+   "fill_better_pct": 0.636
+  }
+ },
+ "ltf30po": {
+  "single_trail_sl50": {
+   "n": 991,
+   "mean": 0.0863,
+   "t": 2.71,
+   "win": 0.351,
+   "pf": 1.27
+  },
+  "single_sl50_orig8": {
+   "n": 440,
+   "mean": 0.0813,
+   "t": 1.82,
+   "win": 0.37,
+   "pf": 1.26
+  },
+  "single_sl50_new12": {
+   "n": 551,
+   "mean": 0.0903,
+   "t": 2.01,
+   "win": 0.336,
+   "pf": 1.27
+  },
+  "single_trail_sl35": {
+   "n": 991,
+   "mean": 0.0933,
+   "t": 3.2,
+   "win": 0.284,
+   "pf": 1.37
+  },
+  "straddle_sl50": {
+   "n": 989,
+   "mean": 0.1022,
+   "t": 5.1,
+   "win": 0.562,
+   "pf": 1.62
+  },
+  "straddle_sl50_orig8": {
+   "n": 440,
+   "mean": 0.1017,
+   "t": 3.6,
+   "win": 0.589,
+   "pf": 1.69
+  },
+  "straddle_sl50_new12": {
+   "n": 549,
+   "mean": 0.1026,
+   "t": 3.65,
+   "win": 0.541,
+   "pf": 1.58
+  },
+  "vs_D": {
+   "shared_eps": 554,
+   "ltf_only_eps": 437,
+   "d_only_eps": 1172,
+   "median_min_earlier": 75.0,
+   "median_fill_edge_boxh": 0.067,
+   "fill_better_pct": 0.579
+  }
+ },
+ "rearm_gated": {
+  "chain": {
+   "n": 2453,
+   "mean": 0.0724,
+   "t": 3.43,
+   "win": 0.313,
+   "pf": 1.23
+  },
+  "chain_orig8": {
+   "n": 1012,
+   "mean": 0.0616,
+   "t": 2.05,
+   "win": 0.33,
+   "pf": 1.21
+  },
+  "chain_new12": {
+   "n": 1441,
+   "mean": 0.08,
+   "t": 2.75,
+   "win": 0.301,
+   "pf": 1.25
+  }
+ }
+}

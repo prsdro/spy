@@ -1,0 +1,474 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Backtesting, Biases & the Bilbo Box Study | Milkman Trades</title>
+<style>
+ body{margin:0;background:#0b0e14;color:#e5edf7;font-family:ui-sans-serif,system-ui,sans-serif;line-height:1.65;font-size:16px}
+ .wrap{max-width:780px;margin:0 auto;padding:28px 18px 80px}
+ h1{font-size:clamp(24px,5vw,34px);letter-spacing:-.02em;line-height:1.2;margin:.4em 0}
+ h2{font-size:22px;margin:2em 0 .5em;color:#dbeafe;border-bottom:1px solid #1f2a44;padding-bottom:6px}
+ h3{font-size:17.5px;margin:1.6em 0 .4em;color:#facc15}
+ p, li{color:#cbd7e6}
+ strong{color:#e5edf7}
+ em{color:#93a4b8}
+ hr{border:0;border-top:1px solid #1f2a44;margin:2.2em 0}
+ ul,ol{padding-left:1.3em} li{margin:7px 0}
+ table{border-collapse:collapse;font-size:13.5px;margin:16px 0;display:block;overflow-x:auto}
+ td,th{padding:7px 10px;border:1px solid #1f2a44;text-align:left;vertical-align:top}
+ th{background:#0f1524;color:#93a4b8}
+ blockquote{border-left:3px solid #1f2a44;margin:1em 0;padding:.1em 1em;color:#93a4b8}
+ .foot{color:#7b8ba1;font-size:13px;border-top:1px solid #1f2a44;margin-top:44px;padding-top:14px}
+ a{color:#60a5fa}
+</style></head><body><div class="wrap">
+<h1>Backtesting, Biases, and the Story of the Bilbo Box Options Study</h1>
+<p><em>Part 1 is a general primer on backtesting; Part 2 is the honest history of
+this specific study — the questions, the dead ends, the biases we caught, and
+where it leaves us. Written 2026-07-08.</em></p>
+<hr />
+<h2>Introduction — who I am, and whose shoulders this stands on</h2>
+<p>I'm <strong>The_Milk_Man</strong>. In a previous life I was an investment professional;
+today I own my own business and trade my own capital as a passion. That
+combination shapes everything on this site: I have the institutional habit of
+demanding evidence before risking money, and the freedom to publish what I
+find — including the failures — because nobody's marketing department has to
+approve it.</p>
+<h3>Saty, and why this system</h3>
+<p>Everything I trade and everything I test is built on the work of
+<strong>Saty Mahajan</strong> — trader, mentor, and the creator of the indicator suite this
+whole site runs on: the ATR Levels, the Pivot Ribbon, and the Phase
+Oscillator. I'm deeply grateful for his mentorship, and just as grateful for
+what he chose to build: a <em>simple</em> system. Not simple as in shallow — simple
+as in learnable. A handful of indicators, a common vocabulary, and a
+level-to-level way of thinking that an ordinary person can actually follow
+under live-market stress. Most trading education sells complexity because
+complexity is hard to falsify. Saty did the opposite, and the fact that his
+method can be written down precisely enough to backtest — which is what this
+entire site does — is itself the strongest compliment I can pay it. Anyone
+willing to put in the screen time can learn this system and use it to pursue
+real success in trading.</p>
+<h3>The three indicators, in plain language</h3>
+<ul>
+<li><strong>Saty ATR Levels</strong> — a map of what a "normal" move looks like. It takes
+  yesterday's close and the average true range (how far this thing typically
+  travels in a day, week, or month) and draws a ladder of levels around it:
+  a <em>trigger</em> at ±23.6% of that range, the <em>Golden Gate</em> zone from 38.2% to
+  61.8%, the full range at ±100%, and extensions beyond. Instead of guessing
+  whether a move is big or small, you can see it: price crossing the upper
+  trigger has started a meaningful push; price at +100% has already traveled
+  a full normal day. The levels double as a target ladder and as spots where
+  moves tend to pause.</li>
+<li><strong>Saty Pivot Ribbon</strong> — trend at a glance. It's layered clouds of moving
+  averages (fast ones and slow ones). When the fast layers stack above the
+  slow ones, the trend is up and the ribbon acts like a floor on pullbacks;
+  stacked the other way, trend is down and it acts like a ceiling. When the
+  layers squeeze together, the market is coiling.</li>
+<li><strong>Saty Phase Oscillator</strong> — a momentum gauge that swings between extremes,
+  telling you <em>where in the cycle</em> a move is: just igniting, stretched, or
+  exhausted. Its most useful state for this study is <strong>compression</strong> — the
+  zone where momentum has gone quiet and energy is building. The "boxes" in
+  the Bilbo study are drawn from exactly those compression candles.</li>
+</ul>
+<p>The full written system — setup definitions, level probabilities, operating
+rules, everything — is documented here on the site:
+<strong><a href="/trading-methodology.html">The Trading Methodology</a></strong>.</p>
+<h3>Full disclosure on how the work gets done</h3>
+<p>I use AI heavily. The backtests, data pipelines, and analysis on this site are
+built with <strong>Claude</strong> (Anthropic's models, via Claude Code) doing the
+engineering and statistics alongside me, with other AI tools — Codex among
+them — used as adversarial reviewers to audit the code and the design of the
+studies. The questions, the trading judgment, the money at risk, and the
+final editorial calls are mine; the tireless simulation work is theirs. I
+disclose this because it's true, and because I think this is simply how
+rigorous retail research gets done now.</p>
+<p><em>Nothing here is financial advice. It's one trader's research, published with
+its receipts.</em></p>
+<hr />
+<h2>Part 1 — What backtesting is and why the biases matter more than the results</h2>
+<h3>What a backtest is</h3>
+<p>A backtest is a simulation: you write down a rule precisely enough that a
+computer can follow it with no judgment calls, then replay history and record
+what the rule would have done. The output is a distribution of trades — not a
+prediction, but an answer to a narrower question: <em>"if the future resembles
+this sample of the past, what should I expect from this rule?"</em></p>
+<p>That narrowness is the point. Before a backtest, a trading idea is a story
+("compression leads to expansion"). After one, it's a measurable claim with a
+sample size attached ("across 2,345 hourly compression boxes on 20 stocks over
+24 months, buying the break paid +12.0% of premium per trade"). Stories can't
+be wrong; claims can — which is what makes them useful.</p>
+<h3>Why it's important</h3>
+<p>Three reasons, in increasing order of importance:</p>
+<ol>
+<li><strong>It kills bad ideas cheaply.</strong> Most ideas don't survive contact with data.
+   Finding that out in an afternoon of simulation costs nothing; finding it
+   out with real money costs the tuition.</li>
+<li><strong>It sizes the good ones.</strong> Knowing a rule wins 36% of the time with a
+   median trade of −50% changes how you size and how you emotionally prepare.
+   The same strategy traded at 5% of the account and at 20% of the account are
+   different strategies — one of our simulations showed the 20% version ends
+   in ruin on the same trade stream where the 5% version compounds.</li>
+<li><strong>It forces precision.</strong> "Buy the breakout" is not testable. "Buy the
+   this-Friday ATM call within 5 minutes of a 5-minute bar poking above the
+   box high between 9:30 and 4:00 ET" is. The act of making a rule testable
+   usually reveals that you had three different strategies in your head under
+   one name.</li>
+</ol>
+<h3>The catch: a backtest is easiest to cheat by accident</h3>
+<p>Every backtest is a claim about the past made by someone who already knows the
+past. That's the original sin, and every bias below is a variation of it.
+A biased backtest is worse than no backtest, because it converts a hunch into
+false confidence with a t-statistic stapled to it.</p>
+<p>The biases that matter most, roughly in order of how often they burn people:</p>
+<p><strong>1. Look-ahead bias</strong> — the rule accidentally uses information that wasn't
+available at decision time. It can be blatant (using the day's close to decide
+a morning entry) or subtle. We hit a subtle one in this study: option expiries
+were initially anchored to when the compression <em>started</em>, not when the trade
+was actually <em>entered</em> — so a late entry could be assigned a contract a real
+trader wouldn't have picked. One line of code, systematically wrong prices.</p>
+<p><strong>2. Survivorship bias</strong> — testing on the stocks that exist and are big
+<em>today</em> means testing on history's winners. Our ticker list (NVDA, TSLA,
+AMD...) is exactly that: names we chose in 2026 because they're huge and
+liquid in 2026. Over a 2-year window this is a modest distortion; over 20
+years it would be fatal. Our IPO study made this vivid from the other side —
+measuring "buy every IPO" honestly required digging delisted tickers out of a
+separate data source, because the easy sources only remember survivors.</p>
+<p><strong>3. Overfitting / data mining</strong> — test enough variants and something will
+look great by chance. The defense is not statistical cleverness, it's
+discipline: decide the grid in advance, count how many cells you searched, and
+treat an isolated positive cell as noise until it repeats out-of-sample. This
+study produced textbook examples: a MSFT-only positive cell in round one
+(gone at scale), a credit-selling overlay that showed +15.5% on 3 tickers and
+−1.3% on 20, and a "retest entry" lead that evaporated when the sample grew
+10×. Each looked publishable at the time.</p>
+<p><strong>4. Execution and fill assumptions</strong> — the quiet killer for options
+backtests. Our option data is <em>trade prints only</em> (no bid/ask quotes), so the
+simulation buys and sells at prices someone actually traded at — but not
+necessarily prices <em>we</em> could have gotten. Real fills pay the spread, and
+trailing-stop exits fire during fast moves when fills are worst. A strategy
+whose whole edge fits inside the bid/ask spread is a simulation artifact.
+That's why the study carries an explicit 2–4 point haircut warning, why every
+exit was re-tested under worst-case fill assumptions, and why a dedicated
+bias-recovery pass (with next-print fills, liquidity filters, and spread
+modeling) is running as a follow-up.</p>
+<p><strong>5. Selection and framing effects</strong> — which trades get counted. Mixing
+untradeable signals with tradeable ones can hide a real edge or create a fake
+one. The single most important discovery in this study was a framing fix:
+separating overnight gap-breaks (which returned ≈0 on 2,064 boxes) from
+intraday breaks (+8.3% on 972). Pooled together, the edge was invisible.</p>
+<p><strong>6. Sample-dependence and clustering</strong> — 369 trades on SPY, QQQ, and SPX
+sound like a sample of 369, but those three move together; there were only 182
+distinct entry days. Statistics that ignore clustering overstate confidence.
+The same trap exists across time: an edge measured only in 2023–24 is a claim
+about 2023–24. Where possible we re-check across years and across eras (one
+validation here went back 20 years on the underlying mechanics).</p>
+<p><strong>7. Missing baselines</strong> — a number means nothing without a control. Buying
+random weekly ATM options in this period lost −15.5% per trade (t=−3.25) —
+theta bleed is the gravity of this asset class. Against that baseline, even a
+0% strategy is beating the market's pricing; +12% is remarkable. Judging
+edges against zero instead of against the random-entry baseline is a way to
+fool yourself in both directions.</p>
+<p>The common thread: <strong>the goal of a backtest is not to produce a big number,
+it's to survive attempts to kill the number.</strong> Year splits, out-of-sample
+tickers, worst-case fills, cluster-robust statistics, adversarial code review
+— a result that survives all of that has earned some trust. A result that
+hasn't is a screenshot.</p>
+<hr />
+<h2>Part 2 — This study: how we actually got here</h2>
+<h3>The original question</h3>
+<p>The study began 2026-07-07 with a specific, five-part question about hourly
+Saty Phase Oscillator compression on AMZN, NVDA, and MSFT (12 months of data):
+when hourly PO compression appears, what's the best (1) direction rule —
+daily 21 EMA slope or hourly PO slope; (2) entry spot — at the 9/21 ribbon or
+after expansion confirms; (3) expiry — 1 week, 2 weeks, 1 month; (4) strike —
+ATM or ±0.5/1.0 daily-ATRs out; (5) exit — profit-target grids, scale-outs,
+stops, hold-to-expiry. Both long premium and short premium (selling the
+opposite side) were in scope.</p>
+<p>The data pull was substantial: every compression episode was matched to real
+option contracts, and minute-level trade prints were pulled for ~3,000
+contracts (later ~29,000) into a local SQLite database.</p>
+<h3>Round one: a clean rejection</h3>
+<p>The first full pass answered every one of the five questions with "no":</p>
+<ul>
+<li>Long premium was negative in <strong>every</strong> grid cell (best exit: −5.1%,
+  not significant; hold-to-expiry −32.5%).</li>
+<li>Every direction rule pointed the <strong>wrong way</strong> — trades that followed the
+  daily 21 EMA slope, the hourly PO slope, or the expansion direction lost
+  −9% to −15%, while fading those signals was +2–3% (not significant).</li>
+<li>The credit side was also negative. Straddles were flat-to-negative.</li>
+</ul>
+<p>The conclusion we wrote down: implied volatility prices hourly compression
+fairly on these names. No edge. This could have been the end.</p>
+<p>Two things kept it alive. First, the <strong>random-entry control</strong>: random long
+ATM weeklies lost −15.5% (t=−3.25) in this period, which reframed every
+number — "flat" straddles were actually beating theta by 15 points. Second,
+a variant borrowed from the earlier stock study: instead of trading the
+<em>compression</em>, trade the <strong>box breakout</strong> — the range of the first five
+compression candles, entered when price breaks out.</p>
+<h3>The pivot, and the finding that mattered</h3>
+<p>The Bilbo-box variant on the same data showed the first real signal, and
+scaling it up (8 mega-caps × 24 months, extended-hours bar definition, ~2,449
+boxes) confirmed it — but only after two corrections that are the real story:</p>
+<ol>
+<li><strong>A look-ahead bug caught by adversarial review.</strong> We ran the backtest code
+   past Codex (a second AI, used as a hostile reviewer). It caught that
+   expiries were anchored to the compression start instead of the entry
+   moment. Fixed before the headline was computed.</li>
+<li><strong>The intraday/overnight split.</strong> Breaks that happened overnight (price
+   gapping out of the box before the open) returned ≈0 across 2,064 boxes.
+   Intraday breaks returned +8.3% per trade (t=3.78, n=972) with a fixed
+   +100%/−50% bracket. Mixing the two classes had been hiding the edge.</li>
+</ol>
+<h3>Dead ends, catalogued</h3>
+<p>Each of these looked promising at some point and died under a validation test.
+They're reported dead in the study rather than silently dropped:</p>
+<ul>
+<li><strong>Retest entries</strong> — a lead in round two (+3.6%) that faded to ≈0 at scale.</li>
+<li><strong>Box-maturity filters</strong> — flipped sign between session definitions; noise.</li>
+<li><strong>PO slope/position/direction on top of the box</strong> — added nothing
+  (the falling-slope cell was t=1.9 after mining; not actionable).</li>
+<li><strong>Scale-out exits</strong> — taking partial profits at +50/+80% turned +8.3% into
+  ≈−1%. Banking early trims exactly the tail that pays.</li>
+<li><strong>Short-premium carry timer</strong> — +15.5% on 3 tickers became −1.3% (t=−0.3)
+  on 20 tickers × 24 months.</li>
+<li><strong>Fading strength inside the box</strong> — reliably negative (−6.2%, t=−3.87,
+  n=1,421): the study's most dependable "don't".</li>
+<li><strong>Index options (SPY/QQQ/SPX)</strong> — full pipeline run on 967 index boxes:
+  directional negative, straddle positive but statistically unconfirmed once
+  clustered by entry date (t=1.74 on 182 distinct days). Index volatility
+  carries the variance risk premium; the movement this trade harvests is only
+  underpriced on single names.</li>
+</ul>
+<h3>The exit work, and the out-of-sample test</h3>
+<p>A take-profit × stop-loss grid showed the stop level (−40/−50%) is
+load-bearing while the profit target is a wide plateau — which suggested
+removing the target entirely. The <strong>arm-then-trail</strong> exit (stop −50%; once
+premium doubles, trail 30% off its high) raised the result to +14.7% per
+trade (t=4.84) and passed a year-split, all 8 tickers, and a parameter plateau
+(arm anywhere +75–150%, trail 25–35%).</p>
+<p>Then the decisive test: <strong>12 tickers the strategy had never touched</strong> (PLTR,
+COIN, HOOD, INTC, MU, BAC, and others — 1,493 fresh boxes). The fixed bracket
+collapsed to −0.7% (t=−0.39). The trail held at +11.2% (t=3.95), positive on
+9 of 12 names. That split is the single most instructive result in the study:
+the entry finds opportunities, but most of the harvestable return lives in the
+exit mechanics, and only the trail generalized to unseen names.</p>
+<h3>Understanding <em>why</em> (so we're not just curve-reading)</h3>
+<p>A 20-year validation on the underlying (10,764 box breaks since 2004) showed
+the break <strong>direction</strong> predicts almost nothing in any era — win rates 49–54%
+— while the <strong>excursion</strong> after a break is large in every era: median ~1.2
+daily-ATRs of movement-in-some-direction within the week. The strategy is
+buying movement cheaply, not calling direction. That frame then predicted a
+result we hadn't tested: a <strong>straddle</strong> (both legs, each with its own stop and
+trail) should work about as well without a direction call. It does — +12.0%
+of combined premium (t=8.42, 57% win rate, 2,345 boxes), with no decay between
+the original and held-out ticker sets. Follow-up cuts: expiry × stop tuning is
+a flat +11–12.3% plateau (tuning closed); VIX regimes split the versions
+(directional strongest under VIX 16, statistically indistinguishable from
+noise above 20; straddle solid at both extremes).</p>
+<h3>Part 3 — The question that reopened everything</h3>
+<p>With the study published, a plain definitional question came up in review:
+<em>what exactly counts as a breakout?</em> If three grey candles have formed and a
+fourth pokes above their range while still grey, is that a breakout — or does
+it just widen the box? Chasing that question exposed the study's deepest
+bias: <strong>the backtest decided whether each hourly bar was "box material" or
+"break-watch territory" using that bar's closing state</strong> — information that
+arrives up to an hour after the moment you'd have to act. Rebuilt as a
+strict live walk (every decision from completed bars only, with an exact
+intrabar recomputation of the compression flag validated against 80,000
+historical bars), the published fixed-bracket headline collapsed from +9.1%
+per trade to +1.0%. Half the entries a live trader would have taken were
+"drift pokes" — price wandering out of a frozen box with the squeeze still
+on — and they earned nothing.</p>
+<p>Nine rebuilt entries later, one rule survived: <strong>enter at the close of the
+first candle that both closes out of compression and broke the box.</strong> Every
+faster alternative (intrabar detection, shorter boxes, lower-timeframe
+confirmation, bail-and-re-enter) either false-fired or paid for its speed in
+fake-outs. And the survivor's exits had to change character too: the trail
+that had been "the edge" under level fills turned out to be partly a machine
+for donating spread — under real quotes, less management is monotonically
+better, all the way down to a stop and nothing else.</p>
+<h3>The stock detour that explained the options</h3>
+<p>Testing the same signal on the underlying itself — no options at all,
+exits keyed to the stock's own levels — produced the cleanest result of the
+project: +38.8 bps per trade at strict execution, positive in six of eight
+years, and a blind-selection protocol (rules chosen on 2019-22, evaluated on
+2023-26) that replicated to the basis point. That reframed the entire
+options failure: the directional edge was always real, roughly 40-55 bps of
+stock over three days; weekly at-the-money options simply cost more than
+that in theta and spread. An honest benchmark cut the celebration short —
+buy-and-hold of the same hindsight-selected universe beat the unlevered
+strategy on raw return — but the strategy's Sharpe (≈1.9 vs 1.2) monetizes
+through leverage, and options are the natural leverage. The question was
+never <em>whether</em> options, but <em>which</em>.</p>
+<h3>The moneyness × tenor map</h3>
+<p>The answer turned out to be a surface, mapped cell by cell: strikes from 2
+ATRs in-the-money to 1.5 ATRs out, tenors from ~9 to ~45 days, every cell
+priced on the same 3,833 trades with real NBBO quotes. The shape: <strong>a
+diagonal ridge.</strong> Deep-in-the-money works short-dated (almost no time value
+to bleed); at-the-money needs ~a month (so a loser still has salvage value
+at the stock-level stop); further out-of-the-money needs both more time and
+more tolerance for ugly medians. The only toxic corner is out-of-the-money
+weeklies — the exact corner the original study lived in. Sizing math picks
+the winners: growth-optimal (Kelly) analysis showed the highest per-trade
+means (OTM) support the <em>smallest</em> positions, and the boring
+deep-in-the-money distribution supports positions seven times larger —
+"expectancy you can't size is expectancy you can't compound."</p>
+<p>Management interacts with position on the surface, gently: longer tenors
+prefer a longer time cap; profit-taking at the strike kills every cell;
+premium-based stops of any kind (including cutting losers at the end of day
+one — tested, 50% of the cut trades were next-day winners) make everything
+worse. Risk lives in the stock's levels and in position size, nowhere else.</p>
+<h3>Volume, and the bias that hid inside the data feed</h3>
+<p>Two participation filters, pre-declared before outcomes were read, survived
+every check: skip the trade if the breakout bar's volume is below that
+ticker's norm for the same clock hour (monotone across quintiles, era-stable,
+keeps ~92% of total P&amp;L on 62% of trades), and prefer breakout bars that
+out-trade their own box. Then the data upgrade delivered a lesson worth the
+whole exercise: a higher-quality quote feed recovered ~400 trades whose entry
+minutes had <strong>no two-sided quote in the cheaper feed</strong> — same contracts, real
+markets, just gaps — and they averaged −11.5%. The old headline had been
+quietly flattered by data availability: the missing minutes were fast-market
+moments when market makers pulled their bids, which is precisely the
+fake-out profile. The repair and the filter turned out to be the same thing —
+those recovered losers are low-participation breaks, and the volume gate
+removes them. With the gates on, every ridge cell clears <strong>full quoted-spread
+execution</strong> for the first time in the study: deep-ITM +5.9% per trade at
+worst-case fills (61% win, +9.3% median), monthly slightly-OTM +8.5%.</p>
+<h3>Where the system stands</h3>
+<p>The recipe, in one paragraph: <em>on ~20 liquid high-beta names, wait for an
+hourly candle that closes out of compression and beyond the box on
+above-normal volume for that hour, with a real two-sided options market
+showing; buy either a deep-in-the-money 9-day call (the anchor sleeve — best
+win rate and median) or a slightly out-of-the-money ~monthly call (the
+higher-octane sleeve); manage the trade only off the stock's levels —
+opposite box edge invalidates, half-retrace after 0.75 ATRs of progress
+takes profit, a few days' cap; size each position at a few percent of the
+account and let the portfolio, not any trade, carry the outcome.</em></p>
+<p>What remains honest to say: every layer above was validated out-of-sample
+individually, but the assembled system has not run as a unit anywhere except
+history; the universe was chosen knowing 2026; and the volume and liquidity
+gates are now load-bearing, not optional garnish. The live scanner produces
+these exact signals in real time, and its forward record — where no backtest
+bias of any kind can operate — is the only remaining test that matters.</p>
+<h3>Biases we uncovered along the way (and their status)</h3>
+<table>
+<thead>
+<tr>
+<th>Bias</th>
+<th>Where it appeared</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Look-ahead (expiry anchoring)</td>
+<td>v3 pipeline</td>
+<td>Fixed before headline (Codex review)</td>
+</tr>
+<tr>
+<td>Selection/framing (overnight breaks pooled with intraday)</td>
+<td>All rounds</td>
+<td>Fixed — split is now rule #2</td>
+</tr>
+<tr>
+<td>Data mining (MSFT cell, carry timer, retest, maturity filters)</td>
+<td>Rounds 1–2</td>
+<td>Each re-tested at scale; reported dead</td>
+</tr>
+<tr>
+<td>Overfit exit (fixed bracket)</td>
+<td>Original 8 tickers</td>
+<td>Exposed by 12-ticker holdout (−0.7% OOS)</td>
+</tr>
+<tr>
+<td>Fill optimism (prints only, no spread; trail fills at level)</td>
+<td>Everywhere</td>
+<td>Resolved outright: rebuilt on 7 years of real NBBO quotes (entries at/near the ask, exits at/near the bid, next-quote fills)</td>
+</tr>
+<tr>
+<td>Selection look-ahead (bar's box-membership decided by its eventual close)</td>
+<td>Box definition, all rounds</td>
+<td>Exposed by a reader's definitional question; entry rule replaced with close-confirmation, validated by strict live re-walk</td>
+</tr>
+<tr>
+<td>Quote-availability bias (trades silently dropped where the cheaper feed had no entry-minute quote)</td>
+<td>Deep-ITM baseline</td>
+<td>Exposed by upgrading the data tier: 402 recovered trades averaged −11.5% (bid-pulled fast markets). Repaired by the volume/participation gate, which screens the same trades for an observable reason</td>
+</tr>
+<tr>
+<td>Premium-management temptation (stops, trails, day-1 cuts on the option's own price)</td>
+<td>Every options round</td>
+<td>Tested exhaustively; all variants worsen results because winners routinely sit red first. Management moved entirely to the underlying's levels</td>
+</tr>
+<tr>
+<td>Cluster inflation (correlated tickers)</td>
+<td>Indices run</td>
+<td>Date-clustered t computed; indices verdict rests on it</td>
+</tr>
+<tr>
+<td>Survivorship (2026 ticker list)</td>
+<td>Ticker selection</td>
+<td>Acknowledged; modest over 24 months; would bias a longer study</td>
+</tr>
+<tr>
+<td>Censoring (trades open at data end)</td>
+<td>All rounds</td>
+<td>Censored trades flagged and excluded from exit stats</td>
+</tr>
+</tbody>
+</table>
+<h3>Where that leaves us</h3>
+<ul>
+<li>A published study page (milkmantrades.com/bilbo-box-options.html) and a
+  one-page cheat sheet, both carrying the fill-cost caveats.</li>
+<li>A live scanner producing these signals in real time on the 25 most liquid
+  names, with Telegram alerts — which is the honest next test: paper-trading
+  the signals forward, where none of the backtest biases can operate.</li>
+<li>An open bias-recovery workstream (Codex-assisted) re-simulating the study
+  under strictly-realistic fills — next-print entries and exits, liquidity
+  filters, spread modeling — to establish which mechanics keep t ≥ 3 under
+  assumptions we could actually trade. Results will land in BIAS_REVIEW.md.</li>
+<li>Known limits, stated plainly: 24 months is one volatility regime pair
+  (2024-25 chop + 2025-26); returns are % of premium from real prints without
+  spreads or commissions; win rates are low by design and the average is
+  carried by a small number of large runners.</li>
+</ul>
+<h3>Data sources and tools</h3>
+<p><strong>Data</strong>
+- Local 5-minute adjusted equity bars, 2003→present, ~3,460 tickers
+  (<code>/srv</code> parquet store; topped up via API).
+- Massive (Polygon-style) market data API, paid tier: equity/index aggregates
+  (including I:SPX and I:VIX), option contract reference (with expired
+  contracts), and option <strong>minute trade prints</strong> — the original core dataset:
+  ~29,000 contracts, ~40M minute bars in a local SQLite database.
+- ThetaData (Theta Terminal v3, upgraded to the Professional tier mid-study):
+  <strong>seven years of minute-level NBBO option quotes</strong> — real bid/ask with
+  sizes, 2019→present, ~65,000 contracts across the validation reruns and the
+  moneyness × tenor surface. The tier upgrade itself surfaced a bias (see
+  table above): the cheaper feed's missing minutes had been silently
+  excluding the worst trades.
+- TradingView charts as the visual spec reference for the Saty indicators.</p>
+<p><strong>Tools</strong>
+- Python (pandas / numpy / sqlite3) for the pipeline and every analysis;
+  a shared <code>indicators.py</code> implementing the Pine-spec Saty Phase Oscillator,
+  ATR, and EMAs, so studies and the live scanner compute identical signals.
+- Idempotent, checkpointed fetch pipeline (kill-and-resume safe; it survived
+  an API-tier downgrade mid-pull and a session crash mid-run).
+- Codex CLI as an adversarial reviewer — code review (caught the expiry bug),
+  design review of the cheat sheet, and now the bias audit.
+- matplotlib for the PNG cheat sheet; lightweight-charts for the study page's
+  interactive trade examples; cron + Telegram for the live scanner alerts.</p>
+<p><em>The through-line of the whole study: every number that survived did so by
+outliving an attempt to kill it — a random-entry baseline, a year split, a
+12-ticker holdout, a 20-year era check, worst-case fills, a strict
+live-semantics re-walk, a blind selection protocol, seven years of real
+bid/ask quotes, a data-feed upgrade that exposed what the cheaper feed had
+hidden, and two AI reviewers reading the code with hostile intent. The
+numbers that didn't survive are in the dead-ends list, which is exactly
+where they belong. And the two most damaging biases were found not by tools
+but by plain questions — "what exactly counts as a breakout?" and "why does
+this cell disagree with itself?" — which is the strongest argument this
+document makes: write your definitions in words a trader can argue with, and
+chase every number that doesn't reconcile.</em></p>
+<div class="foot">Milkman Trades · internal writeup · not linked from the homepage.
+Related: <a href="/bilbo-box-options.html">the Bilbo Box options study</a> ·
+<a href="/cheatsheet-bilbo-breakout.png">one-page cheat sheet</a></div>
+</div></body></html>

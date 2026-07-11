@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bet Sizing Lab — Milkman Trades</title>
+  <meta name="description" content="Asymmetric bet-sizing & Monte Carlo lab: win rate, reward-to-risk, position sizing, compounding, drawdowns — live in the browser.">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://milkmantrades.com/bet-sizing.html">
+  <meta property="og:title" content="Bet Sizing Lab — Milkman Trades">
+  <meta property="og:description" content="Pressure-test the math behind a trading strategy: win rate, R, position sizing, compounding, drawdowns, and a live 10,000-path Monte Carlo.">
+  <meta property="og:image" content="https://milkmantrades.com/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Bet Sizing Lab — Milkman Trades">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥛</text></svg>">
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700&family=JetBrains+Mono:wght@400;600&family=Playfair+Display:wght@900&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #0a0b0f;
+      --surface: #12131a;
+      --surface2: #171923;
+      --border: #1e2030;
+      --text: #e8e6e1;
+      --muted: #6b6a72;
+      --accent: #c9f76f;          /* compounding */
+      --amber: #fbbf24;           /* stair-step */
+      --sky: #7dd3fc;             /* dimmer */
+      --flat: #b8b3c2;            /* flat sizing */
+      --red: #f87171;
+      --mono: 'JetBrains Mono', monospace;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+    }
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse at 20% 50%, rgba(201, 247, 111, 0.03) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 20%, rgba(100, 120, 200, 0.02) 0%, transparent 40%);
+      pointer-events: none;
+    }
+
+    .page { position: relative; z-index: 1; max-width: 1180px; margin: 0 auto; padding: 2.5rem 1.5rem 5rem; }
+
+    .header { text-align: center; margin-bottom: 1.6rem; }
+    .logo { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 900; letter-spacing: -0.02em; }
+    .logo span { color: var(--accent); }
+    .tagline { font-size: 0.9rem; color: var(--muted); font-weight: 300; margin-top: 0.35rem; }
+
+    .credit {
+      max-width: 720px; margin: 0 auto 2.4rem;
+      background: linear-gradient(135deg, rgba(201,247,111,0.06), rgba(201,247,111,0.015));
+      border: 1px solid rgba(201,247,111,0.22); border-radius: 10px;
+      padding: 0.9rem 1.2rem; font-size: 0.85rem; line-height: 1.55; color: #c9c6bf; text-align: center;
+    }
+    .credit a { color: var(--accent); font-weight: 600; text-decoration: none; border-bottom: 1px dotted rgba(201,247,111,0.5); }
+    .credit a:hover { border-bottom-style: solid; }
+
+    .layout { display: grid; grid-template-columns: 330px 1fr; gap: 1.5rem; align-items: start; }
+    @media (max-width: 920px) { .layout { grid-template-columns: 1fr; } .panel-inputs { position: static !important; } }
+
+    .panel {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.3rem 1.3rem 1.1rem;
+    }
+    .panel-inputs { position: sticky; top: 3.2rem; }
+
+    .panel-title {
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 1rem;
+    }
+    .panel-title em { color: var(--accent); font-style: normal; }
+
+    .field { margin-bottom: 0.95rem; }
+    .field-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.3rem; gap: 0.5rem; }
+    .field-head > span:last-child { white-space: nowrap; flex-shrink: 0; }
+    .field-label { font-size: 0.8rem; color: #b5b2ab; }
+    .field-label small { color: var(--muted); font-size: 0.68rem; }
+    .field input[type=number] {
+      width: 5.4rem; background: var(--surface2); border: 1px solid var(--border); border-radius: 6px;
+      color: var(--accent); font-family: var(--mono); font-size: 0.82rem; font-weight: 600;
+      padding: 0.22rem 0.45rem; text-align: right; -moz-appearance: textfield;
+    }
+    .field input[type=number]::-webkit-outer-spin-button, .field input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
+    .field input[type=number]:focus { outline: none; border-color: rgba(201,247,111,0.5); }
+    .unit { color: var(--muted); font-size: 0.72rem; font-family: var(--mono); margin-left: 0.18rem; }
+
+    input[type=range] { width: 100%; appearance: none; -webkit-appearance: none; height: 4px; border-radius: 2px;
+      background: linear-gradient(to right, var(--accent) var(--fill, 50%), #23263a var(--fill, 50%)); cursor: pointer; }
+    input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%;
+      background: var(--accent); border: 2px solid #0a0b0f; box-shadow: 0 0 0 1px rgba(201,247,111,0.5); }
+    input[type=range]::-moz-range-thumb { width: 12px; height: 12px; border-radius: 50%;
+      background: var(--accent); border: 2px solid #0a0b0f; }
+
+    details.adv { margin-top: 1.1rem; border-top: 1px solid var(--border); padding-top: 0.8rem; }
+    details.adv summary { cursor: pointer; font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--muted); list-style: none; user-select: none; }
+    details.adv summary::before { content: '▸ '; color: var(--accent); }
+    details.adv[open] summary::before { content: '▾ '; }
+    details.adv .field:first-of-type { margin-top: 0.85rem; }
+    details.adv select {
+      background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; color: var(--accent);
+      font-family: var(--mono); font-size: 0.8rem; padding: 0.22rem 0.4rem;
+    }
+
+    .derived { margin-top: 1rem; border-top: 1px solid var(--border); padding-top: 0.85rem; }
+    .kv { display: flex; justify-content: space-between; font-size: 0.78rem; padding: 0.18rem 0; }
+    .kv .k { color: var(--muted); }
+    .kv .v { font-family: var(--mono); font-weight: 600; color: var(--text); }
+    .kv .v.good { color: var(--accent); }
+    .kv .v.bad { color: var(--red); }
+    .kv .v.warn { color: var(--amber); }
+
+    .section { margin-bottom: 1.5rem; }
+    h2.sec {
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted);
+      margin: 0 0 0.85rem; display: flex; align-items: center; gap: 0.6rem;
+    }
+    h2.sec::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+    .sec-note { font-size: 0.74rem; color: var(--muted); margin: -0.5rem 0 0.85rem; line-height: 1.5; }
+
+    .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(158px, 1fr)); gap: 0.6rem; }
+    .stat { background: var(--surface2); border: 1px solid var(--border); border-radius: 9px; padding: 0.65rem 0.75rem; }
+    .stat .sl { font-size: 0.66rem; color: var(--muted); letter-spacing: 0.04em; line-height: 1.35; min-height: 1.7em; }
+    .stat .sv { font-family: var(--mono); font-weight: 600; font-size: 1.12rem; margin-top: 0.25rem; }
+    .stat .sv.good { color: var(--accent); } .stat .sv.bad { color: var(--red); } .stat .sv.warn { color: var(--amber); }
+    .stat .sub { font-size: 0.64rem; color: var(--muted); font-family: var(--mono); margin-top: 0.1rem; }
+
+    table.cmp { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+    table.cmp th, table.cmp td { padding: 0.42rem 0.6rem; text-align: right; border-bottom: 1px solid var(--border); }
+    table.cmp th:first-child, table.cmp td:first-child { text-align: left; color: #b5b2ab; font-weight: 400; }
+    table.cmp thead th { color: var(--muted); font-size: 0.66rem; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; border-bottom: 1px solid #2a2d40; }
+    table.cmp td { font-family: var(--mono); }
+    table.cmp .grp td { border-bottom: none; padding-top: 0.75rem; color: var(--muted); font-family: 'DM Sans'; font-size: 0.64rem; letter-spacing: 0.1em; text-transform: uppercase; }
+    .c-comp { color: var(--accent); } .c-stair { color: var(--amber); } .c-dim { color: var(--sky); } .c-flat { color: var(--flat); }
+
+    .scroll-x { overflow-x: auto; }
+
+    .mc-bar { display: flex; align-items: center; gap: 0.7rem; flex-wrap: wrap; margin-bottom: 0.8rem; }
+    .mc-status { font-size: 0.72rem; font-family: var(--mono); color: var(--muted); }
+    .mc-status.busy { color: var(--amber); }
+    button.reroll {
+      background: var(--surface2); border: 1px solid var(--border); color: var(--text); border-radius: 7px;
+      font-family: 'DM Sans'; font-size: 0.74rem; padding: 0.3rem 0.7rem; cursor: pointer; transition: border-color .15s;
+    }
+    button.reroll:hover { border-color: rgba(201,247,111,0.5); }
+
+    .legend { display: flex; gap: 1rem; flex-wrap: wrap; font-size: 0.72rem; color: #b5b2ab; margin-bottom: 0.5rem; }
+    .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 0.35rem; vertical-align: -1px; }
+
+    canvas.chart { width: 100%; display: block; }
+    .fan-wrap { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem; }
+    @media (max-width: 720px) { .fan-wrap { grid-template-columns: 1fr; } }
+    .fan-cell { background: var(--surface2); border: 1px solid var(--border); border-radius: 9px; padding: 0.55rem 0.55rem 0.3rem; }
+    .fan-cell .ft { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em; margin-bottom: 0.2rem; }
+
+    .heat { border-collapse: collapse; font-family: var(--mono); font-size: 0.72rem; }
+    .heat th { color: var(--muted); font-weight: 600; padding: 0.3rem 0.45rem; font-size: 0.68rem; }
+    .heat td { padding: 0.34rem 0.5rem; text-align: right; cursor: pointer; border: 1px solid #0a0b0f; border-radius: 3px; transition: outline .1s; min-width: 3.4rem; }
+    .heat td:hover { outline: 1px solid #fff; }
+    .heat td.sel { outline: 2px solid #fff; }
+    .heat-note { font-size: 0.7rem; color: var(--muted); margin-top: 0.4rem; }
+
+    .footer { margin-top: 3rem; text-align: center; font-size: 0.74rem; color: var(--muted); line-height: 1.7; }
+    .footer a { color: var(--accent); text-decoration: none; }
+    .disclaimer { font-size: 0.68rem; color: #504f57; max-width: 640px; margin: 0.8rem auto 0; }
+  </style>
+  <script src="/nav.js"></script>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <div class="logo">bet sizing lab<span>.</span></div>
+    <div class="tagline">Asymmetric bet sizing &amp; Monte Carlo — win rate, R, compounding, drawdowns, live.</div>
+  </div>
+
+  <div class="credit">
+    Original idea, model &amp; spreadsheet by the <a href="https://playingfordoubles.beehiiv.com/subscribe" target="_blank" rel="noopener">Playing For Doubles newsletter</a> — thank you! 🙏
+    This page ports their workbook to the browser so every output (including the 10,000-path Monte Carlo) updates the instant you move a slider.
+  </div>
+
+  <div class="layout">
+
+    <!-- ============ INPUTS ============ -->
+    <div class="panel panel-inputs">
+      <div class="panel-title"><em>Inputs</em> — drag or type</div>
+
+      <div class="field" data-in="w">
+        <div class="field-head"><span class="field-label">Win rate <small>(w)</small></span>
+          <span><input type="number" id="n_w" min="1" max="99" step="0.5" value="55"><span class="unit">%</span></span></div>
+        <input type="range" id="s_w" min="5" max="95" step="1" value="55">
+      </div>
+
+      <div class="field" data-in="R">
+        <div class="field-head"><span class="field-label">W/L ratio <small>(R = avg win ÷ avg loss)</small></span>
+          <span><input type="number" id="n_R" min="0.1" max="10" step="0.05" value="2"><span class="unit">×</span></span></div>
+        <input type="range" id="s_R" min="0.25" max="5" step="0.05" value="2">
+      </div>
+
+      <div class="field" data-in="bet">
+        <div class="field-head"><span class="field-label">Bet size <small>(stake, % of equity)</small></span>
+          <span><input type="number" id="n_bet" min="1" max="100" step="1" value="15"><span class="unit">%</span></span></div>
+        <input type="range" id="s_bet" min="1" max="100" step="1" value="15">
+      </div>
+
+      <div class="field" data-in="loss">
+        <div class="field-head"><span class="field-label">Average loss <small>(% of stake on a loser)</small></span>
+          <span><input type="number" id="n_loss" min="1" max="100" step="1" value="25"><span class="unit">%</span></span></div>
+        <input type="range" id="s_loss" min="5" max="100" step="1" value="25">
+      </div>
+
+      <div class="field" data-in="N">
+        <div class="field-head"><span class="field-label">Number of trades <small>(N)</small></span>
+          <span><input type="number" id="n_N" min="5" max="2000" step="5" value="100"></span></div>
+        <input type="range" id="s_N" min="10" max="500" step="5" value="100">
+      </div>
+
+      <div class="field" data-in="eq">
+        <div class="field-head"><span class="field-label">Starting equity</span>
+          <span><span class="unit">$</span><input type="number" id="n_eq" min="100" step="1000" value="100000"></span></div>
+        <input type="range" id="s_eq" min="5000" max="1000000" step="5000" value="100000">
+      </div>
+
+      <div class="field" data-in="tgt">
+        <div class="field-head"><span class="field-label">Target multiple</span>
+          <span><input type="number" id="n_tgt" min="1.1" max="100" step="0.1" value="2"><span class="unit">×</span></span></div>
+        <input type="range" id="s_tgt" min="1.5" max="10" step="0.5" value="2">
+      </div>
+
+      <details class="adv">
+        <summary>Advanced — Monte Carlo settings</summary>
+
+        <div class="field" data-in="stair">
+          <div class="field-head"><span class="field-label">Stair-step trigger <small>(resize after this gain)</small></span>
+            <span><input type="number" id="n_stair" min="5" max="200" step="1" value="26"><span class="unit">%</span></span></div>
+          <input type="range" id="s_stair" min="5" max="100" step="1" value="26">
+        </div>
+
+        <div class="field">
+          <div class="field-head"><span class="field-label">Dimmer floor <small>(smallest bet fraction)</small></span>
+            <select id="sel_floor">
+              <option value="0.5">1/2</option><option value="0.25">1/4</option><option value="0.125">1/8</option>
+              <option value="0.0625">1/16</option><option value="0.03125">1/32</option>
+              <option value="0.015625" selected>1/64</option><option value="0.0078125">1/128</option>
+            </select></div>
+        </div>
+
+        <div class="field" data-in="sims">
+          <div class="field-head"><span class="field-label">Simulations <small>(paths per run)</small></span>
+            <span><input type="number" id="n_sims" min="1000" max="50000" step="1000" value="10000"></span></div>
+          <input type="range" id="s_sims" min="1000" max="50000" step="1000" value="10000">
+        </div>
+      </details>
+
+      <div class="derived">
+        <div class="kv"><span class="k">Average win (% of stake)</span><span class="v" id="d_avgwin">—</span></div>
+        <div class="kv"><span class="k">Risk per trade (% of equity)</span><span class="v" id="d_risk">—</span></div>
+        <div class="kv"><span class="k">Full-Kelly risk</span><span class="v" id="d_kelly">—</span></div>
+        <div class="kv"><span class="k">Your risk ÷ Kelly</span><span class="v" id="d_kellyfrac">—</span></div>
+      </div>
+    </div>
+
+    <!-- ============ OUTPUTS ============ -->
+    <div class="outputs">
+
+      <div class="section">
+        <h2 class="sec">Per-Trade Mechanics</h2>
+        <div class="stat-grid">
+          <div class="stat"><div class="sl">Win: gain on equity</div><div class="sv good" id="m_win">—</div><div class="sub">×R payoff</div></div>
+          <div class="stat"><div class="sl">Loss: cost on equity</div><div class="sv bad" id="m_loss">—</div><div class="sub">= bet × avg loss</div></div>
+          <div class="stat"><div class="sl">Arithmetic EV / trade</div><div class="sv" id="m_ev">—</div><div class="sub" id="m_ev_sub">per trade, % of equity</div></div>
+          <div class="stat"><div class="sl">Geometric growth / trade</div><div class="sv" id="m_geo">—</div><div class="sub">what compounds</div></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2 class="sec">Full Compounding — after N trades</h2>
+        <div class="stat-grid">
+          <div class="stat"><div class="sl">Median ending multiple</div><div class="sv" id="o_med">—</div><div class="sub" id="o_medeq">—</div></div>
+          <div class="stat"><div class="sl">Mean ending multiple</div><div class="sv" id="o_mean">—</div><div class="sub">skewed by lucky paths</div></div>
+          <div class="stat"><div class="sl">Trades to target</div><div class="sv" id="o_ttt">—</div><div class="sub" id="o_ttt_sub">—</div></div>
+          <div class="stat"><div class="sl">Arithmetic breakeven win rate</div><div class="sv" id="o_be_a">—</div><div class="sub">= 1 / (1+R)</div></div>
+          <div class="stat"><div class="sl">Growth breakeven win rate</div><div class="sv" id="o_be_g">—</div><div class="sub">to compound up at this risk</div></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2 class="sec">Sizing Schemes — deterministic estimates</h2>
+        <p class="sec-note">Typical ending: median for compounding, mean for flat, typical-path estimate for stair-step. Full distributions, drawdowns &amp; the dimmer rule are in the Monte Carlo below.</p>
+        <div class="scroll-x">
+        <table class="cmp" id="detTable">
+          <thead><tr><th>Metric</th><th class="c-comp">Compounding</th><th class="c-flat">Flat</th><th class="c-stair" id="detStairH">Stair-step</th></tr></thead>
+          <tbody>
+            <tr><td>Typical ending (after N)</td><td class="c-comp" id="t_end_c">—</td><td class="c-flat" id="t_end_f">—</td><td class="c-stair" id="t_end_s">—</td></tr>
+            <tr><td>Trades to double (2×)</td><td class="c-comp" id="t_dbl_c">—</td><td class="c-flat" id="t_dbl_f">—</td><td class="c-stair" id="t_dbl_s">—</td></tr>
+            <tr><td>Breakeven win rate</td><td class="c-comp" id="t_be_c">—</td><td class="c-flat" id="t_be_f">—</td><td class="c-stair" id="t_be_s">—</td></tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2 class="sec">Monte Carlo — 3 sizing schemes, identical random draws</h2>
+        <div class="mc-bar">
+          <span class="legend">
+            <span><i style="background:var(--accent)"></i>Compounding — fixed % of current equity</span>
+            <span><i style="background:var(--amber)"></i>Stair-step — flat $ until <span id="lg_stair">+26%</span>, then resize</span>
+            <span><i style="background:var(--sky)"></i>Dimmer — halve after loss, double back after win</span>
+          </span>
+          <button class="reroll" id="reroll">🎲 re-roll paths</button>
+          <span class="mc-status" id="mcStatus">—</span>
+        </div>
+
+        <div class="fan-wrap" id="fanWrap">
+          <div class="fan-cell"><div class="ft c-comp">Compounding</div><canvas class="chart" id="fanC" height="150"></canvas></div>
+          <div class="fan-cell"><div class="ft c-stair">Stair-step</div><canvas class="chart" id="fanS" height="150"></canvas></div>
+          <div class="fan-cell"><div class="ft c-dim">Dimmer</div><canvas class="chart" id="fanD" height="150"></canvas></div>
+        </div>
+        <p class="sec-note" style="margin-top:.5rem">Equity multiple (log scale) over N trades. Bright line = median path; bands = middle 50% and 90% of simulations; faint lines = sample paths.</p>
+
+        <div class="fan-cell" style="margin-bottom:1rem"><div class="ft" style="color:#b5b2ab">Where you end up — distribution of ending multiples (log scale)</div>
+          <canvas class="chart" id="hist" height="170"></canvas></div>
+
+        <div class="scroll-x">
+        <table class="cmp" id="mcTable">
+          <thead><tr><th>Metric</th><th class="c-comp">Compounding</th><th class="c-stair" id="mcStairH">Stair-step</th><th class="c-dim">Dimmer</th></tr></thead>
+          <tbody id="mcBody"></tbody>
+        </table>
+        </div>
+        <p class="sec-note" style="margin-top:.6rem">Assumes independent trades. With independent trades, stair-step &amp; dimmer mainly affect drawdowns, not raw growth.</p>
+      </div>
+
+      <div class="section">
+        <h2 class="sec">Sensitivity — win rate × W/L ratio</h2>
+        <p class="sec-note">Both grids use your current risk per trade (<span id="h_risk">—</span>) and N (<span id="h_n">—</span>). <b>Click any cell</b> to load that win rate &amp; R into the model. Green = good/fast, red = poor/slow.</p>
+
+        <div class="scroll-x"><b style="font-size:.72rem;letter-spacing:.08em;color:#b5b2ab">MEDIAN ENDING MULTIPLE</b>
+          <table class="heat" id="heat1"></table></div>
+        <div class="scroll-x" style="margin-top:1.1rem"><b style="font-size:.72rem;letter-spacing:.08em;color:#b5b2ab">TRADES TO DOUBLE (2×)</b>
+          <table class="heat" id="heat2"></table></div>
+        <div class="scroll-x" style="margin-top:1.1rem"><b style="font-size:.72rem;letter-spacing:.08em;color:#b5b2ab">GROWTH BREAKEVEN WIN RATE</b>
+          <table class="heat" id="heat3"></table>
+          <div class="heat-note">Minimum win rate needed to compound upward at the current risk per trade.</div></div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="footer">
+    Model &amp; original spreadsheet: <a href="https://playingfordoubles.beehiiv.com/subscribe" target="_blank" rel="noopener">Playing For Doubles newsletter</a> · web port by milkman
+    <div class="disclaimer">All figures are illustrative — plug in your own numbers. Simulated results assume independent trades and constant edge; real trading has neither. Educational only; not financial advice.</div>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+/* ---------- state ---------- */
+const S = { w:0.55, R:2, bet:0.15, loss:0.25, N:100, eq:100000, tgt:2, stair:0.26, floor:1/64, sims:10000, seed:1234567 };
+
+/* ---------- formatting ---------- */
+const fmtMoney = new Intl.NumberFormat('en-US', {style:'currency', currency:'USD', maximumFractionDigits:0});
+function fx(v){ // multiple, e.g. 3.42×
+  if (!isFinite(v)) return '∞';
+  if (v >= 1e6) return v.toExponential(1) + '×';
+  if (v >= 100) return v.toFixed(0) + '×';
+  if (v >= 10) return v.toFixed(1) + '×';
+  return v.toFixed(2) + '×';
+}
+function fp(v, d=1){ return (v*100).toFixed(d) + '%'; }
+function fn(v){ return !isFinite(v) ? '∞' : v >= 1000 ? Math.round(v).toLocaleString() : v >= 100 ? v.toFixed(0) : v.toFixed(1); }
+
+/* ---------- input wiring: slider <-> number ---------- */
+const IN = [
+  {key:'w',    s:'s_w',    n:'n_w',    toS: v=>v*100, fromUI: v=>v/100},
+  {key:'R',    s:'s_R',    n:'n_R',    toS: v=>v,     fromUI: v=>v},
+  {key:'bet',  s:'s_bet',  n:'n_bet',  toS: v=>v*100, fromUI: v=>v/100},
+  {key:'loss', s:'s_loss', n:'n_loss', toS: v=>v*100, fromUI: v=>v/100},
+  {key:'N',    s:'s_N',    n:'n_N',    toS: v=>v,     fromUI: v=>Math.max(1, Math.round(v))},
+  {key:'eq',   s:'s_eq',   n:'n_eq',   toS: v=>v,     fromUI: v=>v},
+  {key:'tgt',  s:'s_tgt',  n:'n_tgt',  toS: v=>v,     fromUI: v=>v},
+  {key:'stair',s:'s_stair',n:'n_stair',toS: v=>v*100, fromUI: v=>v/100},
+  {key:'sims', s:'s_sims', n:'n_sims', toS: v=>v,     fromUI: v=>Math.round(v)},
+];
+function paintSlider(el){
+  const min = +el.min, max = +el.max, v = Math.min(max, Math.max(min, +el.value));
+  el.style.setProperty('--fill', ((v - min) / (max - min) * 100) + '%');
+}
+for (const io of IN){
+  const s = document.getElementById(io.s), n = document.getElementById(io.n);
+  const commit = raw => {
+    if (!isFinite(raw)) return;
+    S[io.key] = io.fromUI(raw);
+    s.value = io.toS(S[io.key]); n.value = io.toS(S[io.key]);
+    paintSlider(s); recalc();
+  };
+  s.addEventListener('input', () => commit(+s.value));
+  n.addEventListener('input', () => { if (n.value !== '') commit(+n.value); });
+  paintSlider(s);
+}
+document.getElementById('sel_floor').addEventListener('change', e => { S.floor = +e.target.value; recalc(); });
+document.getElementById('reroll').addEventListener('click', () => { S.seed = (Math.random()*2**31)|0; scheduleMC(); });
+
+/* set a pair of inputs programmatically (heatmap click) */
+function setInput(key, val){
+  S[key] = val;
+  const io = IN.find(i => i.key === key);
+  const s = document.getElementById(io.s), n = document.getElementById(io.n);
+  s.value = io.toS(val); n.value = io.toS(val); paintSlider(s);
+}
+
+/* ---------- deterministic math ---------- */
+function geoGrowth(w, R, r){ return w*Math.log(1 + r*R) + (1-w)*Math.log(1 - r); }
+
+function recalc(){
+  const {w, R, bet, loss, N, eq, tgt, stair} = S;
+  const r = Math.min(0.999, bet * loss);          // risk per trade
+  const avgWin = R * loss;
+  const g = geoGrowth(w, R, r);
+  const ev = w*r*R - (1-w)*r;
+  const edge = w*R - (1-w);
+  const kelly = w - (1-w)/R;
+
+  const el = id => document.getElementById(id);
+  el('d_avgwin').textContent = fp(avgWin, 1);
+  el('d_risk').textContent = fp(r, 2);
+  el('d_kelly').textContent = kelly > 0 ? fp(kelly, 1) : 'no edge';
+  el('d_kelly').className = 'v ' + (kelly > 0 ? '' : 'bad');
+  const kf = kelly > 0 ? r / kelly : null;
+  el('d_kellyfrac').textContent = kf === null ? '—' : fx(kf).replace('×','× Kelly');
+  el('d_kellyfrac').className = 'v ' + (kf === null ? '' : kf > 1 ? 'bad' : kf > 0.5 ? 'warn' : 'good');
+
+  el('m_win').textContent = '+' + fp(r*R, 2);
+  el('m_loss').textContent = '−' + fp(r, 2);
+  el('m_ev').textContent = (ev >= 0 ? '+' : '') + fp(ev, 3);
+  el('m_ev').className = 'sv ' + (ev > 0 ? 'good' : 'bad');
+  el('m_geo').textContent = (g >= 0 ? '+' : '') + fp(g, 3);
+  el('m_geo').className = 'sv ' + (g > 0 ? 'good' : 'bad');
+
+  const med = Math.exp(N * g);
+  const mean = Math.pow(w*(1 + r*R) + (1-w)*(1 - r), N);
+  el('o_med').textContent = fx(med);
+  el('o_med').className = 'sv ' + (med >= 1 ? 'good' : 'bad');
+  el('o_medeq').textContent = fmtMoney.format(eq * med) + ' from ' + fmtMoney.format(eq);
+  el('o_mean').textContent = fx(mean);
+  el('o_ttt').textContent = g > 0 ? fn(Math.log(tgt)/g) : 'no growth';
+  el('o_ttt').className = 'sv ' + (g > 0 ? '' : 'bad');
+  el('o_ttt_sub').textContent = 'to reach ' + tgt + '× (' + fmtMoney.format(eq*tgt) + ')';
+  el('o_be_a').textContent = fp(1/(1+R), 1);
+  const beG = -Math.log(1-r) / (Math.log(1+r*R) - Math.log(1-r));
+  el('o_be_g').textContent = fp(beG, 1);
+  el('o_be_g').className = 'sv ' + (w >= beG ? 'good' : 'bad');
+
+  // deterministic scheme table
+  el('detStairH').textContent = 'Stair-step (+' + Math.round(stair*100) + '%)';
+  el('t_end_c').textContent = fx(med);
+  el('t_end_f').textContent = fx(1 + N*r*edge);
+  el('t_end_s').textContent = fx(Math.pow(1+stair, N*r*edge/stair));
+  el('t_dbl_c').textContent = g > 0 ? fn(Math.LN2/g) : 'never';
+  el('t_dbl_f').textContent = r*edge > 0 ? fn(1/(r*edge)) : 'never';
+  el('t_dbl_s').textContent = r*edge > 0 ? fn((Math.LN2/Math.log(1+stair)) * (stair/(r*edge))) : 'never';
+  el('t_be_c').textContent = fp(beG, 1);
+  el('t_be_f').textContent = fp(1/(1+R), 1);
+  el('t_be_s').textContent = fp(1/(1+R), 1);
+
+  el('lg_stair').textContent = '+' + Math.round(stair*100) + '%';
+  el('h_risk').textContent = fp(r, 2);
+  el('h_n').textContent = N;
+
+  renderHeatmaps(r, N);
+  scheduleMC();
+}
+
+/* ---------- heatmaps ---------- */
+const H_R = [0.5, 0.75, 1.0, 1.25, 1.5, 2.0, 2.5, 3.0];
+const H_W = [0.30, 0.35, 0.40, 0.45, 0.50, 0.55, 0.60, 0.65];
+
+function heatColor(t){ // t in [0,1]: 0 = red, 0.5 = neutral, 1 = green
+  t = Math.max(0, Math.min(1, t));
+  const stops = t < 0.5
+    ? [[127,45,45], [42,42,52], t*2]           // red -> neutral
+    : [[42,42,52], [74,110,40], (t-0.5)*2];    // neutral -> green
+  const [a, b, k] = stops;
+  const mix = a.map((c,i) => Math.round(c + (b[i]-c)*k));
+  return `rgb(${mix[0]},${mix[1]},${mix[2]})`;
+}
+
+function buildHeat(tableId, rows, cols, cellFn, headLabel){
+  const tbl = document.getElementById(tableId);
+  let html = '<tr><th>' + headLabel + '</th>' + cols.map(c => '<th>' + c.toFixed(2).replace(/0$/,'') + '</th>').join('') + '</tr>';
+  for (const w of rows){
+    html += '<tr><th>' + Math.round(w*100) + '%</th>';
+    for (const R of cols){
+      const c = cellFn(w, R);
+      const sel = Math.abs(w - S.w) < 0.001 && Math.abs(R - S.R) < 0.001 ? ' sel' : '';
+      html += `<td class="hc${sel}" data-w="${w}" data-r="${R}" style="background:${c.bg};color:${c.fg}">${c.text}</td>`;
+    }
+    html += '</tr>';
+  }
+  tbl.innerHTML = html;
+  tbl.querySelectorAll('td.hc').forEach(td => td.addEventListener('click', () => {
+    setInput('w', +td.dataset.w); setInput('R', +td.dataset.r); recalc();
+  }));
+}
+
+function renderHeatmaps(r, N){
+  buildHeat('heat1', H_W, H_R, (w, R) => {
+    const m = Math.exp(N * geoGrowth(w, R, r));
+    const t = 0.5 + Math.max(-0.5, Math.min(0.5, Math.log10(m) / 2.4));  // 0.06x..250x span
+    return { bg: heatColor(t), fg: '#e8e6e1', text: fx(m) };
+  }, 'win \\ R');
+
+  buildHeat('heat2', H_W, H_R, (w, R) => {
+    const g = geoGrowth(w, R, r);
+    if (g <= 0) return { bg: '#3d1420', fg: '#8b5560', text: 'never' };
+    const n = Math.LN2 / g;
+    const t = 1 - Math.max(0, Math.min(1, (Math.log10(n) - 1) / 2));     // 10 trades=green, 1000=red
+    return { bg: heatColor(t), fg: '#e8e6e1', text: fn(n) };
+  }, 'win \\ R');
+
+  // breakeven row
+  const tbl = document.getElementById('heat3');
+  let html = '<tr><th>R</th>' + H_R.map(R => '<th>' + R.toFixed(2).replace(/0$/,'') + '</th>').join('') + '</tr><tr><th>breakeven w</th>';
+  for (const R of H_R){
+    const be = -Math.log(1-r) / (Math.log(1+r*R) - Math.log(1-r));
+    const t = 1 - Math.max(0, Math.min(1, (be - 0.2) / 0.5));
+    html += `<td style="background:${heatColor(t)};cursor:default">${fp(be,1)}</td>`;
+  }
+  tbl.innerHTML = html + '</tr>';
+}
+
+/* ---------- Monte Carlo worker ---------- */
+const workerSrc = `
+'use strict';
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+onmessage = function(e){
+  const {w, R, r, N, sims, stair, floor, seed, job} = e.data;
+  const rand = mulberry32(seed);
+  const endC = new Float64Array(sims), ddC = new Float64Array(sims);
+  const endS = new Float64Array(sims), ddS = new Float64Array(sims);
+  const endD = new Float64Array(sims), ddD = new Float64Array(sims);
+  const TRACK = Math.min(sims, 400);
+  const trC = new Float64Array(TRACK*(N+1)), trS = new Float64Array(TRACK*(N+1)), trD = new Float64Array(TRACK*(N+1));
+
+  for (let s = 0; s < sims; s++){
+    let cB=1, cPk=1, cDD=0;
+    let sB=1, sPk=1, sDD=0, band=1, sAlive=true;
+    let dB=1, dPk=1, dDD=0, m=1;
+    const track = s < TRACK, base = s*(N+1);
+    if (track){ trC[base]=1; trS[base]=1; trD[base]=1; }
+
+    for (let t = 0; t < N; t++){
+      const win = rand() < w;
+
+      const kC = r*cB;
+      cB += win ? kC*R : -kC;
+      if (cB > cPk) cPk = cB;
+      const c1 = (cPk-cB)/cPk; if (c1 > cDD) cDD = c1;
+
+      if (sAlive){
+        const kS = r*band;
+        sB += win ? kS*R : -kS;
+        if (sB <= 0){ sB = 0; sAlive = false; sDD = 1; }
+        else {
+          if (sB > sPk) sPk = sB;
+          const s1 = (sPk-sB)/sPk; if (s1 > sDD) sDD = s1;
+          if (sB >= band*(1+stair)) band = sB;
+        }
+      }
+
+      const kD = r*m*dB;
+      dB += win ? kD*R : -kD;
+      if (dB > dPk) dPk = dB;
+      const d1 = (dPk-dB)/dPk; if (d1 > dDD) dDD = d1;
+      m = win ? Math.min(1, m*2) : Math.max(floor, m/2);
+
+      if (track){ trC[base+t+1]=cB; trS[base+t+1]=sB; trD[base+t+1]=dB; }
+    }
+    endC[s]=cB; ddC[s]=cDD; endS[s]=sB; ddS[s]=sDD; endD[s]=dB; ddD[s]=dDD;
+  }
+
+  function pct(sorted, p){ return sorted[Math.min(sorted.length-1, Math.floor(sorted.length*p))]; }
+  function frac(a, fn){ let c=0; for (let i=0;i<a.length;i++) if (fn(a[i])) c++; return c/a.length; }
+  function stats(ends, dds){
+    const e = Float64Array.from(ends).sort(), d = Float64Array.from(dds).sort();
+    let sum = 0; for (let i=0;i<e.length;i++) sum += e[i];
+    return {
+      mean: sum/e.length, p5: pct(e,.05), p25: pct(e,.25), p50: pct(e,.50), p75: pct(e,.75), p95: pct(e,.95),
+      max: e[e.length-1], min: e[0],
+      plt1: frac(e, x=>x<1), plt05: frac(e, x=>x<0.5), pge2: frac(e, x=>x>=2), pge5: frac(e, x=>x>=5),
+      pge10: frac(e, x=>x>=10), pge20: frac(e, x=>x>=20),
+      mdd: pct(d,.50), dd30: frac(d, x=>x>0.30), dd50: frac(d, x=>x>0.50), wdd: d[d.length-1],
+      ruin: frac(e, x=>x<=0)
+    };
+  }
+
+  // percentile bands per step (from tracked paths) + a few sample paths
+  function bands(tr){
+    const out = {p5:[], p25:[], p50:[], p75:[], p95:[]};
+    const col = new Float64Array(TRACK);
+    for (let t = 0; t <= N; t++){
+      for (let s = 0; s < TRACK; s++) col[s] = tr[s*(N+1)+t];
+      const sc = Float64Array.from(col).sort();
+      out.p5.push(pct(sc,.05)); out.p25.push(pct(sc,.25)); out.p50.push(pct(sc,.50));
+      out.p75.push(pct(sc,.75)); out.p95.push(pct(sc,.95));
+    }
+    return out;
+  }
+  function samples(tr, k){
+    const out = [];
+    for (let s = 0; s < Math.min(k, TRACK); s++) out.push(Array.from(tr.subarray(s*(N+1), (s+1)*(N+1))));
+    return out;
+  }
+
+  postMessage({
+    job,
+    C: stats(endC, ddC), S: stats(endS, ddS), D: stats(endD, ddD),
+    bands: { C: bands(trC), S: bands(trS), D: bands(trD) },
+    samples: { C: samples(trC, 14), S: samples(trS, 14), D: samples(trD, 14) },
+    endings: { C: endC, S: endS, D: endD }
+  }, [endC.buffer, endS.buffer, endD.buffer]);
+};
+`;
+const worker = new Worker(URL.createObjectURL(new Blob([workerSrc], {type:'application/javascript'})));
+
+let mcJob = 0, mcTimer = null, lastMC = null;
+function scheduleMC(){
+  clearTimeout(mcTimer);
+  document.getElementById('mcStatus').textContent = 'simulating…';
+  document.getElementById('mcStatus').className = 'mc-status busy';
+  mcTimer = setTimeout(() => {
+    const r = Math.min(0.999, S.bet * S.loss);
+    mcJob++;
+    worker.postMessage({ w:S.w, R:S.R, r, N:S.N, sims:S.sims, stair:S.stair, floor:S.floor, seed:S.seed, job:mcJob });
+  }, 120);
+}
+
+worker.onmessage = e => {
+  if (e.data.job !== mcJob) return;   // stale run
+  lastMC = e.data;
+  document.getElementById('mcStatus').textContent = S.sims.toLocaleString() + ' paths · seed ' + (S.seed >>> 0).toString(36);
+  document.getElementById('mcStatus').className = 'mc-status';
+  renderMCTable(e.data);
+  drawFans(e.data);
+  drawHist(e.data);
+};
+
+/* ---------- MC table ---------- */
+const MC_ROWS = [
+  ['grp', 'Where you end up'],
+  ['Median ending', 'p50', 'x'], ['Mean ending', 'mean', 'x'],
+  ['5th percentile (unlucky)', 'p5', 'x'], ['25th percentile', 'p25', 'x'],
+  ['75th percentile', 'p75', 'x'], ['95th percentile (lucky)', 'p95', 'x'],
+  ['Best case', 'max', 'x'], ['Worst case', 'min', 'x'],
+  ['grp', 'Odds'],
+  ['Chance of losing money (<1×)', 'plt1', '%'], ['Chance of losing half (<0.5×)', 'plt05', '%'],
+  ['Chance of doubling (≥2×)', 'pge2', '%'], ['Chance of ≥5×', 'pge5', '%'],
+  ['Chance of jackpot ≥10×', 'pge10', '%'], ['Chance of ≥20×', 'pge20', '%'],
+  ['grp', 'Pain along the way'],
+  ['Median worst drawdown', 'mdd', '%'], ['Chance of >30% drawdown', 'dd30', '%'],
+  ['Chance of >50% drawdown', 'dd50', '%'], ['Worst drawdown seen', 'wdd', '%'],
+  ['Chance of wipeout (ruin)', 'ruin', '%'],
+];
+function renderMCTable(d){
+  document.getElementById('mcStairH').textContent = 'Stair-step (+' + Math.round(S.stair*100) + '%)';
+  let html = '';
+  for (const row of MC_ROWS){
+    if (row[0] === 'grp'){ html += `<tr class="grp"><td colspan="4">${row[1]}</td></tr>`; continue; }
+    const [label, key, fmt] = row;
+    const f = fmt === 'x' ? fx : v => fp(v, 1);
+    html += `<tr><td>${label}</td><td class="c-comp">${f(d.C[key])}</td><td class="c-stair">${f(d.S[key])}</td><td class="c-dim">${f(d.D[key])}</td></tr>`;
+  }
+  document.getElementById('mcBody').innerHTML = html;
+}
+
+/* ---------- charts ---------- */
+const COLORS = { C: '#c9f76f', S: '#fbbf24', D: '#7dd3fc' };
+
+function setupCanvas(cv){
+  const dpr = window.devicePixelRatio || 1;
+  const w = cv.clientWidth, h = cv.clientHeight || +cv.getAttribute('height');
+  cv.width = w * dpr; cv.height = h * dpr;
+  const ctx = cv.getContext('2d');
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  return { ctx, w, h };
+}
+
+function drawFans(d){
+  // shared log-y scale across the three panels
+  let lo = Infinity, hi = -Infinity;
+  for (const k of ['C','S','D']){
+    const b = d.bands[k];
+    for (const arr of [b.p5, b.p95]) for (const v of arr){
+      const lv = Math.log(Math.max(v, 0.01));
+      if (lv < lo) lo = lv; if (lv > hi) hi = lv;
+    }
+  }
+  if (!isFinite(lo)){ lo = -1; hi = 1; }
+  const pad = (hi - lo) * 0.08 || 0.5; lo -= pad; hi += pad;
+
+  for (const [k, id] of [['C','fanC'], ['S','fanS'], ['D','fanD']]){
+    const cv = document.getElementById(id);
+    const { ctx, w, h } = setupCanvas(cv);
+    const b = d.bands[k], n = b.p50.length;
+    const X = i => 4 + i/(n-1) * (w-8);
+    const Y = v => h - 4 - (Math.log(Math.max(v, 0.01)) - lo)/(hi - lo) * (h-8);
+    ctx.clearRect(0, 0, w, h);
+
+    // 1x guide line
+    ctx.strokeStyle = 'rgba(232,230,225,0.14)'; ctx.setLineDash([3,4]); ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(0, Y(1)); ctx.lineTo(w, Y(1)); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = 'rgba(232,230,225,0.3)'; ctx.font = '9px JetBrains Mono';
+    ctx.fillText('1×', w-18, Y(1)-3);
+
+    const col = COLORS[k];
+    function band(loA, hiA, alpha){
+      ctx.beginPath();
+      for (let i = 0; i < n; i++) ctx.lineTo(X(i), Y(hiA[i]));
+      for (let i = n-1; i >= 0; i--) ctx.lineTo(X(i), Y(loA[i]));
+      ctx.closePath();
+      ctx.fillStyle = col + alpha; ctx.fill();
+    }
+    band(b.p5, b.p95, '1f'); band(b.p25, b.p75, '38');
+
+    // sample paths
+    ctx.strokeStyle = col + '30'; ctx.lineWidth = 0.7;
+    for (const path of d.samples[k]){
+      ctx.beginPath();
+      for (let i = 0; i < path.length; i++){ const x = X(i), y = Y(path[i]); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
+      ctx.stroke();
+    }
+    // median
+    ctx.strokeStyle = col; ctx.lineWidth = 1.6;
+    ctx.beginPath();
+    for (let i = 0; i < n; i++){ const x = X(i), y = Y(b.p50[i]); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
+    ctx.stroke();
+
+    // end label
+    ctx.fillStyle = col; ctx.font = '600 10px JetBrains Mono';
+    const endV = b.p50[n-1];
+    ctx.textAlign = 'right';
+    ctx.fillText(fx(endV), w-4, Math.max(10, Y(endV)-5));
+    ctx.textAlign = 'left';
+  }
+}
+
+function drawHist(d){
+  const cv = document.getElementById('hist');
+  const { ctx, w, h } = setupCanvas(cv);
+  ctx.clearRect(0, 0, w, h);
+
+  // log-spaced bins over combined range
+  let lo = Infinity, hi = -Infinity;
+  for (const k of ['C','S','D']) for (const v of d.endings[k]){
+    const lv = Math.log10(Math.max(v, 0.01));
+    if (lv < lo) lo = lv; if (lv > hi) hi = lv;
+  }
+  if (!isFinite(lo)){ return; }
+  if (hi - lo < 0.2){ lo -= 0.1; hi += 0.1; }
+  const BINS = 56, bw = (hi - lo)/BINS;
+  const counts = {};
+  let peak = 0;
+  for (const k of ['C','S','D']){
+    const c = new Float64Array(BINS);
+    for (const v of d.endings[k]){
+      let b = Math.floor((Math.log10(Math.max(v, 0.01)) - lo)/bw);
+      if (b < 0) b = 0; if (b >= BINS) b = BINS-1;
+      c[b]++;
+    }
+    counts[k] = c;
+    for (const v of c) if (v > peak) peak = v;
+  }
+
+  const padL = 4, padB = 16, padT = 6;
+  const X = b => padL + b/BINS * (w - padL - 4);
+  const Y = v => h - padB - (v/peak) * (h - padB - padT);
+
+  // 1x marker
+  const x1 = padL + ((0 - lo)/(hi - lo)) * (w - padL - 4);
+  if (x1 > padL && x1 < w){
+    ctx.strokeStyle = 'rgba(232,230,225,0.18)'; ctx.setLineDash([3,4]);
+    ctx.beginPath(); ctx.moveTo(x1, padT); ctx.lineTo(x1, h - padB); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = 'rgba(232,230,225,0.4)'; ctx.font = '9px JetBrains Mono';
+    ctx.fillText('1× breakeven', x1 + 4, padT + 8);
+  }
+
+  for (const k of ['C','S','D']){
+    const col = COLORS[k], c = counts[k];
+    ctx.beginPath();
+    ctx.moveTo(X(0), Y(0));
+    for (let b = 0; b < BINS; b++){ ctx.lineTo(X(b), Y(c[b])); ctx.lineTo(X(b+1), Y(c[b])); }
+    ctx.lineTo(X(BINS), Y(0));
+    ctx.closePath();
+    ctx.fillStyle = col + '20'; ctx.fill();
+    ctx.strokeStyle = col + 'cc'; ctx.lineWidth = 1.2; ctx.stroke();
+  }
+
+  // x-axis tick labels at decades
+  ctx.fillStyle = 'rgba(232,230,225,0.4)'; ctx.font = '9px JetBrains Mono'; ctx.textAlign = 'center';
+  for (let e = Math.ceil(lo); e <= Math.floor(hi); e++){
+    const x = padL + ((e - lo)/(hi - lo)) * (w - padL - 4);
+    const label = e === 0 ? '1×' : e === 1 ? '10×' : e === -1 ? '0.1×' : e === 2 ? '100×' : '1e' + e + '×';
+    ctx.fillText(label, x, h - 4);
+  }
+  ctx.textAlign = 'left';
+}
+
+let resizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => { if (lastMC){ drawFans(lastMC); drawHist(lastMC); } }, 150);
+});
+
+recalc();
+</script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+{
+  "meta": {
+    "ticker": "SPX",
+    "source": "FirstRateData SPX index daily",
+    "date_start": "2002-01-02",
+    "date_end": "2026-05-01",
+    "n_months": 293,
+    "horizon_days": 5,
+    "swing_down_episodes": 139,
+    "swing_down_episodes_fair": 126,
+    "n_setups": 17,
+    "n_setups_fair": 15
+  },
+  "which_wins": {
+    "n": 17,
+    "weekly_up": 64.7,
+    "swing_down": 29.4,
+    "tie_same_day": 0.0,
+    "neither": 5.9,
+    "swing_closes": 41.2,
+    "weekly_closes": 64.7,
+    "swing_retraces": 94.1,
+    "weekly_invalidates": 47.1,
+    "close_atr_m_median": 0.038,
+    "days_open_to_trigger_median": 1
+  },
+  "which_wins_fair": {
+    "n": 15,
+    "weekly_up": 60.0,
+    "swing_down": 33.3,
+    "tie_same_day": 0.0,
+    "neither": 6.7,
+    "swing_closes": 46.7,
+    "weekly_closes": 60.0
+  },
+  "swing_down_completion": {
+    "coexist_weekly_up": {
+      "n": 16,
+      "completes": 43.8
+    },
+    "no_coexist": {
+      "n": 110,
+      "completes": 69.1
+    },
+    "all": {
+      "n": 126,
+      "completes": 65.9
+    }
+  },
+  "weekly_up_completion": {
+    "coexist_swing_down": {
+      "n": 13,
+      "completes": 69.2
+    },
+    "no_coexist": {
+      "n": 676,
+      "completes": 60.7
+    },
+    "all": {
+      "n": 689,
+      "completes": 60.8
+    }
+  }
+}

@@ -754,6 +754,133 @@ headline strategy on page via backtest_ipo_strategy_curve.py):
   Simulator in backtest_ipo_size_tech_curves.py (sim/build_positions);
   strat curve = curves['strat_stop10'].
 
+**Decade-back OOS (2026-07-03, scratch_ipo_decade_run.py): the beat-SPY edge
+does NOT replicate.** Universe 2011–2021H1: 3,451 raw / 1,844 qualifying / 473
+≥$250M; non-tech non-SPAC cohort n=401, Yahoo bar coverage only 55% (168
+delisted names missing → survivors-only, i.e. *optimistic*). Even so, per $1
+held to 2026-05-07: no-stop $1.90 (7.8%/yr), −10% stop $2.32 (10.2%/yr),
++winners-redeploy $2.34 (10.3%/yr) vs SPY $2.86 (12.7%/yr) — the strategy
+loses to SPY by ~2.5pp/yr out-of-sample. The stop *mechanics* replicate
+(+2.4pp vs no-stop) but the index-beating cell from 2021-26 does not.
+Treat the §12 "only cell beating SPY" as period-specific, not structural.
+
+### 13. Afternoon base compression → flush vs pump (SPX+SPY 3m, 2026-06-16) — auto-pump REJECTED
+
+Afternoon (12:00–15:30 ET) 3m-compression "base" episodes, outcome measured as
+break direction and travel, bucketed by where the base sits on the daily Saty
+ATR ladder (backtest_spx_afternoon_base_compression.py,
+analyst/spx_afternoon_base_events.csv).
+
+- The folk "afternoon pump" auto-long is a coin flip: ~55% pump / 44% flush
+  overall, and the net expectancy is tiny either way (typical travel only
+  ~0.15–0.3 daily ATR before the close).
+- Pump rate decays monotonically with ladder position: ~58% when the base
+  sits high → ~40% when it sits low; bases below −1 ATR flush ~60% of the time.
+- SPX and SPY agree. Actionable read: trade the base *breakout* direction,
+  not a presumed pump.
+
+### 14. EOD 15:45 momentum & PO state into the close (SPX 3m, 2026-07-02) — exploration
+
+15:45→close forward move over 4,567 sessions 2008→2026-05
+(analyst/spx_eod_1545_results.txt, scratch_eod_1545_*.py):
+
+- Baseline 15:45→close drifts slightly negative (−0.87 bps, t=−1.38) — no
+  free long into the close.
+- **Last-hour momentum continues**: down 14:44→15:44 legs keep falling
+  (−0.25..−0.1 ATR bucket: −3.7 bps, t=−3.95, n=749; −0.5..−0.25: t=−2.86),
+  up legs 0.25–0.5 ATR keep rising (+5.1 bps, t=2.84, n=345). A last-15-min
+  short built on down-momentum was significant in 18 of 19 years (t≈5.8 in
+  the drilldown) — exploration only, never taken through costs/holdout.
+- **PO divergences are NOT reversal signals at EOD**: "bull divergence" days
+  (LL price / HL PO) still fall (t=−1.94), and price making a lower low with
+  PO confirming falls hardest (−4.2 bps, t=−2.86). Bear-divergence days keep
+  rising. At 15:45 the oscillator reads momentum, not exhaustion.
+
+### 15. ES CBC scalp (close-below-candle / EMA-touch re-entry, 2026-07-03) — REJECTED
+
+Candle-bias-change scalp mechanics on ES intraday, 256 entry/stop/exit
+configs over 4 rounds (backtest_es_cbc_scalp*.py, analyst/es_cbc_scalp_*.csv):
+
+- The raw CBC break entry has **no gross edge** — every config in the round-1
+  grid was negative net of 1-tick slip + commissions.
+- EMA-pullback re-entry variants are only marginally positive (~+0.04R/trade)
+  with the adverse-selection cost of waiting quantified (fills cluster on the
+  trades that were about to fail).
+- One cell survived mining (10m long, EMA9-pullback, morning-only, t≈2.1)
+  — **unconfirmed**; after 256 configs a lone t=2.1 is expected by chance.
+  Not validated, not tradable as-is.
+
+### 16. PO-compression → options ("Bilbo box" options) bias audit (2026-07-08) — published headline RETIRED
+
+Full execution-bias audit of the §-published box-breakout options results
+(analyst/po_comp_options/BIAS_REVIEW.md + CODEX_REVIEW_2.md, independent
+Codex review concurring):
+
+- The published **+13.5%/+12.0% per-trade headlines do NOT survive** realistic
+  fills: actual-print fills, effective-spread haircut, and live-knowable
+  entries collapse them to **+0.8% / +2.8%** (not significant). Biases:
+  mid-fill assumption, level-touch exits filled at unobserved prices,
+  entry timestamps not knowable live.
+- **Surviving candidate** (Codex pre-registered pass bar, then run once):
+  locked 5-bar-box **straddle with underlying-keyed exits** (arm at 0.75×box
+  favorable excursion, exit at 50% retrace of best excursion, real prints,
+  spread haircut): **+7.69% of combined premium, n=397 boxes, date-clustered
+  t=2.60**; break-direction single leg +13.2% (tclust 2.29). Parameter
+  neighborhood is a plateau (9/9 cells +3.6%..+9.7%), not a knife edge.
+- Caveats: orig8 cohort only (8 tickers, 24 months), exit shape inherits a
+  mined idea, spread proxy stands in for NBBO. **new12 out-of-sample run
+  pending before anything is (re)published**; site pages carry the old
+  headline and need the caveat/pull decision.
+
+### 17. ES EMA9/PO ribbon pullback (2026-07-10) — NO CONFIRMED EDGE (final)
+
+164 configs across 5 rounds (backtest_es_ema_po_pullback*.py), then
+pre-registered validation gates (analyst/es_ema_po_ribbon_holdout_prereg.md,
+es_ema_po_ribbon_forward_panel_prereg.md). Every gate failed:
+
+- NQ holdout (frozen spec, pass bar t≥1.5): **t=1.13 — FAIL**.
+- SPY forward 2026-01-26+ was mildly positive (+0.37 pts/trade, t=1.56), but
+  the pre-registered QQQ+IWM replication panel failed: pooled day-clustered
+  **t=0.65 with IWM negative** — the SPY result reads as large-cap regime
+  beta, not signal.
+- Per the pre-registration: verdict reverts to **no confirmed edge, no
+  rescue analysis**. Do NOT re-tune — there is no clean validation data left.
+
+### 18. ES/NQ 3m compression-drift continuation (2026-07-10) — VALIDATED CANDIDATE
+
+The one July system that passed its frozen gates
+(analyst/po_comp_drift_STRATEGY.md is the canonical spec):
+
+- Signal: ≥8-bar 3m compression episode that *drifts* (breaches first-5-bar
+  range by ≥0.50×ATR14 one side, other side holds 0.25×) → trade the first
+  expansion bar **only if expansion direction == drift direction**, with a
+  volatility gate (3m ATR14 ≥ 6.45× RT cost: ES ≥2.0 pts, NQ ≥2.6 pts).
+- Entry next-bar open, stop 1.0× 3m-ATR intrabar, exit stop or MOC. Win rate
+  only 20–25%; all P&L is in EOD runners — targets/trails destroy it.
+- ES 2008–26: n=2,558, **+0.91 pts net/trade (t=2.93)**. Pre-registered NQ
+  holdout: n=4,450, **+2.46 pts net (t=2.85) — PASS**. Forward
+  2026-01-26→07-10 (unseen data): 273 trades, +$83/trade on 1 ES + 1 NQ.
+- Context: the drift-mean-reversion hypothesis this started from was
+  REJECTED (drift *continues*); flat_break/fix10 variant failed its holdout
+  (t=1.42) and is dropped; 10m-confluence filter is null/harmful.
+
+### 19. Intraday momentum (SSRN 4824172) on ES/NQ — prop-eval study (2026-07-10)
+
+Faithful replication of Zarattini/Aziz/Barbon noise-area breakout
+(analyst/intraday_momentum/RESULTS.md; engine validated vs the paper's SPY
+Table 2: Sharpe 1.11 vs 1.24, hit 42.8% vs 43%).
+
+- **The published edge is dead post-publication on SPY/ES**: SPY net
+  +0.56 bps/day (t=0.34) 2024-05→2026-04; paper-base spec on ES is
+  gross-flat post-pub. Decay, not just costs.
+- **NQ is the live leg**: untuned +$106/day post-pub holdout, +$142/day with
+  a skip-expansion-day filter. All ES knob-tuning and intrabar-execution
+  variants failed holdout.
+- Prop-eval math: passing a $4,500-target eval at 20 ES is a variance play
+  (~75% pass / 23% blowup on EOD-trail firms); sustaining $4.5K per 2 weeks
+  funded at ~20% blowup risk is infeasible at allowed sizes. 2022-regime
+  worst days (−$5.5K..−$6.7K on ONE contract) breach any common trailing DD.
+
 ---
 
 ## Analysis TODO

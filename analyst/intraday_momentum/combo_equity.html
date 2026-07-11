@@ -1,0 +1,234 @@
+<title>Three-Engine Combo — 2026 Forward</title>
+<style>
+:root{
+  --surface:#fcfcfb; --panel:#f4f4f1; --ink:#0b0b0b; --ink-2:#52514e; --ink-3:#8a887f;
+  --line:#e4e3dd; --s1:#2a78d6; --s2:#1baf7a; --s3:#eda100; --s4:#008300;
+  --neg:#e34948; --pos:#008300;
+}
+@media (prefers-color-scheme: dark){:root{
+  --surface:#1a1a19; --panel:#232322; --ink:#ffffff; --ink-2:#c3c2b7; --ink-3:#8a887f;
+  --line:#33332f; --s1:#3987e5; --s2:#199e70; --s3:#c98500; --s4:#4caf50;
+  --neg:#e66767; --pos:#4caf50;
+}}
+:root[data-theme="dark"]{
+  --surface:#1a1a19; --panel:#232322; --ink:#ffffff; --ink-2:#c3c2b7; --ink-3:#8a887f;
+  --line:#33332f; --s1:#3987e5; --s2:#199e70; --s3:#c98500; --s4:#4caf50;
+  --neg:#e66767; --pos:#4caf50;
+}
+:root[data-theme="light"]{
+  --surface:#fcfcfb; --panel:#f4f4f1; --ink:#0b0b0b; --ink-2:#52514e; --ink-3:#8a887f;
+  --line:#e4e3dd; --s1:#2a78d6; --s2:#1baf7a; --s3:#eda100; --s4:#008300;
+  --neg:#e34948; --pos:#008300;
+}
+*{box-sizing:border-box}
+body{background:var(--surface);color:var(--ink);
+  font:15px/1.55 "Seravek","Avenir Next",system-ui,sans-serif;margin:0;padding:0}
+.wrap{max-width:1060px;margin:0 auto;padding:36px 24px 72px;display:flex;
+  flex-direction:column;gap:28px}
+.eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+h1{font-size:30px;margin:4px 0 2px;letter-spacing:-.01em;text-wrap:balance}
+.sub{color:var(--ink-2);max-width:70ch}
+.num{font-variant-numeric:tabular-nums;font-family:ui-monospace,"SF Mono",Menlo,monospace}
+.hero-num{font-size:44px;font-weight:650;letter-spacing:-.02em}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.tile{background:var(--panel);border:1px solid var(--line);border-radius:6px;
+  padding:14px 16px;display:flex;flex-direction:column;gap:2px}
+.tile .lab{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);
+  display:flex;align-items:center;gap:7px}
+.dot{width:9px;height:9px;border-radius:2px;display:inline-block}
+.tile .v{font-size:22px;font-weight:640}
+.tile .d{font-size:12.5px;color:var(--ink-2)}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:18px}
+.panel h2{font-size:15px;margin:0 0 4px}
+.panel .note{font-size:12.5px;color:var(--ink-3);margin:0 0 10px}
+.toggle{display:inline-flex;border:1px solid var(--line);border-radius:6px;overflow:hidden;margin-bottom:8px}
+.toggle button{background:none;border:0;padding:6px 14px;font:inherit;font-size:13px;
+  color:var(--ink-2);cursor:pointer}
+.toggle button[aria-pressed="true"]{background:var(--s1);color:#fff}
+.toggle button:focus-visible{outline:2px solid var(--s1);outline-offset:-2px}
+svg text{font:11.5px ui-monospace,Menlo,monospace;fill:var(--ink-2)}
+svg .lbl{font:12px "Seravek","Avenir Next",system-ui,sans-serif;font-weight:600}
+.tooltip{position:fixed;pointer-events:none;background:var(--ink);color:var(--surface);
+  border-radius:5px;padding:7px 10px;font-size:12px;line-height:1.5;z-index:9;
+  opacity:0;transition:opacity .08s;max-width:260px}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th{font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);
+  text-align:right;padding:6px 10px;border-bottom:1px solid var(--line)}
+th:first-child,td:first-child{text-align:left}
+td{padding:7px 10px;text-align:right;border-bottom:1px solid var(--line)}
+tr:last-child td{border-bottom:0}
+.caveats{font-size:13px;color:var(--ink-2);border-left:3px solid var(--s3);
+  padding:4px 0 4px 14px}
+.caveats b{color:var(--ink)}
+.pos{color:var(--pos)}.neg{color:var(--neg)}
+@media (prefers-reduced-motion: no-preference){
+  .draw path.series{stroke-dasharray:var(--len);stroke-dashoffset:var(--len);
+    animation:draw 1.1s ease-out forwards}
+  @keyframes draw{to{stroke-dashoffset:0}}
+}
+</style>
+<div class="wrap">
+<header>
+  <div class="eyebrow">Forward window · Jan 26 – Jul 10, 2026 · 120 trading days · all post-selection data</div>
+  <h1>Three engines, one book</h1>
+  <p class="sub">CompressionDrift (3m PO drift continuation, 1 ES + 1 NQ), RibbonRider
+  (EMA-ribbon arm-entry longs, 1 ES-equivalent via SPY), and BeatTheMarket (noise-area
+  intraday momentum, 1 NQ, skip-expansion filter) — frozen specs, summed daily P&L,
+  no compounding.</p>
+</header>
+
+<div class="tiles">
+  <div class="tile"><span class="lab"><span class="dot" style="background:var(--s1)"></span>Combined (1-lot stack)</span>
+    <span class="v num pos">+$53,352</span><span class="d">$445/day · Sharpe 1.49 · maxDD −$14,413</span></div>
+  <div class="tile"><span class="lab"><span class="dot" style="background:var(--s2)"></span>CompressionDrift</span>
+    <span class="v num pos">+$22,551</span><span class="d">Sharpe 0.96 · maxDD −$17,068 · 106 active days</span></div>
+  <div class="tile"><span class="lab"><span class="dot" style="background:var(--s3)"></span>RibbonRider</span>
+    <span class="v num pos">+$12,152</span><span class="d">Sharpe 2.24 · maxDD −$5,364 · 57 active days</span></div>
+  <div class="tile"><span class="lab"><span class="dot" style="background:var(--s4)"></span>BeatTheMarket</span>
+    <span class="v num pos">+$18,649</span><span class="d">Sharpe 1.06 · maxDD −$9,246 · 61 active days</span></div>
+</div>
+
+<section class="panel">
+  <h2>Equity curves</h2>
+  <p class="note">Cumulative net P&L, $ per stated unit size. Costs: futures 1 tick/side + commissions; SPY mapped at $500/pt (ES-equivalent).</p>
+  <div class="toggle" role="group" aria-label="weighting">
+    <button id="bRaw" aria-pressed="true">1-lot stack</button>
+    <button id="bEq" aria-pressed="false">Equal-risk ($1k/day σ each)</button>
+  </div>
+  <div id="chart"></div>
+</section>
+
+<section class="panel">
+  <h2>Monthly P&L — combined</h2>
+  <p class="note">Partial months at both ends (Jan from the 26th, Jul through the 10th).</p>
+  <div id="monthly"></div>
+</section>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:28px" class="two-col">
+<section class="panel">
+  <h2>Daily P&L correlation</h2>
+  <p class="note">Low correlation is the point of combining.</p>
+  <table>
+    <tr><th></th><th>Drift</th><th>Ribbon</th><th>BTM</th></tr>
+    <tr><td>CompressionDrift</td><td class="num">1.00</td><td class="num">−0.02</td><td class="num">0.45</td></tr>
+    <tr><td>RibbonRider</td><td class="num">−0.02</td><td class="num">1.00</td><td class="num">0.05</td></tr>
+    <tr><td>BeatTheMarket</td><td class="num">0.45</td><td class="num">0.05</td><td class="num">1.00</td></tr>
+  </table>
+</section>
+<section class="panel">
+  <h2>Equal-risk view</h2>
+  <p class="note">Each engine scaled to $1,000/day realized σ (weights: Drift ×0.32, Ribbon ×1.40, BTM ×0.43 lots).</p>
+  <table>
+    <tr><th></th><th>Total</th><th>Sharpe</th><th>maxDD</th></tr>
+    <tr><td>Combined, equal-risk</td><td class="num pos">+$32,201</td><td class="num">2.14</td><td class="num neg">−$6,684</td></tr>
+    <tr><td>Combined, 1-lot stack</td><td class="num pos">+$53,352</td><td class="num">1.49</td><td class="num neg">−$14,413</td></tr>
+  </table>
+</section>
+</div>
+
+<section class="caveats">
+  <b>Read this before believing it.</b> 5.5 months is one macro regime — 2026 has been
+  a volatile, trend-rich tape that flatters all three engines; the diversification
+  (correlations ≈ 0 for Ribbon) is the most durable part of the result. Specs were
+  frozen before this window for all three engines, but the window is shared, not
+  independent. Drift ↔ BTM correlation 0.45 means both can be short-vol-of-trend on
+  the same NQ day; position netting in a single account is not modeled. Equal-risk
+  weights use this window's own realized σ (mild look-ahead). Evidence tiers differ:
+  CompressionDrift passed an NQ holdout (t=2.85), BeatTheMarket passed instrument-OOS
+  (+$106/day NQ holdout), RibbonRider failed its NQ holdout and is
+  promising-unconfirmed on this forward window only.
+</section>
+</div>
+<div class="tooltip" id="tip"></div>
+<script>
+const D = {"dates": ["2026-01-26", "2026-01-27", "2026-01-28", "2026-01-29", "2026-01-30", "2026-02-02", "2026-02-03", "2026-02-04", "2026-02-05", "2026-02-06", "2026-02-09", "2026-02-10", "2026-02-11", "2026-02-12", "2026-02-13", "2026-02-16", "2026-02-17", "2026-02-18", "2026-02-19", "2026-02-20", "2026-02-23", "2026-02-24", "2026-02-25", "2026-02-26", "2026-02-27", "2026-03-02", "2026-03-03", "2026-03-04", "2026-03-05", "2026-03-06", "2026-03-09", "2026-03-10", "2026-03-11", "2026-03-12", "2026-03-13", "2026-03-16", "2026-03-17", "2026-03-18", "2026-03-19", "2026-03-20", "2026-03-23", "2026-03-24", "2026-03-25", "2026-03-26", "2026-03-27", "2026-03-30", "2026-03-31", "2026-04-01", "2026-04-02", "2026-04-03", "2026-04-06", "2026-04-07", "2026-04-08", "2026-04-09", "2026-04-10", "2026-04-13", "2026-04-14", "2026-04-15", "2026-04-16", "2026-04-17", "2026-04-20", "2026-04-21", "2026-04-22", "2026-04-23", "2026-04-24", "2026-04-27", "2026-04-28", "2026-04-29", "2026-04-30", "2026-05-01", "2026-05-04", "2026-05-05", "2026-05-06", "2026-05-07", "2026-05-08", "2026-05-11", "2026-05-12", "2026-05-13", "2026-05-14", "2026-05-15", "2026-05-18", "2026-05-19", "2026-05-20", "2026-05-21", "2026-05-22", "2026-05-25", "2026-05-26", "2026-05-27", "2026-05-28", "2026-05-29", "2026-06-01", "2026-06-02", "2026-06-03", "2026-06-04", "2026-06-05", "2026-06-08", "2026-06-09", "2026-06-10", "2026-06-11", "2026-06-12", "2026-06-15", "2026-06-16", "2026-06-17", "2026-06-18", "2026-06-19", "2026-06-22", "2026-06-23", "2026-06-24", "2026-06-25", "2026-06-26", "2026-06-29", "2026-06-30", "2026-07-01", "2026-07-02", "2026-07-03", "2026-07-06", "2026-07-07", "2026-07-08", "2026-07-09", "2026-07-10"], "Combined": [-1198.0, -1507.0, -2137.0, -2692.0, -5904.0, -4344.0, -124.0, 773.0, 175.0, 5367.0, 5067.0, 5301.0, 4136.0, 7895.0, 4538.0, 4538.0, 3639.0, 4090.0, 1868.0, -5757.0, -4206.0, -5578.0, -5390.0, -4248.0, -4248.0, -6518.0, 278.0, 170.0, 2129.0, 1143.0, 2886.0, 1803.0, -99.0, 652.0, 313.0, -502.0, -2303.0, 36.0, -718.0, 979.0, 83.0, -2832.0, -3491.0, 11397.0, 14710.0, 13394.0, 19594.0, 17301.0, 16214.0, 16214.0, 14877.0, 14602.0, 13480.0, 12990.0, 12807.0, 14152.0, 21205.0, 22418.0, 21248.0, 20987.0, 18663.0, 17812.0, 18282.0, 18435.0, 26129.0, 26521.0, 27529.0, 25901.0, 30361.0, 26585.0, 23246.0, 24128.0, 25723.0, 24795.0, 28360.0, 27617.0, 28998.0, 29602.0, 30077.0, 29795.0, 27725.0, 25865.0, 27055.0, 25172.0, 27452.0, 27452.0, 27124.0, 25753.0, 27482.0, 24169.0, 23287.0, 22711.0, 17363.0, 16247.0, 56528.0, 52093.0, 53117.0, 57866.0, 57462.0, 51702.0, 55265.0, 61940.0, 61141.0, 60565.0, 60415.0, 60415.0, 59375.0, 61082.0, 55683.0, 54289.0, 58277.0, 65714.0, 64318.0, 63436.0, 63436.0, 62393.0, 59327.0, 57630.0, 53300.0, 53352.0], "Combined_daily": [-1198.0, -309.0, -629.0, -555.0, -3213.0, 1561.0, 4220.0, 896.0, -597.0, 5192.0, -299.0, 234.0, -1165.0, 3759.0, -3357.0, 0.0, -898.0, 450.0, -2222.0, -7625.0, 1550.0, -1371.0, 188.0, 1141.0, 0.0, -2270.0, 6796.0, -108.0, 1959.0, -986.0, 1742.0, -1083.0, -1902.0, 751.0, -339.0, -814.0, -1801.0, 2339.0, -753.0, 1697.0, -896.0, -2915.0, -659.0, 14888.0, 3313.0, -1316.0, 6200.0, -2293.0, -1088.0, 0.0, -1336.0, -275.0, -1123.0, -490.0, -183.0, 1345.0, 7053.0, 1213.0, -1171.0, -261.0, -2324.0, -851.0, 470.0, 153.0, 7694.0, 392.0, 1008.0, -1628.0, 4460.0, -3776.0, -3339.0, 882.0, 1595.0, -928.0, 3565.0, -743.0, 1381.0, 604.0, 475.0, -283.0, -2070.0, -1859.0, 1189.0, -1883.0, 2279.0, 0.0, -328.0, -1371.0, 1729.0, -3312.0, -882.0, -576.0, -5348.0, -1117.0, 40282.0, -4435.0, 1024.0, 4749.0, -404.0, -5760.0, 3563.0, 6674.0, -798.0, -577.0, -149.0, 0.0, -1040.0, 1707.0, -5399.0, -1393.0, 3988.0, 7436.0, -1396.0, -882.0, 0.0, -1043.0, -3065.0, -1697.0, -4330.0, 52.0], "CompressionDrift": [-464.0, -773.0, -1403.0, 611.0, -2676.0, -2946.0, -2457.0, -3612.0, -4210.0, -4059.0, -5027.0, -4368.0, -5533.0, -6710.0, -10142.0, -10142.0, -10181.0, -11167.0, -13388.0, -16207.0, -14148.0, -15090.0, -14603.0, -15657.0, -15657.0, -16456.0, -9660.0, -10589.0, -8630.0, -9615.0, -10759.0, -11331.0, -13233.0, -13233.0, -13573.0, -14387.0, -15319.0, -12980.0, -13733.0, -12036.0, -12036.0, -14516.0, -15175.0, -1518.0, -1487.0, -2333.0, 585.0, -116.0, -1469.0, -1469.0, -1801.0, -2076.0, -2748.0, -4388.0, -4571.0, -4571.0, -1489.0, -1842.0, -2409.0, -3221.0, -4291.0, -4932.0, -4649.0, -3872.0, -276.0, 116.0, 1119.0, 61.0, 6254.0, 4442.0, 2878.0, 2759.0, 2759.0, 2759.0, 1673.0, 580.0, 2315.0, 788.0, 162.0, -121.0, -2191.0, -2191.0, -3788.0, -5670.0, -2270.0, -2270.0, -2438.0, -2898.0, -3404.0, -4447.0, -5125.0, -5701.0, -6715.0, -7832.0, 17304.0, 15145.0, 13663.0, 20257.0, 23845.0, 23845.0, 24437.0, 24096.0, 23298.0, 22721.0, 22572.0, 22572.0, 21531.0, 25062.0, 25062.0, 23669.0, 25066.0, 27022.0, 26099.0, 25217.0, 25217.0, 23719.0, 25242.0, 23546.0, 23066.0, 22551.0], "CompressionDrift_daily": [-464.0, -309.0, -629.0, 2014.0, -3288.0, -270.0, 489.0, -1155.0, -597.0, 151.0, -968.0, 659.0, -1165.0, -1177.0, -3432.0, 0.0, -39.0, -985.0, -2222.0, -2819.0, 2060.0, -943.0, 487.0, -1054.0, 0.0, -799.0, 6796.0, -929.0, 1959.0, -986.0, -1143.0, -573.0, -1902.0, 0.0, -339.0, -814.0, -932.0, 2339.0, -753.0, 1697.0, 0.0, -2480.0, -659.0, 13657.0, 32.0, -846.0, 2918.0, -701.0, -1353.0, 0.0, -332.0, -275.0, -673.0, -1640.0, -183.0, 0.0, 3082.0, -353.0, -567.0, -812.0, -1070.0, -641.0, 283.0, 776.0, 3597.0, 392.0, 1003.0, -1059.0, 6193.0, -1812.0, -1565.0, -119.0, 0.0, 0.0, -1086.0, -1093.0, 1735.0, -1527.0, -626.0, -283.0, -2070.0, 0.0, -1597.0, -1883.0, 3401.0, 0.0, -169.0, -459.0, -507.0, -1043.0, -678.0, -576.0, -1014.0, -1117.0, 25136.0, -2159.0, -1482.0, 6594.0, 3588.0, 0.0, 593.0, -341.0, -798.0, -577.0, -149.0, 0.0, -1040.0, 3531.0, 0.0, -1393.0, 1397.0, 1956.0, -923.0, -882.0, 0.0, -1498.0, 1524.0, -1697.0, -479.0, -515.0], "RibbonRider": [0.0, 0.0, 0.0, 0.0, 75.0, 2095.0, 2095.0, 2095.0, 2095.0, 4350.0, 5433.0, 5008.0, 5008.0, 5008.0, 5083.0, 5083.0, 5083.0, 6203.0, 6203.0, 7675.0, 7675.0, 7675.0, 8345.0, 8345.0, 8345.0, 6874.0, 6874.0, 8094.0, 8094.0, 8094.0, 10189.0, 9679.0, 9679.0, 9679.0, 9679.0, 9679.0, 8810.0, 8810.0, 8810.0, 8810.0, 7913.0, 7478.0, 7478.0, 7478.0, 7478.0, 6638.0, 6893.0, 7441.0, 7706.0, 7706.0, 7616.0, 7616.0, 7166.0, 8316.0, 8316.0, 9661.0, 9706.0, 9916.0, 9313.0, 10637.0, 10637.0, 10427.0, 10917.0, 10295.0, 12246.0, 12246.0, 12251.0, 12251.0, 12772.0, 11561.0, 11561.0, 11561.0, 13156.0, 12638.0, 12638.0, 12988.0, 13568.0, 14923.0, 14763.0, 14763.0, 14763.0, 14763.0, 15008.0, 15008.0, 13886.0, 13886.0, 13981.0, 13789.0, 13674.0, 13674.0, 13674.0, 13674.0, 13674.0, 13674.0, 13674.0, 12337.0, 12337.0, 10492.0, 11514.0, 9644.0, 10364.0, 9949.0, 9949.0, 9949.0, 9949.0, 9949.0, 9949.0, 9949.0, 9949.0, 9949.0, 9949.0, 12504.0, 12032.0, 12032.0, 12032.0, 12487.0, 12487.0, 12487.0, 11585.0, 12152.0], "RibbonRider_daily": [0.0, 0.0, 0.0, 0.0, 75.0, 2020.0, 0.0, 0.0, 0.0, 2255.0, 1083.0, -425.0, 0.0, 0.0, 75.0, 0.0, 0.0, 1120.0, 0.0, 1472.0, 0.0, 0.0, 670.0, 0.0, 0.0, -1471.0, 0.0, 1220.0, 0.0, 0.0, 2095.0, -510.0, 0.0, 0.0, 0.0, 0.0, -870.0, 0.0, 0.0, 0.0, -896.0, -435.0, 0.0, 0.0, 0.0, -840.0, 255.0, 548.0, 265.0, 0.0, -90.0, 0.0, -450.0, 1150.0, 0.0, 1345.0, 45.0, 210.0, -603.0, 1325.0, 0.0, -210.0, 490.0, -623.0, 1951.0, 0.0, 5.0, 0.0, 521.0, -1211.0, 0.0, 0.0, 1595.0, -518.0, 0.0, 350.0, 580.0, 1355.0, -160.0, 0.0, 0.0, 0.0, 245.0, 0.0, -1121.0, 0.0, 95.0, -193.0, -115.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1337.0, 0.0, -1845.0, 1023.0, -1870.0, 720.0, -415.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2555.0, -472.0, 0.0, 0.0, 455.0, 0.0, 0.0, -901.0, 567.0], "BeatTheMarket": [-734.0, -734.0, -734.0, -3303.0, -3303.0, -3492.0, 238.0, 2290.0, 2290.0, 5076.0, 4662.0, 4662.0, 4662.0, 9598.0, 9598.0, 9598.0, 8738.0, 9054.0, 9054.0, 2775.0, 2266.0, 1838.0, 868.0, 3064.0, 3064.0, 3064.0, 3064.0, 2665.0, 2665.0, 2665.0, 3455.0, 3455.0, 3455.0, 4206.0, 4206.0, 4206.0, 4206.0, 4206.0, 4206.0, 4206.0, 4206.0, 4206.0, 4206.0, 5437.0, 8718.0, 9089.0, 12116.0, 9977.0, 9977.0, 9977.0, 9062.0, 9062.0, 9062.0, 9062.0, 9062.0, 9062.0, 12988.0, 14344.0, 14344.0, 13570.0, 12316.0, 12316.0, 12013.0, 12013.0, 14159.0, 14159.0, 14159.0, 13589.0, 11335.0, 10581.0, 8807.0, 9808.0, 9808.0, 9399.0, 14049.0, 14049.0, 13116.0, 13891.0, 15153.0, 15153.0, 15153.0, 13294.0, 15835.0, 15835.0, 15835.0, 15835.0, 15581.0, 14861.0, 17212.0, 14943.0, 14738.0, 14738.0, 10405.0, 10405.0, 25550.0, 24611.0, 27117.0, 27117.0, 22103.0, 18213.0, 20464.0, 27895.0, 27895.0, 27895.0, 27895.0, 27895.0, 27895.0, 26070.0, 20671.0, 20671.0, 23262.0, 26188.0, 26188.0, 26188.0, 26188.0, 26188.0, 21598.0, 21598.0, 18649.0, 18649.0], "BeatTheMarket_daily": [-734.0, 0.0, 0.0, -2569.0, 0.0, -189.0, 3731.0, 2051.0, 0.0, 2786.0, -414.0, 0.0, 0.0, 4936.0, 0.0, 0.0, -859.0, 316.0, 0.0, -6279.0, -509.0, -429.0, -969.0, 2196.0, 0.0, 0.0, 0.0, -399.0, 0.0, 0.0, 791.0, 0.0, 0.0, 751.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1231.0, 3281.0, 371.0, 3027.0, -2139.0, 0.0, 0.0, -914.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3926.0, 1356.0, 0.0, -774.0, -1254.0, 0.0, -303.0, 0.0, 2146.0, 0.0, 0.0, -569.0, -2254.0, -754.0, -1774.0, 1001.0, 0.0, -409.0, 4651.0, 0.0, -934.0, 776.0, 1261.0, 0.0, 0.0, -1859.0, 2541.0, 0.0, 0.0, 0.0, -254.0, -719.0, 2351.0, -2269.0, -204.0, 0.0, -4334.0, 0.0, 15146.0, -939.0, 2506.0, 0.0, -5014.0, -3889.0, 2251.0, 7431.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1824.0, -5399.0, 0.0, 2591.0, 2926.0, 0.0, 0.0, 0.0, 0.0, -4589.0, 0.0, -2949.0, 0.0], "Combined_eqrisk": [-464.0, -563.0, -765.0, -1225.0, -2173.0, 478.0, 2239.0, 2751.0, 2560.0, 6953.0, 7976.0, 7594.0, 7221.0, 8967.0, 7972.0, 7972.0, 7590.0, 8973.0, 8262.0, 6713.0, 7154.0, 6667.0, 7341.0, 7948.0, 7948.0, 5640.0, 7817.0, 9050.0, 9677.0, 9362.0, 12259.0, 11364.0, 10755.0, 11078.0, 10969.0, 10708.0, 9196.0, 9945.0, 9704.0, 10248.0, 8997.0, 7596.0, 7384.0, 12288.0, 13709.0, 12425.0, 15018.0, 14637.0, 14574.0, 14574.0, 13949.0, 13860.0, 13017.0, 14097.0, 14038.0, 15915.0, 18653.0, 19417.0, 18393.0, 19649.0, 18767.0, 18269.0, 18913.0, 18292.0, 23090.0, 23215.0, 23544.0, 22960.0, 24701.0, 22107.0, 20843.0, 21235.0, 23461.0, 22561.0, 24214.0, 24352.0, 25316.0, 27051.0, 27170.0, 27079.0, 26416.0, 25617.0, 26540.0, 25937.0, 25462.0, 25462.0, 25431.0, 24706.0, 25394.0, 24084.0, 23779.0, 23594.0, 21406.0, 21048.0, 35613.0, 32652.0, 33255.0, 32792.0, 33211.0, 28928.0, 31091.0, 33598.0, 33343.0, 33158.0, 33110.0, 33110.0, 32777.0, 33123.0, 30801.0, 30355.0, 31917.0, 37367.0, 36412.0, 36129.0, 36129.0, 36284.0, 34798.0, 34255.0, 31575.0, 32201.0], "Combined_eqrisk_daily": [-464.0, -99.0, -202.0, -460.0, -948.0, 2651.0, 1761.0, 512.0, -191.0, 4393.0, 1023.0, -382.0, -373.0, 1746.0, -995.0, 0.0, -382.0, 1383.0, -712.0, -1549.0, 441.0, -486.0, 674.0, 607.0, 0.0, -2308.0, 2177.0, 1233.0, 627.0, -316.0, 2897.0, -895.0, -609.0, 323.0, -109.0, -261.0, -1512.0, 749.0, -241.0, 543.0, -1251.0, -1401.0, -211.0, 4903.0, 1422.0, -1284.0, 2592.0, -381.0, -63.0, 0.0, -625.0, -88.0, -843.0, 1080.0, -58.0, 1877.0, 2738.0, 763.0, -1023.0, 1256.0, -882.0, -498.0, 644.0, -620.0, 4797.0, 125.0, 328.0, -584.0, 1741.0, -2594.0, -1264.0, 392.0, 2226.0, -899.0, 1653.0, 138.0, 963.0, 1736.0, 119.0, -91.0, -663.0, -800.0, 924.0, -603.0, -476.0, 0.0, -31.0, -725.0, 688.0, -1310.0, -305.0, -184.0, -2189.0, -358.0, 14565.0, -2961.0, 603.0, -463.0, 419.0, -4283.0, 2163.0, 2508.0, -256.0, -185.0, -48.0, 0.0, -333.0, 346.0, -2322.0, -446.0, 1562.0, 5450.0, -955.0, -283.0, 0.0, 155.0, -1486.0, -543.0, -2680.0, 626.0], "monthly": {"2026-01": -5904.0, "2026-02": 1656.0, "2026-03": 23843.0, "2026-04": 10767.0, "2026-05": -6192.0, "2026-06": 41544.0, "2026-07": -12361.0}, "monthly_eq": {"2026-01": -2173.0, "2026-02": 10121.0, "2026-03": 7070.0, "2026-04": 9683.0, "2026-05": -617.0, "2026-06": 13283.0, "2026-07": -5166.0}};
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const fmt$ = v => (v<0?"−$":"+$") + Math.abs(v).toLocaleString();
+const SERIES = [
+  {k:"Combined", lab:"Combined", c:"--s1", w:2.5},
+  {k:"CompressionDrift", lab:"Drift", c:"--s2", w:1.6},
+  {k:"RibbonRider", lab:"Ribbon", c:"--s3", w:1.6},
+  {k:"BeatTheMarket", lab:"BTM", c:"--s4", w:1.6},
+];
+let mode = "raw";
+function drawChart(){
+  const el = document.getElementById("chart");
+  const W = Math.min(el.clientWidth||1000,1000), H = 380,
+        m = {t:14,r:86,b:26,l:64};
+  const ser = mode==="raw" ? SERIES
+    : [{k:"Combined_eqrisk", lab:"Combined", c:"--s1", w:2.5}];
+  const all = ser.flatMap(s=>D[s.k]);
+  const ymin = Math.min(0,...all), ymax = Math.max(...all);
+  const n = D.dates.length;
+  const x = i => m.l + i*(W-m.l-m.r)/(n-1);
+  const y = v => m.t + (ymax-v)*(H-m.t-m.b)/(ymax-ymin);
+  let g = `<svg class="draw" viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="equity curves">`;
+  const step = Math.ceil((ymax-ymin)/5/5000)*5000 || 5000;
+  for(let v=Math.ceil(ymin/step)*step; v<=ymax; v+=step){
+    g += `<line x1="${m.l}" x2="${W-m.r}" y1="${y(v)}" y2="${y(v)}" stroke="${css('--line')}" stroke-width="1"/>`;
+    g += `<text x="${m.l-8}" y="${y(v)+4}" text-anchor="end">${v===0?"0":(v/1000)+"k"}</text>`;
+  }
+  g += `<line x1="${m.l}" x2="${W-m.r}" y1="${y(0)}" y2="${y(0)}" stroke="${css('--ink-3')}" stroke-width="1"/>`;
+  const mticks = {}; D.dates.forEach((d,i)=>{const mo=d.slice(0,7); if(!(mo in mticks)) mticks[mo]=i;});
+  for(const [mo,i] of Object.entries(mticks)){
+    g += `<text x="${x(i)}" y="${H-8}">${new Date(mo+"-15").toLocaleString("en",{month:"short"})}</text>`;
+  }
+  for(const s of ser){
+    const pts = D[s.k].map((v,i)=>`${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(" ");
+    g += `<path class="series" style="--len:2200" d="M${pts.replaceAll(" "," L")}" fill="none" stroke="${css(s.c)}" stroke-width="${s.w}" stroke-linejoin="round"/>`;
+    const last = D[s.k][n-1];
+    g += `<circle cx="${x(n-1)}" cy="${y(last)}" r="3.5" fill="${css(s.c)}"/>`;
+    g += `<text class="lbl" x="${x(n-1)+8}" y="${y(last)+4}" fill="${css(s.c)}">${s.lab}</text>`;
+  }
+  g += `<line id="xh" y1="${m.t}" y2="${H-m.b}" stroke="${css('--ink-3')}" stroke-width="1" opacity="0"/>`;
+  g += `</svg>`;
+  el.innerHTML = g;
+  const svg = el.querySelector("svg"), tip = document.getElementById("tip"), xh = el.querySelector("#xh");
+  svg.addEventListener("mousemove", e=>{
+    const r = svg.getBoundingClientRect();
+    const sx = (e.clientX-r.left)*W/r.width;
+    let i = Math.round((sx-m.l)*(n-1)/(W-m.l-m.r)); i = Math.max(0,Math.min(n-1,i));
+    xh.setAttribute("x1",x(i)); xh.setAttribute("x2",x(i)); xh.setAttribute("opacity",.6);
+    tip.style.opacity = 1;
+    tip.style.left = Math.min(e.clientX+14, innerWidth-280)+"px";
+    tip.style.top = (e.clientY+14)+"px";
+    tip.innerHTML = `<b>${D.dates[i]}</b><br>` + ser.map(s=>
+      `${s.lab}: ${fmt$(D[s.k][i])} <span style="opacity:.7">(day ${fmt$(D[s.k+"_daily"][i])})</span>`).join("<br>");
+  });
+  svg.addEventListener("mouseleave", ()=>{tip.style.opacity=0; xh.setAttribute("opacity",0);});
+}
+function drawMonthly(){
+  const el = document.getElementById("monthly");
+  const mon = mode==="raw" ? D.monthly : D.monthly_eq;
+  const keys = Object.keys(mon), W = Math.min(el.clientWidth||1000,1000), H=190,
+        m={t:12,r:12,b:24,l:64};
+  const vals = Object.values(mon);
+  const ymin = Math.min(0,...vals), ymax = Math.max(0,...vals);
+  const y = v => m.t + (ymax-v)*(H-m.t-m.b)/(ymax-ymin);
+  const bw = (W-m.l-m.r)/keys.length;
+  let g = `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="monthly PnL">`;
+  g += `<line x1="${m.l}" x2="${W-m.r}" y1="${y(0)}" y2="${y(0)}" stroke="${css('--ink-3')}" stroke-width="1"/>`;
+  keys.forEach((k,i)=>{
+    const v = mon[k], up = v>=0;
+    const bx = m.l+i*bw+bw*0.18, bwid = bw*0.64;
+    g += `<rect data-k="${k}" data-v="${v}" x="${bx}" width="${bwid}" y="${y(Math.max(v,0))}"
+      height="${Math.abs(y(v)-y(0))}" rx="3" fill="${up?css('--s1'):css('--neg')}"/>`;
+    g += `<text x="${bx+bwid/2}" y="${H-6}" text-anchor="middle">${new Date(k+"-15").toLocaleString("en",{month:"short"})}</text>`;
+    g += `<text x="${bx+bwid/2}" y="${up? y(v)-6 : y(v)+14}" text-anchor="middle">${(v/1000).toFixed(1)}k</text>`;
+  });
+  g += `</svg>`;
+  el.innerHTML = g;
+}
+function setMode(mo){
+  mode = mo;
+  document.getElementById("bRaw").setAttribute("aria-pressed", mo==="raw");
+  document.getElementById("bEq").setAttribute("aria-pressed", mo==="eq");
+  drawChart(); drawMonthly();
+}
+document.getElementById("bRaw").onclick = ()=>setMode("raw");
+document.getElementById("bEq").onclick = ()=>setMode("eq");
+new MutationObserver(()=>{drawChart();drawMonthly();})
+  .observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
+addEventListener("resize", ()=>{drawChart();drawMonthly();});
+setMode("raw");
+</script>

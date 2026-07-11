@@ -1,0 +1,77 @@
+=== EOD 15:45 scalp-exit study, run 2026-07-02 20:32:14 UTC ===
+/usr/local/lib/python3.12/dist-packages/pandas/core/computation/expressions.py:22: UserWarning: Pandas requires version '2.10.2' or newer of 'numexpr' (version '2.9.0' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/masked.py:56: UserWarning: Pandas requires version '1.4.2' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+sessions: 4567  (2008-01-02 -> 2026-05-01)
+
+== A. Baseline 15:45 -> close ==
+bucket    n  win_pct  mean_pts  med_pts  mean_atr  mean_bps     t  atr_2008-2012  n_2008-2012  atr_2013-2019  n_2013-2019  atr_2020-2026  n_2020-2026
+   all 4567     49.0    -0.145    -0.06    -0.007     -0.87 -1.38        -0.0077         1245        -0.0114         1745        -0.0015         1577
+
+== B. PO zone at 15:44 ==
+  bucket    n  win_pct  mean_pts  med_pts  mean_atr  mean_bps     t  atr_2008-2012  n_2008-2012  atr_2013-2019  n_2013-2019  atr_2020-2026  n_2020-2026
+ext_down  247     45.7    -0.700   -0.500   -0.0206     -3.11 -1.37        -0.0307           87         0.0091          101        -0.0566           59
+   accum  456     48.2    -0.404   -0.215   -0.0162     -2.21 -1.05        -0.0143          123        -0.0243          180        -0.0081          153
+ neut_dn  840     48.9    -0.325   -0.080   -0.0095     -2.31 -1.48        -0.0168          181        -0.0148          319        -0.0007          340
+ neutral 1243     49.3    -0.374   -0.020   -0.0092     -1.62 -1.84        -0.0091          308        -0.0117          430        -0.0072          505
+ neut_up  906     51.3    -0.046    0.085   -0.0039     -0.04 -0.19        -0.0035          249        -0.0032          348        -0.0049          309
+ distrib  548     47.3     0.469   -0.130    0.0007      2.14  1.51         0.0100          181        -0.0224          209         0.0203          158
+  ext_up  327     48.6     0.662   -0.050    0.0096      1.92  2.44        -0.0020          116        -0.0059          158         0.0814           53
+
+== C. PO divergence (afternoon legs) ==
+                    bucket   n  win_pct  mean_pts  med_pts  mean_atr  mean_bps     t  atr_2008-2012  n_2008-2012  atr_2013-2019  n_2013-2019  atr_2020-2026  n_2020-2026
+bull_div (LL price, HL po) 601     46.4    -0.603   -0.350   -0.0157     -1.86 -1.94        -0.0037          176        -0.0164          209        -0.0249          216
+     bull_div strong (+15) 444     47.7    -0.491   -0.195   -0.0156     -2.21 -1.27        -0.0130          136        -0.0160          154        -0.0174          154
+    lower_low, po confirms 604     43.7    -0.980   -0.430   -0.0275     -4.23 -2.86        -0.0195          194        -0.0263          222        -0.0372          188
+bear_div (HH price, LH po) 736     53.1     0.487    0.255    0.0055      2.32  1.94         0.0025          219         0.0014          282         0.0132          235
+     bear_div strong (-15) 556     54.9     0.503    0.310    0.0070      2.59  2.06         0.0108          172        -0.0021          216         0.0148          168
+  higher_high, po confirms 798     51.9     0.518    0.130    0.0079      0.97  2.24        -0.0005          228        -0.0086          304         0.0338          266
+
+== D. PO mean-reversion signal fired 15:30-15:44 ==
+              bucket    n  win_pct  mean_pts  med_pts  mean_atr  mean_bps     t  atr_2008-2012  n_2008-2012  atr_2013-2019  n_2013-2019  atr_2020-2026  n_2020-2026
+leaving_accumulation 1412     48.2    -0.380   -0.105    -0.011     -1.58 -1.91        -0.0039          447        -0.0125          526        -0.0163          439
+leaving_distribution 1507     50.6     0.142    0.030    -0.001      0.23  0.86        -0.0046          452        -0.0062          627         0.0106          428
+
+== E. Day trend (15:44 - open, ATR units) ==
+     bucket    n  win_pct  mean_pts  med_pts  mean_atr  mean_bps     t  atr_2008-2012  n_2008-2012  atr_2013-2019  n_2013-2019  atr_2020-2026  n_2020-2026
+        <-1  294     39.1    -1.495   -1.090   -0.0617     -7.65 -2.50        -0.0581           98        -0.0878          113        -0.0306           83
+   -1..-0.5  523     46.5    -0.339   -0.340   -0.0203     -2.98 -0.85        -0.0372          146        -0.0282          185         0.0002          192
+-0.5..-0.15  742     47.0    -0.415   -0.150   -0.0109     -2.70 -1.69        -0.0185          191        -0.0107          279        -0.0057          272
+       flat 1066     48.1    -0.354   -0.095   -0.0074     -0.98 -1.86        -0.0017          286        -0.0065          415        -0.0129          365
+  0.15..0.5  988     53.8     0.402    0.240    0.0068      0.83  1.80        -0.0021          242        -0.0023          385         0.0224          361
+     0.5..1  715     51.6     0.299    0.140    0.0073      1.84  1.39         0.0131          201         0.0081          264         0.0019          250
+         >1  239     49.8     0.122    0.000    0.0033      3.13  0.32         0.0428           81        -0.0039          104        -0.0420           54
+
+== F. Last-hour momentum (15:44 - 14:44, ATR units) ==
+     bucket    n  win_pct  mean_pts  med_pts  mean_atr  mean_bps     t  atr_2008-2012  n_2008-2012  atr_2013-2019  n_2013-2019  atr_2020-2026  n_2020-2026
+      <-0.5  107     32.7    -1.614    -2.27   -0.0928     -9.45 -1.02        -0.0737           33        -0.1305           42        -0.0629           32
+-0.5..-0.25  352     44.6    -1.167    -0.65   -0.0357     -4.83 -2.86        -0.0186          111        -0.0470          122        -0.0400          119
+-0.25..-0.1  749     45.3    -0.967    -0.29   -0.0174     -3.71 -3.95        -0.0177          222        -0.0038          267        -0.0311          260
+       flat 2031     51.6    -0.007     0.12   -0.0003     -0.27 -0.05        -0.0008          482        -0.0042          787         0.0042          762
+  0.1..0.25  901     47.2     0.056    -0.17   -0.0065     -0.49  0.29        -0.0198          245        -0.0060          377         0.0044          279
+  0.25..0.5  345     56.5     1.492     0.52    0.0237      5.13  2.84         0.0159          127        -0.0062          115         0.0666          103
+       >0.5   82     48.8     1.144    -0.12    0.0225      8.98  0.74         0.0843           25        -0.0400           35         0.0517           22
+
+== G. Saty ladder position (15:44 - PDC, ATR units) ==
+       bucket    n  win_pct  mean_pts  med_pts  mean_atr  mean_bps     t  atr_2008-2012  n_2008-2012  atr_2013-2019  n_2013-2019  atr_2020-2026  n_2020-2026
+          <-1  380     43.9    -0.703   -0.585   -0.0377     -5.01 -1.15        -0.0557          112        -0.0611          138         0.0028          130
+   -1..-0.618  354     46.9    -0.061   -0.325   -0.0160     -2.61 -0.15        -0.0321          103        -0.0322          118         0.0109          133
+-0.618..-trig  639     44.8    -0.562   -0.290   -0.0190     -3.49 -2.12        -0.0365          173        -0.0095          260        -0.0163          206
+  inside trig 1424     50.1    -0.149    0.015   -0.0035     -0.75 -0.94         0.0012          406        -0.0090          530        -0.0014          488
+  trig..0.618  855     52.4    -0.113    0.160   -0.0004      0.03 -0.56         0.0005          222        -0.0030          341         0.0021          292
+     0.618..1  506     51.0     0.393    0.090    0.0080      1.51  1.47         0.0052          129         0.0046          195         0.0137          182
+           >1  409     49.4     0.233   -0.030    0.0034      3.35  0.57         0.0504          100        -0.0023          163        -0.0225          146
+
+== H. Distance from session extremes at 15:44 ==
+                      bucket    n  win_pct  mean_pts  med_pts  mean_atr  mean_bps     t  atr_2008-2012  n_2008-2012  atr_2013-2019  n_2013-2019  atr_2020-2026  n_2020-2026
+at session HIGH (<=0.05 ATR)  576     50.5     0.380    0.040    0.0057      1.97  1.71        -0.0009          149         0.0093          235         0.0063          192
+ at session LOW (<=0.05 ATR)  240     43.8    -0.856   -0.785   -0.0237     -4.35 -1.74        -0.0298           77        -0.0119           73        -0.0280           90
+                   mid-range 3751     49.2    -0.180   -0.050   -0.0079     -1.08 -1.51        -0.0070         1019        -0.0148         1437        -0.0009         1295
+
+wrote analyst/spx_eod_1545_sessions.csv
+
+/usr/local/lib/python3.12/dist-packages/pandas/core/computation/expressions.py:22: UserWarning: Pandas requires version '2.10.2' or newer of 'numexpr' (version '2.9.0' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/usr/local/lib/python3.12/dist-packages/pandas/core/arrays/masked.py:56: UserWarning: Pandas requires version '1.4.2' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (

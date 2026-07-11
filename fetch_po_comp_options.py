@@ -64,8 +64,9 @@ def save_state(**kw):
 
 
 def api_get(url, params=None):
-    """Rate-limited GET with 429 backoff. Returns parsed json or raises."""
-    for attempt in range(6):
+    """Rate-limited GET with 429 backoff. Returns parsed json or raises.
+    Patient retry budget: free-tier contention can 429 for many minutes."""
+    for attempt in range(30):
         wait = _last_req[0] + REQ_SPACING - time.time()
         if wait > 0:
             time.sleep(wait)
@@ -96,16 +97,19 @@ def load_5m(tkr):
         if os.path.exists(p):
             frames.append(pd.read_parquet(
                 p, columns=['metric_ts_et', 'open', 'high', 'low', 'close', 'volume']))
-    df = pd.concat(frames, ignore_index=True)
-    df['ts'] = pd.to_datetime(df['metric_ts_et'], utc=True).dt.tz_convert('America/New_York')
-    df = df[['ts', 'open', 'high', 'low', 'close', 'volume']]
+    parts = []
+    if frames:
+        df = pd.concat(frames, ignore_index=True)
+        df['ts'] = pd.to_datetime(df['metric_ts_et'], utc=True).dt.tz_convert('America/New_York')
+        parts.append(df[['ts', 'open', 'high', 'low', 'close', 'volume']])
     if TOPUP.exists():
         t = pd.read_parquet(TOPUP)
         t = t[t['ticker'] == tkr].copy()
         if len(t):
             t['ts'] = pd.to_datetime(t['ts'], utc=True).dt.tz_convert('America/New_York')
-            df = pd.concat([df, t[['ts', 'open', 'high', 'low', 'close', 'volume']]],
-                           ignore_index=True)
+            parts.append(t[['ts', 'open', 'high', 'low', 'close', 'volume']])
+    # topup-only tickers (SPY/QQQ/SPX indices run) have no local parquet store
+    df = pd.concat(parts, ignore_index=True)
     df = df.drop_duplicates(subset='ts').sort_values('ts').set_index('ts')
     return df
 
@@ -241,6 +245,10 @@ def get_chain(tkr, expiry):
         while url:
             d = api_get(url, params)
             for r in d.get('results') or []:
+                # SPX chains mix PM-settled weeklies (O:SPXW) with AM-settled
+                # monthlies (O:SPX) that stop trading Thursday; keep SPXW only
+                if tkr == 'SPX' and not r['ticker'].startswith('O:SPXW'):
+                    continue
                 out[r['contract_type']].append(
                     {'strike': r['strike_price'], 'ticker': r['ticker']})
             url = d.get('next_url')

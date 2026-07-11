@@ -1,0 +1,108 @@
+//@version=5
+// BeatTheMarket — noise-area intraday momentum (SSRN 4824172), NQ port.
+// Chart: NQ1! (or dated contract), 30-minute, extended hours ON.
+// Spec frozen 2026-07-10: VM 1.0, 14-day sigma, band+VWAP trailing stop,
+// semi-hourly decisions 10:00–15:30 ET, flat at 16:00 ET,
+// skip-expansion day filter (ETH 1h rr6/60 <= 1.21).
+strategy("BeatTheMarket NQ (noise-area momentum)", overlay = true,
+     initial_capital = 100000,
+     default_qty_type = strategy.fixed, default_qty_value = 1,
+     commission_type = strategy.commission.cash_per_contract,
+     commission_value = 2.15, slippage = 1,
+     calc_on_every_tick = false, max_bars_back = 500)
+
+// ---------------- inputs ----------------
+vm       = input.float(1.0,  "Volatility multiplier (band width)", step = 0.25)
+LB       = input.int(14,     "Sigma lookback (sessions)", minval = 5, maxval = 90)
+useRR    = input.bool(true,  "Skip expansion days (hourly rr6/60 filter)")
+rrMax    = input.float(1.21, "Max rr6/60 at open", step = 0.01)
+showBands= input.bool(true,  "Plot noise area")
+
+TZ   = "America/New_York"
+SESS = "0930-1600"
+
+// ---------------- session anatomy (explicit ET gating) ----------------
+inRTH   = not na(time(timeframe.period, SESS, TZ))
+mod     = hour(time, TZ) * 60 + minute(time, TZ)   // bar START minute-of-day, ET
+slot    = inRTH ? int((mod - 570) / 30) : -1        // 09:30 bar -> 0 ... 15:30 bar -> 12
+dayStart = inRTH and not inRTH[1]
+isFlattenBar = slot == 12                           // 15:30–16:00 bar: exit only
+
+// ---------------- day state ----------------
+var float dayOpen   = na
+var float prevClose = na
+var float lastRTHc  = na
+var bool  dayOK     = true
+var int   dayN      = 0
+
+// expansion filter: last CONFIRMED extended-hours 1h bar before today's open
+ethTicker = ticker.modify(syminfo.tickerid, session.extended)
+rr6_60 = request.security(ethTicker, "60",
+     (ta.sma(ta.tr, 6) / ta.sma(ta.tr, 60))[1],
+     lookahead = barmerge.lookahead_on)
+
+if dayStart
+    prevClose := lastRTHc
+    dayOpen   := open
+    dayN      += 1
+    dayOK     := not useRR or na(rr6_60) ? not useRR : rr6_60 <= rrMax
+if inRTH
+    lastRTHc := close
+
+// ---------------- per-slot sigma ring buffer (13 slots x LB days) ----------------
+var buf = array.new<float>(13 * LB, na)
+float sigma = na
+if inRTH and slot >= 0 and not na(dayOpen)
+    // read BEFORE pushing today's value -> average of prior LB sessions only
+    if dayN > LB
+        float s = 0.0
+        int   c = 0
+        for k = 0 to LB - 1
+            v = array.get(buf, slot * LB + k)
+            if not na(v)
+                s += v
+                c += 1
+        sigma := c == LB ? s / c : na
+    array.set(buf, slot * LB + dayN % LB, math.abs(close / dayOpen - 1))
+
+// ---------------- session VWAP (RTH only, typical price) ----------------
+var float cumPV = na
+var float cumV  = na
+if dayStart
+    cumPV := 0.0
+    cumV  := 0.0
+if inRTH
+    cumPV += hlc3 * volume
+    cumV  += volume
+vwapS = cumV > 0 ? cumPV / cumV : na
+
+// ---------------- bands & trailing stops ----------------
+anchorHi = math.max(dayOpen, prevClose)
+anchorLo = math.min(dayOpen, prevClose)
+ub = anchorHi * (1 + vm * sigma)
+lb = anchorLo * (1 - vm * sigma)
+longTrail  = na(vwapS) ? ub : math.max(ub, vwapS)
+shortTrail = na(vwapS) ? lb : math.min(lb, vwapS)
+
+// ---------------- orders ----------------
+// Decision bars close 10:00 ... 15:30 ET; orders fill at next bar open,
+// matching the reference backtest (signal at HH:MM-1 close, fill at HH:MM open).
+canTrade = inRTH and not na(sigma) and not na(prevClose) and dayOK and slot <= 11
+if canTrade
+    if strategy.position_size > 0 and close < longTrail
+        strategy.close("L", comment = "trail")
+    if strategy.position_size < 0 and close > shortTrail
+        strategy.close("S", comment = "trail")
+    if close > ub and strategy.position_size <= 0
+        strategy.entry("L", strategy.long)
+    else if close < lb and strategy.position_size >= 0
+        strategy.entry("S", strategy.short)
+if isFlattenBar and strategy.position_size != 0
+    strategy.close_all(comment = "EOD", immediately = true)   // fills at 16:00 close
+
+// ---------------- plots ----------------
+pUB = plot(showBands and inRTH ? ub : na, "Upper band", color.new(#2a78d6, 0), 2, plot.style_linebr)
+pLB = plot(showBands and inRTH ? lb : na, "Lower band", color.new(#e34948, 0), 2, plot.style_linebr)
+fill(pUB, pLB, color.new(#eda100, 92), title = "Noise area")
+plot(showBands and inRTH ? vwapS : na, "Session VWAP", color.new(#8a887f, 30), 1, plot.style_linebr)
+bgcolor(inRTH and not dayOK ? color.new(#e34948, 90) : na, title = "Expansion day (skipped)")

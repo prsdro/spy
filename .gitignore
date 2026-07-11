@@ -54,6 +54,32 @@ outputs/
 # Heavy per-event dumps (regenerable from backtests; too big for git)
 /tenam_traffic_events.json
 analyst/bilbo_box_events.csv
+analyst/es_po_comp_drift_events.csv
+
+# ThetaData terminal (42MB jar + runtime; auth happens outside the repo)
+/theta/
+analyst/po_comp_options/theta/
+
+# Options pipeline raw data & intermediates (19GB+; regenerable via
+# fetch_po_comp_options.py / scratch_run_*.sh pipelines)
+analyst/po_comp_options/option_bars.sqlite
+analyst/po_comp_options/chains/
+analyst/po_comp_options/*.parquet
+analyst/po_comp_options/contracts_todo*.json
+
+# Raw fetched market data (regenerable via fetch scripts)
+analyst/forward_2026/
+analyst/ipo_study/bars/
+analyst/ipo_study/bars_yahoo/
+analyst/ipo_study/curve_bars_cache.pkl
+analyst/*_1m_massive_fwd.csv
+
+# Monte-carlo path dumps and tuning grids (intraday momentum study)
+analyst/intraday_momentum/*.npz
+analyst/intraday_momentum/*.parquet
+
+# Bilbo scanner runtime state (mutated by cron every 2 minutes)
+analyst/bilbo_scanner/state.json
 
 # OS
 .DS_Store
@@ -80,3 +106,7 @@ site/analyst.html
 # Weekly plan charts (keep)
 !weekly-plans/*.jpg
 !weekly-plans/*.png
+
+# nohup / stray process output
+*.out
+nohup.out

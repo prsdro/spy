@@ -1,0 +1,180 @@
+//@version=5
+// ============================================================================
+// ES CBC Morning Long — 10m confirm + 1m EMA9 pullback, hold to close
+//
+// HOW TO RUN (important — fidelity to the backtest depends on this):
+//   * Chart: ES1! (or MES1!), 1-MINUTE timeframe.
+//   * Session: set chart to REGULAR trading hours (Settings > Symbol >
+//     Session: Regular). The backtest computed all EMAs/ATR on RTH-only
+//     bars; on an extended-hours chart the ribbon/ATR values will drift.
+//   * All times below are ET / America/New_York (exchange time).
+//     09:50-12:00 ET signal closes = 08:50-11:00 Central.
+//
+// RULES (as validated 2008-2026 on ES 1-min data):
+//   Signal   : completed 10m bar closes ABOVE the prior 10m bar's high,
+//              with EMA8 > EMA21 on the 10m (ribbon), signal bar closing
+//              between 09:50 and 12:00 ET.
+//   Entry    : limit order at the 1-minute EMA9, live for 20 minutes,
+//              cancelled if a 1m close breaks the signal bar's low.
+//   Stop     : entry - 1.0 x ATR(14) of the 10m timeframe. NEVER moved.
+//   Exit     : hold to 15:59 ET close (optional max take-profit below).
+//              No overnight positions.
+//   Re-entry : if stopped out, one more fresh signal may be taken
+//              (max 2 signal entries/day). Long only.
+//
+// OPTIONAL (off in the validated spec, on by default here per request):
+//   Take-profit cap : exit at entry + N points (default 10).
+//   Dip re-entry    : after a take-profit exit, rest a limit N points below
+//                     the exit price (default 5), good until EOD, max 1/day.
+//                     Same ATR stop and take-profit rules on the re-entry.
+//                     Requires the take-profit to be enabled. A fresh CBC
+//                     signal cancels a pending dip order (signal has priority).
+//
+// Costs modeled: $1.55/side commission + 1 tick slippage on stop/market
+// exits (~0.31 ES pts round trip, matching the research assumption).
+// ============================================================================
+
+strategy("ES CBC Morning Long — 10m confirm + 1m EMA9 pullback",
+     shorttitle="CBC 10m Long",
+     overlay=true,
+     initial_capital=25000,
+     default_qty_type=strategy.fixed,
+     default_qty_value=1,
+     commission_type=strategy.commission.cash_per_contract,
+     commission_value=1.55,
+     slippage=1,
+     process_orders_on_close=true)
+
+// ---------------- inputs ----------------
+tfSig      = input.timeframe("10",  "Signal timeframe")
+emaLen     = input.int(9,    "Pullback EMA length (on chart TF = 1m)", minval=1)
+atrMult    = input.float(1.0, "Initial stop = ATR(14, signal TF) x", step=0.25)
+useRibbon  = input.bool(true, "Require EMA8 > EMA21 on signal TF")
+winMinutes = input.int(20,   "Entry order validity (minutes)", minval=1)
+sigStartET = input.int(950,  "Earliest signal CLOSE, ET as HHMM (0950 = 9:50am ET / 8:50am CT)")
+sigEndET   = input.int(1200, "Latest signal CLOSE, ET as HHMM")
+maxPerDay  = input.int(2,    "Max signal entries per day", minval=1, maxval=5)
+eodHHMM    = input.int(1559, "Flat-by time, ET as HHMM")
+
+grpTP      = "Take-profit & dip re-entry"
+useTp      = input.bool(true,  "Use max take-profit", group=grpTP)
+tpPts      = input.float(10.0, "Max take-profit (ES points)", step=0.5, minval=0.5, group=grpTP)
+useDip     = input.bool(true,  "Re-enter on a dip after a take-profit exit", group=grpTP)
+dipPts     = input.float(5.0,  "Dip size (points below TP exit price)", step=0.5, minval=0.25, group=grpTP)
+maxDips    = input.int(1,      "Max dip re-entries per day", minval=1, maxval=5, group=grpTP)
+
+// ---------------- confirmed 10m data (no repaint: [1] + lookahead_on) -------
+[sigClose, sigLow10, prevHigh10, ema8s, ema21s, atrS] =
+     request.security(syminfo.tickerid, tfSig,
+         [close[1], low[1], high[2],
+          ta.ema(close, 8)[1], ta.ema(close, 21)[1], ta.atr(14)[1]],
+         lookahead = barmerge.lookahead_on)
+
+etHHMM    = hour(time, "America/New_York") * 100 + minute(time, "America/New_York")
+newSigBar = ta.change(time(tfSig)) != 0          // first 1m bar of a new 10m period
+newDay    = ta.change(dayofmonth(time, "America/New_York")) != 0
+
+ema1m = ta.ema(close, emaLen)
+
+// ---------------- state ----------------
+var int   entriesToday = 0
+var int   dipsToday    = 0
+var bool  orderActive  = false     // pending signal-entry order
+var bool  dipArmed     = false     // pending dip re-entry order
+var float ordSigLow    = na
+var float ordAtr       = na
+var int   ordExpiry    = na
+var float dipLevel     = na
+var float stopPx       = na
+var float tpPx         = na
+
+if newDay
+    entriesToday := 0
+    dipsToday    := 0
+    orderActive  := false
+    dipArmed     := false
+    strategy.cancel("L")
+    strategy.cancel("D")
+
+// ---------------- signal: 10m close above prior 10m high ----------------
+ribbonOK = not useRibbon or ema8s > ema21s
+inWindow = etHHMM >= sigStartET and etHHMM <= sigEndET
+signal   = newSigBar and not na(prevHigh10) and sigClose > prevHigh10 and
+           ribbonOK and inWindow and
+           strategy.position_size == 0 and entriesToday < maxPerDay
+
+if signal
+    orderActive := true
+    ordSigLow   := sigLow10
+    ordAtr      := atrS
+    ordExpiry   := time + winMinutes * 60 * 1000
+    if dipArmed                       // fresh signal outranks a waiting dip
+        dipArmed := false
+        strategy.cancel("D")
+
+// ---------------- pending signal-entry order ----------------
+if orderActive and strategy.position_size == 0
+    invalidated = close < ordSigLow          // 1m close breaks signal-bar low
+    expired     = time >= ordExpiry or etHHMM >= eodHHMM
+    if invalidated or expired
+        orderActive := false
+        strategy.cancel("L")
+    else
+        // limit rides the 1m EMA9; re-submitted each minute at the new value
+        strategy.entry("L", strategy.long, limit = ema1m, comment = "sig")
+
+// ---------------- pending dip re-entry order ----------------
+if dipArmed and strategy.position_size == 0 and not orderActive
+    if etHHMM >= eodHHMM
+        dipArmed := false
+        strategy.cancel("D")
+    else
+        strategy.entry("D", strategy.long, limit = dipLevel, comment = "dip")
+
+// ---------------- on fill: fixed stop (+ optional TP), never moved ---------
+justFilled = strategy.position_size > 0 and strategy.position_size[1] == 0
+if justFilled
+    isDip = strategy.opentrades.entry_id(strategy.opentrades - 1) == "D"
+    if isDip
+        dipsToday := dipsToday + 1
+        dipArmed  := false
+    else
+        entriesToday := entriesToday + 1
+    orderActive := false
+    stopPx := strategy.position_avg_price - atrMult * (isDip ? atrS : ordAtr)
+    tpPx   := useTp ? strategy.position_avg_price + tpPts : na
+
+if strategy.position_size > 0
+    strategy.exit("X", stop = stopPx, limit = useTp ? tpPx : na)
+
+// ---------------- arm dip re-entry after a take-profit exit ----------------
+justClosed = strategy.position_size == 0 and strategy.position_size[1] > 0
+if justClosed and useTp and useDip and dipsToday < maxDips and etHHMM < eodHHMM
+    exitPx = strategy.closedtrades.exit_price(strategy.closedtrades - 1)
+    if not na(tpPx) and exitPx >= tpPx - syminfo.mintick   // exit WAS the TP
+        dipArmed := true
+        dipLevel := exitPx - dipPts
+
+// ---------------- forced flat at EOD (no overnight) ----------------
+if etHHMM >= eodHHMM
+    strategy.cancel("L")
+    strategy.cancel("D")
+    orderActive := false
+    dipArmed    := false
+    if strategy.position_size > 0
+        strategy.close_all(comment = "EOD")
+
+// ---------------- visuals ----------------
+plot(ema1m, "1m EMA9", color = color.new(color.orange, 0))
+plot(strategy.position_size > 0 ? stopPx : na, "Stop",
+     color = color.new(color.red, 0), style = plot.style_linebr)
+plot(strategy.position_size > 0 and useTp ? tpPx : na, "Take-profit",
+     color = color.new(color.green, 0), style = plot.style_linebr)
+plot(dipArmed ? dipLevel : na, "Dip re-entry level",
+     color = color.new(color.blue, 0), style = plot.style_linebr)
+plotshape(signal, "Signal", shape.triangleup, location.belowbar,
+     color = color.new(color.teal, 0), size = size.tiny)
+bgcolor(orderActive and strategy.position_size == 0
+     ? color.new(color.teal, 90) : na)
+bgcolor(dipArmed and strategy.position_size == 0
+     ? color.new(color.blue, 92) : na)

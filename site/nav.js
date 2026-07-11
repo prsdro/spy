@@ -12,6 +12,7 @@
     {label:'Entries', href:'/gg-entries.html'},
     {label:'Gap Fills', href:'/gap-fills.html'},
     {label:'SPX Live', href:'/spx-live-cascade.html'},
+    {label:'Bilbo Scan', href:'/bilbo-scanner.html'},
     {label:'Open Band', href:'/spx-open-band-path.html'},
     {label:'SPX Cascade', href:'/atr-cascade-spx.html'},
     {label:'4h PO × OpEx', href:'/4h-po-opex.html'},
@@ -26,6 +27,7 @@
     {label:'Swing', href:'/swing-gg.html'},
     {label:'Bet Sizing', href:'/bet-sizing.html'},
     {label:'Box Options', href:'/bilbo-box-options.html'},
+    {label:'Paper Acct', href:'/bilbo-paper.html'},
     // {label:'IPOs', href:'/ipo-5yr.html'},  // hidden from menu; page stays live at /ipo-5yr.html
     {label:'Cheat Sheet', href:'/cheatsheet.html'},
     {label:'Data', href:'/data/'},

@@ -1,0 +1,219 @@
+{
+  "summaries": [
+    {
+      "label": "full 2008-2026",
+      "days": 4642,
+      "avg_usd_per_day": 15.81,
+      "sd_usd": 680.41,
+      "t_stat": 1.58,
+      "avg_bps": 1.28,
+      "sharpe": 0.42,
+      "hit_rate_all_days": 0.223,
+      "pct_days_traded": 0.566,
+      "avg_rts_per_day": 0.83,
+      "worst_day_usd": -6173.6,
+      "best_day_usd": 9421.9
+    },
+    {
+      "label": "2008-2015",
+      "days": 2048,
+      "avg_usd_per_day": 6.76,
+      "sd_usd": 322.15,
+      "t_stat": 0.95,
+      "avg_bps": 1.59,
+      "sharpe": 0.47,
+      "hit_rate_all_days": 0.214,
+      "pct_days_traded": 0.562,
+      "avg_rts_per_day": 0.81,
+      "worst_day_usd": -2129.9,
+      "best_day_usd": 2601.2
+    },
+    {
+      "label": "2016-2021",
+      "days": 1547,
+      "avg_usd_per_day": 16.39,
+      "sd_usd": 647.95,
+      "t_stat": 0.99,
+      "avg_bps": 0.64,
+      "sharpe": 0.24,
+      "hit_rate_all_days": 0.213,
+      "pct_days_traded": 0.567,
+      "avg_rts_per_day": 0.84,
+      "worst_day_usd": -6173.6,
+      "best_day_usd": 5131.7
+    },
+    {
+      "label": "2022-2026",
+      "days": 1047,
+      "avg_usd_per_day": 32.64,
+      "sd_usd": 1109.05,
+      "t_stat": 0.95,
+      "avg_bps": 1.6,
+      "sharpe": 0.58,
+      "hit_rate_all_days": 0.257,
+      "pct_days_traded": 0.575,
+      "avg_rts_per_day": 0.86,
+      "worst_day_usd": -6092.3,
+      "best_day_usd": 9421.9
+    },
+    {
+      "label": "2023-2026 (recent regime)",
+      "days": 789,
+      "avg_usd_per_day": 10.44,
+      "sd_usd": 948.5,
+      "t_stat": 0.31,
+      "avg_bps": 0.68,
+      "sharpe": 0.31,
+      "hit_rate_all_days": 0.247,
+      "pct_days_traded": 0.561,
+      "avg_rts_per_day": 0.84,
+      "worst_day_usd": -4108.6,
+      "best_day_usd": 9421.9
+    },
+    {
+      "label": "2024",
+      "days": 259,
+      "avg_usd_per_day": -0.63,
+      "sd_usd": 849.27,
+      "t_stat": -0.01,
+      "avg_bps": -0.02,
+      "sharpe": -0.01,
+      "hit_rate_all_days": 0.251,
+      "pct_days_traded": 0.575,
+      "avg_rts_per_day": 0.88,
+      "worst_day_usd": -3821.3,
+      "best_day_usd": 3886.7
+    },
+    {
+      "label": "2025-2026 (post-publication)",
+      "days": 273,
+      "avg_usd_per_day": -22.25,
+      "sd_usd": 1211.0,
+      "t_stat": -0.3,
+      "avg_bps": -0.37,
+      "sharpe": -0.14,
+      "hit_rate_all_days": 0.234,
+      "pct_days_traded": 0.527,
+      "avg_rts_per_day": 0.81,
+      "worst_day_usd": -4108.6,
+      "best_day_usd": 9421.9
+    }
+  ],
+  "yearly": [
+    {
+      "year": 2008,
+      "net_usd": 18954.5,
+      "days": 244,
+      "avg_bps": 14.7
+    },
+    {
+      "year": 2009,
+      "net_usd": 4213.0,
+      "days": 258,
+      "avg_bps": 4.7
+    },
+    {
+      "year": 2010,
+      "net_usd": -7778.1,
+      "days": 258,
+      "avg_bps": -5.4
+    },
+    {
+      "year": 2011,
+      "net_usd": 3449.9,
+      "days": 258,
+      "avg_bps": 2.3
+    },
+    {
+      "year": 2012,
+      "net_usd": -2150.7,
+      "days": 256,
+      "avg_bps": -1.3
+    },
+    {
+      "year": 2013,
+      "net_usd": -4493.7,
+      "days": 258,
+      "avg_bps": -2.1
+    },
+    {
+      "year": 2014,
+      "net_usd": -2080.9,
+      "days": 258,
+      "avg_bps": -0.7
+    },
+    {
+      "year": 2015,
+      "net_usd": 3734.2,
+      "days": 258,
+      "avg_bps": 1.3
+    },
+    {
+      "year": 2016,
+      "net_usd": -8444.3,
+      "days": 258,
+      "avg_bps": -2.9
+    },
+    {
+      "year": 2017,
+      "net_usd": -10730.6,
+      "days": 257,
+      "avg_bps": -3.2
+    },
+    {
+      "year": 2018,
+      "net_usd": 25344.7,
+      "days": 257,
+      "avg_bps": 6.7
+    },
+    {
+      "year": 2019,
+      "net_usd": -2125.9,
+      "days": 258,
+      "avg_bps": -0.6
+    },
+    {
+      "year": 2020,
+      "net_usd": 9836.3,
+      "days": 259,
+      "avg_bps": 1.8
+    },
+    {
+      "year": 2021,
+      "net_usd": 11471.7,
+      "days": 258,
+      "avg_bps": 1.9
+    },
+    {
+      "year": 2022,
+      "net_usd": 25940.4,
+      "days": 258,
+      "avg_bps": 4.4
+    },
+    {
+      "year": 2023,
+      "net_usd": 14471.7,
+      "days": 257,
+      "avg_bps": 2.5
+    },
+    {
+      "year": 2024,
+      "net_usd": -162.1,
+      "days": 259,
+      "avg_bps": -0.0
+    },
+    {
+      "year": 2025,
+      "net_usd": -3393.8,
+      "days": 257,
+      "avg_bps": -0.1
+    },
+    {
+      "year": 2026,
+      "net_usd": -2680.5,
+      "days": 16,
+      "avg_bps": -4.8
+    }
+  ],
+  "cost_rt_pts": 0.586
+}
